@@ -15,6 +15,8 @@ interface Props {
   interval: Interval;
   today: string;
   nowHour: number;
+  /** 캡처용: 넘기기 버튼·접기 버튼 없이 표 전체를 그린다 (더보기는 화면과 같은 상태) */
+  capture?: boolean;
 }
 
 interface Col {
@@ -164,7 +166,7 @@ const MORE_KEY = "tripnal:more";
  * 선택한 기간 전체를 한 카드 안의 표 하나로 보여주고 좌우로 넘겨 본다.
  * 날짜 사이에는 구분선, 시각 칸은 낮·밤 색, 지금 칸은 밑줄로 표시한다.
  */
-export function ForecastTable({ days, leisure, interval, today, nowHour }: Props) {
+export function ForecastTable({ days, leisure, interval, today, nowHour, capture }: Props) {
   const scroller = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
   const [edges, setEdges] = useState({ prev: false, next: false });
@@ -236,15 +238,17 @@ export function ForecastTable({ days, leisure, interval, today, nowHour }: Props
   const more = leisure.more.filter((k) => hasData(k, allSlots, days));
 
   return (
-    <article className="card ft">
-      <div className="ft-bar">
-        <button className="ft-nav" disabled={!edges.prev} onClick={() => go(-1)}>
-          ‹ 이전 날
-        </button>
-        <button className="ft-nav" disabled={!edges.next} onClick={() => go(1)}>
-          다음 날 ›
-        </button>
-      </div>
+    <article className={`card ft${capture ? " cap" : ""}`}>
+      {!capture && (
+        <div className="ft-bar">
+          <button className="ft-nav" disabled={!edges.prev} onClick={() => go(-1)}>
+            ‹ 이전 날
+          </button>
+          <button className="ft-nav" disabled={!edges.next} onClick={() => go(1)}>
+            다음 날 ›
+          </button>
+        </div>
+      )}
       <div className="ft-wrap">
         <div className="ft-scroll" ref={scroller} onScroll={updateEdges}>
           {daily ? (
@@ -321,7 +325,7 @@ export function ForecastTable({ days, leisure, interval, today, nowHour }: Props
           )}
         </div>
       </div>
-      {more.length > 0 && (
+      {more.length > 0 && !capture && (
         <button className="ft-toggle" aria-expanded={open} onClick={toggle}>
           {open ? "접기" : "더 많은 날씨 정보 보기"}
           <span aria-hidden>{open ? "▴" : "▾"}</span>

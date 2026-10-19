@@ -698,6 +698,7 @@ a {
   left: 0;
   top: 0;
   display: flex;
+  flex-direction: column;
   align-items: flex-start;
   width: max-content;
   transform-origin: 0 0;
@@ -1446,4 +1447,12 @@ a {
   white-space: nowrap;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   cursor: pointer;
+}
+/* 캡처용 표: 넘기지 않고 전체를 그린다 */
+.ft.cap {
+  margin: 0;
+  padding-bottom: 4px !important;
+}
+.ft.cap .ft-scroll {
+  overflow: visible;
 }

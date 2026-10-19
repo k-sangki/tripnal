@@ -1321,11 +1321,6 @@ a {
 }
 
 /* ---------- 활동 선택 ---------- */
-.ctl-sep {
-  height: 1px;
-  margin: 16px 0 12px;
-  background: var(--line);
-}
 .act-groups {
   display: flex;
   flex-direction: column;
@@ -1365,4 +1360,7 @@ a {
 .ftab.s12 .span-in {
   flex-wrap: wrap;
   column-gap: 4px;
+}
+.act-card {
+  margin-top: 12px;
 }

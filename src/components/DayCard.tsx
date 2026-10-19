@@ -1,58 +1,22 @@
-import { codeIcon, codeInfo, windDirKo } from "@/lib/weather/codes";
+import { codeIcon, codeInfo } from "@/lib/weather/codes";
 import { METRIC_LABEL, scoreDay, type Leisure, type MetricKey } from "@/lib/leisure";
+import { isPast, regroup, slotHead } from "@/lib/interval";
 import { shortDateKo, weekday } from "@/lib/time";
-import type { DayForecast, Slot } from "@/lib/weather/types";
+import type { DayForecast } from "@/lib/weather/types";
+import { Cell, UNIT, fmt } from "./cells";
 
-function fmt(v: number | null, unit = "") {
-  return v == null ? "-" : `${Math.round(v)}${unit}`;
+interface Props {
+  day: DayForecast;
+  leisure: Leisure;
+  isToday: boolean;
+  nowHour: number;
+  /** 칸 간격(시간): 3, 6, 12 */
+  step: number;
 }
 
-function Cell({ slot, metric }: { slot: Slot; metric: MetricKey }) {
-  switch (metric) {
-    case "temp":
-      return <td>{fmt(slot.temp, "°")}</td>;
-    case "feels":
-      return <td className={slot.feels != null && slot.feels <= 0 ? "v-rain" : undefined}>{fmt(slot.feels, "°")}</td>;
-    case "precip": {
-      const p = slot.precip;
-      if (p == null) return <td className="v-none">-</td>;
-      if (p < 0.1) {
-        // 강수가 없을 때는 확률이 높으면 확률을 보여준다
-        return slot.precipProb != null && slot.precipProb >= 30 ? (
-          <td className="v-rain v-prob">{slot.precipProb}%</td>
-        ) : (
-          <td className="v-none">·</td>
-        );
-      }
-      return <td className="v-rain">{p < 10 ? p.toFixed(1) : Math.round(p)}</td>;
-    }
-    case "cloud":
-      return <td>{fmt(slot.cloud)}</td>;
-    case "wind":
-      return (
-        <td className={slot.wind != null && slot.wind >= 7 ? "v-warn" : undefined} title={windDirKo(slot.windDir)}>
-          <span className="arrow" style={{ transform: `rotate(${slot.windDir ?? 0}deg)` }} aria-label={`${windDirKo(slot.windDir)}풍`}>
-            ↓
-          </span>
-          {fmt(slot.wind)}
-        </td>
-      );
-    case "gust":
-      return <td className={slot.gust != null && slot.gust >= 10 ? "v-warn" : undefined}>{fmt(slot.gust)}</td>;
-  }
-}
-
-const UNIT: Record<MetricKey, string> = {
-  temp: "°",
-  feels: "°",
-  precip: "mm",
-  cloud: "%",
-  wind: "m/s",
-  gust: "m/s",
-};
-
-export function DayCard({ day, leisure, isToday, nowHour }: { day: DayForecast; leisure: Leisure; isToday: boolean; nowHour: number }) {
-  const slots = isToday ? day.slots.filter((s) => s.hour + 3 > nowHour) : day.slots;
+export function DayCard({ day, leisure, isToday, nowHour, step }: Props) {
+  const all = regroup(day.slots, step);
+  const slots = isToday ? all.filter((s) => !isPast(s.hour, step, nowHour)) : all;
   const score = scoreDay(day, leisure.id);
   const wd = weekday(day.date);
   const info = codeInfo(day.code);
@@ -96,7 +60,7 @@ export function DayCard({ day, leisure, isToday, nowHour }: { day: DayForecast; 
       </div>
 
       <div className="grid-wrap">
-        <table className="slots" style={slots.length < 4 ? { width: "auto", minWidth: 0 } : undefined}>
+        <table className={`slots s${step}`} style={slots.length < 4 ? { width: "auto", minWidth: 0 } : undefined}>
           <thead>
             <tr>
               <th scope="col">
@@ -104,7 +68,7 @@ export function DayCard({ day, leisure, isToday, nowHour }: { day: DayForecast; 
               </th>
               {slots.map((s) => (
                 <th scope="col" key={s.time}>
-                  {s.hour}시
+                  {slotHead(s.hour, step)}
                 </th>
               ))}
             </tr>

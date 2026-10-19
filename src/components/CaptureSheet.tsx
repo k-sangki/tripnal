@@ -15,7 +15,9 @@ interface Props {
 /** 캔버스 최대 면적(모바일 사파리 약 1,670만 px)을 넘지 않게 배율을 정한다 */
 function pickScale(el: HTMLElement) {
   const area = el.scrollWidth * el.scrollHeight;
-  return Math.max(1, Math.min(2, Math.sqrt(16_000_000 / area)));
+  // 휴대폰 크기는 3배로 선명하게, 모니터 크기는 2배까지
+  const max = el.offsetWidth < 600 ? 3 : 2;
+  return Math.max(1, Math.min(max, Math.sqrt(16_000_000 / area)));
 }
 
 const nextFrame = () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));

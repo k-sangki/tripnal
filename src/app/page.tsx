@@ -18,7 +18,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
   return (
     <div className="shell">
       <SiteHeader />
-      <WeatherApp initialPlace={place} initialLeisure={one(sp.act)} initialFrom={one(sp.from)} initialTo={one(sp.to)} />
+      <WeatherApp initialPlace={place} initialLeisure={one(sp.act)} initialFrom={one(sp.from)} initialTo={one(sp.to)} initialInterval={one(sp.int)} />
       <SiteFooter />
     </div>
   );

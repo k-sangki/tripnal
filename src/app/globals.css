@@ -351,66 +351,6 @@ a {
   color: var(--pine);
 }
 
-/* ---------- 요약 ---------- */
-.stats {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-}
-.stat {
-  background: var(--chip);
-  border-radius: 14px;
-  padding: 12px 14px;
-}
-.stat-label {
-  font-size: 13px;
-  color: var(--muted);
-}
-.stat-value {
-  margin-top: 2px;
-  font-size: 20px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-}
-.best {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 12px;
-  padding: 12px 14px;
-  border-radius: 14px;
-  background: var(--mint-soft);
-  color: var(--pine);
-  font-weight: 700;
-  font-size: 15px;
-}
-.grade-strip {
-  display: flex;
-  gap: 3px;
-  margin-top: 12px;
-}
-.grade-cell {
-  flex: 1 1 0;
-  min-width: 0;
-  text-align: center;
-  font-size: 11px;
-  color: var(--muted);
-}
-.grade-cell i {
-  display: block;
-  height: 8px;
-  border-radius: 4px;
-  margin-bottom: 4px;
-}
-.chart {
-  margin-top: 16px;
-}
-.chart svg {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
 /* ---------- 등급 ---------- */
 .grade {
   display: inline-flex;
@@ -421,26 +361,17 @@ a {
   font-size: 13px;
   font-weight: 700;
 }
-.grade.good,
-.grade-cell i.good {
+.grade.good {
   background: var(--mint);
   color: var(--pine);
 }
-.grade.fair,
-.grade-cell i.fair {
+.grade.fair {
   background: var(--amber-soft);
   color: #a86500;
 }
-.grade-cell i.fair {
-  background: var(--amber);
-}
-.grade.bad,
-.grade-cell i.bad {
+.grade.bad {
   background: var(--coral-soft);
   color: #d13f1f;
-}
-.grade-cell i.bad {
-  background: var(--coral);
 }
 
 /* ---------- 일별 카드 ---------- */
@@ -528,6 +459,7 @@ a {
 
 /* 3시간 격자 */
 .grid-wrap {
+  position: relative;
   overflow-x: auto;
   margin: 0 -6px;
   scrollbar-width: thin;
@@ -611,50 +543,6 @@ a {
   border: 1px dashed #c4cad1;
   color: var(--muted);
   font-size: 13px;
-}
-
-/* ---------- 캡처 프레임 ----------
- * 화면에서는 숨겨 두었다가, 캡처 순간에만 파인 프레임·로고·워터마크가 나타난다. */
-.capture-only {
-  display: none;
-}
-.capturing {
-  background: var(--pine);
-  padding: 20px 16px 16px;
-  border-radius: 0;
-}
-.capturing .grid-wrap {
-  overflow: visible;
-}
-.capturing .capture-only {
-  display: flex;
-}
-.capturing .no-capture,
-.capturing .ad-slot {
-  display: none !important;
-}
-.cap-head {
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 14px;
-}
-.cap-foot {
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 16px;
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 12px;
-}
-.cap-url {
-  font-size: 18px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: var(--mint);
-}
-@media (min-width: 1024px) {
-  .capturing {
-    width: 760px;
-  }
 }
 
 /* ---------- 캡처 버튼 / 시트 ---------- */
@@ -812,14 +700,6 @@ a {
     display: block;
   }
 }
-.capturing .hero {
-  background: none;
-  padding: 4px 4px 8px;
-}
-.capturing .hero::after,
-.capturing .hero-top {
-  display: none;
-}
 .h1-suffix {
   font-size: 0.62em;
   font-weight: 700;
@@ -865,6 +745,384 @@ a {
   opacity: 0.72;
   margin-top: -2px;
 }
-.capturing .hero-addr {
-  opacity: 0.85;
+
+/* ---------- 간격 선택 ---------- */
+.seg {
+  display: flex;
+  padding: 3px;
+  border-radius: 12px;
+  background: var(--chip);
+}
+.seg button {
+  flex: 1 1 0;
+  height: 36px;
+  border-radius: 9px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--muted);
+}
+.seg button[aria-pressed="true"] {
+  background: var(--card);
+  color: var(--pine);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* ---------- 좌우로 넘기는 일별 카드 ---------- */
+.swiper-bar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+.swiper-nav {
+  flex: none;
+  width: 32px;
+  height: 44px;
+  border-radius: 10px;
+  font-size: 24px;
+  line-height: 1;
+  color: var(--pine);
+}
+.swiper-nav:disabled {
+  opacity: 0.25;
+}
+.date-tabs {
+  flex: 1;
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.date-tabs::-webkit-scrollbar {
+  display: none;
+}
+.date-tabs button {
+  flex: none;
+  min-width: 44px;
+  height: 44px;
+  padding: 0 6px;
+  border-radius: 12px;
+  background: var(--card);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.15;
+}
+.date-tabs button b {
+  font-size: 15px;
+}
+.date-tabs button small {
+  font-size: 11px;
+  color: var(--muted);
+}
+.date-tabs button[aria-selected="true"] {
+  background: var(--pine);
+  color: #fff;
+}
+.date-tabs button[aria-selected="true"] small {
+  color: var(--mint);
+}
+.swiper-track {
+  /* 안쪽 sr-only(절대 위치) 요소가 페이지 폭을 늘리지 않도록 */
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+.swiper-track::-webkit-scrollbar {
+  display: none;
+}
+.swiper-track > * {
+  flex: 0 0 100%;
+  min-width: 0;
+  scroll-snap-align: start;
+}
+
+/* ---------- 하루 단위 표 ---------- */
+.slots.daily {
+  width: auto;
+  min-width: 100%;
+  table-layout: auto;
+}
+.slots.daily td,
+.slots.daily thead th[scope="col"] {
+  min-width: 50px;
+  padding: 5px 4px;
+}
+.slots.daily thead th small {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+}
+.slots.daily th[scope="row"] {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: var(--card);
+  min-width: 36px;
+}
+.slots.daily tr.em th[scope="row"] {
+  background: var(--mint-soft);
+}
+.slots.daily .lo td {
+  font-size: 14px;
+  color: var(--muted);
+}
+.slots .r-sun td {
+  font-size: 12px;
+}
+.gdot {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 8px;
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 700;
+}
+.gdot.good {
+  background: var(--mint);
+  color: var(--pine);
+}
+.gdot.fair {
+  background: var(--amber-soft);
+  color: #a86500;
+}
+.gdot.bad {
+  background: var(--coral-soft);
+  color: #d13f1f;
+}
+.small-note {
+  margin: 8px 0 0;
+  font-size: 12px;
+}
+
+/* ---------- 캡처 이미지 (화면 밖에서 그린 뒤 이미지로 만든다) ---------- */
+.cf-host {
+  position: fixed;
+  left: -100000px;
+  top: 0;
+  pointer-events: none;
+}
+.cf {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 28px 32px 22px;
+  background: var(--pine);
+  color: #fff;
+  overflow: hidden;
+}
+.cf.narrow {
+  padding: 18px 14px 14px;
+  gap: 10px;
+}
+.cf-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+}
+.cf-title {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 2px 10px;
+  min-width: 0;
+}
+.cf-title b {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+.cf-title span {
+  font-size: 13px;
+  opacity: 0.75;
+}
+.cf.narrow .cf-title {
+  flex-basis: 100%;
+  order: 2;
+}
+.cf.narrow .cf-title b {
+  font-size: 22px;
+}
+.cf-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-left: auto;
+}
+.cf.narrow .cf-pills {
+  order: 3;
+  margin-left: 0;
+}
+.cf:not(.narrow) .pill {
+  height: 34px;
+  padding: 0 14px;
+  font-size: 15px;
+}
+.cf:not(.narrow) .cf-foot {
+  font-size: 15px;
+}
+.cf .pill {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+.cf .pill.mint {
+  background: var(--mint);
+  color: var(--pine);
+}
+.cf-body {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+.cf-fit {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: flex-start;
+  width: max-content;
+  transform-origin: 0 0;
+}
+.cf-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--card);
+  color: var(--ink);
+  border-radius: 14px;
+  overflow: hidden;
+  font-size: 13px;
+}
+.cf-table th,
+.cf-table td {
+  padding: 5px 4px;
+  text-align: center;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+.cf-table tr:last-child > * {
+  border-bottom: 0;
+}
+.cf-table thead th {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  background: var(--chip);
+}
+.cf-table td {
+  min-width: 58px;
+  line-height: 1.2;
+}
+.cf-table td.past {
+  opacity: 0.3;
+}
+.cf-date {
+  text-align: left !important;
+  padding: 5px 8px !important;
+  min-width: 70px;
+}
+.cf-date > span:first-child {
+  display: block;
+}
+.cf-date b {
+  font-size: 15px;
+  font-weight: 800;
+}
+.cf-date small {
+  margin-left: 3px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.cf-date .d-sat b,
+.cf-date .d-sat small {
+  color: var(--rain);
+}
+.cf-date .d-sun b,
+.cf-date .d-sun small {
+  color: var(--coral);
+}
+.cf-hl {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.v-hi {
+  color: var(--coral);
+}
+.v-lo {
+  color: var(--rain);
+}
+.cl-icon {
+  display: block;
+  font-size: 20px;
+  line-height: 1.1;
+}
+.cl-temp {
+  display: block;
+  font-size: 15px;
+  font-weight: 800;
+}
+.cl-rain,
+.cl-wind {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+}
+.cl-rain:not(:empty) {
+  color: var(--rain);
+  font-weight: 700;
+}
+.cl-rain.prob {
+  font-weight: 500;
+}
+.cl-wind small {
+  font-size: 10px;
+}
+.cl-rain.em,
+.cl-wind.em {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--ink);
+}
+.cl-rain.em {
+  color: var(--rain);
+}
+.cl-wind.warn {
+  color: #d13f1f;
+}
+.cf-daily td {
+  min-width: 52px;
+  padding: 6px 8px;
+  font-size: 14px;
+}
+.cf-daily th.em,
+.cf-daily td.em {
+  background: var(--mint-soft);
+  font-weight: 800;
+}
+.cf-sky small {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+}
+.cf-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+}
+.cap-url {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--mint);
 }

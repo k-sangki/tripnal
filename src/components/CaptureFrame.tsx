@@ -283,7 +283,7 @@ export function CaptureFrame({ frameRef, ...p }: Props) {
           </div>
           <div className="cf-pills">
             <span className="pill mint">
-              {p.leisure.emoji} {p.leisure.label}
+              {p.leisure.emoji} {p.leisure.groupLabel}
             </span>
             <span className="pill">{periodLabel(p.period)}</span>
             <span className="pill">{intervalLong(p.interval)}</span>

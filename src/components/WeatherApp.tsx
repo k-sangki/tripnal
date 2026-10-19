@@ -237,7 +237,7 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
           <section className="hero">
             <div className="hero-top">
               <span>
-                {leisure.emoji} {leisure.label} 날씨
+                {leisure.emoji} {leisure.groupLabel} 날씨
               </span>
               <span>{intervalLong(interval)} · 최대 16일</span>
             </div>

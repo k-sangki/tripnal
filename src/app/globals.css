@@ -968,7 +968,7 @@ a {
 }
 /* 날짜 구분선 */
 .ftab .ds {
-  border-left: 2px solid #c9d1d9;
+  border-left: 1px solid #e3e7eb;
 }
 /* 일 단위는 칸마다 날짜가 바뀌므로 구분선을 쓰지 않는다 */
 .ftab.daily .ds {
@@ -1008,7 +1008,7 @@ a {
   vertical-align: bottom;
   padding: 0;
   text-align: left;
-  border-left: 2px solid #c9d1d9;
+  border-left: 1px solid #e3e7eb;
 }
 .dh-in {
   position: sticky;
@@ -1384,13 +1384,21 @@ a {
 .grp-emoji {
   flex: none;
 }
+.grp-dot {
+  margin-left: 6px;
+  font-style: normal;
+  opacity: 0.5;
+}
 .grp-label {
   min-width: 0;
+  padding: 10px 0;
   font-size: 13.5px;
-  letter-spacing: -0.3px;
+  line-height: 1.5;
+  letter-spacing: -0.2px;
+}
+/* 좁은 화면에서는 버튼 안에서만 줄을 바꾸고, 활동 이름은 쪼개지 않는다 */
+.grp-label > span {
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 /* 캡처: 활동별 핵심 지표 한 줄 */

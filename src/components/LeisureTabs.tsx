@@ -1,5 +1,6 @@
 "use client";
 
+import { Fragment } from "react";
 import { GROUPS, LEISURES, getLeisure, type LeisureId } from "@/lib/leisure";
 
 /**
@@ -18,7 +19,20 @@ export function LeisureTabs({ value, onChange }: { value: LeisureId; onChange: (
             <span className="grp-emoji" aria-hidden>
               {first.emoji}
             </span>
-            <span className="grp-label">{first.groupLabel}</span>
+            <span className="grp-label">
+              {first.groupItems.map((t, i, all) => (
+                <Fragment key={t}>
+                  <span>
+                    {t}
+                    {i < all.length - 1 && (
+                      <i className="grp-dot" aria-hidden>
+                        ·
+                      </i>
+                    )}
+                  </span>{" "}
+                </Fragment>
+              ))}
+            </span>
           </button>
         );
       })}

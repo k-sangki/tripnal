@@ -66,9 +66,9 @@ export interface ActivityGroup {
 /** 그룹 순서가 곧 활동 버튼과 표의 순서 */
 export const GROUPS: ActivityGroup[] = [
   // 일교차·강풍·강수
-  { id: "camp", primary: ["range", "wind", "gust", "precip"], sun: "sunset" },
+  { id: "camp", primary: ["range", "wind", "gust", "precip"] },
   // 강수량·낙뢰·노면
-  { id: "active", primary: ["precip", "thunder", "road"] },
+  { id: "active", primary: ["precip", "thunder", "road"], sun: "both" },
   // 파고·물때·풍랑
   { id: "marine", primary: ["wave", "tide", "windWave"], sun: "sunrise" },
   // 미세먼지·자외선·체감온도
@@ -117,7 +117,9 @@ export interface Leisure {
   rows: MetricKey[];
   /** 더보기에 접어 두는 지표 */
   more: MetricKey[];
-  /** 같은 그룹 활동 이름을 이은 것 (그룹 버튼·제목에 쓴다) */
+  /** 같은 그룹 활동 이름들 ("등산/트레킹"은 "등산", "트레킹"으로 나눈다) */
+  groupItems: string[];
+  /** groupItems를 점으로 이은 것 (제목·캡처에 쓴다) */
   groupLabel: string;
   /** 주 지표 (강조) */
   emphasis: MetricKey[];
@@ -144,10 +146,8 @@ export function rowsForGroup(g: ActivityGroup): { rows: MetricKey[]; more: Metri
 
 export const LEISURES: Leisure[] = ACTIVITIES.map((a) => {
   const g = GROUPS.find((x) => x.id === a.group)!;
-  const groupLabel = ACTIVITIES.filter((x) => x.group === a.group)
-    .map((x) => x.label)
-    .join("·");
-  return { ...a, ...rowsForGroup(g), groupLabel, emphasis: g.primary, sun: g.sun };
+  const groupItems = ACTIVITIES.filter((x) => x.group === a.group).flatMap((x) => x.label.split("/"));
+  return { ...a, ...rowsForGroup(g), groupItems, groupLabel: groupItems.join(" · "), emphasis: g.primary, sun: g.sun };
 });
 
 export function getLeisure(id: string | null | undefined): Leisure {

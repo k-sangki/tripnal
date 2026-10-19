@@ -1,4 +1,4 @@
-import { getLeisure, scoreDay } from "@/lib/leisure";
+import { getLeisure } from "@/lib/leisure";
 import { presetPeriod, inPeriod } from "@/lib/period";
 import type { Place } from "@/lib/places";
 import { kstDate, shortDateKo } from "@/lib/time";
@@ -28,6 +28,8 @@ export function placeTitle(p: Place): string {
       return `${p.name} 16일 날씨 · 라이딩 바람 예보 3시간 간격`;
     case "travel":
       return `${p.name} 16일 날씨 · 주말 여행 날씨 3시간 간격`;
+    default:
+      return `${p.name} 16일 날씨 · ${getLeisure(p.leisure).label} 날씨 3시간 간격`;
   }
 }
 
@@ -39,7 +41,7 @@ export function placeDescription(p: Place): string {
       : p.leisure === "fishing"
         ? "풍속·풍향과 돌풍, 일출 시간을"
         : "기온·체감온도·비·돌풍과 일몰 시간을";
-  return `${p.name}(${p.region}) 오늘부터 16일까지 3시간 간격 날씨. ${extra} ${l.label}에 맞게 한눈에 보여드리고, 이번 주말 날씨와 ${l.label}하기 가장 좋은 날도 알려드립니다.`;
+  return `${p.name}(${p.region}) 오늘부터 16일까지 3시간 간격 날씨. ${extra} ${l.label}에 맞게 한눈에 보여드리고, 이번 주말 날씨도 바로 확인할 수 있습니다.`;
 }
 
 /** 검색엔진과 사용자에게 보여줄 요약 문장 (서버에서 렌더링) */
@@ -55,24 +57,15 @@ export function placeSummary(p: Place, f: Forecast, now = new Date()): string[] 
     const rain = Math.round(weekend.reduce((a, d) => a + d.precipSum, 0) * 10) / 10;
     const gust = Math.max(...weekend.map((d) => d.gustMax ?? 0));
     const sky = codeInfo(weekend[0].code).label;
-    const grades = weekend.map((d) => `${shortDateKo(d.date)} ${scoreDay(d, p.leisure).label}`).join(", ");
     lines.push(
       `이번 주말 ${weekend.map((d) => shortDateKo(d.date)).join("~")} ${topic(p.name)} ${sky}, 기온 ${Math.round(lo)}~${Math.round(hi)}°, ` +
-        `강수 ${rain}mm, 최대 돌풍 ${Math.round(gust)}m/s로 예보되었습니다. ${l.label} 적합도는 ${grades}입니다.`,
+        `강수 ${rain}mm, 최대 돌풍 ${Math.round(gust)}m/s로 예보되었습니다.`,
     );
   }
-  const scored = f.days.map((d) => ({ d, s: scoreDay(d, p.leisure) }));
-  const good = scored.filter((x) => x.s.grade === "good");
-  if (good.length) {
-    lines.push(
-      `앞으로 ${f.days.length}일 중 ${l.label}하기 좋은 날은 ${good.length}일이며, ${good
-        .slice(0, 4)
-        .map((x) => shortDateKo(x.d.date))
-        .join(", ")}${good.length > 4 ? " 등" : ""}입니다.`,
-    );
-  } else {
-    lines.push(`앞으로 ${f.days.length}일은 ${l.label}하기 좋은 날이 많지 않습니다. 비와 바람을 확인하세요.`);
-  }
+  const dry = f.days.filter((d) => d.precipSum < 1);
+  lines.push(
+    `앞으로 ${f.days.length}일 중 비 예보가 없는 날은 ${dry.length}일이며, ${l.label} 일정은 기온·바람·강수를 3시간 간격으로 비교해 보세요.`,
+  );
   const first = f.days[0];
   if (first?.sunrise && first.sunset) lines.push(`오늘 일출은 ${first.sunrise}, 일몰은 ${first.sunset}입니다.`);
   return lines;

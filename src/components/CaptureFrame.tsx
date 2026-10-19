@@ -1,13 +1,13 @@
 "use client";
 
 import { useLayoutEffect, useRef, useState } from "react";
-import { scoreDay, type Leisure, type MetricKey } from "@/lib/leisure";
+import { METRIC_LABEL, type Leisure, type MetricKey } from "@/lib/leisure";
 import { daySummary, intervalLong, isPast, regroup, slotHead, slotHours, stepHours, type Interval } from "@/lib/interval";
 import { periodLabel, type Period } from "@/lib/period";
 import { weekday, weekdayKo } from "@/lib/time";
 import { codeIcon, codeInfo } from "@/lib/weather/codes";
 import type { DayForecast, Slot } from "@/lib/weather/types";
-import { WindArrow, fmt, rainText } from "./cells";
+import { WindArrow, cellValue, fmt, rainText } from "./cells";
 import { Logo } from "./Logo";
 
 interface Props {
@@ -61,15 +61,27 @@ function WindLine({ s, em }: { s: Slot; em: boolean }) {
   );
 }
 
-function DateCell({ d, leisure, today, withTemp }: { d: DayForecast; leisure: Leisure; today: string; withTemp: boolean }) {
-  const score = scoreDay(d, leisure.id);
+/** 바람·비 말고 그 활동에서 꼭 봐야 하는 지표 한 줄 (낚시는 파고, 스키는 적설 등) */
+const KEY_LINE: MetricKey[] = ["wave", "snow", "ice", "visibility", "pm10", "uv", "thunder", "turbulence"];
+
+function KeyLine({ s, leisure }: { s: Slot; leisure: Leisure }) {
+  const k = leisure.emphasis.find((m) => KEY_LINE.includes(m));
+  if (!k) return null;
+  const v = cellValue(s, k);
+  return (
+    <span className={`cl-key ${v.cls ?? ""}`}>
+      {METRIC_LABEL[k]} {v.text}
+    </span>
+  );
+}
+
+function DateCell({ d, today, withTemp }: { d: DayForecast; today: string; withTemp: boolean }) {
   return (
     <th scope="row" className="cf-date">
       <span className={wdClass(d.date)}>
         <b>{d.date === today ? "오늘" : `${Number(d.date.slice(5, 7))}/${Number(d.date.slice(8))}`}</b>
         <small>{weekdayKo(d.date)}</small>
       </span>
-      <i className={`gdot ${score.grade}`}>{score.label}</i>
       {withTemp && (
         <span className="cf-hl">
           <span className="v-hi">{fmt(d.tMax, "°")}</span> <span className="v-lo">{fmt(d.tMin, "°")}</span>
@@ -97,7 +109,7 @@ function SlotMatrix({ days, leisure, step, today, nowHour }: { days: DayForecast
           const slots = regroup(d.slots, step);
           return (
             <tr key={d.date}>
-              <DateCell d={d} leisure={leisure} today={today} withTemp />
+              <DateCell d={d} today={today} withTemp />
               {hours.map((h) => {
                 const s = slots.find((x) => x.hour === h);
                 if (!s) return <td key={h} className="past" />;
@@ -106,6 +118,7 @@ function SlotMatrix({ days, leisure, step, today, nowHour }: { days: DayForecast
                   <td key={h} className={past ? "past" : undefined} title={codeInfo(s.code).label}>
                     <span className="cl-icon">{codeIcon(s.code, s.isDay)}</span>
                     <b className="cl-temp">{fmt(s.temp, "°")}</b>
+                    <KeyLine s={s} leisure={leisure} />
                     <RainLine s={s} em={em("precip")} />
                     <WindLine s={s} em={em("wind") || em("gust")} />
                   </td>
@@ -119,9 +132,14 @@ function SlotMatrix({ days, leisure, step, today, nowHour }: { days: DayForecast
   );
 }
 
+/** 하루 단위 캡처에 넣을 열: 활동의 지표 순서대로 앞의 몇 개 */
+function dayColumns(leisure: Leisure): MetricKey[] {
+  return leisure.rows.filter((k) => k !== "temp" && k !== "precipProb").slice(0, 5);
+}
+
 function DayMatrix({ days, leisure, today }: { days: DayForecast[]; leisure: Leisure; today: string }) {
+  const cols = dayColumns(leisure);
   const em = (k: MetricKey) => (leisure.emphasis.includes(k) ? "em" : undefined);
-  const sunEm = (k: "sunrise" | "sunset") => (leisure.sun === k || leisure.sun === "both" ? "em" : undefined);
   return (
     <table className="cf-table cf-daily">
       <thead>
@@ -129,12 +147,13 @@ function DayMatrix({ days, leisure, today }: { days: DayForecast[]; leisure: Lei
           <th />
           <th>날씨</th>
           <th>최고/최저</th>
-          <th className={em("feels")}>체감</th>
-          <th className={em("precip")}>강수</th>
-          <th className={em("wind")}>바람</th>
-          <th className={em("gust")}>돌풍</th>
-          <th className={sunEm("sunrise")}>일출</th>
-          <th className={sunEm("sunset")}>일몰</th>
+          {cols.map((k) => (
+            <th key={k} className={em(k)}>
+              {METRIC_LABEL[k]}
+            </th>
+          ))}
+          <th>일출</th>
+          <th>일몰</th>
         </tr>
       </thead>
       <tbody>
@@ -142,7 +161,7 @@ function DayMatrix({ days, leisure, today }: { days: DayForecast[]; leisure: Lei
           const s = daySummary(d);
           return (
             <tr key={d.date}>
-              <DateCell d={d} leisure={leisure} today={today} withTemp={false} />
+              <DateCell d={d} today={today} withTemp={false} />
               <td className="cf-sky">
                 <span className="cl-icon">{codeIcon(d.code)}</span>
                 <small>{codeInfo(d.code).label}</small>
@@ -150,17 +169,45 @@ function DayMatrix({ days, leisure, today }: { days: DayForecast[]; leisure: Lei
               <td>
                 <b className="v-hi">{fmt(d.tMax, "°")}</b> <span className="v-lo">{fmt(d.tMin, "°")}</span>
               </td>
-              <td className={em("feels")}>{fmt(s.feels, "°")}</td>
-              <td className={em("precip")}>
-                <RainLine s={s} em={false} />
-              </td>
-              <td className={em("wind")}>
-                <WindArrow dir={s.windDir} />
-                {fmt(d.windMax)}
-              </td>
-              <td className={em("gust")}>{fmt(d.gustMax)}</td>
-              <td className={sunEm("sunrise")}>{d.sunrise ?? "-"}</td>
-              <td className={sunEm("sunset")}>{d.sunset ?? "-"}</td>
+              {cols.map((k) => {
+                if (k === "range") {
+                  return (
+                    <td key={k} className={em(k)}>
+                      {d.tMax != null && d.tMin != null ? `${Math.round(d.tMax - d.tMin)}°` : "-"}
+                    </td>
+                  );
+                }
+                if (k === "tide") {
+                  return (
+                    <td key={k} className={`cf-tide ${em(k) ?? ""}`}>
+                      {d.tides.length
+                        ? d.tides.map((t) => (
+                            <span key={t.time}>
+                              {t.type === "high" ? "▲" : "▼"}
+                              {t.time}
+                            </span>
+                          ))
+                        : "-"}
+                    </td>
+                  );
+                }
+                if (k === "precip") {
+                  return (
+                    <td key={k} className={em(k)}>
+                      <RainLine s={s} em={false} />
+                    </td>
+                  );
+                }
+                const v = cellValue(s, k);
+                return (
+                  <td key={k} className={[em(k), v.cls].filter(Boolean).join(" ") || undefined}>
+                    {(k === "wind" || k === "windDir") && <WindArrow dir={s.windDir} />}
+                    {v.text}
+                  </td>
+                );
+              })}
+              <td>{d.sunrise ?? "-"}</td>
+              <td>{d.sunset ?? "-"}</td>
             </tr>
           );
         })}
@@ -253,7 +300,11 @@ export function CaptureFrame({ frameRef, ...p }: Props) {
         </div>
         <footer className="cf-foot">
           <span>
-            {p.interval === "day" ? "바람·돌풍 하루 최대 m/s" : "바람 풍속/돌풍 m/s"}
+            {p.interval !== "day"
+              ? "바람 풍속/돌풍 m/s"
+              : dayColumns(p.leisure).some((k) => k === "wind" || k === "gust")
+                ? "바람·돌풍 하루 최대 m/s"
+                : ""}
             {(p.interval === "6h" || p.interval === "12h") && " · 기온은 낮 칸 최고, 밤 칸 최저"}
           </span>
           <span className="cap-url">tripnal.com</span>

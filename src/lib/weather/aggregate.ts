@@ -1,6 +1,6 @@
 import { getTimes } from "suncalc";
 import { kstHourMinute, kstNoon } from "@/lib/time";
-import type { DayForecast, Forecast, RawForecast, Slot } from "./types";
+import type { DayForecast, Forecast, RawForecast, Slot, TideEvent } from "./types";
 
 type Num = number | null;
 
@@ -49,6 +49,34 @@ function toMinutes(hm: string | null): number | null {
 }
 
 /**
+ * 시간별 해수면 높이에서 만조·간조를 찾는다.
+ * 이웃 세 점에 포물선을 맞춰 분 단위로 보정한다.
+ */
+export function findTides(time: string[], level: (number | null)[], idx: number[]): TideEvent[] {
+  const out: TideEvent[] = [];
+  for (const i of idx) {
+    const a = level[i - 1];
+    const b = level[i];
+    const c = level[i + 1];
+    if (a == null || b == null || c == null) continue;
+    const high = b > a && b >= c;
+    const low = b < a && b <= c;
+    if (!high && !low) continue;
+    const denom = a - 2 * b + c;
+    const off = denom === 0 ? 0 : (0.5 * (a - c)) / denom;
+    const peak = b - 0.25 * (a - c) * off;
+    const minutes = Number(time[i].slice(11, 13)) * 60 + Math.round(off * 60);
+    const m = Math.max(0, Math.min(23 * 60 + 59, minutes));
+    out.push({
+      time: `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(m % 60).padStart(2, "0")}`,
+      type: high ? "high" : "low",
+      level: Math.round(peak * 100) / 100,
+    });
+  }
+  return out;
+}
+
+/**
  * 시간 단위 예보를 3시간 칸(00, 03, ..., 21시)과 날짜별로 묶는다.
  * - 기온·체감·풍속·풍향: 칸 시작 시각 값 (순간값)
  * - 강수: 3시간 합, 강수확률·돌풍: 3시간 최대, 구름: 3시간 평균
@@ -89,6 +117,15 @@ export function aggregate(raw: RawForecast, now: Date = new Date()): Forecast {
         windDir: h.windDirection[i],
         code: max(pick(h.weatherCode)),
         isDay: mid >= riseMin && mid <= setMin,
+        snow: h.snowfall ? round1(sum(pick(h.snowfall))) : null,
+        visibility: h.visibility ? round1(min(pick(h.visibility)) == null ? null : min(pick(h.visibility))! / 1000) : null,
+        uv: h.uvIndex ? round1(max(pick(h.uvIndex))) : null,
+        cape: h.cape ? max(pick(h.cape)) : null,
+        wave: h.waveHeight ? round1(max(pick(h.waveHeight))) : null,
+        windWave: h.windWaveHeight ? round1(max(pick(h.windWaveHeight))) : null,
+        tide: h.seaLevel?.[i] != null ? Math.round(h.seaLevel[i]! * 100) / 100 : null,
+        pm10: h.pm10 ? max(pick(h.pm10)) : null,
+        pm25: h.pm25 ? max(pick(h.pm25)) : null,
       });
     }
     if (slots.length === 0) continue;
@@ -106,6 +143,7 @@ export function aggregate(raw: RawForecast, now: Date = new Date()): Forecast {
       code: max((daytime.length ? daytime : slots).map((s) => s.code)),
       sunrise: sun.sunrise,
       sunset: sun.sunset,
+      tides: h.seaLevel ? findTides(h.time, h.seaLevel, idx) : [],
     });
   }
 

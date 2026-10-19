@@ -15,14 +15,23 @@ const slot = (hour: number, temp: number, extra: Partial<Slot> = {}): Slot => ({
   windDir: hour * 10,
   code: 1,
   isDay: true,
+  snow: null,
+  visibility: null,
+  uv: null,
+  cape: null,
+  wave: null,
+  windWave: null,
+  tide: null,
+  pm10: null,
+  pm25: null,
   ...extra,
 });
 const day = [0, 3, 6, 9, 12, 15, 18, 21].map((h, i) => slot(h, [5, 4, 8, 14, 17, 15, 10, 7][i]));
 
 describe("interval", () => {
-  it("parses and defaults to 3h", () => {
+  it("parses and defaults to day", () => {
     expect(parseInterval("12h")).toBe("12h");
-    expect(parseInterval("x")).toBe("3h");
+    expect(parseInterval("x")).toBe("day");
   });
   it("12h: 오전은 최저, 오후는 최고 기온", () => {
     const g = regroup(day, 12);

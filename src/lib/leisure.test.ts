@@ -1,47 +1,30 @@
 import { describe, expect, it } from "vitest";
-import { scoreDay } from "./leisure";
-import type { DayForecast } from "./weather/types";
+import { BASE_METRICS, EXTRA_METRICS, GROUPS, LEISURES, getLeisure } from "./leisure";
 
-const day = (o: Partial<DayForecast> = {}): DayForecast => ({
-  date: "2026-10-24",
-  slots: [],
-  tMin: 10,
-  tMax: 20,
-  precipSum: 0,
-  precipProbMax: 10,
-  windMax: 3,
-  gustMax: 5,
-  code: 1,
-  sunrise: "06:40",
-  sunset: "17:50",
-  ...o,
-});
-
-describe("scoreDay", () => {
-  it("맑고 잔잔하면 모든 레저가 좋음", () => {
-    for (const id of ["camping", "fishing", "hiking", "cycling", "travel"] as const) {
-      expect(scoreDay(day(), id).grade).toBe("good");
-    }
-  });
-  it("강풍은 낚시에 나쁨, 이유를 알려준다", () => {
-    const s = scoreDay(day({ windMax: 11, gustMax: 15 }), "fishing");
-    expect(s.grade).toBe("bad");
-    expect(s.reasons).toContain("바람 11m/s");
-  });
-  it("약한 비도 사이클에는 감점이 크다", () => {
-    expect(scoreDay(day({ precipSum: 1 }), "cycling").grade).toBe("fair");
-    expect(scoreDay(day({ precipSum: 1 }), "travel").grade).toBe("good");
-  });
-});
-
-describe("leisure rows", () => {
-  it("돌풍은 풍속 바로 아래, 강수확률은 강수 바로 아래", async () => {
-    const { LEISURES } = await import("./leisure");
+describe("activities", () => {
+  it("모든 활동은 지표를 한 번씩만 보여주고, 기본 지표는 접지 않는다", () => {
     for (const l of LEISURES) {
       const all = [...l.rows, ...l.more];
-      if (all.includes("gust")) expect(all[all.indexOf("wind") + 1]).toBe("gust");
-      if (all.includes("precipProb")) expect(all[all.indexOf("precip") + 1]).toBe("precipProb");
       expect(new Set(all).size).toBe(all.length);
+      expect(all.length).toBe(BASE_METRICS.length + EXTRA_METRICS.length);
+      for (const k of BASE_METRICS) expect(l.rows).toContain(k);
     }
+  });
+  it("그룹의 주 지표가 주어진 순서대로 맨 위에 온다", () => {
+    for (const g of GROUPS) {
+      const l = LEISURES.find((x) => x.group === g.id)!;
+      expect(l.rows.slice(0, g.primary.length)).toEqual(g.primary);
+    }
+  });
+  it("낚시는 파고·조석·풍랑이 위로, 캠핑은 일교차가 맨 위", () => {
+    expect(getLeisure("fishing").rows.slice(0, 3)).toEqual(["wave", "tide", "windWave"]);
+    expect(getLeisure("camping").rows[0]).toBe("range");
+    expect(getLeisure("camping").more).toContain("wave");
+  });
+  it("강수확률은 강수 바로 아래", () => {
+    for (const l of LEISURES) expect(l.rows[l.rows.indexOf("precip") + 1]).toBe("precipProb");
+  });
+  it("모르는 활동은 캠핑", () => {
+    expect(getLeisure("x").id).toBe("camping");
   });
 });

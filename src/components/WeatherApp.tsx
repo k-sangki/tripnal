@@ -27,6 +27,8 @@ export interface AppPlace {
   slug?: string;
 }
 
+const FORECAST_VERSION = "2";
+
 interface Props {
   initialPlace: AppPlace | null;
   initialForecast?: Forecast | null;
@@ -155,13 +157,15 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
     }
     const ctrl = new AbortController();
     setLoading(true);
-    const q = new URLSearchParams({ lat: String(place.lat), lon: String(place.lon) });
+    // v: 응답 모양이 바뀔 때 올려서 브라우저·엣지에 남은 예전 응답을 쓰지 않게 한다
+    const q = new URLSearchParams({ lat: String(place.lat), lon: String(place.lon), v: FORECAST_VERSION });
     if (place.elevation != null) q.set("elev", String(place.elevation));
     fetch(`/api/forecast?${q}`, { signal: ctrl.signal })
       .then(async (res) => {
         const json = await res.json();
         if (!res.ok) throw new Error(json.error ?? "날씨 정보를 가져오지 못했습니다.");
-        setForecast(json);
+        const f = json as Forecast;
+        setForecast({ ...f, days: f.days.map((d) => ({ ...d, tides: d.tides ?? [] })) });
         setError(null);
       })
       .catch((e) => {
@@ -197,7 +201,7 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
 
   return (
     <div className="layout">
-      {/* 모바일은 검색 → 지도 → 현재 위치 → 설정 → 예보 순서, PC는 왼쪽(검색·지도·설정)과 오른쪽(위치·예보) 2단 */}
+      {/* 모바일은 검색 → 지도 → 현재 위치 → 설정 → 예보 → 활동 순서, PC는 왼쪽(검색·지도·설정)과 오른쪽(위치·예보) 2단 */}
       <div className="a-side">
         <div className="o-search">
           <SearchBar onSelect={(p) => choose(p)} onLocate={() => locate(false)} locating={locating} />
@@ -221,8 +225,6 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
           <PeriodPicker value={period} today={today} onChange={setPeriod} />
           <div style={{ height: 12 }} />
           <IntervalPicker value={interval} onChange={setIntervalChoice} />
-          <div className="ctl-sep" />
-          <LeisureTabs value={leisureId} onChange={setLeisureId} />
         </div>
         <div className="o-ad pc-only">
           <AdSlot slot={AD_SLOTS.side} />
@@ -258,6 +260,9 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
             forecast && (
               <div style={{ opacity: loading ? 0.5 : 1 }}>
                 <ForecastTable days={days} leisure={leisure} interval={interval} today={today} nowHour={nowHour} />
+                <div className="card act-card">
+                  <LeisureTabs value={leisureId} onChange={setLeisureId} />
+                </div>
                 <p className="muted" style={{ marginTop: 12 }}>
                   {(interval === "6h" || interval === "12h") && "기온·체감은 낮 칸은 최고, 밤 칸은 최저 값입니다. "}
                   {forecast.elevation != null &&

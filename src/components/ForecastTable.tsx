@@ -60,6 +60,8 @@ function shade(d: number) {
 }
 
 function skyFor(hour: number, step: number, rise: number, set: number) {
+  // 오전·오후 칸은 낮과 밤이 섞여 있어 색띠를 쓰지 않는다
+  if (step >= 12) return { bg: shade(0), dark: false };
   const a = darkness(hour * 60, rise, set);
   const b = darkness((hour + step) * 60, rise, set);
   const m = darkness((hour + step / 2) * 60, rise, set);

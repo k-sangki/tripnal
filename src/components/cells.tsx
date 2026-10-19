@@ -15,7 +15,7 @@ export function rainText(mm: number) {
 export const UNIT: Record<MetricKey, string> = {
   temp: "°C",
   feels: "°C",
-  precip: "mm",
+  precip: "mm·%",
   precipProb: "%",
   cloud: "%",
   wind: "m/s",
@@ -188,6 +188,16 @@ export function Cell({
 }) {
   const v = cellValue(slot, metric);
   const cls = [className, v.cls, metric === "temp" && mark ? `t-${mark}` : undefined].filter(Boolean).join(" ") || undefined;
+  if (metric === "precip") {
+    // 강수량 아래에 강수 확률을 작게 붙인다
+    const p = slot.precipProb;
+    return (
+      <td className={cls} style={style}>
+        <span className="pr-amt">{v.text}</span>
+        <small className={`pr-prob ${p == null ? "" : p >= 60 ? "p-hi" : p >= 30 ? "p-mid" : "p-lo"}`}>{p == null ? "-" : `${p}%`}</small>
+      </td>
+    );
+  }
   if (metric === "wind" || metric === "windDir") {
     return (
       <td className={cls} style={style} title={`${windDirKo(slot.windDir)}풍`}>

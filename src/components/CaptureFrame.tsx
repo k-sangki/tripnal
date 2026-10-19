@@ -2,6 +2,7 @@
 
 import { useLayoutEffect, useRef, useState } from "react";
 import { METRIC_LABEL, type Leisure, type MetricKey } from "@/lib/leisure";
+import { muldae } from "@/lib/muldae";
 import { daySummary, intervalLong, isPast, regroup, slotHead, slotHours, stepHours, type Interval } from "@/lib/interval";
 import { periodLabel, type Period } from "@/lib/period";
 import { weekday, weekdayKo } from "@/lib/time";
@@ -180,14 +181,12 @@ function DayMatrix({ days, leisure, today }: { days: DayForecast[]; leisure: Lei
                 if (k === "tide") {
                   return (
                     <td key={k} className={`cf-tide ${em(k) ?? ""}`}>
-                      {d.tides.length
-                        ? d.tides.map((t) => (
-                            <span key={t.time}>
-                              {t.type === "high" ? "▲" : "▼"}
-                              {t.time}
-                            </span>
-                          ))
-                        : "-"}
+                      <b className="tide-md">{muldae(d.date)}</b>
+                      {d.tides.map((t) => (
+                        <span key={t.time} className={t.type === "high" ? "tide-h" : "tide-l"}>
+                          {t.type === "high" ? "만조" : "간조"} {t.time}
+                        </span>
+                      ))}
                     </td>
                   );
                 }

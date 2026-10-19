@@ -1156,6 +1156,33 @@ a {
 .ftab td.v-cold {
   color: #2563eb;
 }
+/* 강수 칸: 강수량 아래 확률 */
+.ftab .r-precip td {
+  height: 42px;
+  line-height: 1.15;
+}
+.pr-amt,
+.pr-prob {
+  display: block;
+}
+.pr-prob {
+  font-size: 11px;
+  font-weight: 600;
+}
+.pr-prob.p-lo {
+  color: #b0b8c1;
+}
+.pr-prob.p-mid {
+  color: #3b7bff;
+}
+.pr-prob.p-hi {
+  color: #1d4ed8;
+  font-weight: 800;
+}
+.ftab td.r2 .pr-prob,
+.ftab td.r3 .pr-prob {
+  color: inherit;
+}
 .ftab .r-sun td {
   font-size: 12px;
 }
@@ -1241,10 +1268,15 @@ a {
   font-weight: 600;
 }
 .tide-h {
-  color: #1d4ed8;
+  color: #e5484d;
 }
 .tide-l {
-  color: #8b95a1;
+  color: #1d4ed8;
+}
+.tide-md {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--ink);
 }
 .ftab td.tide-cell {
   font-size: 11px;
@@ -1265,10 +1297,10 @@ a {
   color: #0b2a80;
 }
 .ftab td.td-hi {
-  color: #1d4ed8;
+  color: #e5484d;
 }
 .ftab td.td-lo {
-  color: #8b95a1;
+  color: #1d4ed8;
 }
 .ftab td.sn1 {
   background: #eef2ff;
@@ -1363,4 +1395,8 @@ a {
 }
 .act-card {
   margin-top: 12px;
+}
+.cf-tide b {
+  display: block;
+  font-size: 12px;
 }

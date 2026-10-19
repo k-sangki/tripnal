@@ -5,11 +5,12 @@
  * 기본 지표가 아닌 추가 지표 중 그 활동에 필요 없는 것만 "더보기"에 접어 둔다.
  */
 
-/** 원래부터 보여주던 기본 지표. 어떤 활동에서도 접지 않는다 */
-export const BASE_METRICS = ["temp", "feels", "precip", "precipProb", "wind", "gust", "cloud"] as const;
+/** 원래부터 보여주던 기본 지표. 어떤 활동에서도 접지 않는다 (강수 확률은 강수 칸 안에 함께 보여준다) */
+export const BASE_METRICS = ["temp", "feels", "precip", "wind", "gust"] as const;
 
 /** 추가 지표. 활동의 주 지표가 아니면 더보기에 들어간다 (이 순서로) */
 export const EXTRA_METRICS = [
+  "cloud",
   "wave",
   "windWave",
   "tide",
@@ -26,7 +27,7 @@ export const EXTRA_METRICS = [
   "range",
 ] as const;
 
-export type MetricKey = (typeof BASE_METRICS)[number] | (typeof EXTRA_METRICS)[number];
+export type MetricKey = (typeof BASE_METRICS)[number] | (typeof EXTRA_METRICS)[number] | "precipProb";
 
 export const METRIC_LABEL: Record<MetricKey, string> = {
   temp: "기온",
@@ -38,7 +39,7 @@ export const METRIC_LABEL: Record<MetricKey, string> = {
   gust: "돌풍",
   wave: "파고",
   windWave: "풍랑",
-  tide: "조석",
+  tide: "물때",
   snow: "적설",
   ice: "결빙",
   road: "노면",
@@ -64,12 +65,12 @@ export interface ActivityGroup {
 
 /** 그룹 순서가 곧 활동 버튼과 표의 순서 */
 export const GROUPS: ActivityGroup[] = [
-  // 파고·조석·풍랑
+  // 파고·물때·풍랑
   { id: "marine", primary: ["wave", "tide", "windWave"], sun: "sunrise" },
   // 강수량·낙뢰·노면
-  { id: "active", primary: ["precip", "precipProb", "thunder", "road"] },
+  { id: "active", primary: ["precip", "thunder", "road"] },
   // 일교차·강풍·강수
-  { id: "camp", primary: ["range", "wind", "gust", "precip", "precipProb"], sun: "sunset" },
+  { id: "camp", primary: ["range", "wind", "gust", "precip"], sun: "sunset" },
   // 기온·결빙·적설량
   { id: "snow", primary: ["temp", "ice", "snow"] },
   // 가시거리·구름

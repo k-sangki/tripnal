@@ -75,13 +75,9 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
       navigator.geolocation.getCurrentPosition(
         async (pos) => {
           const { latitude: lat, longitude: lon } = pos.coords;
-          let name = "현재 위치";
-          try {
-            const r = await fetch(`/api/reverse?lat=${lat}&lon=${lon}`).then((x) => x.json());
-            if (r.name) name = r.name;
-          } catch {}
+          const address = await lookupAddress(lat, lon);
           setLocating(false);
-          choose({ name, lat, lon, address: "현재 위치" });
+          choose({ name: "현재 위치", lat, lon, address });
         },
         () => {
           setLocating(false);
@@ -198,7 +194,7 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
       </div>
       {place && (
         <div className="a-map card" style={{ padding: 8 }}>
-          <KakaoMap lat={place.lat} lon={place.lon} onPick={(lat, lon) => choose({ name: "지도에서 고른 위치", lat, lon })} />
+          <KakaoMap lat={place.lat} lon={place.lon} onPick={async (lat, lon) => choose({ name: "지도에서 고른 위치", lat, lon, address: await lookupAddress(lat, lon) })} />
         </div>
       )}
       <div className="a-ad pc-only">
@@ -227,7 +223,7 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
               {place?.name ?? "위치 확인 중"}
               {headingSuffix && <span className="h1-suffix"> {headingSuffix}</span>}
             </h1>
-            {place?.address && place.address !== place.name && <div style={{ opacity: 0.75, fontSize: 14 }}>{place.address}</div>}
+            {place?.address && place.address !== place.name && <div className="hero-addr">{place.address}</div>}
             <div className="hero-meta">
               <span className="pill mint">{periodLabel(period)}</span>
               {forecast?.elevation != null && <span className="pill">⛰️ 해발 {Math.round(forecast.elevation).toLocaleString()}m</span>}
@@ -279,6 +275,15 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
       )}
     </div>
   );
+}
+
+/** 좌표의 주소. 찾지 못하면 좌표를 그대로 보여준다. */
+async function lookupAddress(lat: number, lon: number): Promise<string> {
+  try {
+    const r = await fetch(`/api/reverse?lat=${lat}&lon=${lon}`).then((x) => x.json());
+    if (r.address) return r.address;
+  } catch {}
+  return `위도 ${lat.toFixed(4)}, 경도 ${lon.toFixed(4)}`;
 }
 
 function FragmentWithAd({ showAd, children }: { showAd: boolean; children: React.ReactNode }) {

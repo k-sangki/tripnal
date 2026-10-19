@@ -92,14 +92,20 @@ export async function searchPlaces(q: string): Promise<PlaceResult[]> {
   });
 }
 
-/** 좌표 → "가평군 가평읍" 같은 짧은 이름 */
-export async function reverseName(lat: number, lon: number): Promise<string | null> {
-  if (!process.env.KAKAO_REST_API_KEY) return null;
-  const json = await kakao<{ documents: KakaoRegionDoc[] }>("/geo/coord2regioncode.json", {
-    x: String(lon),
-    y: String(lat),
-  });
-  const doc = json.documents.find((d) => d.region_type === "H") ?? json.documents[0];
-  if (!doc) return null;
-  return [doc.region_2depth_name, doc.region_3depth_name].filter(Boolean).join(" ") || doc.address_name;
+interface KakaoAddressResult {
+  address: { address_name: string } | null;
+  road_address: { address_name: string } | null;
+}
+
+/** 좌표 → 주소. 산·바다처럼 번지가 없는 곳은 행정구역 이름으로 대신한다. */
+export async function reverseAddress(lat: number, lon: number): Promise<string | null> {
+  if (!process.env.KAKAO_REST_API_KEY) throw new Error("KAKAO_REST_API_KEY missing");
+  const xy = { x: String(lon), y: String(lat) };
+  const json = await kakao<{ documents: KakaoAddressResult[] }>("/geo/coord2address.json", xy);
+  const doc = json.documents[0];
+  const addr = doc?.road_address?.address_name || doc?.address?.address_name;
+  if (addr) return addr;
+  const region = await kakao<{ documents: KakaoRegionDoc[] }>("/geo/coord2regioncode.json", xy);
+  const r = region.documents.find((d) => d.region_type === "H") ?? region.documents[0];
+  return r?.address_name ?? null;
 }

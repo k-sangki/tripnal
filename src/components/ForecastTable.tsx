@@ -106,11 +106,11 @@ function buildCols(days: DayForecast[], step: number, today: string, nowHour: nu
   return cols;
 }
 
-type RowKey = MetricKey | "hi" | "lo" | "sunrise" | "sunset";
+type RowKey = MetricKey | "sunrise" | "sunset";
 
 function RowHead({ k, em }: { k: RowKey; em?: boolean }) {
-  const label = k === "hi" ? "최고" : k === "lo" ? "최저" : k === "sunrise" ? "일출" : k === "sunset" ? "일몰" : METRIC_LABEL[k];
-  const unit = k === "hi" || k === "lo" ? "°C" : k === "sunrise" || k === "sunset" ? "" : UNIT[k];
+  const label = k === "sunrise" ? "일출" : k === "sunset" ? "일몰" : METRIC_LABEL[k];
+  const unit = k === "sunrise" || k === "sunset" ? "" : UNIT[k];
   return (
     <th scope="row" className={`lbl${em ? " em" : ""}`}>
       <span>{label}</span>
@@ -407,20 +407,15 @@ function DailyTable({
   );
   const metricRow = (k: MetricKey, isEm: boolean) => {
     if (k === "temp") {
+      // 최고/최저를 한 줄에
       return [
-        <tr key="hi" className={`r-temp${isEm ? " em" : ""}`}>
-          <RowHead k="hi" em={isEm} />
+        <tr key="temp" className={`r-temp${isEm ? " em" : ""}`}>
+          <RowHead k="temp" em={isEm} />
           {cols.map(({ d }) => (
-            <td key={d.date} className="ds t-max">
-              {fmt(d.tMax, "°")}
-            </td>
-          ))}
-        </tr>,
-        <tr key="lo" className={`r-temp${isEm ? " em" : ""}`}>
-          <RowHead k="lo" em={isEm} />
-          {cols.map(({ d }) => (
-            <td key={d.date} className="ds t-min">
-              {fmt(d.tMin, "°")}
+            <td key={d.date} className="ds t-hilo">
+              <span className="v-hi">{fmt(d.tMax, "°")}</span>
+              <span className="t-sep">/</span>
+              <span className="v-lo">{fmt(d.tMin, "°")}</span>
             </td>
           ))}
         </tr>,

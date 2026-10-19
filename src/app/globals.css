@@ -1119,6 +1119,17 @@ a {
   color: #2563eb;
   background: var(--rain-soft);
 }
+.ftab td.t-hilo .v-hi {
+  color: #e2462a;
+}
+.ftab td.t-hilo .v-lo {
+  color: #2563eb;
+}
+.ftab td.t-hilo .t-sep {
+  margin: 0 1px;
+  color: #b0b8c1;
+  font-weight: 500;
+}
 /* 바람·돌풍 세기 */
 .ftab td.w1 {
   background: #e4f7ee;

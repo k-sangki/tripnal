@@ -1,0 +1,43 @@
+name: Deploy
+
+# main 에 합쳐지면 Cloudflare Workers(tripnal.com)로 배포한다.
+# 필요한 값은 저장소 Settings > Secrets and variables > Actions 에 넣는다.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency: deploy
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      # 브라우저용 값은 빌드할 때 코드에 들어간다
+      NEXT_PUBLIC_SITE_URL: https://tripnal.com
+      NEXT_PUBLIC_KAKAO_JS_KEY: ${{ secrets.NEXT_PUBLIC_KAKAO_JS_KEY }}
+      NEXT_PUBLIC_ADSENSE_CLIENT: ${{ secrets.NEXT_PUBLIC_ADSENSE_CLIENT }}
+      NEXT_PUBLIC_AD_SLOT_SUMMARY: ${{ secrets.NEXT_PUBLIC_AD_SLOT_SUMMARY }}
+      NEXT_PUBLIC_AD_SLOT_DAYS: ${{ secrets.NEXT_PUBLIC_AD_SLOT_DAYS }}
+      NEXT_PUBLIC_AD_SLOT_SIDE: ${{ secrets.NEXT_PUBLIC_AD_SLOT_SIDE }}
+      NEXT_PUBLIC_AD_SLOT_BOTTOM: ${{ secrets.NEXT_PUBLIC_AD_SLOT_BOTTOM }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: R2 캐시 버킷 준비 (이미 있으면 건너뜀)
+        run: npx wrangler r2 bucket create tripnal-opennext-cache || true
+      - name: 빌드·배포
+        run: npm run deploy
+      - name: 서버 비밀값 등록
+        env:
+          KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
+          OPEN_METEO_API_KEY: ${{ secrets.OPEN_METEO_API_KEY }}
+        run: |
+          if [ -n "$KAKAO_REST_API_KEY" ]; then echo "$KAKAO_REST_API_KEY" | npx wrangler secret put KAKAO_REST_API_KEY; fi
+          if [ -n "$OPEN_METEO_API_KEY" ]; then echo "$OPEN_METEO_API_KEY" | npx wrangler secret put OPEN_METEO_API_KEY; fi

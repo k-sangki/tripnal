@@ -1350,19 +1350,42 @@ a {
 }
 
 /* ---------- 활동 선택 ---------- */
-.act-groups {
+.grp-list {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
-.act-row + .act-row {
-  padding-top: 8px;
-  border-top: 1px dashed var(--line);
+.grp-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--chip);
+  color: var(--ink-2);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
 }
-.chip.sm {
-  height: 34px;
-  padding: 0 11px;
-  font-size: 13px;
+.grp-btn[aria-pressed="true"] {
+  background: var(--pine);
+  color: #fff;
+}
+.grp-emoji {
+  flex: none;
+}
+.grp-label {
+  min-width: 0;
+  font-size: 13.5px;
+  letter-spacing: -0.3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* 캡처: 활동별 핵심 지표 한 줄 */

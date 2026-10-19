@@ -65,20 +65,20 @@ export interface ActivityGroup {
 
 /** 그룹 순서가 곧 활동 버튼과 표의 순서 */
 export const GROUPS: ActivityGroup[] = [
-  // 파고·물때·풍랑
-  { id: "marine", primary: ["wave", "tide", "windWave"], sun: "sunrise" },
-  // 강수량·낙뢰·노면
-  { id: "active", primary: ["precip", "thunder", "road"] },
   // 일교차·강풍·강수
   { id: "camp", primary: ["range", "wind", "gust", "precip"], sun: "sunset" },
-  // 기온·결빙·적설량
-  { id: "snow", primary: ["temp", "ice", "snow"] },
-  // 가시거리·구름
-  { id: "view", primary: ["visibility", "cloud"], sun: "both" },
+  // 강수량·낙뢰·노면
+  { id: "active", primary: ["precip", "thunder", "road"] },
+  // 파고·물때·풍랑
+  { id: "marine", primary: ["wave", "tide", "windWave"], sun: "sunrise" },
   // 미세먼지·자외선·체감온도
   { id: "outdoor", primary: ["pm10", "pm25", "uv", "feels"] },
+  // 기온·결빙·적설량
+  { id: "snow", primary: ["temp", "ice", "snow"] },
   // 풍속·풍향·기류
   { id: "air", primary: ["wind", "windDir", "turbulence"] },
+  // 가시거리·구름
+  { id: "view", primary: ["visibility", "cloud"], sun: "both" },
 ];
 
 export const ACTIVITIES = [
@@ -92,7 +92,6 @@ export const ACTIVITIES = [
   { id: "cycling", label: "자전거", emoji: "🚴", group: "active" },
   { id: "tennis", label: "테니스", emoji: "🎾", group: "active" },
   { id: "climbing", label: "암벽 등반", emoji: "🧗", group: "active" },
-  { id: "waterplay", label: "물놀이", emoji: "🏊", group: "active" },
   { id: "camping", label: "캠핑", emoji: "🏕️", group: "camp" },
   { id: "ski", label: "스키/스노보드", emoji: "🏂", group: "snow" },
   { id: "icefishing", label: "얼음낚시", emoji: "🧊", group: "snow" },
@@ -118,6 +117,8 @@ export interface Leisure {
   rows: MetricKey[];
   /** 더보기에 접어 두는 지표 */
   more: MetricKey[];
+  /** 같은 그룹 활동 이름을 이은 것 (그룹 버튼·제목에 쓴다) */
+  groupLabel: string;
   /** 주 지표 (강조) */
   emphasis: MetricKey[];
   sun?: "sunrise" | "sunset" | "both";
@@ -143,7 +144,10 @@ export function rowsForGroup(g: ActivityGroup): { rows: MetricKey[]; more: Metri
 
 export const LEISURES: Leisure[] = ACTIVITIES.map((a) => {
   const g = GROUPS.find((x) => x.id === a.group)!;
-  return { ...a, ...rowsForGroup(g), emphasis: g.primary, sun: g.sun };
+  const groupLabel = ACTIVITIES.filter((x) => x.group === a.group)
+    .map((x) => x.label)
+    .join("·");
+  return { ...a, ...rowsForGroup(g), groupLabel, emphasis: g.primary, sun: g.sun };
 });
 
 export function getLeisure(id: string | null | undefined): Leisure {

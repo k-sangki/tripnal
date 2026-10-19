@@ -840,3 +840,23 @@ a {
     font-size: 14px;
   }
 }
+.doc h1 {
+  font-size: 24px;
+  color: var(--ink);
+  letter-spacing: -0.03em;
+  margin: 0 0 12px;
+}
+.doc h2 {
+  margin-top: 24px;
+}
+.doc a,
+.foot a {
+  color: var(--pine);
+  text-decoration: underline;
+}
+.foot-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 8px 0;
+}

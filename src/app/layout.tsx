@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import Script from "next/script";
 import "./globals.css";
 
 export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://tripnal.com";
@@ -16,6 +15,8 @@ export const metadata: Metadata = {
   applicationName: "tripnal",
   openGraph: { type: "website", siteName: "tripnal", locale: "ko_KR" },
   formatDetection: { telephone: false },
+  // 애드센스 사이트 소유 확인용
+  ...(ADSENSE ? { other: { "google-adsense-account": ADSENSE } } : {}),
 };
 
 export const viewport: Viewport = {
@@ -34,18 +35,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           crossOrigin="anonymous"
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
         />
-      </head>
-      <body>
-        {children}
         {ADSENSE && (
-          <Script
-            id="adsense"
+          <script
             async
-            strategy="afterInteractive"
             crossOrigin="anonymous"
             src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE}`}
           />
         )}
+      </head>
+      <body>
+        {children}
       </body>
     </html>
   );

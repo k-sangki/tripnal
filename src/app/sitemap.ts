@@ -8,6 +8,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     { url: `${BASE}/`, lastModified: now, changeFrequency: "hourly", priority: 1 },
     { url: `${BASE}/weather`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
+    ...["/about", "/privacy", "/contact"].map((path) => ({ url: `${BASE}${path}`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.3 })),
     ...PLACES.map((p) => ({
       url: `${BASE}/weather/${p.slug}`,
       lastModified: now,

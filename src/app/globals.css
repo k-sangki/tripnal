@@ -860,3 +860,11 @@ a {
   gap: 12px;
   margin: 8px 0;
 }
+.hero-addr {
+  font-size: 13px;
+  opacity: 0.72;
+  margin-top: -2px;
+}
+.capturing .hero-addr {
+  opacity: 0.85;
+}

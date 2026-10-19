@@ -1,3 +1,4 @@
+import { fetchJsonCached } from "@/lib/cache";
 import type { HourlySeries, RawForecast, WeatherProvider } from "./types";
 
 const HOURLY = [
@@ -62,10 +63,7 @@ export function parseOpenMeteo(json: OpenMeteoResponse): RawForecast {
 export const openMeteoProvider: WeatherProvider = {
   name: "open-meteo",
   async fetchHourly(lat, lon, elevation) {
-    const res = await fetch(buildOpenMeteoUrl(lat, lon, process.env.OPEN_METEO_API_KEY, elevation), {
-      next: { revalidate: 1800 },
-    });
-    if (!res.ok) throw new Error(`Open-Meteo ${res.status}`);
-    return parseOpenMeteo((await res.json()) as OpenMeteoResponse);
+    const url = buildOpenMeteoUrl(lat, lon, process.env.OPEN_METEO_API_KEY, elevation);
+    return parseOpenMeteo(await fetchJsonCached<OpenMeteoResponse>(url, 1800));
   },
 };

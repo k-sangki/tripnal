@@ -30,8 +30,6 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: R2 캐시 버킷 준비 (이미 있으면 건너뜀)
-        run: npx wrangler r2 bucket create tripnal-opennext-cache || true
       - name: 빌드·배포
         run: npm run deploy
       - name: 서버 비밀값 등록

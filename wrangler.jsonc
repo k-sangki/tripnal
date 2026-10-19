@@ -14,13 +14,6 @@
       "service": "tripnal"
     }
   ],
-  "r2_buckets": [
-    {
-      // 배포 전에 한 번: npx wrangler r2 bucket create tripnal-opennext-cache
-      "binding": "NEXT_INC_CACHE_R2_BUCKET",
-      "bucket_name": "tripnal-opennext-cache"
-    }
-  ],
   "routes": [
     { "pattern": "tripnal.com", "custom_domain": true },
     { "pattern": "www.tripnal.com", "custom_domain": true }

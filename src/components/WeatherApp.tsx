@@ -3,18 +3,21 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getLeisure, type LeisureId } from "@/lib/leisure";
-import { clampPeriod, inPeriod, type Period } from "@/lib/period";
+import { parseInterval, intervalLong, stepHours, type Interval } from "@/lib/interval";
+import { clampPeriod, inPeriod, periodLabel, type Period } from "@/lib/period";
 import { kstDate, kstHourKey } from "@/lib/time";
 import type { Forecast } from "@/lib/weather/types";
 import { AD_SLOTS, AdSlot } from "./AdSlot";
+import { CaptureFrame } from "./CaptureFrame";
 import { CaptureSheet } from "./CaptureSheet";
 import { DayCard } from "./DayCard";
+import { DaySwiper } from "./DaySwiper";
+import { DaysTable } from "./DaysTable";
+import { IntervalPicker } from "./IntervalPicker";
 import { KakaoMap } from "./KakaoMap";
 import { LeisureTabs } from "./LeisureTabs";
-import { Logo } from "./Logo";
 import { PeriodPicker } from "./PeriodPicker";
 import { SearchBar } from "./SearchBar";
-import { SummaryCard, periodLabel } from "./SummaryCard";
 
 export interface AppPlace {
   name: string;
@@ -32,13 +35,13 @@ interface Props {
   initialLeisure?: string | null;
   initialFrom?: string | null;
   initialTo?: string | null;
+  initialInterval?: string | null;
   /** 장소 페이지의 h1 뒤에 붙는 검색 키워드 (예: "16일 날씨") */
   headingSuffix?: string;
 }
 
 const DEFAULT_PLACE: AppPlace = { name: "서울", lat: 37.5665, lon: 126.978, address: "서울특별시" };
 const STORE_KEY = "tripnal:last";
-const DAY_AD_EVERY = 4;
 
 function store(): Storage | null {
   try {
@@ -48,13 +51,14 @@ function store(): Storage | null {
   }
 }
 
-export function WeatherApp({ initialPlace, initialForecast, initialLeisure, initialFrom, initialTo, headingSuffix }: Props) {
+export function WeatherApp({ initialPlace, initialForecast, initialLeisure, initialFrom, initialTo, initialInterval, headingSuffix }: Props) {
   const router = useRouter();
   const [today] = useState(() => kstDate());
   const [nowHour] = useState(() => Number(kstHourKey().slice(11, 13)));
   const [place, setPlace] = useState<AppPlace | null>(initialPlace);
   const [leisureId, setLeisureId] = useState<LeisureId>(getLeisure(initialLeisure).id);
   const [period, setPeriod] = useState<Period>(() => clampPeriod(initialFrom, initialTo, today));
+  const [interval, setIntervalChoice] = useState<Interval>(parseInterval(initialInterval));
   const [forecast, setForecast] = useState<Forecast | null>(initialForecast ?? null);
   const [loading, setLoading] = useState(!initialForecast);
   const [error, setError] = useState<string | null>(null);
@@ -96,7 +100,7 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
   function choose(p: AppPlace) {
     setError(null);
     if (initialPlace?.slug) {
-      const q = new URLSearchParams({ lat: p.lat.toFixed(4), lon: p.lon.toFixed(4), name: p.name, act: leisureId, from: period.from, to: period.to });
+      const q = new URLSearchParams({ lat: p.lat.toFixed(4), lon: p.lon.toFixed(4), name: p.name, act: leisureId, int: interval, from: period.from, to: period.to });
       router.push(`/?${q}`);
       return;
     }
@@ -110,6 +114,7 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
     // 하이드레이션 이후에만 읽을 수 있는 주소창 값을 한 번 반영한다
     // eslint-disable-next-line react-hooks/set-state-in-effect
     if (sp.get("act")) setLeisureId(getLeisure(sp.get("act")).id);
+    if (sp.get("int")) setIntervalChoice(parseInterval(sp.get("int")));
     if (sp.get("from") && sp.get("to")) setPeriod(clampPeriod(sp.get("from"), sp.get("to"), today));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -169,17 +174,18 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
       q.set("name", place.name);
     }
     q.set("act", leisureId);
+    q.set("int", interval);
     q.set("from", period.from);
     q.set("to", period.to);
     window.history.replaceState(null, "", `${window.location.pathname}?${q}`);
     if (!place.slug) store()?.setItem(STORE_KEY, JSON.stringify({ place, leisure: leisureId }));
-  }, [place, leisureId, period]);
+  }, [place, leisureId, interval, period]);
 
   const days = useMemo(() => (forecast ? forecast.days.filter((d) => inPeriod(d.date, period)) : []), [forecast, period]);
 
   const shareUrl = typeof window === "undefined" ? "https://tripnal.com" : window.location.href;
   const shareTitle = place ? `${place.name} ${periodLabel(period)} ${leisure.label} 날씨` : "tripnal 날씨";
-  const fileName = `tripnal_${place?.name ?? "weather"}_${period.from}_${period.to}.png`.replace(/\s+/g, "_");
+  const fileName = `tripnal_${place?.name ?? "weather"}_${period.from}_${period.to}_${interval}.png`.replace(/\s+/g, "_");
   const getTarget = useCallback(() => captureRef.current, []);
 
   return (
@@ -190,6 +196,8 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
           <LeisureTabs value={leisureId} onChange={setLeisureId} />
           <div style={{ height: 12 }} />
           <PeriodPicker value={period} today={today} onChange={setPeriod} />
+          <div style={{ height: 12 }} />
+          <IntervalPicker value={interval} onChange={setIntervalChoice} />
         </div>
       </div>
       {place && (
@@ -204,64 +212,52 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
       <main className="a-main">
         {error && <div className="error">{error}</div>}
 
-        <div ref={captureRef} className="capture">
-          <div className="capture-only cap-head">
-            <Logo dark size={24} />
-            <span className="pill mint">
+        <section className="hero">
+          <div className="hero-top">
+            <span>
               {leisure.emoji} {leisure.label} 날씨
             </span>
+            <span>{intervalLong(interval)} · 최대 16일</span>
           </div>
+          <h1 className="hero-name">
+            {place?.name ?? "위치 확인 중"}
+            {headingSuffix && <span className="h1-suffix"> {headingSuffix}</span>}
+          </h1>
+          {place?.address && place.address !== place.name && <div className="hero-addr">{place.address}</div>}
+          <div className="hero-meta">
+            <span className="pill mint">{periodLabel(period)}</span>
+            {forecast?.elevation != null && <span className="pill">⛰️ 해발 {Math.round(forecast.elevation).toLocaleString()}m</span>}
+          </div>
+        </section>
 
-          <section className="hero">
-            <div className="hero-top">
-              <span>
-                {leisure.emoji} {leisure.label} 날씨
-              </span>
-              <span>3시간 간격 · 최대 16일</span>
-            </div>
-            <h1 className="hero-name">
-              {place?.name ?? "위치 확인 중"}
-              {headingSuffix && <span className="h1-suffix"> {headingSuffix}</span>}
-            </h1>
-            {place?.address && place.address !== place.name && <div className="hero-addr">{place.address}</div>}
-            <div className="hero-meta">
-              <span className="pill mint">{periodLabel(period)}</span>
-              {forecast?.elevation != null && <span className="pill">⛰️ 해발 {Math.round(forecast.elevation).toLocaleString()}m</span>}
-            </div>
-          </section>
+        <div style={{ height: 12 }} />
 
-          <div style={{ height: 12 }} />
-
-          {loading && !forecast ? (
-            <div className="skeleton" />
-          ) : (
-            forecast && (
-              <>
-                <SummaryCard days={days} leisure={leisure} period={period} />
-                <div style={{ height: 12 }} />
-                <AdSlot slot={AD_SLOTS.afterSummary} />
-                <div style={{ height: 12 }} className="no-capture" />
-                <div className="days-grid" style={{ opacity: loading ? 0.5 : 1 }}>
-                  {days.map((d, i) => (
-                    <FragmentWithAd key={d.date} showAd={i > 0 && i % DAY_AD_EVERY === 0}>
-                      <DayCard day={d} leisure={leisure} isToday={d.date === today} nowHour={nowHour} />
-                    </FragmentWithAd>
+        {loading && !forecast ? (
+          <div className="skeleton" />
+        ) : (
+          forecast && (
+            <div style={{ opacity: loading ? 0.5 : 1 }}>
+              {interval === "day" ? (
+                <DaysTable days={days} leisure={leisure} today={today} />
+              ) : (
+                <DaySwiper dates={days.map((d) => d.date)} today={today}>
+                  {days.map((d) => (
+                    <DayCard key={d.date} day={d} leisure={leisure} isToday={d.date === today} nowHour={nowHour} step={stepHours(interval)} />
                   ))}
-                </div>
-                <p className="muted" style={{ marginTop: 12 }}>
-                  {forecast.elevation != null && `기온은 해발 ${Math.round(forecast.elevation)}m 기준으로 보정된 값입니다. 바람은 고도 보정이 되지 않아 높은 산에서는 실제보다 약할 수 있습니다. `}
-                  예보 제공: {forecast.source}
-                </p>
-              </>
-            )
-          )}
+                </DaySwiper>
+              )}
+              <p className="muted" style={{ marginTop: 12 }}>
+                {(interval === "6h" || interval === "12h") && "기온·체감은 낮 칸은 최고, 밤 칸은 최저 값입니다. "}
+                {forecast.elevation != null && `기온은 해발 ${Math.round(forecast.elevation)}m 기준으로 보정된 값입니다. 바람은 고도 보정이 되지 않아 높은 산에서는 실제보다 약할 수 있습니다. `}
+                예보 제공: {forecast.source}
+              </p>
+              <div style={{ height: 12 }} />
+              <AdSlot slot={AD_SLOTS.afterSummary} />
+            </div>
+          )
+        )}
 
-          <div className="capture-only cap-foot">
-            <span>16일 · 3시간 간격 레저 날씨</span>
-            <span className="cap-url">tripnal.com</span>
-          </div>
-        </div>
-
+        <div style={{ height: 12 }} />
         <AdSlot slot={AD_SLOTS.bottom} />
       </main>
 
@@ -269,6 +265,21 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
         <button className="fab" onClick={() => setCapturing(true)}>
           <i className="logo-dot" aria-hidden /> 캡처해서 공유
         </button>
+      )}
+      {capturing && forecast && place && (
+        <CaptureFrame
+          frameRef={captureRef}
+          days={days}
+          leisure={leisure}
+          interval={interval}
+          period={period}
+          today={today}
+          nowHour={nowHour}
+          placeName={place.name}
+          address={place.address}
+          elevation={forecast.elevation}
+          source={forecast.source}
+        />
       )}
       {capturing && (
         <CaptureSheet target={getTarget} fileName={fileName} shareTitle={shareTitle} shareUrl={shareUrl} onClose={() => setCapturing(false)} />
@@ -284,13 +295,4 @@ async function lookupAddress(lat: number, lon: number): Promise<string> {
     if (r.address) return r.address;
   } catch {}
   return `위도 ${lat.toFixed(4)}, 경도 ${lon.toFixed(4)}`;
-}
-
-function FragmentWithAd({ showAd, children }: { showAd: boolean; children: React.ReactNode }) {
-  return (
-    <>
-      {showAd && <AdSlot slot={AD_SLOTS.betweenDays} />}
-      {children}
-    </>
-  );
 }

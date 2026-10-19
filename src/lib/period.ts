@@ -1,4 +1,4 @@
-import { addDays, diffDays, weekday } from "@/lib/time";
+import { addDays, diffDays, shortDateKo, weekday } from "@/lib/time";
 
 export const MAX_DAYS = 16;
 
@@ -67,4 +67,11 @@ export function inPeriod(date: string, p: Period) {
 export function periodNights(p: Period) {
   const days = diffDays(p.from, p.to) + 1;
   return { days, nights: days - 1 };
+}
+
+/** "10/24(토) ~ 10/26(월) · 2박 3일" */
+export function periodLabel(p: Period) {
+  const { days, nights } = periodNights(p);
+  if (days === 1) return shortDateKo(p.from);
+  return `${shortDateKo(p.from)} ~ ${shortDateKo(p.to)} · ${nights}박 ${days}일`;
 }

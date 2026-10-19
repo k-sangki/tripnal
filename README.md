@@ -41,3 +41,7 @@ npm test && npm run lint && npm run typecheck
 
 - 개발 중: [Open-Meteo](https://open-meteo.com) 무료 API (비상업용). 애드센스를 붙여 공개하기 전에 유료 키 또는 직접 수집으로 전환해야 한다.
 - 검색·지도: 카카오 로컬·지도 API. 검색 결과는 약관상 저장하지 않는다.
+
+## 예보 직접 수집 (진행 중)
+
+`collector/`는 ECMWF IFS 공개 예보(0.25°, CC-BY-4.0)에서 한국 영역(북위 32.5~39.5, 동경 124~132)만 잘라 격자점별 JSON으로 만들고 R2 `tripnal-data` 버킷에 올립니다. `.github/workflows/collect.yml`이 하루 두 번(00·12 UTC run) 돌고, 수동으로도 실행할 수 있습니다. 화면에 쓰기 전까지는 Open-Meteo 예보를 그대로 씁니다.

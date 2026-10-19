@@ -33,10 +33,9 @@ npm test && npm run lint && npm run typecheck
 ## 배포 (Cloudflare Workers)
 
 1. `npx wrangler login`
-2. `npx wrangler r2 bucket create tripnal-opennext-cache`
-3. 서버 키 등록: `npx wrangler secret put KAKAO_REST_API_KEY` (공개 후 `OPEN_METEO_API_KEY`도)
-4. 브라우저용 키(`NEXT_PUBLIC_*`)는 빌드 시점에 필요하므로 `.env.production`에 넣는다
-5. `npm run deploy` → `wrangler.jsonc`의 routes로 tripnal.com, www.tripnal.com에 연결
+2. 서버 키 등록: `npx wrangler secret put KAKAO_REST_API_KEY` (공개 후 `OPEN_METEO_API_KEY`도)
+3. 브라우저용 키(`NEXT_PUBLIC_*`)는 빌드 시점에 필요하므로 `.env.production`에 넣는다
+4. `npm run deploy` → `wrangler.jsonc`의 routes로 tripnal.com, www.tripnal.com에 연결
 
 ## 데이터 출처·라이선스
 

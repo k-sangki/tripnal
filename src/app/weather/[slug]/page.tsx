@@ -9,13 +9,8 @@ import { placeDescription, placeSummary, placeTitle } from "@/lib/seo";
 import { getForecast } from "@/lib/weather";
 import type { Forecast } from "@/lib/weather/types";
 
-/** 30분마다 새 예보로 다시 만든다 */
-export const revalidate = 1800;
-export const dynamicParams = false;
-
-export function generateStaticParams() {
-  return PLACES.map((p) => ({ slug: p.slug }));
-}
+/** 요청마다 그린다. 예보 자체는 엣지 캐시에 30분 보관된다(src/lib/cache.ts). */
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: PageProps<"/weather/[slug]">): Promise<Metadata> {
   const place = getPlace((await params).slug);

@@ -33,3 +33,15 @@ describe("scoreDay", () => {
     expect(scoreDay(day({ precipSum: 1 }), "travel").grade).toBe("good");
   });
 });
+
+describe("leisure rows", () => {
+  it("돌풍은 풍속 바로 아래, 강수확률은 강수 바로 아래", async () => {
+    const { LEISURES } = await import("./leisure");
+    for (const l of LEISURES) {
+      const all = [...l.rows, ...l.more];
+      if (all.includes("gust")) expect(all[all.indexOf("wind") + 1]).toBe("gust");
+      if (all.includes("precipProb")) expect(all[all.indexOf("precip") + 1]).toBe("precipProb");
+      expect(new Set(all).size).toBe(all.length);
+    }
+  });
+});

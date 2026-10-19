@@ -68,7 +68,7 @@ export function SearchBar({ onSelect, onLocate, locating }: Props) {
           }}
         />
         <button className="icon-btn" onClick={onLocate} aria-label="현재 위치 날씨" title="현재 위치" disabled={locating}>
-          {locating ? "⏳" : "📍"}
+          <LocateIcon spinning={locating} />
         </button>
       </div>
       {error && <p className="muted">{error}</p>}
@@ -92,5 +92,16 @@ export function SearchBar({ onSelect, onLocate, locating }: Props) {
         </ul>
       )}
     </div>
+  );
+}
+
+/** 현재 위치 아이콘: 조준점 모양, 가운데 민트 점 */
+function LocateIcon({ spinning }: { spinning: boolean }) {
+  return (
+    <svg className={`locate-ico${spinning ? " spin" : ""}`} width="24" height="24" viewBox="0 0 24 24" aria-hidden>
+      <circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" strokeWidth="2.4" />
+      <path d="M12 1.8v3.4M12 18.8v3.4M1.8 12h3.4M18.8 12h3.4" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+      <circle cx="12" cy="12" r="3" fill="var(--mint)" />
+    </svg>
   );
 }

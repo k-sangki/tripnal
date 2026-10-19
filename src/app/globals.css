@@ -86,23 +86,34 @@ a {
 }
 
 .layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  grid-template-areas: "controls" "main" "map";
+  display: flex;
+  flex-direction: column;
   gap: 12px;
 }
-.a-controls {
-  grid-area: controls;
-}
+/* 모바일: 두 묶음을 풀어 한 줄로 세우고 순서를 정한다 */
+.a-side,
 .a-main {
-  grid-area: main;
+  display: contents;
+}
+.o-search {
+  order: 1;
+}
+.o-map {
+  order: 2;
+}
+.o-hero {
+  order: 3;
+}
+.o-controls {
+  order: 4;
+  padding: 16px !important;
+}
+.o-fc {
+  order: 5;
   min-width: 0;
 }
-.a-map {
-  grid-area: map;
-}
-.a-ad {
-  grid-area: ad;
+.o-ad {
+  order: 6;
 }
 
 @media (min-width: 1024px) {
@@ -111,11 +122,17 @@ a {
     padding: 0 32px 80px;
   }
   .layout {
+    display: grid;
     grid-template-columns: 360px minmax(0, 1fr);
-    grid-template-rows: auto auto 1fr;
-    grid-template-areas: "controls main" "map main" "ad main";
     column-gap: 24px;
     align-items: start;
+  }
+  .a-side,
+  .a-main {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
   }
 }
 
@@ -260,22 +277,6 @@ a {
   background: var(--pine);
   color: #fff;
 }
-.date-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 12px;
-}
-.date-row input {
-  flex: 1;
-  min-width: 0;
-  height: 44px;
-  border: 0;
-  border-radius: 12px;
-  background: var(--chip);
-  padding: 0 12px;
-  font-size: 15px;
-}
 
 /* ---------- 지도 ---------- */
 .map-box {
@@ -374,147 +375,7 @@ a {
   color: #d13f1f;
 }
 
-/* ---------- 일별 카드 ---------- */
-.days-grid > * + * {
-  margin-top: 12px;
-}
-.day-head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-}
-.day-date {
-  font-size: 18px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-}
-.day-date small {
-  margin-left: 6px;
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--pine);
-  background: var(--mint-soft);
-  padding: 2px 8px;
-  border-radius: 10px;
-  vertical-align: 2px;
-}
-.day-date.d-sat {
-  color: var(--rain);
-}
-.day-date.d-sun {
-  color: var(--coral);
-}
-.day-sky {
-  margin-top: 4px;
-  font-size: 14px;
-  color: var(--ink-2);
-}
-.day-temp {
-  text-align: right;
-  white-space: nowrap;
-}
-.day-temp .hi {
-  font-size: 26px;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-}
-.day-temp .lo {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--muted);
-  margin-left: 4px;
-}
-.day-reasons {
-  margin-top: 4px;
-  font-size: 12px;
-  color: var(--muted);
-}
-.sunrow {
-  display: flex;
-  gap: 8px;
-  margin: 14px 0 12px;
-}
-.sun {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-radius: 12px;
-  background: var(--chip);
-  padding: 8px 12px;
-  font-size: 13px;
-  color: var(--ink-2);
-}
-.sun b {
-  font-size: 15px;
-  color: var(--ink);
-}
-.sun.em {
-  background: var(--amber-soft);
-}
-.sun.em b {
-  font-size: 18px;
-}
-
-/* 3시간 격자 */
-.grid-wrap {
-  position: relative;
-  overflow-x: auto;
-  margin: 0 -6px;
-  scrollbar-width: thin;
-}
-.slots {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed;
-  min-width: 296px;
-  font-variant-numeric: tabular-nums;
-}
-.slots th,
-.slots td {
-  text-align: center;
-  padding: 5px 0;
-  font-size: 13px;
-  white-space: nowrap;
-}
-.slots th[scope="row"] {
-  width: 32px;
-  text-align: left;
-  padding-left: 6px;
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--muted);
-}
-.slots thead th {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--muted);
-}
-.slots .r-icon td {
-  font-size: 20px;
-  padding: 2px 0;
-}
-.slots .r-temp td {
-  font-size: 16px;
-  font-weight: 800;
-}
-.slots tr.em td {
-  font-size: 15px;
-  font-weight: 800;
-}
-.slots tr.em th[scope="row"] {
-  color: var(--pine);
-}
-.slots tr.em {
-  background: var(--mint-soft);
-}
-.slots tr.em td:last-child {
-  border-radius: 0 8px 8px 0;
-}
-.slots tr.em th:first-child {
-  border-radius: 8px 0 0 8px;
-}
+/* ---------- 값 색 ---------- */
 .v-rain {
   color: var(--rain);
 }
@@ -767,115 +628,7 @@ a {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
-/* ---------- 좌우로 넘기는 일별 카드 ---------- */
-.swiper-bar {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  margin-bottom: 10px;
-}
-.swiper-nav {
-  flex: none;
-  width: 32px;
-  height: 44px;
-  border-radius: 10px;
-  font-size: 24px;
-  line-height: 1;
-  color: var(--pine);
-}
-.swiper-nav:disabled {
-  opacity: 0.25;
-}
-.date-tabs {
-  flex: 1;
-  display: flex;
-  gap: 6px;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-.date-tabs::-webkit-scrollbar {
-  display: none;
-}
-.date-tabs button {
-  flex: none;
-  min-width: 44px;
-  height: 44px;
-  padding: 0 6px;
-  border-radius: 12px;
-  background: var(--card);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  line-height: 1.15;
-}
-.date-tabs button b {
-  font-size: 15px;
-}
-.date-tabs button small {
-  font-size: 11px;
-  color: var(--muted);
-}
-.date-tabs button[aria-selected="true"] {
-  background: var(--pine);
-  color: #fff;
-}
-.date-tabs button[aria-selected="true"] small {
-  color: var(--mint);
-}
-.swiper-track {
-  /* 안쪽 sr-only(절대 위치) 요소가 페이지 폭을 늘리지 않도록 */
-  position: relative;
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  overscroll-behavior-x: contain;
-  scrollbar-width: none;
-}
-.swiper-track::-webkit-scrollbar {
-  display: none;
-}
-.swiper-track > * {
-  flex: 0 0 100%;
-  min-width: 0;
-  scroll-snap-align: start;
-}
-
-/* ---------- 하루 단위 표 ---------- */
-.slots.daily {
-  width: auto;
-  min-width: 100%;
-  table-layout: auto;
-}
-.slots.daily td,
-.slots.daily thead th[scope="col"] {
-  min-width: 50px;
-  padding: 5px 4px;
-}
-.slots.daily thead th small {
-  display: block;
-  font-size: 11px;
-  font-weight: 500;
-}
-.slots.daily th[scope="row"] {
-  position: sticky;
-  left: 0;
-  z-index: 1;
-  background: var(--card);
-  min-width: 36px;
-}
-.slots.daily tr.em th[scope="row"] {
-  background: var(--mint-soft);
-}
-.slots.daily .lo td {
-  font-size: 14px;
-  color: var(--muted);
-}
-.slots .r-sun td {
-  font-size: 12px;
-}
+/* ---------- 적합도 점 ---------- */
 .gdot {
   display: inline-block;
   padding: 1px 6px;
@@ -1125,4 +878,365 @@ a {
   font-weight: 800;
   letter-spacing: -0.02em;
   color: var(--mint);
+}
+
+/* ---------- 지도 (접어 둠) ---------- */
+.map-card {
+  padding: 0 !important;
+  overflow: hidden;
+}
+.map-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 52px;
+  padding: 0 18px;
+  font-size: 15px;
+  font-weight: 700;
+}
+.map-card.open .map-box {
+  margin: 0 8px 8px;
+}
+
+/* ---------- 현재 위치 아이콘 ---------- */
+.locate-ico {
+  color: var(--pine);
+}
+.locate-ico.spin {
+  animation: spin 1.2s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- 직접 선택: 16일 버튼 ---------- */
+.day-pick {
+  margin-top: 12px;
+}
+.day-pick p {
+  margin: 0 0 8px;
+  font-size: 13px;
+}
+.day-grid {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: 4px;
+}
+.day-grid button {
+  height: 46px;
+  border-radius: 10px;
+  background: var(--chip);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.15;
+}
+.day-grid b {
+  font-size: 14px;
+}
+.day-grid small {
+  font-size: 11px;
+  color: var(--muted);
+}
+.day-grid .d-sat b,
+.day-grid .d-sat small {
+  color: var(--rain);
+}
+.day-grid .d-sun b,
+.day-grid .d-sun small {
+  color: var(--coral);
+}
+.day-grid button.in {
+  background: var(--mint-soft);
+}
+.day-grid button.edge {
+  background: var(--pine);
+}
+.day-grid button.edge b,
+.day-grid button.edge small {
+  color: #fff;
+}
+
+/* ---------- 예보 표 (기간 전체, 좌우 스크롤) ---------- */
+.ft {
+  padding: 12px 0 0 !important;
+  overflow: hidden;
+}
+.ft-wrap {
+  position: relative;
+}
+.ft-scroll {
+  position: relative;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+}
+.ftab {
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+.ftab th,
+.ftab td {
+  height: 34px;
+  padding: 0 2px;
+  text-align: center;
+  white-space: nowrap;
+  font-weight: 600;
+}
+.ftab td {
+  min-width: 44px;
+}
+.ftab.s6 td,
+.ftab.s12 td {
+  min-width: 64px;
+}
+.ftab.daily td {
+  min-width: 56px;
+}
+/* 날짜 구분선 */
+.ftab .ds {
+  border-left: 2px solid #c9d1d9;
+}
+/* 항목 이름: 왼쪽에 고정 */
+.ftab .lbl {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  box-sizing: border-box;
+  width: 64px;
+  min-width: 64px;
+  max-width: 64px;
+  padding: 0 4px 0 14px;
+  background: var(--card);
+  text-align: left;
+  font-size: 13px;
+  font-weight: 700;
+  color: #4e5968;
+  box-shadow: 1px 0 0 var(--line);
+}
+.ftab .lbl small {
+  display: block;
+  margin-top: -2px;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--muted);
+}
+.ftab .lbl.em {
+  color: var(--pine);
+  background: var(--mint-soft);
+}
+.ftab tr.em td {
+  font-weight: 800;
+  font-size: 15px;
+}
+/* 날짜 머리 */
+.ft-date th.dh {
+  height: 52px;
+  padding: 0;
+  text-align: left;
+  border-left: 2px solid #c9d1d9;
+}
+.dh-in {
+  position: sticky;
+  left: 64px;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.dh-l1,
+.dh-l2 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.dh-in b {
+  font-size: 16px;
+  font-weight: 800;
+}
+.dh-in b small {
+  font-size: 12px;
+  margin-left: 1px;
+}
+.dh-in b.d-sat {
+  color: var(--rain);
+}
+.dh-in b.d-sun {
+  color: var(--coral);
+}
+.dh-in .today {
+  padding: 2px 7px;
+  border-radius: 8px;
+  background: var(--pine);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+}
+.dh-in .sun-t {
+  color: var(--muted);
+  font-size: 12px;
+}
+.dh-in .sun-t.em {
+  color: var(--ink);
+  font-weight: 800;
+}
+.dh-in .hl {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--muted);
+}
+/* 시각: 낮·밤 배경 */
+.ft-time th {
+  font-size: 12px;
+  font-weight: 700;
+}
+.ft-time th.day {
+  background: #fff4d6;
+  color: #8a5a00;
+}
+.ft-time th.night {
+  background: #e3e8f4;
+  color: #34446b;
+}
+.ft-time th.now {
+  background: var(--pine);
+  color: #fff;
+}
+.ftab.daily .ft-time th {
+  background: var(--chip);
+  height: 42px;
+  line-height: 1.15;
+}
+.ftab.daily .ft-time th b {
+  display: block;
+  font-size: 14px;
+}
+.ftab.daily .ft-time th small {
+  font-size: 11px;
+  font-weight: 500;
+}
+.ftab.daily .ft-time th.now {
+  background: var(--pine);
+}
+.ftab.daily .ft-time b.d-sat {
+  color: var(--rain);
+}
+.ftab.daily .ft-time b.d-sun {
+  color: var(--coral);
+}
+.ftab.daily .ft-time th.now small {
+  color: var(--mint);
+}
+.ftab .r-icon td {
+  font-size: 20px;
+  height: 36px;
+}
+.ftab td.empty {
+  background: repeating-linear-gradient(135deg, transparent 0 6px, #f4f6f8 6px 8px);
+}
+/* 그날 최고·최저 기온 */
+.ftab td.t-max {
+  color: #e2462a;
+  background: var(--coral-soft);
+}
+.ftab td.t-min {
+  color: #2563eb;
+  background: var(--rain-soft);
+}
+/* 바람·돌풍 세기 */
+.ftab td.w1 {
+  background: #e4f7ee;
+}
+.ftab td.w2 {
+  background: #fff2b3;
+}
+.ftab td.w3 {
+  background: #ffd59e;
+}
+.ftab td.w4 {
+  background: #ffab91;
+}
+.ftab td.w5 {
+  background: #e57399;
+  color: #fff;
+}
+/* 강수량 */
+.ftab td.r1 {
+  background: #e8f0ff;
+  color: #2563eb;
+}
+.ftab td.r2 {
+  background: #c7d9ff;
+  color: #1d4ed8;
+}
+.ftab td.r3 {
+  background: #8fb2ff;
+  color: #0b2a80;
+}
+.ftab td.p-hi {
+  color: #1d4ed8;
+  font-weight: 800;
+}
+.ftab td.p-mid {
+  color: #3b7bff;
+}
+.ftab td.v-cold {
+  color: #2563eb;
+}
+.ftab .r-grade td {
+  height: 30px;
+}
+.ftab .r-sun td {
+  font-size: 12px;
+}
+/* 이전·다음 날 버튼 (마우스가 있는 화면) */
+.ft-bar {
+  display: none;
+}
+@media (hover: hover) and (min-width: 768px) {
+  .ft-bar {
+    display: flex;
+    justify-content: flex-end;
+    gap: 6px;
+    padding: 0 12px 10px;
+  }
+  .ft-nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 32px;
+    padding: 0 12px;
+    border-radius: 16px;
+    background: var(--chip);
+    color: var(--pine);
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .ft-nav:hover:not(:disabled) {
+    background: var(--mint-soft);
+  }
+  .ft-nav:disabled {
+    opacity: 0.35;
+  }
+}
+.ft-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  height: 44px;
+  border-top: 1px solid var(--line);
+  font-size: 14px;
+  font-weight: 700;
+  color: #4e5968;
 }

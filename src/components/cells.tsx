@@ -11,13 +11,33 @@ export function rainText(mm: number) {
 }
 
 export const UNIT: Record<MetricKey, string> = {
-  temp: "°",
-  feels: "°",
+  temp: "°C",
+  feels: "°C",
   precip: "mm",
+  precipProb: "%",
   cloud: "%",
   wind: "m/s",
   gust: "m/s",
 };
+
+/** 바람 세기 단계 (m/s): 0 약함 · 1 산들 · 2 다소 강함 · 3 강함 · 4 매우 강함 · 5 위험 */
+export function windLevel(v: number | null): number {
+  if (v == null) return 0;
+  if (v < 3) return 0;
+  if (v < 5) return 1;
+  if (v < 7) return 2;
+  if (v < 10) return 3;
+  if (v < 14) return 4;
+  return 5;
+}
+
+/** 강수 단계 (mm/칸) */
+export function rainLevel(v: number | null): number {
+  if (v == null || v < 0.1) return 0;
+  if (v < 1) return 1;
+  if (v < 5) return 2;
+  return 3;
+}
 
 export function WindArrow({ dir }: { dir: number | null }) {
   return (
@@ -27,36 +47,38 @@ export function WindArrow({ dir }: { dir: number | null }) {
   );
 }
 
-/** 표의 지표 칸 하나 */
-export function Cell({ slot, metric }: { slot: Slot; metric: MetricKey }) {
+/**
+ * 표의 지표 칸 하나.
+ * mark: 그날 가장 높은/낮은 기온 칸 표시
+ */
+export function Cell({ slot, metric, className, mark }: { slot: Slot; metric: MetricKey; className?: string; mark?: "max" | "min" }) {
+  const c = (extra?: string) => [className, extra].filter(Boolean).join(" ") || undefined;
   switch (metric) {
     case "temp":
-      return <td>{fmt(slot.temp, "°")}</td>;
+      return <td className={c(mark ? `t-${mark}` : undefined)}>{fmt(slot.temp, "°")}</td>;
     case "feels":
-      return <td className={slot.feels != null && slot.feels <= 0 ? "v-rain" : undefined}>{fmt(slot.feels, "°")}</td>;
+      return <td className={c(slot.feels != null && slot.feels <= 0 ? "v-cold" : undefined)}>{fmt(slot.feels, "°")}</td>;
     case "precip": {
       const p = slot.precip;
-      if (p == null) return <td className="v-none">-</td>;
-      if (p < 0.1) {
-        // 강수가 없을 때는 확률이 높으면 확률을 보여준다
-        return slot.precipProb != null && slot.precipProb >= 30 ? (
-          <td className="v-rain v-prob">{slot.precipProb}%</td>
-        ) : (
-          <td className="v-none">·</td>
-        );
-      }
-      return <td className="v-rain">{rainText(p)}</td>;
+      if (p == null) return <td className={c("v-none")}>-</td>;
+      if (p < 0.1) return <td className={c("v-none")}>·</td>;
+      return <td className={c(`r${rainLevel(p)}`)}>{rainText(p)}</td>;
+    }
+    case "precipProb": {
+      const v = slot.precipProb;
+      if (v == null) return <td className={c("v-none")}>-</td>;
+      return <td className={c(v >= 60 ? "p-hi" : v >= 30 ? "p-mid" : "v-none")}>{v}</td>;
     }
     case "cloud":
-      return <td>{fmt(slot.cloud)}</td>;
+      return <td className={c()}>{fmt(slot.cloud)}</td>;
     case "wind":
       return (
-        <td className={slot.wind != null && slot.wind >= 7 ? "v-warn" : undefined} title={windDirKo(slot.windDir)}>
+        <td className={c(`w${windLevel(slot.wind)}`)} title={`${windDirKo(slot.windDir)}풍`}>
           <WindArrow dir={slot.windDir} />
           {fmt(slot.wind)}
         </td>
       );
     case "gust":
-      return <td className={slot.gust != null && slot.gust >= 10 ? "v-warn" : undefined}>{fmt(slot.gust)}</td>;
+      return <td className={c(`w${windLevel(slot.gust)}`)}>{fmt(slot.gust)}</td>;
   }
 }

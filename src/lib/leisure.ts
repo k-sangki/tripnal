@@ -1,26 +1,68 @@
 import type { DayForecast } from "@/lib/weather/types";
 
 export type LeisureId = "camping" | "fishing" | "hiking" | "cycling" | "travel";
-export type MetricKey = "temp" | "feels" | "precip" | "cloud" | "wind" | "gust";
+export type MetricKey = "temp" | "feels" | "precip" | "precipProb" | "cloud" | "wind" | "gust";
 
 export interface Leisure {
   id: LeisureId;
   label: string;
   emoji: string;
-  /** 3시간 칸에서 크게 강조할 지표 */
+  /** 표에 보이는 지표, 중요한 순서 (풍속 바로 아래 돌풍, 강수 바로 아래 강수확률) */
+  rows: MetricKey[];
+  /** 중요도가 낮아 접어 두는 지표 */
+  more: MetricKey[];
+  /** 그중 특히 강조할 지표 */
   emphasis: MetricKey[];
-  /** 3시간 칸 행 순서 (기온은 항상 맨 위) */
-  order: MetricKey[];
   /** 일출·일몰 중 크게 보여줄 것 */
   sun: "sunrise" | "sunset" | "both";
 }
 
 export const LEISURES: Leisure[] = [
-  { id: "camping", label: "캠핑", emoji: "🏕️", emphasis: ["feels", "precip", "gust"], order: ["feels", "precip", "gust", "wind", "cloud"], sun: "sunset" },
-  { id: "fishing", label: "낚시", emoji: "🎣", emphasis: ["wind", "gust"], order: ["wind", "gust", "precip", "cloud", "feels"], sun: "sunrise" },
-  { id: "hiking", label: "등산", emoji: "⛰️", emphasis: ["feels", "gust", "precip"], order: ["feels", "gust", "precip", "wind", "cloud"], sun: "both" },
-  { id: "cycling", label: "사이클", emoji: "🚴", emphasis: ["wind", "gust", "precip"], order: ["wind", "gust", "precip", "feels", "cloud"], sun: "both" },
-  { id: "travel", label: "여행", emoji: "🧳", emphasis: ["precip", "cloud"], order: ["precip", "cloud", "feels", "wind", "gust"], sun: "sunset" },
+  {
+    id: "camping",
+    label: "캠핑",
+    emoji: "🏕️",
+    rows: ["temp", "feels", "precip", "precipProb", "wind", "gust"],
+    more: ["cloud"],
+    emphasis: ["feels", "precip", "gust"],
+    sun: "sunset",
+  },
+  {
+    id: "fishing",
+    label: "낚시",
+    emoji: "🎣",
+    rows: ["wind", "gust", "temp", "precip", "precipProb"],
+    more: ["feels", "cloud"],
+    emphasis: ["wind", "gust"],
+    sun: "sunrise",
+  },
+  {
+    id: "hiking",
+    label: "등산",
+    emoji: "⛰️",
+    rows: ["temp", "feels", "wind", "gust", "precip", "precipProb"],
+    more: ["cloud"],
+    emphasis: ["feels", "gust", "precip"],
+    sun: "both",
+  },
+  {
+    id: "cycling",
+    label: "사이클",
+    emoji: "🚴",
+    rows: ["wind", "gust", "precip", "precipProb", "temp"],
+    more: ["feels", "cloud"],
+    emphasis: ["wind", "gust", "precip"],
+    sun: "both",
+  },
+  {
+    id: "travel",
+    label: "여행",
+    emoji: "🧳",
+    rows: ["temp", "precip", "precipProb", "cloud"],
+    more: ["feels", "wind", "gust"],
+    emphasis: ["precip", "cloud"],
+    sun: "sunset",
+  },
 ];
 
 export function getLeisure(id: string | null | undefined): Leisure {
@@ -31,6 +73,7 @@ export const METRIC_LABEL: Record<MetricKey, string> = {
   temp: "기온",
   feels: "체감",
   precip: "강수",
+  precipProb: "확률",
   cloud: "구름",
   wind: "풍속",
   gust: "돌풍",

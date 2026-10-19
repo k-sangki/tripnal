@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { METRIC_LABEL, type Leisure, type MetricKey } from "@/lib/leisure";
+import { muldae } from "@/lib/muldae";
 import { daySummary, isPast, regroup, slotHead, slotHours, type Interval, stepHours } from "@/lib/interval";
 import { weekday, weekdayKo } from "@/lib/time";
 import { codeIcon, codeInfo } from "@/lib/weather/codes";
@@ -143,14 +144,14 @@ function rangeClass(d: DayForecast) {
   return r >= 15 ? "rg2" : r >= 10 ? "rg1" : undefined;
 }
 
+/** 물때와 만조(빨강)·간조(파랑) 시각 */
 function TideText({ d }: { d: DayForecast }) {
-  if (!d.tides.length) return <>-</>;
   return (
     <>
+      <span className="tide-md">{muldae(d.date)}</span>
       {d.tides.map((t) => (
         <span key={t.time} className={t.type === "high" ? "tide-h" : "tide-l"}>
-          {t.type === "high" ? "▲" : "▼"}
-          {t.time}
+          {t.type === "high" ? "만조" : "간조"} {t.time}
         </span>
       ))}
     </>
@@ -270,7 +271,7 @@ export function ForecastTable({ days, leisure, interval, today, nowHour }: Props
                           <span className={`sun-t${sunEm("sunrise") ? " em" : ""}`}>🌅{d.sunrise ?? "-"}</span>
                           <span className={`sun-t${sunEm("sunset") ? " em" : ""}`}>🌇{d.sunset ?? "-"}</span>
                         </div>
-                        {showTides && d.tides.length > 0 && (
+                        {showTides && (
                           <div className="dh-l2 tides">
                             <TideText d={d} />
                           </div>

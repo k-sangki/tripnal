@@ -16,13 +16,15 @@ describe("activities", () => {
       expect(l.rows.slice(0, g.primary.length)).toEqual(g.primary);
     }
   });
-  it("낚시는 파고·조석·풍랑이 위로, 캠핑은 일교차가 맨 위", () => {
+  it("낚시는 파고·물때·풍랑이 위로, 캠핑은 일교차가 맨 위", () => {
     expect(getLeisure("fishing").rows.slice(0, 3)).toEqual(["wave", "tide", "windWave"]);
     expect(getLeisure("camping").rows[0]).toBe("range");
     expect(getLeisure("camping").more).toContain("wave");
   });
-  it("강수확률은 강수 바로 아래", () => {
-    for (const l of LEISURES) expect(l.rows[l.rows.indexOf("precip") + 1]).toBe("precipProb");
+  it("강수 확률은 따로 줄을 두지 않고, 구름은 사진·드라이브 등에서만 밖에 둔다", () => {
+    for (const l of LEISURES) expect([...l.rows, ...l.more]).not.toContain("precipProb");
+    expect(getLeisure("photo").rows).toContain("cloud");
+    expect(getLeisure("camping").more[0]).toBe("cloud");
   });
   it("모르는 활동은 캠핑", () => {
     expect(getLeisure("x").id).toBe("camping");

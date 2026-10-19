@@ -10,7 +10,8 @@ import { addDays, weekday, weekdayKo } from "@/lib/time";
  */
 export function PeriodPicker({ value, today, onChange }: { value: Period; today: string; onChange: (p: Period) => void }) {
   const active = matchPreset(value, today);
-  const [custom, setCustom] = useState(active == null);
+  // 날짜 버튼(직접 선택)을 기본으로 펼쳐 둔다
+  const [custom, setCustom] = useState(true);
   // 시작일만 고른 상태
   const [anchor, setAnchor] = useState<string | null>(null);
   const dates = Array.from({ length: MAX_DAYS }, (_, i) => addDays(today, i));

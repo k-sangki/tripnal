@@ -19,6 +19,15 @@ export function mockRaw(lat: number, lon: number, now: Date = new Date(), elevat
   const windGusts: number[] = [];
   const windDirection: number[] = [];
   const weatherCode: number[] = [];
+  const snowfall: number[] = [];
+  const visibility: number[] = [];
+  const uvIndex: number[] = [];
+  const cape: number[] = [];
+  const waveHeight: number[] = [];
+  const windWaveHeight: number[] = [];
+  const seaLevel: number[] = [];
+  const pm10: (number | null)[] = [];
+  const pm25: (number | null)[] = [];
 
   for (let d = 0; d < 16; d++) {
     const date = addDays(start, d);
@@ -39,7 +48,19 @@ export function mockRaw(lat: number, lon: number, now: Date = new Date(), elevat
       windSpeed.push(Math.round(wind * 10) / 10);
       windGusts.push(Math.round(wind * (1.4 + rnd(i + 17) * 0.6) * 10) / 10);
       windDirection.push(Math.round((200 + d * 20 + rnd(i) * 40) % 360));
-      weatherCode.push(rain > 2 ? 63 : rain > 0 ? 61 : cloud > 80 ? 3 : cloud > 40 ? 2 : cloud > 15 ? 1 : 0);
+      const cold = t < 1;
+      snowfall.push(cold && rain > 0 ? Math.round(rain * 7) / 10 : 0);
+      weatherCode.push(cold && rain > 0 ? 73 : rain > 2 ? 63 : rain > 0 ? 61 : cloud > 80 ? 3 : cloud > 40 ? 2 : cloud > 15 ? 1 : 0);
+      visibility.push(Math.round((rain > 0 ? 3000 + rnd(i + 19) * 5000 : 12000 + rnd(i + 19) * 30000) / 100) * 100);
+      const sunUp = hr >= 7 && hr <= 17;
+      uvIndex.push(sunUp ? Math.round(Math.max(0, (6 - cloud / 25) * Math.sin(((hr - 6) / 12) * Math.PI)) * 10) / 10 : 0);
+      cape.push(Math.round(rainy && hr > 11 && hr < 19 ? rnd(i + 23) * 1500 : rnd(i + 23) * 150));
+      waveHeight.push(Math.round((0.3 + wind * 0.18 + rnd(i + 29) * 0.3) * 10) / 10);
+      windWaveHeight.push(Math.round((wind * 0.12 + rnd(i + 31) * 0.2) * 10) / 10);
+      // 반일주조: 약 12시간 25분 주기
+      seaLevel.push(Math.round(1.6 * Math.sin(((i * 60 + d * 50) / 745) * 2 * Math.PI) * 100) / 100);
+      pm10.push(d < 5 ? Math.round(15 + rnd(i + 37) * (rainy ? 25 : 90)) : null);
+      pm25.push(d < 5 ? Math.round(6 + rnd(i + 41) * (rainy ? 12 : 45)) : null);
     }
   }
 
@@ -59,6 +80,15 @@ export function mockRaw(lat: number, lon: number, now: Date = new Date(), elevat
       windGusts,
       windDirection,
       weatherCode,
+      snowfall,
+      visibility,
+      uvIndex,
+      cape,
+      waveHeight,
+      windWaveHeight,
+      seaLevel,
+      pm10,
+      pm25,
     },
   };
 }

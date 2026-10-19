@@ -353,27 +353,6 @@ a {
 }
 
 /* ---------- 등급 ---------- */
-.grade {
-  display: inline-flex;
-  align-items: center;
-  height: 26px;
-  padding: 0 10px;
-  border-radius: 13px;
-  font-size: 13px;
-  font-weight: 700;
-}
-.grade.good {
-  background: var(--mint);
-  color: var(--pine);
-}
-.grade.fair {
-  background: var(--amber-soft);
-  color: #a86500;
-}
-.grade.bad {
-  background: var(--coral-soft);
-  color: #d13f1f;
-}
 
 /* ---------- 값 색 ---------- */
 .v-rain {
@@ -629,26 +608,6 @@ a {
 }
 
 /* ---------- 적합도 점 ---------- */
-.gdot {
-  display: inline-block;
-  padding: 1px 6px;
-  border-radius: 8px;
-  font-style: normal;
-  font-size: 11px;
-  font-weight: 700;
-}
-.gdot.good {
-  background: var(--mint);
-  color: var(--pine);
-}
-.gdot.fair {
-  background: var(--amber-soft);
-  color: #a86500;
-}
-.gdot.bad {
-  background: var(--coral-soft);
-  color: #d13f1f;
-}
 .small-note {
   margin: 8px 0 0;
   font-size: 12px;
@@ -976,6 +935,8 @@ a {
   scrollbar-width: thin;
 }
 .ftab {
+  /* 칸이 적으면 카드 폭을 채우고, 많으면 좌우로 넘긴다 */
+  min-width: 100%;
   border-collapse: separate;
   border-spacing: 0;
   font-size: 14px;
@@ -988,14 +949,19 @@ a {
   padding: 0 2px;
   text-align: center;
   white-space: nowrap;
-  font-weight: 600;
+  font-weight: 500;
+}
+.ftab .r-temp td {
+  font-weight: 700;
 }
 .ftab td {
   min-width: 44px;
 }
-.ftab.s6 td,
+.ftab.s6 td {
+  min-width: 54px;
+}
 .ftab.s12 td {
-  min-width: 64px;
+  min-width: 40px;
 }
 .ftab.daily td {
   min-width: 56px;
@@ -1032,13 +998,10 @@ a {
   color: var(--pine);
   background: var(--mint-soft);
 }
-.ftab tr.em td {
-  font-weight: 800;
-  font-size: 15px;
-}
 /* 날짜 머리 */
 .ft-date th.dh {
   height: 52px;
+  vertical-align: bottom;
   padding: 0;
   text-align: left;
   border-left: 2px solid #c9d1d9;
@@ -1056,8 +1019,12 @@ a {
 .dh-l1,
 .dh-l2 {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 6px;
+  gap: 2px 6px;
+}
+.ft-date th.dh {
+  white-space: normal;
 }
 .dh-in b {
   font-size: 16px;
@@ -1087,7 +1054,6 @@ a {
 }
 .dh-in .sun-t.em {
   color: var(--ink);
-  font-weight: 800;
 }
 .dh-in .hl {
   font-size: 13px;
@@ -1100,16 +1066,14 @@ a {
   font-weight: 700;
 }
 .ft-time th.day {
-  background: #fff4d6;
-  color: #8a5a00;
+  color: #4e5968;
 }
 .ft-time th.night {
-  background: #e3e8f4;
-  color: #34446b;
+  color: #fff;
 }
 .ft-time th.now {
-  background: var(--pine);
-  color: #fff;
+  box-shadow: inset 0 -4px 0 var(--mint);
+  font-weight: 800;
 }
 .ftab.daily .ft-time th {
   background: var(--chip);
@@ -1192,9 +1156,6 @@ a {
 .ftab td.v-cold {
   color: #2563eb;
 }
-.ftab .r-grade td {
-  height: 30px;
-}
 .ftab .r-sun td {
   font-size: 12px;
 }
@@ -1239,4 +1200,169 @@ a {
   font-size: 14px;
   font-weight: 700;
   color: #4e5968;
+}
+
+/* ---------- 추가 지표 색 ---------- */
+.ftab td.span-cell,
+.ftab .r-range td {
+  text-align: left;
+}
+.span-in {
+  position: sticky;
+  left: 64px;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 0 8px;
+  font-weight: 700;
+}
+.span-in small {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted);
+}
+.ftab.daily .r-range td {
+  text-align: center;
+}
+.ftab td.rg1 {
+  background: var(--amber-soft);
+}
+.ftab td.rg2 {
+  background: var(--coral-soft);
+}
+.dh-in .tides {
+  display: flex;
+  gap: 2px 6px;
+  max-width: 200px;
+}
+.tide-h,
+.tide-l {
+  font-size: 12px;
+  font-weight: 600;
+}
+.tide-h {
+  color: #1d4ed8;
+}
+.tide-l {
+  color: #8b95a1;
+}
+.ftab td.tide-cell {
+  font-size: 11px;
+  line-height: 1.2;
+  padding: 4px 4px;
+}
+.ftab td.tide-cell span {
+  display: block;
+}
+.ftab td.wv1 {
+  background: #e8f3ff;
+}
+.ftab td.wv2 {
+  background: #c4defd;
+}
+.ftab td.wv3 {
+  background: #8bbaf5;
+  color: #0b2a80;
+}
+.ftab td.td-hi {
+  color: #1d4ed8;
+}
+.ftab td.td-lo {
+  color: #8b95a1;
+}
+.ftab td.sn1 {
+  background: #eef2ff;
+  color: #4338ca;
+}
+.ftab td.sn2 {
+  background: #c7d2fe;
+  color: #312e81;
+}
+.ftab td.lv1 {
+  background: #fff8e1;
+  color: #8a5a00;
+}
+.ftab td.lv2 {
+  background: #ffe0b2;
+  color: #a14b00;
+}
+.ftab td.lv3 {
+  background: #ffccbc;
+  color: #b3261e;
+}
+.ftab td.uv0 {
+  color: #2e7d32;
+}
+.ftab td.uv1 {
+  background: #fff8c5;
+}
+.ftab td.uv2 {
+  background: #ffe0b2;
+}
+.ftab td.uv3 {
+  background: #ffb4a2;
+}
+.ftab td.uv4 {
+  background: #d9b3f5;
+}
+.ftab td.pm0 {
+  color: #1d4ed8;
+}
+.ftab td.pm1 {
+  color: #2e7d32;
+}
+.ftab td.pm2 {
+  background: #ffe0b2;
+  color: #a14b00;
+}
+.ftab td.pm3 {
+  background: #ffccbc;
+  color: #b3261e;
+}
+
+/* ---------- 활동 선택 ---------- */
+.ctl-sep {
+  height: 1px;
+  margin: 16px 0 12px;
+  background: var(--line);
+}
+.act-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.act-row + .act-row {
+  padding-top: 8px;
+  border-top: 1px dashed var(--line);
+}
+.chip.sm {
+  height: 34px;
+  padding: 0 11px;
+  font-size: 13px;
+}
+
+/* 캡처: 활동별 핵심 지표 한 줄 */
+.cl-key {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: #1d4ed8;
+}
+.cf-tide span {
+  display: block;
+  font-size: 11px;
+}
+/* 12시간 단위는 하루가 두 칸뿐이라 날짜 머리를 좁힌다 */
+.ftab.s12 .dh-in {
+  padding: 0 4px;
+}
+.ftab.s12 .dh-in b {
+  font-size: 14px;
+}
+.ftab.s12 td.ds:has(.span-in) {
+  white-space: normal;
+}
+.ftab.s12 .span-in {
+  flex-wrap: wrap;
+  column-gap: 4px;
 }

@@ -11,7 +11,7 @@ export const INTERVALS: { id: Interval; label: string; long: string }[] = [
 ];
 
 export function parseInterval(s: string | null | undefined): Interval {
-  return INTERVALS.find((i) => i.id === s)?.id ?? "3h";
+  return INTERVALS.find((i) => i.id === s)?.id ?? "day";
 }
 
 export function intervalLong(i: Interval) {
@@ -28,6 +28,23 @@ const nums = (xs: Num[]) => xs.filter((v): v is number => v != null);
 const r1 = (v: number) => Math.round(v * 10) / 10;
 const maxOf = (xs: Num[]) => (nums(xs).length ? Math.max(...nums(xs)) : null);
 const minOf = (xs: Num[]) => (nums(xs).length ? Math.min(...nums(xs)) : null);
+
+const sumOf = (xs: Num[]) => (nums(xs).length ? r1(nums(xs).reduce((a, b) => a + b, 0)) : null);
+
+/** 날씨 외 지표(적설·가시거리·자외선·바다·대기질)를 여러 칸에서 합친다 */
+function combineExtra(ss: Slot[]) {
+  return {
+    snow: sumOf(ss.map((s) => s.snow)),
+    visibility: minOf(ss.map((s) => s.visibility)),
+    uv: maxOf(ss.map((s) => s.uv)),
+    cape: maxOf(ss.map((s) => s.cape)),
+    wave: maxOf(ss.map((s) => s.wave)),
+    windWave: maxOf(ss.map((s) => s.windWave)),
+    tide: ss[0]?.tide ?? null,
+    pm10: maxOf(ss.map((s) => s.pm10)),
+    pm25: maxOf(ss.map((s) => s.pm25)),
+  };
+}
 
 /** 칸의 낮·밤 여부. 낮 칸은 최고 기온, 밤 칸은 최저 기온을 대표값으로 쓴다. */
 function isDaytime(hour: number, step: number) {
@@ -68,6 +85,7 @@ export function regroup(slots: Slot[], step: number): Slot[] {
       windDir: windy.windDir,
       code: maxOf(ss.map((s) => s.code)),
       isDay: day,
+      ...combineExtra(ss),
     };
   });
 }
@@ -110,5 +128,8 @@ export function daySummary(d: DayForecast): DaySummary {
     windDir: windy?.windDir ?? null,
     code: d.code,
     isDay: true,
+    ...combineExtra(d.slots),
+    // 하루 단위의 조석은 만조·간조 시각으로 따로 보여준다
+    tide: null,
   };
 }

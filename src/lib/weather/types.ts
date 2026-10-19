@@ -18,6 +18,20 @@ export interface HourlySeries {
   windDirection: (number | null)[];
   /** WMO weather code */
   weatherCode: (number | null)[];
+  /** 신적설 cm/h */
+  snowfall?: (number | null)[];
+  /** 가시거리 m */
+  visibility?: (number | null)[];
+  uvIndex?: (number | null)[];
+  /** 대기 불안정도(J/kg). 낙뢰 가능성 판단에 쓴다 */
+  cape?: (number | null)[];
+  /** 바다: 유의파고·풍랑(풍파) 높이 m, 해수면 높이(조석 포함) m */
+  waveHeight?: (number | null)[];
+  windWaveHeight?: (number | null)[];
+  seaLevel?: (number | null)[];
+  /** 대기질 µg/m³ (약 5일까지만 제공) */
+  pm10?: (number | null)[];
+  pm25?: (number | null)[];
 }
 
 export interface RawForecast {
@@ -52,6 +66,27 @@ export interface Slot {
   windDir: number | null;
   code: number | null;
   isDay: boolean;
+  /** 칸 동안 신적설 cm */
+  snow: number | null;
+  /** 칸 중 가장 짧은 가시거리 km */
+  visibility: number | null;
+  uv: number | null;
+  cape: number | null;
+  /** 칸 중 최대 파고·풍랑 m */
+  wave: number | null;
+  windWave: number | null;
+  /** 칸 시작 시각 해수면 높이 m */
+  tide: number | null;
+  pm10: number | null;
+  pm25: number | null;
+}
+
+export interface TideEvent {
+  /** "HH:MM" */
+  time: string;
+  type: "high" | "low";
+  /** 해수면 높이 m */
+  level: number;
 }
 
 export interface DayForecast {
@@ -69,6 +104,8 @@ export interface DayForecast {
   /** "HH:MM" */
   sunrise: string | null;
   sunset: string | null;
+  /** 만조·간조 (해수면 자료가 있는 바다 근처만) */
+  tides: TideEvent[];
 }
 
 export interface Forecast {

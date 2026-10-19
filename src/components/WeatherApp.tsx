@@ -218,11 +218,11 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
           </div>
         )}
         <div className="o-controls card">
-          <LeisureTabs value={leisureId} onChange={setLeisureId} />
-          <div style={{ height: 12 }} />
           <PeriodPicker value={period} today={today} onChange={setPeriod} />
           <div style={{ height: 12 }} />
           <IntervalPicker value={interval} onChange={setIntervalChoice} />
+          <div className="ctl-sep" />
+          <LeisureTabs value={leisureId} onChange={setLeisureId} />
         </div>
         <div className="o-ad pc-only">
           <AdSlot slot={AD_SLOTS.side} />

@@ -37,10 +37,22 @@ function loadSdk(): Promise<KakaoMaps> {
     const s = document.createElement("script");
     s.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${KEY}&autoload=false`;
     s.async = true;
-    s.onload = () => window.kakao!.maps.load(() => resolve(window.kakao!.maps));
-    s.onerror = () => {
+    // 도메인이 등록되지 않았으면 카카오가 스크립트를 거부해 onerror가 난다
+    const fail = (reason: string) => {
       loader = null;
-      reject(new Error("kakao sdk"));
+      reject(new Error(reason));
+    };
+    const timer = setTimeout(() => fail("timeout"), 10000);
+    s.onload = () => {
+      if (!window.kakao?.maps) return fail("blocked");
+      window.kakao.maps.load(() => {
+        clearTimeout(timer);
+        resolve(window.kakao!.maps);
+      });
+    };
+    s.onerror = () => {
+      clearTimeout(timer);
+      fail("blocked");
     };
     document.head.appendChild(s);
   });
@@ -52,7 +64,7 @@ export function KakaoMap({ lat, lon, onPick }: { lat: number; lon: number; onPic
   const el = useRef<HTMLDivElement>(null);
   const map = useRef<{ map: KMap; marker: KMarker; maps: KakaoMaps } | null>(null);
   const pickRef = useRef(onPick);
-  const [failed, setFailed] = useState(false);
+  const [failed, setFailed] = useState<string | null>(null);
 
   useEffect(() => {
     pickRef.current = onPick;
@@ -70,7 +82,7 @@ export function KakaoMap({ lat, lon, onPick }: { lat: number; lon: number; onPic
         maps.event.addListener(m, "click", (e) => pickRef.current(e.latLng.getLat(), e.latLng.getLng()));
         map.current = { map: m, marker, maps };
       })
-      .catch(() => setFailed(true));
+      .catch((e: Error) => setFailed(e.message));
     return () => {
       cancelled = true;
     };
@@ -90,7 +102,11 @@ export function KakaoMap({ lat, lon, onPick }: { lat: number; lon: number; onPic
     return (
       <div className="map-box">
         <div className="map-empty">
-          {failed ? "지도를 불러오지 못했습니다." : "카카오맵 키를 설정하면 지도에서 위치를 고를 수 있습니다."}
+          {!KEY
+            ? "지도 키(NEXT_PUBLIC_KAKAO_JS_KEY)가 배포에 들어가지 않았습니다."
+            : failed === "timeout"
+              ? "지도 응답이 늦습니다. 잠시 후 다시 열어 주세요."
+              : "카카오가 지도를 거부했습니다. 카카오 앱의 JavaScript SDK 도메인에 이 주소가 등록됐는지, 카카오맵 사용 설정이 켜졌는지 확인해 주세요."}
         </div>
       </div>
     );

@@ -3,16 +3,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getLeisure, type LeisureId } from "@/lib/leisure";
-import { parseInterval, intervalLong, stepHours, type Interval } from "@/lib/interval";
+import { parseInterval, intervalLong, type Interval } from "@/lib/interval";
 import { clampPeriod, inPeriod, periodLabel, type Period } from "@/lib/period";
 import { kstDate, kstHourKey } from "@/lib/time";
 import type { Forecast } from "@/lib/weather/types";
 import { AD_SLOTS, AdSlot } from "./AdSlot";
 import { CaptureFrame } from "./CaptureFrame";
 import { CaptureSheet } from "./CaptureSheet";
-import { DayCard } from "./DayCard";
-import { DaySwiper } from "./DaySwiper";
-import { DaysTable } from "./DaysTable";
+import { ForecastTable } from "./ForecastTable";
 import { IntervalPicker } from "./IntervalPicker";
 import { KakaoMap } from "./KakaoMap";
 import { LeisureTabs } from "./LeisureTabs";
@@ -64,6 +62,7 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
   const [error, setError] = useState<string | null>(null);
   const [locating, setLocating] = useState(false);
   const [capturing, setCapturing] = useState(false);
+  const [mapOpen, setMapOpen] = useState(false);
   const captureRef = useRef<HTMLDivElement>(null);
   const skipFirstFetch = useRef(!!initialForecast);
 
@@ -100,7 +99,15 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
   function choose(p: AppPlace) {
     setError(null);
     if (initialPlace?.slug) {
-      const q = new URLSearchParams({ lat: p.lat.toFixed(4), lon: p.lon.toFixed(4), name: p.name, act: leisureId, int: interval, from: period.from, to: period.to });
+      const q = new URLSearchParams({
+        lat: p.lat.toFixed(4),
+        lon: p.lon.toFixed(4),
+        name: p.name,
+        act: leisureId,
+        int: interval,
+        from: period.from,
+        to: period.to,
+      });
       router.push(`/?${q}`);
       return;
     }
@@ -177,7 +184,7 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
     q.set("int", interval);
     q.set("from", period.from);
     q.set("to", period.to);
-    window.history.replaceState(null, "", `${window.location.pathname}?${q}`);
+    window.history.replaceState(window.history.state, "", `${window.location.pathname}?${q}`);
     if (!place.slug) store()?.setItem(STORE_KEY, JSON.stringify({ place, leisure: leisureId }));
   }, [place, leisureId, interval, period]);
 
@@ -190,75 +197,82 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
 
   return (
     <div className="layout">
-      <div className="a-controls">
-        <SearchBar onSelect={(p) => choose(p)} onLocate={() => locate(false)} locating={locating} />
-        <div className="card" style={{ padding: 16, marginTop: 12 }}>
+      {/* 모바일은 검색 → 지도 → 현재 위치 → 설정 → 예보 순서, PC는 왼쪽(검색·지도·설정)과 오른쪽(위치·예보) 2단 */}
+      <div className="a-side">
+        <div className="o-search">
+          <SearchBar onSelect={(p) => choose(p)} onLocate={() => locate(false)} locating={locating} />
+        </div>
+        {place && (
+          <div className={`o-map card map-card${mapOpen ? " open" : ""}`}>
+            <button className="map-toggle" aria-expanded={mapOpen} onClick={() => setMapOpen((o) => !o)}>
+              <span>🗺️ 지도에서 찾기</span>
+              <span className="muted">{mapOpen ? "접기 ▴" : "펼치기 ▾"}</span>
+            </button>
+            {mapOpen && (
+              <KakaoMap
+                lat={place.lat}
+                lon={place.lon}
+                onPick={async (lat, lon) => choose({ name: "지도에서 고른 위치", lat, lon, address: await lookupAddress(lat, lon) })}
+              />
+            )}
+          </div>
+        )}
+        <div className="o-controls card">
           <LeisureTabs value={leisureId} onChange={setLeisureId} />
           <div style={{ height: 12 }} />
           <PeriodPicker value={period} today={today} onChange={setPeriod} />
           <div style={{ height: 12 }} />
           <IntervalPicker value={interval} onChange={setIntervalChoice} />
         </div>
-      </div>
-      {place && (
-        <div className="a-map card" style={{ padding: 8 }}>
-          <KakaoMap lat={place.lat} lon={place.lon} onPick={async (lat, lon) => choose({ name: "지도에서 고른 위치", lat, lon, address: await lookupAddress(lat, lon) })} />
+        <div className="o-ad pc-only">
+          <AdSlot slot={AD_SLOTS.side} />
         </div>
-      )}
-      <div className="a-ad pc-only">
-        <AdSlot slot={AD_SLOTS.side} />
       </div>
 
       <main className="a-main">
-        {error && <div className="error">{error}</div>}
-
-        <section className="hero">
-          <div className="hero-top">
-            <span>
-              {leisure.emoji} {leisure.label} 날씨
-            </span>
-            <span>{intervalLong(interval)} · 최대 16일</span>
-          </div>
-          <h1 className="hero-name">
-            {place?.name ?? "위치 확인 중"}
-            {headingSuffix && <span className="h1-suffix"> {headingSuffix}</span>}
-          </h1>
-          {place?.address && place.address !== place.name && <div className="hero-addr">{place.address}</div>}
-          <div className="hero-meta">
-            <span className="pill mint">{periodLabel(period)}</span>
-            {forecast?.elevation != null && <span className="pill">⛰️ 해발 {Math.round(forecast.elevation).toLocaleString()}m</span>}
-          </div>
-        </section>
-
-        <div style={{ height: 12 }} />
-
-        {loading && !forecast ? (
-          <div className="skeleton" />
-        ) : (
-          forecast && (
-            <div style={{ opacity: loading ? 0.5 : 1 }}>
-              {interval === "day" ? (
-                <DaysTable days={days} leisure={leisure} today={today} />
-              ) : (
-                <DaySwiper dates={days.map((d) => d.date)} today={today}>
-                  {days.map((d) => (
-                    <DayCard key={d.date} day={d} leisure={leisure} isToday={d.date === today} nowHour={nowHour} step={stepHours(interval)} />
-                  ))}
-                </DaySwiper>
-              )}
-              <p className="muted" style={{ marginTop: 12 }}>
-                {(interval === "6h" || interval === "12h") && "기온·체감은 낮 칸은 최고, 밤 칸은 최저 값입니다. "}
-                {forecast.elevation != null && `기온은 해발 ${Math.round(forecast.elevation)}m 기준으로 보정된 값입니다. 바람은 고도 보정이 되지 않아 높은 산에서는 실제보다 약할 수 있습니다. `}
-                예보 제공: {forecast.source}
-              </p>
-              <div style={{ height: 12 }} />
-              <AdSlot slot={AD_SLOTS.afterSummary} />
+        <div className="o-hero">
+          {error && <div className="error">{error}</div>}
+          <section className="hero">
+            <div className="hero-top">
+              <span>
+                {leisure.emoji} {leisure.label} 날씨
+              </span>
+              <span>{intervalLong(interval)} · 최대 16일</span>
             </div>
-          )
-        )}
+            <h1 className="hero-name">
+              {place?.name ?? "위치 확인 중"}
+              {headingSuffix && <span className="h1-suffix"> {headingSuffix}</span>}
+            </h1>
+            {place?.address && place.address !== place.name && <div className="hero-addr">{place.address}</div>}
+            <div className="hero-meta">
+              <span className="pill mint">{periodLabel(period)}</span>
+              {forecast?.elevation != null && <span className="pill">⛰️ 해발 {Math.round(forecast.elevation).toLocaleString()}m</span>}
+            </div>
+          </section>
+        </div>
 
-        <div style={{ height: 12 }} />
-        <AdSlot slot={AD_SLOTS.bottom} />
+        <div className="o-fc">
+          {loading && !forecast ? (
+            <div className="skeleton" />
+          ) : (
+            forecast && (
+              <div style={{ opacity: loading ? 0.5 : 1 }}>
+                <ForecastTable days={days} leisure={leisure} interval={interval} today={today} nowHour={nowHour} />
+                <p className="muted" style={{ marginTop: 12 }}>
+                  {(interval === "6h" || interval === "12h") && "기온·체감은 낮 칸은 최고, 밤 칸은 최저 값입니다. "}
+                  {forecast.elevation != null &&
+                    `기온은 해발 ${Math.round(forecast.elevation)}m 기준으로 보정된 값입니다. 바람은 고도 보정이 되지 않아 높은 산에서는 실제보다 약할 수 있습니다. `}
+                  예보 제공: {forecast.source}
+                </p>
+                <div style={{ height: 12 }} />
+                <AdSlot slot={AD_SLOTS.afterSummary} />
+              </div>
+            )
+          )}
+
+          <div style={{ height: 12 }} />
+          <AdSlot slot={AD_SLOTS.bottom} />
+        </div>
       </main>
 
       {forecast && !capturing && (
@@ -281,9 +295,7 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
           source={forecast.source}
         />
       )}
-      {capturing && (
-        <CaptureSheet target={getTarget} fileName={fileName} shareTitle={shareTitle} shareUrl={shareUrl} onClose={() => setCapturing(false)} />
-      )}
+      {capturing && <CaptureSheet target={getTarget} fileName={fileName} shareTitle={shareTitle} shareUrl={shareUrl} onClose={() => setCapturing(false)} />}
     </div>
   );
 }

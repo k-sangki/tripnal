@@ -970,6 +970,10 @@ a {
 .ftab .ds {
   border-left: 2px solid #c9d1d9;
 }
+/* 일 단위는 칸마다 날짜가 바뀌므로 구분선을 쓰지 않는다 */
+.ftab.daily .ds {
+  border-left: 0;
+}
 /* 항목 이름: 왼쪽에 고정 */
 .ftab .lbl {
   position: sticky;
@@ -1087,6 +1091,7 @@ a {
 }
 .ftab.daily .ft-time th.now {
   background: var(--pine);
+  color: #fff;
 }
 .ftab.daily .ft-time b.d-sat {
   color: var(--rain);

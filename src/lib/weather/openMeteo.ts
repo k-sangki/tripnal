@@ -31,7 +31,16 @@ interface OpenMeteoResponse {
   hourly: Partial<Record<(typeof HOURLY)[number], (number | null)[]>> & { time: string[] };
 }
 
-export function buildOpenMeteoUrl(lat: number, lon: number, apiKey?: string, elevation?: number): string {
+/**
+ * 모델 순서. 앞쪽 며칠은 기상청(LDPS 1.5km + GDPS), 그 뒤는 ECMWF IFS,
+ * 둘 다 비어 있는 값(강수 확률·자외선, 15일 이후 등)은 Open-Meteo 기본 조합(best_match)으로 채운다.
+ */
+export const MODELS = ["kma_seamless", "ecmwf_ifs", "best_match"] as const;
+type Model = (typeof MODELS)[number];
+/** 기상청 모델을 먼저 쓰는 기간 (시간) */
+const KMA_HOURS = 72;
+
+export function buildOpenMeteoUrl(lat: number, lon: number, apiKey?: string, elevation?: number, models?: readonly Model[]): string {
   // 유료 키가 있으면 customer- 호스트를 쓴다 (상업용).
   const host = apiKey ? "https://customer-api.open-meteo.com" : "https://api.open-meteo.com";
   const params = new URLSearchParams({
@@ -43,6 +52,7 @@ export function buildOpenMeteoUrl(lat: number, lon: number, apiKey?: string, ele
     wind_speed_unit: "ms",
   });
   if (elevation != null) params.set("elevation", String(elevation));
+  if (models) params.set("models", models.join(","));
   if (apiKey) params.set("apikey", apiKey);
   return `${host}/v1/forecast?${params}`;
 }
@@ -81,10 +91,46 @@ function align<K extends string>(time: string[], json: HourlyOnly<K> | null, key
   return time.map((x) => at.get(x) ?? null);
 }
 
+type Series = (number | null)[];
+
+/**
+ * 여러 모델을 한 번에 요청하면 변수 이름 뒤에 _모델명이 붙어 온다.
+ * 시각마다 정해진 모델 순서대로 처음 나오는 값을 골라 하나의 시계열로 합친다.
+ */
+export function blendModels(json: OpenMeteoResponse, models: readonly Model[] = MODELS): OpenMeteoResponse {
+  const h = json.hourly as unknown as Record<string, Series | string[]>;
+  const time = json.hourly.time;
+  const start = time.findIndex((t) => t.slice(0, 13) >= kstNowHour());
+  const from = start < 0 ? 0 : start;
+  const out: Record<string, Series | string[]> = { time };
+  for (const v of HOURLY) {
+    const byModel = models.map((m) => h[`${v}_${m}`] as Series | undefined);
+    if (byModel.every((x) => !x)) {
+      if (h[v]) out[v] = h[v];
+      continue;
+    }
+    out[v] = time.map((_, i) => {
+      // 앞쪽은 기상청 → ECMWF → 기본, 그 뒤는 ECMWF → 기본 → 기상청
+      const order = i - from < KMA_HOURS ? [0, 1, 2] : [1, 2, 0];
+      for (const j of order) {
+        const x = byModel[j]?.[i];
+        if (x != null) return x;
+      }
+      return null;
+    });
+  }
+  return { ...json, hourly: out as OpenMeteoResponse["hourly"] };
+}
+
+function kstNowHour(): string {
+  return new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 13);
+}
+
 export function parseOpenMeteo(
   json: OpenMeteoResponse,
   marine: HourlyOnly<(typeof MARINE)[number]> | null = null,
   air: HourlyOnly<(typeof AIR)[number]> | null = null,
+  source = "Open-Meteo",
 ): RawForecast {
   const h = json.hourly;
   const nums = (k: (typeof HOURLY)[number]) => h[k] ?? h.time.map(() => null);
@@ -115,7 +161,7 @@ export function parseOpenMeteo(
     longitude: json.longitude,
     elevation: json.elevation ?? null,
     hourly,
-    source: "Open-Meteo",
+    source,
   };
 }
 
@@ -125,14 +171,24 @@ export const openMeteoProvider: WeatherProvider = {
     const key = process.env.OPEN_METEO_API_KEY;
     // 바다·대기질은 없어도 기본 예보는 보여준다
     const optional = <T,>(url: string) => fetchJsonCached<T>(url, 1800).catch(() => null);
+    // 기상청·ECMWF 조합이 실패하면 예전처럼 기본 조합 하나로 받는다
+    const blended = fetchJsonCached<OpenMeteoResponse>(buildOpenMeteoUrl(lat, lon, key, elevation, MODELS), 1800)
+      .then((j) => {
+        const json = blendModels(j);
+        if (!json.hourly.temperature_2m?.some((x) => x != null)) throw new Error("모델 조합 응답에 기온이 없음");
+        return { json, source: "Open-Meteo (기상청·ECMWF)" };
+      })
+      .catch(() =>
+        fetchJsonCached<OpenMeteoResponse>(buildOpenMeteoUrl(lat, lon, key, elevation), 1800).then((json) => ({ json, source: "Open-Meteo" })),
+      );
     const [main, marine, air] = await Promise.all([
-      fetchJsonCached<OpenMeteoResponse>(buildOpenMeteoUrl(lat, lon, key, elevation), 1800),
+      blended,
       // 바다 예보 기간이 16일보다 짧은 경우를 대비해 7일로 한 번 더 시도한다
       optional<HourlyOnly<(typeof MARINE)[number]>>(buildMarineUrl(lat, lon, key)).then(
         (m) => m ?? optional<HourlyOnly<(typeof MARINE)[number]>>(buildMarineUrl(lat, lon, key, 7)),
       ),
       optional<HourlyOnly<(typeof AIR)[number]>>(buildAirUrl(lat, lon, key)),
     ]);
-    return parseOpenMeteo(main, marine, air);
+    return parseOpenMeteo(main.json, marine, air, main.source);
   },
 };

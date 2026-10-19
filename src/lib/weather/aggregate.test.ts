@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { aggregate, sunTimes } from "./aggregate";
 import { mockRaw } from "./mock";
-import { buildOpenMeteoUrl, parseOpenMeteo } from "./openMeteo";
+import { blendModels, buildOpenMeteoUrl, parseOpenMeteo } from "./openMeteo";
 import type { RawForecast } from "./types";
 
 function raw(hours: number, over: Partial<RawForecast["hourly"]> = {}): RawForecast {
@@ -113,5 +113,36 @@ describe("openMeteo", () => {
     });
     expect(r.elevation).toBe(38);
     expect(r.hourly.windGusts).toEqual([6.2]);
+  });
+
+  it("기상청 → ECMWF → 기본 순서로 시각마다 값을 고르고, 사흘 뒤부터는 ECMWF를 먼저 쓴다", () => {
+    const n = 100;
+    const t0 = Date.UTC(2020, 0, 1); // 과거 시각이라 처음부터 센다
+    const time = Array.from({ length: n }, (_, i) => new Date(t0 + i * 3600e3).toISOString().slice(0, 16));
+    const fill = (v: number | null) => Array.from({ length: n }, () => v);
+    const kma = fill(1);
+    kma[1] = null;
+    const r = blendModels({
+      latitude: 37,
+      longitude: 127,
+      hourly: {
+        time,
+        temperature_2m_kma_seamless: kma,
+        temperature_2m_ecmwf_ifs: fill(2),
+        temperature_2m_best_match: fill(3),
+        precipitation_probability_kma_seamless: fill(null),
+        precipitation_probability_ecmwf_ifs: fill(null),
+        precipitation_probability_best_match: fill(40),
+      } as never,
+    });
+    const temp = r.hourly.temperature_2m!;
+    expect([temp[0], temp[1], temp[71], temp[72]]).toEqual([1, 2, 1, 2]);
+    expect(r.hourly.precipitation_probability![80]).toBe(40);
+  });
+
+  it("모델 목록을 URL에 넣는다", () => {
+    expect(new URL(buildOpenMeteoUrl(37, 127, undefined, undefined, ["kma_seamless", "ecmwf_ifs", "best_match"])).searchParams.get("models")).toBe(
+      "kma_seamless,ecmwf_ifs,best_match",
+    );
   });
 });

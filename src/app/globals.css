@@ -1433,3 +1433,17 @@ a {
   display: block;
   font-size: 12px;
 }
+/* 지도에서 누른 지점의 버튼 */
+.map-pick {
+  padding: 8px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--pine);
+  color: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}

@@ -16,11 +16,16 @@ interface KMap {
 interface KMarker {
   setPosition(p: KLatLng): void;
 }
+interface KOverlay {
+  setPosition(p: KLatLng): void;
+  setMap(m: KMap | null): void;
+}
 interface KakaoMaps {
   load(cb: () => void): void;
   LatLng: new (lat: number, lng: number) => KLatLng;
   Map: new (el: HTMLElement, opts: { center: KLatLng; level: number }) => KMap;
   Marker: new (opts: { position: KLatLng; map: KMap }) => KMarker;
+  CustomOverlay: new (opts: { position: KLatLng; content: HTMLElement; yAnchor?: number; clickable?: boolean }) => KOverlay;
   event: { addListener(target: KMap, type: string, cb: (e: { latLng: KLatLng }) => void): void };
 }
 declare global {
@@ -59,7 +64,7 @@ function loadSdk(): Promise<KakaoMaps> {
   return loader;
 }
 
-/** 위치 확인·선택용 지도. 지도를 누르면 그 지점의 날씨로 바뀐다. */
+/** 위치 확인·선택용 지도. 지도를 누르면 "이 위치의 예보 보기" 버튼이 뜨고, 누르면 그 지점의 날씨로 바뀐다. */
 export function KakaoMap({ lat, lon, onPick }: { lat: number; lon: number; onPick: (lat: number, lon: number) => void }) {
   const el = useRef<HTMLDivElement>(null);
   const map = useRef<{ map: KMap; marker: KMarker; maps: KakaoMaps } | null>(null);
@@ -79,7 +84,24 @@ export function KakaoMap({ lat, lon, onPick }: { lat: number; lon: number; onPic
         const center = new maps.LatLng(lat, lon);
         const m = new maps.Map(el.current, { center, level: 9 });
         const marker = new maps.Marker({ position: center, map: m });
-        maps.event.addListener(m, "click", (e) => pickRef.current(e.latLng.getLat(), e.latLng.getLng()));
+        // 누른 지점에 띄우는 버튼 (지도를 끌어 옮기는 것과 구분)
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "map-pick";
+        btn.textContent = "이 위치의 예보 보기";
+        const overlay = new maps.CustomOverlay({ position: center, content: btn, yAnchor: 1.3, clickable: true });
+        let picked: KLatLng | null = null;
+        btn.addEventListener("click", (ev) => {
+          ev.stopPropagation();
+          if (!picked) return;
+          overlay.setMap(null);
+          pickRef.current(picked.getLat(), picked.getLng());
+        });
+        maps.event.addListener(m, "click", (e) => {
+          picked = e.latLng;
+          overlay.setPosition(e.latLng);
+          overlay.setMap(m);
+        });
         map.current = { map: m, marker, maps };
       })
       .catch((e: Error) => setFailed(e.message));

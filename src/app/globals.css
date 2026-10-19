@@ -1052,9 +1052,6 @@ a {
   color: var(--muted);
   font-size: 12px;
 }
-.dh-in .sun-t.em {
-  color: var(--ink);
-}
 .dh-in .hl {
   font-size: 13px;
   font-weight: 800;

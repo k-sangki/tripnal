@@ -268,8 +268,8 @@ export function ForecastTable({ days, leisure, interval, today, nowHour }: Props
                           </span>
                         </div>
                         <div className="dh-l2">
-                          <span className={`sun-t${sunEm("sunrise") ? " em" : ""}`}>🌅{d.sunrise ?? "-"}</span>
-                          <span className={`sun-t${sunEm("sunset") ? " em" : ""}`}>🌇{d.sunset ?? "-"}</span>
+                          {(open || sunEm("sunrise")) && <span className="sun-t">🌅{d.sunrise ?? "-"}</span>}
+                          {(open || sunEm("sunset")) && <span className="sun-t">🌇{d.sunset ?? "-"}</span>}
                         </div>
                         {showTides && (
                           <div className="dh-l2 tides">
@@ -391,6 +391,16 @@ function DailyTable({
   sunEm: (k: "sunrise" | "sunset") => boolean;
 }) {
   const cols = days.map((d) => ({ d, s: daySummary(d) }));
+  const sunRow = (k: "sunrise" | "sunset") => (
+    <tr key={k} className="r-sun">
+      <RowHead k={k} em={false} />
+      {cols.map(({ d }) => (
+        <td key={d.date} className="ds">
+          {d[k] ?? "-"}
+        </td>
+      ))}
+    </tr>
+  );
   const metricRow = (k: MetricKey, isEm: boolean) => {
     if (k === "temp") {
       return [
@@ -463,28 +473,12 @@ function DailyTable({
           ))}
         </tr>
         {rows.flatMap((k) => metricRow(k, em(k)))}
-        <tr className={sunEm("sunrise") ? "r-sun em" : "r-sun"}>
-          <RowHead k="sunrise" em={sunEm("sunrise")} />
-          {cols.map(({ d }) => (
-            <td key={d.date} className="ds">
-              {d.sunrise ?? "-"}
-            </td>
-          ))}
-        </tr>
-        <tr className={sunEm("sunset") ? "r-sun em" : "r-sun"}>
-          <RowHead k="sunset" em={sunEm("sunset")} />
-          {cols.map(({ d }) => (
-            <td key={d.date} className="ds">
-              {d.sunset ?? "-"}
-            </td>
-          ))}
-        </tr>
+        {(["sunrise", "sunset"] as const).filter(sunEm).map(sunRow)}
       </tbody>
-      {more.length > 0 && (
-        <tbody className="ft-more" hidden={!open}>
-          {more.flatMap((k) => metricRow(k, false))}
-        </tbody>
-      )}
+      <tbody className="ft-more" hidden={!open}>
+        {more.flatMap((k) => metricRow(k, false))}
+        {(["sunrise", "sunset"] as const).filter((k) => !sunEm(k)).map(sunRow)}
+      </tbody>
     </table>
   );
 }

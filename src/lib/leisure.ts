@@ -102,9 +102,9 @@ export const ACTIVITIES = [
   { id: "running", label: "러닝", emoji: "🏃", group: "outdoor" },
   { id: "travel", label: "여행", emoji: "🧳", group: "outdoor" },
   { id: "picnic", label: "피크닉/산책", emoji: "🧺", group: "outdoor" },
-  { id: "paragliding", label: "패러글라이딩", emoji: "🪂", group: "air" },
-  { id: "drone", label: "드론 비행", emoji: "🚁", group: "air" },
   { id: "badminton", label: "배드민턴", emoji: "🏸", group: "air" },
+  { id: "drone", label: "드론 비행", emoji: "🚁", group: "air" },
+  { id: "paragliding", label: "패러글라이딩", emoji: "🪂", group: "air" },
 ] as const satisfies readonly { id: string; label: string; emoji: string; group: GroupId }[];
 
 export type LeisureId = (typeof ACTIVITIES)[number]["id"];
@@ -123,17 +123,21 @@ export interface Leisure {
   sun?: "sunrise" | "sunset" | "both";
 }
 
-/** 그룹의 주 지표를 위로, 나머지 기본 지표를 아래로, 필요 없는 추가 지표는 더보기로 */
+/** 기온·체감은 항상 맨 위에 둔다 (날씨 아이콘 바로 아래) */
+export const TOP_METRICS: MetricKey[] = ["temp", "feels"];
+
+/** 기온·체감 다음에 그룹의 주 지표, 그 아래 나머지 기본 지표, 필요 없는 추가 지표는 더보기로 */
 export function rowsForGroup(g: ActivityGroup): { rows: MetricKey[]; more: MetricKey[] } {
-  const rest: MetricKey[] = BASE_METRICS.filter((k) => !g.primary.includes(k));
+  const primary = g.primary.filter((k) => !TOP_METRICS.includes(k));
+  const rest: MetricKey[] = BASE_METRICS.filter((k) => !TOP_METRICS.includes(k) && !primary.includes(k));
   // 주 지표에 풍속만 있고 돌풍이 없으면 돌풍을 부 지표 맨 앞에 둔다
-  if (g.primary.includes("wind") && rest.includes("gust")) {
+  if (primary.includes("wind") && rest.includes("gust")) {
     rest.splice(rest.indexOf("gust"), 1);
     rest.unshift("gust");
   }
   return {
-    rows: [...g.primary, ...rest],
-    more: EXTRA_METRICS.filter((k) => !g.primary.includes(k)),
+    rows: [...TOP_METRICS, ...primary, ...rest],
+    more: EXTRA_METRICS.filter((k) => !primary.includes(k)),
   };
 }
 

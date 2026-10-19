@@ -141,6 +141,8 @@ function dayColumns(leisure: Leisure): MetricKey[] {
 function DayMatrix({ days, leisure, today }: { days: DayForecast[]; leisure: Leisure; today: string }) {
   const cols = dayColumns(leisure);
   const em = (k: MetricKey) => (leisure.emphasis.includes(k) ? "em" : undefined);
+  // 일출·일몰은 그 활동에 중요할 때만 넣는다
+  const suns = (["sunrise", "sunset"] as const).filter((k) => leisure.sun === k || leisure.sun === "both");
   return (
     <table className="cf-table cf-daily">
       <thead>
@@ -153,8 +155,9 @@ function DayMatrix({ days, leisure, today }: { days: DayForecast[]; leisure: Lei
               {METRIC_LABEL[k]}
             </th>
           ))}
-          <th>일출</th>
-          <th>일몰</th>
+          {suns.map((k) => (
+            <th key={k}>{k === "sunrise" ? "일출" : "일몰"}</th>
+          ))}
         </tr>
       </thead>
       <tbody>
@@ -205,8 +208,9 @@ function DayMatrix({ days, leisure, today }: { days: DayForecast[]; leisure: Lei
                   </td>
                 );
               })}
-              <td>{d.sunrise ?? "-"}</td>
-              <td>{d.sunset ?? "-"}</td>
+              {suns.map((k) => (
+                <td key={k}>{d[k] ?? "-"}</td>
+              ))}
             </tr>
           );
         })}

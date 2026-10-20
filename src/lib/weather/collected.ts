@@ -7,7 +7,7 @@ import type { HourlySeries, RawForecast, WeatherProvider } from "./types";
  *
  * - 격자(0.25°)의 둘러싼 네 점을 읽어 고도 보정 후 거리 가중(쌍선형)으로 지점 값을 낸다.
  * - 3·6시간 간격 값을 1시간 간격으로 풀고, 세 모델의 중간값을 쓴다 (openMeteo.ts와 같은 규칙).
- * - 체감온도·날씨 코드·자외선은 받은 값으로 계산한다. 파고는 GFS-Wave. 강수 확률·해수면·대기질은 아직 없다.
+ * - 체감온도·날씨 코드·자외선은 받은 값으로 계산한다. 파고는 GFS-Wave, 강수 확률은 GEFS 앙상블. 해수면·대기질은 아직 없다.
  */
 
 export const COLLECTED_MODELS = ["ecmwf", "gfs", "icon"] as const;
@@ -330,7 +330,7 @@ function cached<T>(key: string, load: () => Promise<T>): Promise<T> {
 
 /** 최신 run은 5분 동안 기억한다 (버킷마다 따로) */
 const latestMemos = new WeakMap<DataBucket, Map<string, { at: number; run: Promise<string | null> }>>();
-function latestRun(b: DataBucket, model: CollectedModel | "wave"): Promise<string | null> {
+function latestRun(b: DataBucket, model: CollectedModel | "wave" | "gefs"): Promise<string | null> {
   let latestMemo = latestMemos.get(b);
   if (!latestMemo) latestMemos.set(b, (latestMemo = new Map()));
   const hit = latestMemo.get(model);
@@ -386,12 +386,48 @@ export async function loadWave(b: DataBucket, cs: ReturnType<typeof corners>, ke
   return { waveHeight: mix((f) => f.wave), windWaveHeight: mix((f) => f.windwave) };
 }
 
+/** GEFS 6시간 강수 확률 격자점 (collector/gefs.py) */
+export interface ProbPointFile {
+  run: string;
+  /** 6시간 구간의 끝 */
+  step: number[];
+  prob: Num[];
+}
+
+/** 시각별 강수 확률(%): 그 시각이 속한 6시간 구간의 확률을 네 점 가중 평균 */
+export async function loadProbability(b: DataBucket, cs: ReturnType<typeof corners>, keys: string[]): Promise<Num[] | null> {
+  const run = await latestRun(b, "gefs");
+  if (!run) return null;
+  const files = await Promise.all(
+    cs.map((c) => {
+      const key = `gefs/${run}/${c.lat.toFixed(2)}_${c.lon.toFixed(2)}.json`;
+      return cached(key, () => b.get(key).then((o) => (o ? o.json<ProbPointFile>() : null)));
+    }),
+  );
+  const t0 = runTime(run);
+  return keys.map((k) => {
+    const h = (kstKeyTime(k) - t0) / 3600e3;
+    let s = 0;
+    let ws = 0;
+    files.forEach((f, i) => {
+      if (!f) return;
+      const j = f.step.findIndex((x) => x >= h && x - 6 < h);
+      const v = j < 0 ? null : f.prob[j];
+      if (v == null) return;
+      s += v * cs[i].w;
+      ws += cs[i].w;
+    });
+    return ws > 0 ? Math.round(s / ws) : null;
+  });
+}
+
 export async function loadCollected(b: DataBucket, lat: number, lon: number, elevation?: number, now = new Date()): Promise<RawForecast> {
   const keys = hourKeys(now);
   const cs = corners(lat, lon);
   const dem = elevation == null ? demElevation(b, lat, lon) : null;
   // 바다가 없어도 예보는 보여준다
   const wave = loadWave(b, cs, keys).catch(() => null);
+  const prob = loadProbability(b, cs, keys).catch(() => null);
   const models = await Promise.all(
     COLLECTED_MODELS.map(async (model) => {
       const run = await latestRun(b, model);
@@ -420,6 +456,8 @@ export async function loadCollected(b: DataBucket, lat: number, lon: number, ele
   );
   const w = await wave;
   if (w) Object.assign(hourly, w);
+  const p = await prob;
+  if (p) hourly.precipitationProbability = p;
   const names: Record<CollectedModel, string> = { ecmwf: "ECMWF", gfs: "GFS", icon: "ICON" };
   return {
     latitude: lat,

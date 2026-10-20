@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { apparent, corners, expand, hourKeys, loadCollected, loadWave, pointKey, uvIndex, weatherCode, type DataBucket, type PointFile } from "./collected";
+import { apparent, corners, expand, hourKeys, loadCollected, loadProbability, loadWave, pointKey, uvIndex, weatherCode, type DataBucket, type PointFile } from "./collected";
 
 // 2026-10-20 00:00 KST = 2026-10-19 15:00 UTC
 const NOW = new Date("2026-10-20T03:00:00+09:00");
@@ -120,5 +120,21 @@ describe("직접 수집 예보", () => {
     const w = await loadWave(bucket, cs, keys);
     expect(w?.waveHeight).toEqual([1, 1.3, 1.7, 2]);
     expect(await loadWave(bucket, corners(37.6, 127.1), keys)).toBeNull();
+  });
+
+  it("강수 확률은 그 시각이 속한 6시간 구간 값", async () => {
+    const files: Record<string, unknown> = { "gefs/latest.json": { run: "2026101915" } };
+    for (const c of corners(37.5, 127)) {
+      files[`gefs/2026101915/${c.lat.toFixed(2)}_${c.lon.toFixed(2)}.json`] = { run: "2026101915", step: [6, 12], prob: [40, 80] };
+    }
+    const bucket: DataBucket = {
+      async get(key) {
+        const v = files[key];
+        return v ? { json: async <T,>() => v as T, arrayBuffer: async () => new ArrayBuffer(0) } : null;
+      },
+    };
+    const p = await loadProbability(bucket, corners(37.5, 127), hourKeys(NOW).slice(0, 14));
+    // 0시 = run 기준 0시간(구간 밖), 1~6시 = 40%, 7~12시 = 80%, 13시부터 없음
+    expect(p).toEqual([null, 40, 40, 40, 40, 40, 40, 80, 80, 80, 80, 80, 80, null]);
   });
 });

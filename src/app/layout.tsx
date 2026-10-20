@@ -12,16 +12,18 @@ function beacon(token: string) {
   return `(function(){try{var q=new URLSearchParams(location.search).get("me");if(q==="1")localStorage.setItem("tripnal-me","1");if(q==="0")localStorage.removeItem("tripnal-me");if(localStorage.getItem("tripnal-me"))return}catch(e){}var s=document.createElement("script");s.defer=true;s.src="https://static.cloudflareinsights.com/beacon.min.js";s.setAttribute("data-cf-beacon",${JSON.stringify(JSON.stringify({ token }))});document.body.appendChild(s)})()`;
 }
 
+const DESCRIPTION = "캠핑·낚시·등산·자전거·여행 날씨를 16일까지 3시간 간격으로. 기온·비·바람·돌풍·물때를 한눈에 보고 캡처해 공유하세요.";
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
     default: "tripnalc - 캠핑·낚시·등산 16일 날씨 (3시간 간격)",
     template: "%s | tripnalc",
   },
-  description:
-    "대한민국 어디든 오늘부터 16일까지 3시간 간격 날씨. 기온·체감온도·비·바람·돌풍·일출·일몰을 캠핑, 낚시, 등산, 자전거, 여행에 맞게 한눈에 보고 캡처해서 공유하세요.",
+  // 검색 결과·공유 미리보기에 쓰인다. 네이버 권장 80자 이내
+  description: DESCRIPTION,
   applicationName: "tripnalc",
-  openGraph: { type: "website", siteName: "tripnalc", locale: "ko_KR" },
+  openGraph: { type: "website", siteName: "tripnalc", locale: "ko_KR", description: DESCRIPTION },
   formatDetection: { telephone: false },
   // 애드센스 사이트 소유 확인용
   ...(ADSENSE ? { other: { "google-adsense-account": ADSENSE } } : {}),

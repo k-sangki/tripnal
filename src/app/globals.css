@@ -1829,3 +1829,7 @@ th.dcol .pd {
     transform: rotate(360deg);
   }
 }
+.search-results .search-more {
+  padding: 8px 12px;
+  font-size: 13px;
+}

@@ -2,7 +2,7 @@
 collect.py 결과(out/ecmwf/...)를 Cloudflare R2 버킷에 올리고, 지난 run은 하나만 남기고 지운다.
 
 환경 변수: CLOUDFLARE_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET(기본 tripnal-data)
-사용: python collector/upload.py out ecmwf
+사용: python collector/upload.py out ecmwf  (gfs·icon·dem도 같은 방식)
 """
 
 import concurrent.futures as cf
@@ -25,9 +25,19 @@ def client():
     )
 
 
+def upload_dem(s3, bucket, out):
+    """지형 고도 격자 (collector/dem.py)는 run 없이 그대로 올린다"""
+    for name, ctype in [("korea.bin", "application/octet-stream"), ("korea.json", "application/json")]:
+        with open(os.path.join(out, "dem", name), "rb") as fp:
+            s3.put_object(Bucket=bucket, Key=f"dem/{name}", Body=fp.read(), ContentType=ctype)
+    print("uploaded dem", flush=True)
+
+
 def main(out, model):
     s3 = client()
     bucket = os.environ.get("R2_BUCKET", "tripnal-data")
+    if model == "dem":
+        return upload_dem(s3, bucket, out)
     with open(os.path.join(out, model, "latest.json")) as fp:
         run = json.load(fp)["run"]
     folder = os.path.join(out, model, run)

@@ -7,6 +7,7 @@ import { getForecast, isInKorea } from "@/lib/weather";
 import { codeIcon } from "@/lib/weather/codes";
 import type { DayForecast } from "@/lib/weather/types";
 import { ICONS } from "./icons";
+import { SLOGAN } from "@/lib/brand";
 
 /**
  * 카카오톡·네이버 등에 링크를 붙였을 때 보이는 미리보기 이미지 (1200×630).
@@ -99,7 +100,7 @@ export async function GET(request: Request) {
           <div style={{ fontSize: 54, fontWeight: 700 }}>{title}</div>
           <div style={{ fontSize: 30, opacity: 0.85, marginTop: 4 }}>{sub}</div>
         </div>
-        <div style={{ fontSize: 30, fontWeight: 700, opacity: 0.9 }}>트립날씨</div>
+        <div style={{ fontSize: 30, fontWeight: 700, opacity: 0.9 }}>{SLOGAN}</div>
       </div>
       <div style={{ flex: 1, display: "flex", padding: "26px 36px 0" }}>
         {days.length ? (
@@ -118,7 +119,7 @@ export async function GET(request: Request) {
   );
 
   // 그림에 들어가는 글자만 담아 폰트를 받는다 (숫자·기호는 미리 넣어 둔다)
-  const glyphs = [title, sub, "트립날씨 캠핑·낚시·등산 16일 날씨, 3시간 간격으로 ECMWF·GFS·ICON 예보 종합 tripnalc.com", "0123456789/°-%mm바람s일월화수목금토요"].join("");
+  const glyphs = [title, sub, SLOGAN, "트립날씨 캠핑·낚시·등산 16일 날씨, 3시간 간격으로 ECMWF·GFS·ICON 예보 종합 tripnalc.com", "0123456789/°-%mm바람s일월화수목금토요"].join("");
   try {
     const [regular, bold] = await Promise.all([loadFont(glyphs, 400), loadFont(glyphs, 700)]);
     return new ImageResponse(element, {

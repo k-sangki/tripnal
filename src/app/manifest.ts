@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "tripnalc - 캠핑·낚시·등산 16일 날씨",
     short_name: "tripnalc",
-    description: "대한민국 어디든 16일까지 3시간 간격 레저 날씨",
+    description: "놀러갈 땐, 트립날씨. 대한민국 어디든 16일까지 3시간 간격 레저 날씨",
     start_url: "/",
     scope: "/",
     display: "standalone",

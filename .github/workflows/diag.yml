@@ -15,11 +15,14 @@ jobs:
       ADS_API_KEY: ${{ secrets.ADS_API_KEY }}
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
       - run: |
           set +e
           {
           pip install -q boto3 pywebpush
-          curl -s https://tripnalc.com/api/alerts; echo
+          curl -s -w ' [%{http_code}]' https://tripnalc.com/api/alerts; echo
           ID=$(curl -s -X POST https://tripnalc.com/api/alerts -H 'Content-Type: application/json' -d '{"subscription":{"endpoint":"https://example.com/push/test","keys":{"p256dh":"BFake","auth":"fake"}},"place":{"name":"테스트","lat":37.81,"lon":127.52},"act":"camping","from":"2026-10-24","to":"2026-10-25"}' | tee /dev/stderr | python3 -c 'import sys,json;print(json.load(sys.stdin)["id"])')
           echo id $ID
           python3 - <<'PY'

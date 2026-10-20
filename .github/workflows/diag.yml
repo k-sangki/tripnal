@@ -18,9 +18,19 @@ jobs:
       - run: |
           set +e
           {
-          curl -s -A diag https://tripnalc.com/ | grep -o 'class="adsbygoogle ad-slot"[^>]*' | sed 's/data-ad-client="[^"]*"/client=…/' | head
-          curl -s -A diag https://tripnalc.com/ | grep -c adsbygoogle.js
-          curl -s -A diag https://tripnalc.com/ads.txt
+          python3 - <<'PY'
+          import os, urllib.request, urllib.parse
+          key=os.environ["KHOA_API_KEY"]
+          base="https://apis.data.go.kr/1360000/WthrWrnInfoService/"
+          for op, extra in [("getPwnStatus",{}),("getWthrWrnList",{"stnId":"108"}),("getWthrWrnMsg",{"stnId":"108"}),("getPwnCd",{"areaCode":"L1100100"})]:
+              q={"serviceKey":key,"dataType":"JSON","numOfRows":"10","pageNo":"1",**extra}
+              try:
+                  b=urllib.request.urlopen(base+op+"?"+urllib.parse.urlencode(q), timeout=30).read().decode()
+              except Exception as e:
+                  b="ERR "+str(e)
+              print("==", op); print(b[:2500])
+          PY
+          curl -s "https://apihub.kma.go.kr/" -o /dev/null -w "apihub %{http_code}\n"
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com
           git add -A diag-out.txt; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026

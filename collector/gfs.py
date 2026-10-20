@@ -20,6 +20,7 @@ import sys
 import eccodes
 
 from collect import LAT_MAX, LAT_MIN, LON_MAX, LON_MIN, RES, http, r1, retry
+from overseas import POINTS, pick
 
 BASE = "https://noaa-gfs-bdp-pds.s3.amazonaws.com"
 STEPS = list(range(0, 385, 3))
@@ -56,7 +57,7 @@ def latest_run():
     raise SystemExit("올라온 run을 찾지 못함")
 
 
-def pick(lines, step):
+def pick_ranges(lines, step):
     """idx 줄에서 받을 메시지 {이름: (시작, 끝)}"""
     out = {}
     for i, line in enumerate(lines):
@@ -83,8 +84,9 @@ def fields(run, step):
     lines = http(f"{run_path(run)}.f{step:03d}.idx").decode().splitlines()
     want = set(WANT.values()) - ({"tp"} if step == 0 else set()) | ({"z"} if step == 0 else set())
     # step 0에는 강수·돌풍 같은 값이 없을 수 있다
-    rngs = pick(lines, step)
-    out = {}
+    rngs = pick_ranges(lines, step)
+    # 해외 여행지 둘레 격자점은 out["@x"][이름] (1, n)
+    out = {"@x": {}}
     for name, (o, e) in rngs.items():
         msg = eccodes.codes_new_from_message(http(f"{run_path(run)}.f{step:03d}", rng=(o, e) if e else (o, o + 50_000_000)))
         try:
@@ -100,6 +102,7 @@ def fields(run, step):
         c0 = int(round(((LON_MIN - lon0) % 360) / RES))
         c1 = int(round(((LON_MAX - lon0) % 360) / RES))
         out[name] = vals[r0 : r1_ + 1, c0 : c1 + 1]
+        out["@x"][name] = pick(vals, lat0, lon0, RES)
     missing = want - out.keys() - ({"gust", "cape", "csnow", "tcc", "vis"} if step == 0 else set())
     if missing:
         raise RuntimeError(f"step {step}: {sorted(missing)} 없음")
@@ -119,18 +122,28 @@ def main():
     with cf.ThreadPoolExecutor(8) as ex:
         data = dict(zip(steps, ex.map(lambda s: retry(fields, run, s), steps)))
 
-    nlat, nlon = data[steps[0]]["2t"].shape
-    elev = data[0].get("z") if 0 in data else None
     folder = os.path.join(a.out, "gfs", run)
     os.makedirs(folder, exist_ok=True)
+    data_x = {s: data[s].pop("@x") for s in steps}
+    n = write(folder, run, steps, data, lambda r, c: (LAT_MAX - r * RES, LON_MIN + c * RES))
+    # 해외 여행지: (1, n) 배열을 한 줄짜리 격자처럼 쓴다
+    n += write(folder, run, steps, data_x, lambda r, c: POINTS[c])
+    with open(os.path.join(a.out, "gfs", "latest.json"), "w") as fp:
+        json.dump({"run": run, "lat": [LAT_MIN, LAT_MAX], "lon": [LON_MIN, LON_MAX], "res": RES}, fp)
+    print("points", n, flush=True)
+
+
+def write(folder, run, steps, data, coord):
+    """data[step][이름][r, c] → 격자점별 JSON. coord(r, c) = (lat, lon)"""
+    nlat, nlon = data[steps[0]]["2t"].shape
+    elev = data[0].get("z") if 0 in data else None
 
     def at(f, k, r, c):
         return float(f[k][r, c]) if k in f else None
 
     for r in range(nlat):
         for c in range(nlon):
-            lat = LAT_MAX - r * RES
-            lon = LON_MIN + c * RES
+            lat, lon = coord(r, c)
             series = {k: [] for k in ["temp", "dew", "wind", "dir", "gust", "precip", "snow", "cloud", "cape", "vis"]}
             prev_tp = 0.0
             for s in steps:
@@ -164,9 +177,7 @@ def main():
             }
             with open(os.path.join(folder, f"{lat:.2f}_{lon:.2f}.json"), "w") as fp:
                 json.dump(point, fp, separators=(",", ":"))
-    with open(os.path.join(a.out, "gfs", "latest.json"), "w") as fp:
-        json.dump({"run": run, "lat": [LAT_MIN, LAT_MAX], "lon": [LON_MIN, LON_MAX], "res": RES}, fp)
-    print("points", nlat * nlon, flush=True)
+    return nlat * nlon
 
 
 if __name__ == "__main__":

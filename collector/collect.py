@@ -3,6 +3,7 @@ ECMWF IFS 공개 예보(0.25°)에서 한국 영역만 잘라 격자점별 JSON�
 
 - 원본: ECMWF Open Data (CC-BY-4.0) AWS 미러. .index 파일로 필요한 변수만 바이트 범위로 받는다.
 - 결과: out/ecmwf/{run}/{lat}_{lon}.json (격자점 하나), out/ecmwf/latest.json (최신 run)
+  해외 여행지 둘레 격자점(overseas.py)도 같은 폴더에 같은 모양으로 남긴다.
 - 값: temp·dew °C, wind·gust m/s, dir °, precip mm(구간 합), snow mm 물당량(구간 합), cloud %, cape J/kg
 - 시각: run 기준 시간(step). 0~144h는 3시간, 그 뒤 360h까지 6시간 간격.
 
@@ -21,6 +22,8 @@ import urllib.request
 
 import eccodes
 import numpy as np
+
+from overseas import POINTS, pick
 
 BASE = "https://ecmwf-forecasts.s3.eu-central-1.amazonaws.com"
 # 한국 영역 (제주·울릉·독도 포함)
@@ -66,10 +69,10 @@ def latest_run():
 
 
 def fields(run, step):
-    """step 하나에서 PARAMS를 받아 {param: 한국 영역 2차원 배열}"""
+    """step 하나에서 PARAMS를 받아 {param: 한국 영역 2차원 배열}, 해외 지점은 out["@x"][param] (1, n)"""
     idx = http(f"{run_path(run)}-{step}h-oper-fc.index").decode().splitlines()
     want = set(PARAMS) | ({"z"} if step == 0 else set())
-    out = {}
+    out = {"@x": {}}
     for line in idx:
         j = json.loads(line)
         name = ALIAS.get(j["param"], j["param"])
@@ -91,6 +94,7 @@ def fields(run, step):
         c0 = int(round(((LON_MIN - lon0) % 360) / RES))
         c1 = int(round(((LON_MAX - lon0) % 360) / RES))
         out[name] = vals[r0 : r1 + 1, c0 : c1 + 1]
+        out["@x"][name] = pick(vals, lat0, lon0, RES)
     missing = want - out.keys()
     if missing:
         raise RuntimeError(f"step {step}: {sorted(missing)} 없음")
@@ -127,14 +131,25 @@ def main():
     with cf.ThreadPoolExecutor(4) as ex:
         data = dict(zip(steps, ex.map(lambda s: retry(fields, run, s), steps)))
 
-    nlat, nlon = data[steps[0]]["2t"].shape
-    elev = data[0]["z"] / 9.80665 if 0 in data else None
     folder = os.path.join(a.out, "ecmwf", run)
     os.makedirs(folder, exist_ok=True)
+    n = write(folder, run, steps, data, lambda r, c: (LAT_MAX - r * RES, LON_MIN + c * RES))
+    # 해외 여행지: (1, n) 배열을 한 줄짜리 격자처럼 쓴다
+    data_x = {s: data[s].pop("@x") for s in steps}
+    n += write(folder, run, steps, data_x, lambda r, c: POINTS[c])
+    with open(os.path.join(a.out, "ecmwf", "latest.json"), "w") as fp:
+        json.dump({"run": run, "lat": [LAT_MIN, LAT_MAX], "lon": [LON_MIN, LON_MAX], "res": RES}, fp)
+    print("points", n, flush=True)
+
+
+def write(folder, run, steps, data, coord):
+    """data[step][param][r, c] → 격자점별 JSON. coord(r, c) = (lat, lon)"""
+    data = {s: {k: v for k, v in f.items() if k != "@x"} for s, f in data.items()}
+    nlat, nlon = data[steps[0]]["2t"].shape
+    elev = data[0]["z"] / 9.80665 if 0 in data else None
     for r in range(nlat):
         for c in range(nlon):
-            lat = LAT_MAX - r * RES
-            lon = LON_MIN + c * RES
+            lat, lon = coord(r, c)
             series = {k: [] for k in ["temp", "dew", "wind", "dir", "gust", "precip", "snow", "cloud", "cape"]}
             prev_tp = prev_sf = 0.0
             for s in steps:
@@ -163,9 +178,7 @@ def main():
             }
             with open(os.path.join(folder, f"{lat:.2f}_{lon:.2f}.json"), "w") as fp:
                 json.dump(point, fp, separators=(",", ":"))
-    with open(os.path.join(a.out, "ecmwf", "latest.json"), "w") as fp:
-        json.dump({"run": run, "lat": [LAT_MIN, LAT_MAX], "lon": [LON_MIN, LON_MAX], "res": RES}, fp)
-    print("points", nlat * nlon, flush=True)
+    return nlat * nlon
 
 
 if __name__ == "__main__":

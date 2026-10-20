@@ -1,5 +1,5 @@
 import { getPosition } from "suncalc";
-import { addDays, kstDate } from "@/lib/time";
+import { KST_OFFSET_MIN, addDays, kstDate } from "@/lib/time";
 import type { DatedTideEvent, ForecastChange, HourlySeries, RawForecast, WeatherProvider } from "./types";
 
 /**
@@ -57,14 +57,14 @@ function runTime(run: string): number {
   return Date.UTC(+run.slice(0, 4), +run.slice(4, 6) - 1, +run.slice(6, 8), +run.slice(8, 10));
 }
 
-/** "YYYY-MM-DDTHH:00"(KST) → epoch ms */
-function kstKeyTime(key: string): number {
-  return Date.UTC(+key.slice(0, 4), +key.slice(5, 7) - 1, +key.slice(8, 10), +key.slice(11, 13)) - 9 * 3600e3;
+/** "YYYY-MM-DDTHH:00"(KST, 해외는 off분 현지 시간) → epoch ms */
+function kstKeyTime(key: string, off = KST_OFFSET_MIN): number {
+  return Date.UTC(+key.slice(0, 4), +key.slice(5, 7) - 1, +key.slice(8, 10), +key.slice(11, 13)) - off * 60e3;
 }
 
-/** 오늘 0시(KST)부터 16일치 시각 */
-export function hourKeys(now: Date = new Date()): string[] {
-  const start = kstDate(now);
+/** 오늘 0시(KST, 해외는 off분 현지 시간)부터 16일치 시각 */
+export function hourKeys(now: Date = new Date(), off = KST_OFFSET_MIN): string[] {
+  const start = kstDate(now, off);
   const out: string[] = [];
   for (let d = 0; d < DAYS; d++) {
     const date = addDays(start, d);
@@ -73,8 +73,17 @@ export function hourKeys(now: Date = new Date()): string[] {
   return out;
 }
 
-/** 지점을 둘러싼 격자 네 점과 가중치 */
+/** 지점을 둘러싼 격자 네 점과 가중치. 한국 영역 밖(해외 여행지)은 전 세계 0.25° 격자에서 */
 export function corners(lat: number, lon: number) {
+  if (lat < GRID.latMin || lat > GRID.latMax || lon < GRID.lonMin || lon > GRID.lonMax) {
+    const y0 = Math.floor(lat / GRID.res);
+    const x0 = Math.floor(lon / GRID.res);
+    const fy = lat / GRID.res - y0;
+    const fx = lon / GRID.res - x0;
+    // -0을 0으로 (파일 이름 "0.00")
+    const at = (dy: number, dx: number, w: number) => ({ lat: (y0 + dy) * GRID.res + 0, lon: (x0 + dx) * GRID.res + 0, w });
+    return [at(0, 0, (1 - fy) * (1 - fx)), at(0, 1, (1 - fy) * fx), at(1, 0, fy * (1 - fx)), at(1, 1, fy * fx)];
+  }
   const y = (Math.min(Math.max(lat, GRID.latMin), GRID.latMax) - GRID.latMin) / GRID.res;
   const x = (Math.min(Math.max(lon, GRID.lonMin), GRID.lonMax) - GRID.lonMin) / GRID.res;
   const y0 = Math.min(Math.floor(y), (GRID.latMax - GRID.latMin) / GRID.res - 1);
@@ -114,11 +123,11 @@ interface ModelHourly {
  * (강수는 구간 길이로 나눠 시간당 값으로).
  */
 /** run 기준 시간(step)의 순간값을 시각별로 직선 보간 */
-export function linearSteps(run: string, step: number[], vals: Num[], keys: string[]): Num[] {
+export function linearSteps(run: string, step: number[], vals: Num[], keys: string[], off = KST_OFFSET_MIN): Num[] {
   const t0 = runTime(run);
   const last = step[step.length - 1];
   return keys.map((k) => {
-    const h = (kstKeyTime(k) - t0) / 3600e3;
+    const h = (kstKeyTime(k, off) - t0) / 3600e3;
     if (h < 0 || h > last) return null;
     const i = step.findIndex((s) => s >= h);
     if (step[i] === h) return vals[i];
@@ -129,11 +138,11 @@ export function linearSteps(run: string, step: number[], vals: Num[], keys: stri
   });
 }
 
-export function expand(p: PointFile, keys: string[]): Omit<ModelHourly, "elevation"> {
+export function expand(p: PointFile, keys: string[], off = KST_OFFSET_MIN): Omit<ModelHourly, "elevation"> {
   const t0 = runTime(p.run);
-  const hours = keys.map((k) => (kstKeyTime(k) - t0) / 3600e3);
+  const hours = keys.map((k) => (kstKeyTime(k, off) - t0) / 3600e3);
   const last = p.step[p.step.length - 1];
-  const linear = (vals: Num[]) => linearSteps(p.run, p.step, vals, keys);
+  const linear = (vals: Num[]) => linearSteps(p.run, p.step, vals, keys, off);
   const interval = (vals: Num[], perHour: boolean) =>
     hours.map((h) => {
       // h시 값 = (h-1, h] 구간. step 0 이전·마지막 이후는 없음
@@ -162,8 +171,8 @@ export function expand(p: PointFile, keys: string[]): Omit<ModelHourly, "elevati
 }
 
 /** 둘러싼 네 점을 고도 보정한 뒤 가중 평균 */
-export function combineCorners(points: { file: PointFile; w: number }[], keys: string[], target: number | null): ModelHourly {
-  const parts = points.map(({ file, w }) => ({ w, e: file.elevation, h: expand(file, keys) }));
+export function combineCorners(points: { file: PointFile; w: number }[], keys: string[], target: number | null, off = KST_OFFSET_MIN): ModelHourly {
+  const parts = points.map(({ file, w }) => ({ w, e: file.elevation, h: expand(file, keys, off) }));
   const wsum = (pick: (part: (typeof parts)[number], i: number) => Num) =>
     keys.map((_, i) => {
       let s = 0;
@@ -208,9 +217,9 @@ export function apparent(t: Num, dew: Num, wind: Num): Num {
 }
 
 /** 맑은 날 자외선 지수를 태양 고도로 구하고 구름으로 줄인다 */
-export function uvIndex(time: string, lat: number, lon: number, cloud: Num): Num {
+export function uvIndex(time: string, lat: number, lon: number, cloud: Num, off = KST_OFFSET_MIN): Num {
   // suncalc 2.x는 고도를 도(°) 단위로 준다
-  const alt = getPosition(new Date(kstKeyTime(time) + 30 * 60e3), lat, lon).altitude;
+  const alt = getPosition(new Date(kstKeyTime(time, off) + 30 * 60e3), lat, lon).altitude;
   if (alt <= 0) return 0;
   const clear = 12.5 * Math.pow(Math.sin((alt * Math.PI) / 180), 2.42);
   const c = (cloud ?? 0) / 100;
@@ -238,7 +247,7 @@ export function weatherCode(precip: Num, snow: Num, cloud: Num, cape: Num, vis: 
 }
 
 /** 모델별 시간 값을 하나의 시계열로 */
-export function blendCollected(models: ModelHourly[], keys: string[], lat: number, lon: number): HourlySeries {
+export function blendCollected(models: ModelHourly[], keys: string[], lat: number, lon: number, off = KST_OFFSET_MIN): HourlySeries {
   const med = (pick: (m: ModelHourly) => Num[]) => keys.map((_, i) => median(models.map((m) => pick(m)[i])));
   const temp = med((m) => m.temp);
   const dew = med((m) => m.dew);
@@ -278,7 +287,7 @@ export function blendCollected(models: ModelHourly[], keys: string[], lat: numbe
     weatherCode: keys.map((_, i) => weatherCode(precip[i], snow[i], cloud[i], cape[i], vis[i], thunder[i])),
     snowfall: snow.map((s) => round1(s == null ? null : s * SNOW_CM_PER_MM)),
     visibility: vis.map((x) => (x == null ? null : Math.round(x))),
-    uvIndex: keys.map((k, i) => round1(uvIndex(k, lat, lon, cloud[i]))),
+    uvIndex: keys.map((k, i) => round1(uvIndex(k, lat, lon, cloud[i], off))),
     cape: cape.map((c) => (c == null ? null : Math.round(c))),
   };
 }
@@ -464,7 +473,7 @@ export interface WavePointFile {
 /**
  * 파고. 둘러싼 네 점 중 바다인 점만 가중 평균한다. 네 점이 모두 육지면(내륙) 없음.
  */
-export async function loadWave(b: DataBucket, cs: ReturnType<typeof corners>, keys: string[]) {
+export async function loadWave(b: DataBucket, cs: ReturnType<typeof corners>, keys: string[], off = KST_OFFSET_MIN) {
   const run = await latestRun(b, "wave");
   if (!run) return null;
   const sea = await cached(`wave/${run}/sea.json`, () =>
@@ -480,7 +489,7 @@ export async function loadWave(b: DataBucket, cs: ReturnType<typeof corners>, ke
   );
   const mix = (pick: (f: WavePointFile) => Num[]) => {
     // 지점이 격자선 위에 있으면 바다 쪽 점의 가중치가 0일 수 있어 아주 작은 값을 더한다 (해안 지점)
-    const series = files.map((f, i) => (f ? { w: near[i].w + 1e-3, v: linearSteps(f.run, f.step, pick(f), keys) } : null));
+    const series = files.map((f, i) => (f ? { w: near[i].w + 1e-3, v: linearSteps(f.run, f.step, pick(f), keys, off) } : null));
     return keys.map((_, i) => {
       let s = 0;
       let ws = 0;
@@ -504,7 +513,7 @@ export interface ProbPointFile {
 }
 
 /** 시각별 강수 확률(%): 그 시각이 속한 6시간 구간의 확률을 네 점 가중 평균 */
-export async function loadProbability(b: DataBucket, cs: ReturnType<typeof corners>, keys: string[]): Promise<Num[] | null> {
+export async function loadProbability(b: DataBucket, cs: ReturnType<typeof corners>, keys: string[], off = KST_OFFSET_MIN): Promise<Num[] | null> {
   const run = await latestRun(b, "gefs");
   if (!run) return null;
   const files = await Promise.all(
@@ -515,7 +524,7 @@ export async function loadProbability(b: DataBucket, cs: ReturnType<typeof corne
   );
   const t0 = runTime(run);
   return keys.map((k) => {
-    const h = (kstKeyTime(k) - t0) / 3600e3;
+    const h = (kstKeyTime(k, off) - t0) / 3600e3;
     let s = 0;
     let ws = 0;
     files.forEach((f, i) => {
@@ -539,7 +548,7 @@ export interface AirPointFile {
 }
 
 /** 미세먼지 µg/m³: 네 점 가중 평균을 시각별로 잇는다 (CAMS는 5일까지) */
-export async function loadAirQuality(b: DataBucket, cs: ReturnType<typeof corners>, keys: string[]) {
+export async function loadAirQuality(b: DataBucket, cs: ReturnType<typeof corners>, keys: string[], off = KST_OFFSET_MIN) {
   const run = await latestRun(b, "cams");
   if (!run) return null;
   const files = await Promise.all(
@@ -549,7 +558,7 @@ export async function loadAirQuality(b: DataBucket, cs: ReturnType<typeof corner
     }),
   );
   const mix = (pick: (f: AirPointFile) => Num[]) => {
-    const series = files.map((f, i) => (f ? { w: cs[i].w, v: linearSteps(f.run, f.step, pick(f), keys) } : null));
+    const series = files.map((f, i) => (f ? { w: cs[i].w, v: linearSteps(f.run, f.step, pick(f), keys, off) } : null));
     return keys.map((_, i) => {
       let s = 0;
       let ws = 0;
@@ -640,14 +649,16 @@ export async function loadTide(b: DataBucket, lat: number, lon: number, keys: st
   return { seaLevel, tideEvents, station: file.name };
 }
 
-export async function loadCollected(b: DataBucket, lat: number, lon: number, elevation?: number, now = new Date()): Promise<RawForecast> {
-  const keys = hourKeys(now);
+/** off: 해외 여행지의 현지 시간대(UTC와의 차이, 분). 해외는 파고·물때·지형 고도 보정 없이 날씨만 */
+export async function loadCollected(b: DataBucket, lat: number, lon: number, elevation?: number, now = new Date(), off = KST_OFFSET_MIN): Promise<RawForecast> {
+  const overseas = off !== KST_OFFSET_MIN;
+  const keys = hourKeys(now, off);
   const cs = corners(lat, lon);
-  const dem = elevation == null ? demElevation(b, lat, lon) : null;
+  const dem = elevation == null && !overseas ? demElevation(b, lat, lon) : null;
   // 바다가 없어도 예보는 보여준다
-  const wave = loadWave(b, cs, keys).catch(() => null);
-  const prob = loadProbability(b, cs, keys).catch(() => null);
-  const air = loadAirQuality(b, cs, keys).catch(() => null);
+  const wave = overseas ? null : loadWave(b, cs, keys).catch(() => null);
+  const prob = loadProbability(b, cs, keys, off).catch(() => null);
+  const air = overseas ? null : loadAirQuality(b, cs, keys).catch(() => null);
   const load = async (model: CollectedModel, run: string | null) => {
     if (!run) return null;
     const files = await Promise.all(
@@ -668,11 +679,11 @@ export async function loadCollected(b: DataBucket, lat: number, lon: number, ele
   // 지점 고도를 모르면 지형 고도 격자에서, 그것도 없으면 모델 지형 고도를 쓴다 (보정 없음)
   const target = elevation ?? (await dem);
   const gridElev = median(ok.map((m) => combineCorners(m.points, keys.slice(0, 1), null).elevation));
-  const perModel = ok.map((m) => combineCorners(m.points, keys, target));
-  const hourly = blendCollected(perModel, keys, lat, lon);
+  const perModel = ok.map((m) => combineCorners(m.points, keys, target, off));
+  const hourly = blendCollected(perModel, keys, lat, lon, off);
   const w = await wave;
   if (w) Object.assign(hourly, w);
-  const tide = await loadTide(b, lat, lon, keys, w != null).catch(() => null);
+  const tide = overseas ? null : await loadTide(b, lat, lon, keys, w != null).catch(() => null);
   if (tide) hourly.seaLevel = tide.seaLevel;
   const p = await prob;
   if (p) hourly.precipitationProbability = p;
@@ -682,13 +693,15 @@ export async function loadCollected(b: DataBucket, lat: number, lon: number, ele
   // 지난 예보도 같은 모델들이 다 있을 때만 비교한다 (모델 구성이 다르면 중간값이 달라져서)
   const change =
     prevModels.length === ok.length && ok.length
-      ? forecastChange(hourly, blendCollected(prevModels.map((m) => combineCorners(m.points, keys, target)), keys, lat, lon))
+      ? forecastChange(hourly, blendCollected(prevModels.map((m) => combineCorners(m.points, keys, target, off)), keys, lat, lon, off))
       : null;
   const names: Record<CollectedModel, string> = { ecmwf: "ECMWF", gfs: "GFS", icon: "ICON" };
   return {
     latitude: lat,
     longitude: lon,
-    elevation: target ?? (gridElev == null ? null : Math.round(gridElev)),
+    // 해외는 고도 보정을 하지 않으므로 고도를 보여 주지 않는다
+    elevation: overseas ? null : (target ?? (gridElev == null ? null : Math.round(gridElev))),
+    ...(overseas ? { utcOffset: off } : {}),
     hourly,
     source: ok.map((m) => names[m.model]).join("·"),
     ...(tide ? { tideEvents: tide.tideEvents } : {}),
@@ -699,7 +712,7 @@ export async function loadCollected(b: DataBucket, lat: number, lon: number, ele
 
 export const collectedProvider: WeatherProvider = {
   name: "collected",
-  async fetchHourly(lat, lon, elevation) {
-    return loadCollected(await bucket(), lat, lon, elevation);
+  async fetchHourly(lat, lon, elevation, utcOffset) {
+    return loadCollected(await bucket(), lat, lon, elevation, new Date(), utcOffset);
   },
 };

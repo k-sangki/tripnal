@@ -9,9 +9,16 @@ export function SiteHeader() {
         <Logo />
         <span className="slogan">{SLOGAN_C}</span>
       </Link>
-      <Link href="/weather" className="tagline">
-        장소별 날씨
-      </Link>
+      <nav className="top-nav">
+        {/* "해외 날씨" 네 글자만 담은 제목용 글꼴 (구글 폰트 text= 부분 로드라 몇 KB) */}
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&text=%ED%95%B4%EC%99%B8%EB%82%A0%EC%94%A8&display=swap" precedence="default" />
+        <Link href="/overseas" className="nav-overseas">
+          해외 날씨
+        </Link>
+        <Link href="/weather" className="tagline">
+          장소별 날씨
+        </Link>
+      </nav>
     </header>
   );
 }
@@ -26,6 +33,7 @@ export function SiteFooter() {
       <nav className="foot-links">
         <Link href="/about">소개</Link>
         <Link href="/weather">장소별 날씨</Link>
+        <Link href="/overseas">해외 날씨</Link>
         <Link href="/privacy">개인정보처리방침</Link>
         <Link href="/contact">문의</Link>
       </nav>

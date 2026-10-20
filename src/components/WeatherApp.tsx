@@ -41,6 +41,8 @@ interface Props {
   initialInterval?: string | null;
   /** 장소 페이지의 h1 뒤에 붙는 검색 키워드 (예: "16일 날씨") */
   headingSuffix?: string;
+  /** 해외 여행지 페이지: 검색·지도·특보·알림 없이, 날짜·시각은 이 현지 시간대(UTC와의 차이, 분)로 */
+  overseasOffset?: number;
 }
 
 const DEFAULT_PLACE: AppPlace = { name: "서울", lat: 37.5665, lon: 126.978, address: "서울특별시" };
@@ -54,10 +56,11 @@ function store(): Storage | null {
   }
 }
 
-export function WeatherApp({ initialPlace, initialForecast, initialLeisure, initialFrom, initialTo, initialInterval, headingSuffix }: Props) {
+export function WeatherApp({ initialPlace, initialForecast, initialLeisure, initialFrom, initialTo, initialInterval, headingSuffix, overseasOffset }: Props) {
   const router = useRouter();
-  const [today] = useState(() => kstDate());
-  const [nowHour] = useState(() => Number(kstHourKey().slice(11, 13)));
+  const overseas = overseasOffset != null;
+  const [today] = useState(() => kstDate(new Date(), overseasOffset));
+  const [nowHour] = useState(() => Number(kstHourKey(new Date(), overseasOffset).slice(11, 13)));
   const [place, setPlace] = useState<AppPlace | null>(initialPlace);
   const [leisureId, setLeisureId] = useState<LeisureId>(getLeisure(initialLeisure).id);
   const [period, setPeriod] = useState<Period>(() => clampPeriod(initialFrom, initialTo, today));
@@ -206,10 +209,12 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
     <div className="layout">
       {/* 모바일은 검색 → 지도 → 현재 위치 → 설정 → 예보 → 활동 순서, PC는 왼쪽(검색·지도·설정)과 오른쪽(위치·예보) 2단 */}
       <div className="a-side">
-        <div className="o-search">
-          <SearchBar onSelect={(p) => choose(p)} onLocate={() => locate(false)} locating={locating} />
-        </div>
-        {place && (
+        {!overseas && (
+          <div className="o-search">
+            <SearchBar onSelect={(p) => choose(p)} onLocate={() => locate(false)} locating={locating} />
+          </div>
+        )}
+        {place && !overseas && (
           <div className={`o-map card map-card${mapOpen ? " open" : ""}`}>
             <button className="map-toggle" aria-expanded={mapOpen} onClick={() => setMapOpen((o) => !o)}>
               <span>🗺️ 지도에서 찾기</span>
@@ -251,8 +256,9 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
             {place?.address && place.address !== place.name && <div className="hero-addr">{place.address}</div>}
             <div className="hero-meta">
               <span className="pill mint">{periodLabel(period)}</span>
+              {overseas && <span className="pill">🕒 현지 시간</span>}
               {forecast?.elevation != null && <span className="pill">⛰️ 해발 {Math.round(forecast.elevation).toLocaleString()}m</span>}
-              {place && forecast && <AlertButton
+              {place && forecast && !overseas && <AlertButton
                   key={`${place.lat},${place.lon}`}
                   place={place}
                   act={leisureId}
@@ -266,7 +272,7 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
         </div>
 
         <div className="o-fc">
-          <WarningTicker address={place?.address} />
+          {!overseas && <WarningTicker address={place?.address} />}
           {loading && !forecast ? (
             <div className="skeleton" />
           ) : (
@@ -278,6 +284,7 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
                 </div>
                 <p className="muted" style={{ marginTop: 12 }}>
                   {(interval === "6h" || interval === "12h") && "기온·체감은 낮 칸은 최고, 밤 칸은 최저 값입니다. "}
+                  {overseas && "날짜와 시각은 모두 현지 시간입니다. "}
                   {forecast.elevation != null &&
                     `기온은 해발 ${Math.round(forecast.elevation)}m 기준으로 보정된 값입니다. 바람은 고도 보정이 되지 않아 높은 산에서는 실제보다 약할 수 있습니다. `}
                   예보 제공: {forecast.source}

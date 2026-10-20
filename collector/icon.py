@@ -22,6 +22,7 @@ import eccodes
 import numpy as np
 
 from collect import LAT_MAX, LAT_MIN, LON_MAX, LON_MIN, RES, http, r1, retry
+from overseas import POINTS
 
 BASE = "https://opendata.dwd.de/weather/nwp/icon/grib"
 STEPS = list(range(0, 181, 3))
@@ -59,8 +60,16 @@ def latest_run():
     raise SystemExit("올라온 run을 찾지 못함")
 
 
+def nearest(clat, clon, p, q):
+    """위경도(도) p, q에 가장 가까운 칸 번호 (clat·clon은 라디안)"""
+    p, q = math.radians(p), math.radians(q)
+    d = np.sin((clat - p) / 2) ** 2 + np.cos(p) * np.cos(clat) * np.sin((clon - q) / 2) ** 2
+    return int(np.argmin(d))
+
+
 def nearest_cells(run):
-    """0.25° 격자점(북→남, 서→동 순서)마다 가장 가까운 ICON 칸 번호와 그 칸의 고도"""
+    """0.25° 격자점(북→남, 서→동 순서)마다 가장 가까운 ICON 칸 번호와 그 칸의 고도.
+    해외 여행지 둘레 격자점(overseas.POINTS)은 (1, n) 모양으로 따로"""
     clat, clon = values(url(run, "CLAT")), values(url(run, "CLON"))
     # 영역 근처 칸만 추려서 비교한다
     near = np.where((clat > LAT_MIN - 0.5) & (clat < LAT_MAX + 0.5) & (clon > LON_MIN - 0.5) & (clon < LON_MAX + 0.5))[0]
@@ -73,17 +82,28 @@ def nearest_cells(run):
             p, q = math.radians(lat), math.radians(lon)
             d = np.sin((la - p) / 2) ** 2 + np.cos(p) * np.cos(la) * np.sin((lo - q) / 2) ** 2
             idx[r, c] = near[int(np.argmin(d))]
+    la_all, lo_all = np.radians(clat), np.radians(clon)
+    idx_x = np.array([[nearest(la_all, lo_all, p, q) for p, q in POINTS]], dtype=np.int64)
     hsurf = values(url(run, "HSURF"))
-    return idx, hsurf[idx]
+    return idx, hsurf[idx], idx_x, hsurf[idx_x]
 
 
-def fields(run, step, idx):
-    out = {v: values(url(run, v, step))[idx] for v in VARS}
+def fields(run, step, idxs):
+    """받은 변수 하나를 idxs(칸 번호 배열들)마다 뽑아 [{변수: 배열}, ...]"""
+    outs = [{} for _ in idxs]
+    # 전 지구 배열은 크므로(약 300만 칸) 받는 대로 뽑고 버린다
+    for v in VARS:
+        full = values(url(run, v, step))
+        for o, idx in zip(outs, idxs):
+            o[v] = full[idx]
     # 돌풍(VMAX_10M)은 step 0에 없다. 78시간까지는 지난 3시간의 매시간 값 중 최대
     if step:
         hours = range(step - 2, step + 1) if step <= HOURLY_UNTIL else [step]
-        out["VMAX_10M"] = np.max([values(url(run, "VMAX_10M", h))[idx] for h in hours], axis=0)
-    return out
+        for h in hours:
+            full = values(url(run, "VMAX_10M", h))
+            for o, idx in zip(outs, idxs):
+                o["VMAX_10M"] = np.maximum(o["VMAX_10M"], full[idx]) if "VMAX_10M" in o else full[idx]
+    return outs
 
 
 def main():
@@ -96,17 +116,26 @@ def main():
     steps = [int(s) for s in a.steps.split(",")] if a.steps else STEPS
     print("run", run, "steps", len(steps), flush=True)
 
-    idx, elev = retry(nearest_cells, run)
+    idx, elev, idx_x, elev_x = retry(nearest_cells, run)
     with cf.ThreadPoolExecutor(6) as ex:
-        data = dict(zip(steps, ex.map(lambda s: retry(fields, run, s, idx), steps)))
+        both = dict(zip(steps, ex.map(lambda s: retry(fields, run, s, [idx, idx_x]), steps)))
 
-    nlat, nlon = idx.shape
     folder = os.path.join(a.out, "icon", run)
     os.makedirs(folder, exist_ok=True)
+    n = write(folder, run, steps, {s: b[0] for s, b in both.items()}, elev, lambda r, c: (LAT_MAX - r * RES, LON_MIN + c * RES))
+    # 해외 여행지: (1, n) 배열을 한 줄짜리 격자처럼 쓴다
+    n += write(folder, run, steps, {s: b[1] for s, b in both.items()}, elev_x, lambda r, c: POINTS[c])
+    with open(os.path.join(a.out, "icon", "latest.json"), "w") as fp:
+        json.dump({"run": run, "lat": [LAT_MIN, LAT_MAX], "lon": [LON_MIN, LON_MAX], "res": RES}, fp)
+    print("points", n, flush=True)
+
+
+def write(folder, run, steps, data, elev, coord):
+    """data[step][변수][r, c] → 격자점별 JSON. coord(r, c) = (lat, lon)"""
+    nlat, nlon = elev.shape
     for r in range(nlat):
         for c in range(nlon):
-            lat = LAT_MAX - r * RES
-            lon = LON_MIN + c * RES
+            lat, lon = coord(r, c)
             series = {k: [] for k in ["temp", "dew", "wind", "dir", "gust", "precip", "snow", "cloud", "cape"]}
             prev_tp = prev_sn = 0.0
             for s in steps:
@@ -136,9 +165,7 @@ def main():
             }
             with open(os.path.join(folder, f"{lat:.2f}_{lon:.2f}.json"), "w") as fp:
                 json.dump(point, fp, separators=(",", ":"))
-    with open(os.path.join(a.out, "icon", "latest.json"), "w") as fp:
-        json.dump({"run": run, "lat": [LAT_MIN, LAT_MAX], "lon": [LON_MIN, LON_MAX], "res": RES}, fp)
-    print("points", nlat * nlon, flush=True)
+    return nlat * nlon
 
 
 if __name__ == "__main__":

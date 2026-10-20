@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 import { getLeisure } from "@/lib/leisure";
 import { clampPeriod, inPeriod, periodLabel } from "@/lib/period";
+import { destinationOffset, getDestination } from "@/lib/overseas";
 import { getPlace } from "@/lib/places";
 import { addDays, kstDate, weekday, weekdayKo } from "@/lib/time";
 import { getForecast, isInKorea } from "@/lib/weather";
@@ -71,19 +72,22 @@ function DayCol({ d, narrow }: { d: DayForecast; narrow: boolean }) {
 
 export async function GET(request: Request) {
   const sp = new URL(request.url).searchParams;
-  const today = kstDate();
   const slugPlace = sp.get("slug") ? getPlace(sp.get("slug")!) : undefined;
-  const lat = slugPlace?.lat ?? Number(sp.get("lat"));
-  const lon = slugPlace?.lon ?? Number(sp.get("lon"));
-  const name = (slugPlace?.name ?? sp.get("name") ?? "").slice(0, 20) || "선택한 위치";
-  const leisure = getLeisure(sp.get("act") ?? slugPlace?.leisure);
+  // 해외 여행지는 현지 날짜로
+  const dest = sp.get("slug") && !slugPlace ? getDestination(sp.get("slug")!) : undefined;
+  const offset = dest ? destinationOffset(dest) : undefined;
+  const today = kstDate(new Date(), offset);
+  const lat = slugPlace?.lat ?? dest?.lat ?? Number(sp.get("lat"));
+  const lon = slugPlace?.lon ?? dest?.lon ?? Number(sp.get("lon"));
+  const name = (slugPlace?.name ?? dest?.name ?? sp.get("name") ?? "").slice(0, 20) || "선택한 위치";
+  const leisure = getLeisure(sp.get("act") ?? slugPlace?.leisure ?? (dest ? "travel" : undefined));
   // 기간 없이 공유한 장소 페이지는 앞으로 7일을 보여 준다
   const period = sp.get("from") ? clampPeriod(sp.get("from"), sp.get("to"), today) : { from: today, to: addDays(today, MAX_COLS - 1) };
 
   let days: DayForecast[] = [];
-  if (Number.isFinite(lat) && Number.isFinite(lon) && isInKorea(lat, lon)) {
+  if (Number.isFinite(lat) && Number.isFinite(lon) && (dest || isInKorea(lat, lon))) {
     try {
-      const f = await getForecast(lat, lon, slugPlace?.elevation);
+      const f = await getForecast(lat, lon, slugPlace?.elevation ?? dest?.elevation, undefined, offset);
       days = f.days.filter((d) => inPeriod(d.date, period)).slice(0, MAX_COLS);
     } catch (e) {
       console.error(e);

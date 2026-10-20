@@ -29,8 +29,9 @@ export function snapCoord(v: number): number {
   return Math.round(v * 100) / 100;
 }
 
-export async function getForecast(lat: number, lon: number, elevation?: number, provider?: string): Promise<Forecast> {
-  const raw = await getProvider(provider).fetchHourly(snapCoord(lat), snapCoord(lon), elevation);
+/** utcOffset: 해외 여행지의 현지 시간대(분). 없으면 한국 시간 */
+export async function getForecast(lat: number, lon: number, elevation?: number, provider?: string, utcOffset?: number): Promise<Forecast> {
+  const raw = await getProvider(provider).fetchHourly(snapCoord(lat), snapCoord(lon), elevation, utcOffset);
   return aggregate(raw);
 }
 

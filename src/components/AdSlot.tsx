@@ -3,6 +3,11 @@
 import { useEffect, useRef } from "react";
 
 const CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT?.trim();
+/**
+ * 광고 자리 표시 여부. Open-Meteo 무료 API는 광고 사이트에서 쓸 수 없어서,
+ * ECMWF·GFS·ICON 직접 수집으로 바꾸는 배포에서 true로 켠다 (2026-10-20 SK 결정).
+ */
+export const ADS_ENABLED = false;
 
 declare global {
   interface Window {
@@ -18,7 +23,7 @@ export function AdSlot({ slot, format = "auto" }: { slot?: string; format?: stri
   const ref = useRef<HTMLModElement>(null);
 
   useEffect(() => {
-    if (!CLIENT || !slot || !ref.current || ref.current.dataset.loaded) return;
+    if (!ADS_ENABLED || !CLIENT || !slot || !ref.current || ref.current.dataset.loaded) return;
     ref.current.dataset.loaded = "1";
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
@@ -27,7 +32,7 @@ export function AdSlot({ slot, format = "auto" }: { slot?: string; format?: stri
     }
   }, [slot]);
 
-  if (!CLIENT || !slot) {
+  if (!ADS_ENABLED || !CLIENT || !slot) {
     if (process.env.NODE_ENV === "development") return <div className="ad-slot dev">광고 영역</div>;
     return null;
   }

@@ -21,13 +21,9 @@ jobs:
       - run: |
           set +e
           {
-          F='%{http_code} dns=%{time_namelookup} conn=%{time_connect} tls=%{time_appconnect} ttfb=%{time_starttransfer} total=%{time_total}'
-          for q in 자라섬 가평 서울숲 설악산 대천 을왕리 남이섬 강릉 제주 부산; do curl -s -o p.out -D h.out -w "search $q $F\n" "https://tripnalc.com/api/search?q=$q"; grep -i '^cf-ray' h.out; head -c 120 p.out; echo; done
-          for k in 1 2 3 4 5; do curl -s -o /dev/null -w "search-same $F\n" "https://tripnalc.com/api/search?q=%EA%B0%80%ED%8F%89"; done
-          for k in 1 2 3; do curl -s -o /dev/null -w "reverse $F\n" "https://tripnalc.com/api/reverse?lat=37.5&lon=127.0"; done
-          for k in 1 2 3; do curl -s -o /dev/null -w "robots $F\n" "https://tripnalc.com/robots.txt"; done
-          for k in 1 2 3; do curl -s -o /dev/null -w "home $F\n" "https://tripnalc.com/"; done
-          for k in 1 2 3; do curl -s -o /dev/null -w "warnings $F\n" "https://tripnalc.com/api/warnings"; done
+          F='%{http_code} ttfb=%{time_starttransfer} total=%{time_total}'
+          for q in %EC%9E%90%EB%9D%BC%EC%84%AC %EA%B0%80%ED%8F%89 %EC%84%A4%EC%95%85%EC%82%B0 %EB%8C%80%EC%B2%9C %EC%A0%9C%EC%A3%BC %EB%B6%80%EC%82%B0 %EA%B0%80%ED%8F%89 %EA%B0%80%ED%8F%89; do curl -s -o p.out -D h.out -w "search $F " "https://tripnalc.com/api/search?q=$q"; grep -i '^server-timing\|^cf-ray' h.out | tr -d '\r' | tr '\n' ' '; echo; done
+          for k in 1 2 3; do curl -s -o /dev/null -w "robots $F\n" "https://tripnalc.com/robots.txt?k=$k"; done
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com
           git add -A diag-out.txt; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026

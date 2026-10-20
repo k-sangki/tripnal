@@ -18,11 +18,18 @@ jobs:
       - run: |
           set +e
           {
-          curl -s -o og.png -w "og %{http_code} %{content_type} %{size_download} %{time_total}\n" -A "facebookexternalhit/1.1" "https://tripnalc.com/api/og?lat=37.5665&lon=126.978&name=%EC%84%9C%EC%9A%B8&act=camping&from=2026-10-24&to=2026-10-26"
-          curl -s -o /dev/null -w "og-slug %{http_code} %{size_download} %{time_total}\n" "https://tripnalc.com/api/og?slug=jarasum-autocamp"
-          curl -s -A "kakaotalk-scrap/1.0" "https://tripnalc.com/?lat=37.5665&lon=126.978&name=%EC%84%9C%EC%9A%B8&act=camping&from=2026-10-24&to=2026-10-26" | grep -oE '<meta property="og:(title|description|image)"[^>]*>'
-          base64 -w0 og.png > og.b64; echo; echo b64 $(wc -c < og.b64)
-          cat og.b64
+          pip install -q boto3 pywebpush
+          curl -s https://tripnalc.com/api/alerts; echo
+          ID=$(curl -s -X POST https://tripnalc.com/api/alerts -H 'Content-Type: application/json' -d '{"subscription":{"endpoint":"https://example.com/push/test","keys":{"p256dh":"BFake","auth":"fake"}},"place":{"name":"테스트","lat":37.81,"lon":127.52},"act":"camping","from":"2026-10-24","to":"2026-10-25"}' | tee /dev/stderr | python3 -c 'import sys,json;print(json.load(sys.stdin)["id"])')
+          echo id $ID
+          python3 - <<'PY'
+          import boto3,os,json
+          s3=boto3.client("s3",endpoint_url=f"https://{os.environ['CLOUDFLARE_ACCOUNT_ID']}.r2.cloudflarestorage.com",aws_access_key_id=os.environ["R2_ACCESS_KEY_ID"],aws_secret_access_key=os.environ["R2_SECRET_ACCESS_KEY"],region_name="auto")
+          for o in s3.list_objects_v2(Bucket="tripnal-data",Prefix="alerts")["Contents"]:
+              print(o["Key"], o["Size"])
+          PY
+          python3 collector/alerts.py --dry-run
+          curl -s -X DELETE "https://tripnalc.com/api/alerts?id=$ID"; echo
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com
           git add -A diag-out.txt; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026

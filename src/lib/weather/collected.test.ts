@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { apparent, corners, expand, hourKeys, loadCollected, loadProbability, loadWave, pointKey, uvIndex, weatherCode, type DataBucket, type PointFile } from "./collected";
+import { apparent, corners, expand, hourKeys, loadAirQuality, loadCollected, loadProbability, loadTide, loadWave, pointKey, uvIndex, weatherCode, type DataBucket, type PointFile } from "./collected";
 
 // 2026-10-20 00:00 KST = 2026-10-19 15:00 UTC
 const NOW = new Date("2026-10-20T03:00:00+09:00");
@@ -139,5 +139,66 @@ describe("직접 수집 예보", () => {
     const p = await loadProbability(bucket, corners(37.5, 127), hourKeys(NOW).slice(0, 14));
     // 0시 = run 기준 0시간(구간 밖), 1~6시 = 40%, 7~12시 = 80%, 13시부터 없음
     expect(p).toEqual([null, 40, 40, 40, 40, 40, 40, 80, 80, 80, 80, 80, 80, null]);
+  });
+
+  it("만조·간조는 가까운 관측소 예보, 사이 높이는 코사인으로 잇는다", async () => {
+    const files: Record<string, unknown> = {
+      "tide/stations.json": [
+        { code: "DT_0001", name: "인천", lat: 37.45194, lon: 126.59222 },
+        { code: "DT_0004", name: "제주", lat: 33.5275, lon: 126.54305 },
+      ],
+      "tide/DT_0001.json": {
+        code: "DT_0001",
+        name: "인천",
+        lat: 37.45194,
+        lon: 126.59222,
+        msl: 400,
+        events: [
+          ["2026-10-19 23:00", "L", 300],
+          ["2026-10-20 05:00", "H", 600],
+          ["2026-10-20 11:00", "L", 200],
+        ],
+      },
+    };
+    const bucket: DataBucket = {
+      async get(key) {
+        const v = files[key];
+        return v ? { json: async <T,>() => v as T, arrayBuffer: async () => new ArrayBuffer(0) } : null;
+      },
+    };
+    const keys = hourKeys(NOW).slice(0, 13);
+    const t = await loadTide(bucket, 37.45, 126.6, keys, true);
+    expect(t?.station).toBe("인천");
+    // 어제 이벤트는 보간에만 쓴다
+    expect(t?.tideEvents).toEqual([
+      { at: "2026-10-20 05:00", type: "high", level: 2 },
+      { at: "2026-10-20 11:00", type: "low", level: -2 },
+    ]);
+    // 23시 -1m → 5시 +2m: 2시(가운데)는 0.5m, 5시 2m, 8시 0m, 11시 -2m, 12시는 다음 이벤트가 없어 없음
+    expect(t?.seaLevel[2]).toBe(0.5);
+    expect(t?.seaLevel[5]).toBe(2);
+    expect(t?.seaLevel[8]).toBe(0);
+    expect(t?.seaLevel[11]).toBe(-2);
+    expect(t?.seaLevel[12]).toBeNull();
+    // 내륙(바다 격자 없음)은 아주 가까운 관측소만, 먼 곳은 없음
+    expect(await loadTide(bucket, 37.5, 126.75, keys, false)).toBeNull();
+    expect(await loadTide(bucket, 36.0, 127.5, keys, true)).toBeNull();
+  });
+
+  it("미세먼지는 네 점 값을 시각별로 잇는다", async () => {
+    const files: Record<string, unknown> = { "cams/latest.json": { run: "2026101912" } };
+    for (const c of corners(37.5, 127)) {
+      files[`cams/2026101912/${c.lat.toFixed(2)}_${c.lon.toFixed(2)}.json`] = { run: "2026101912", step: [3, 6], pm10: [30, 60], pm25: [10, null] };
+    }
+    const bucket: DataBucket = {
+      async get(key) {
+        const v = files[key];
+        return v ? { json: async <T,>() => v as T, arrayBuffer: async () => new ArrayBuffer(0) } : null;
+      },
+    };
+    // 0시 KST = run 기준 3시간
+    const q = await loadAirQuality(bucket, corners(37.5, 127), hourKeys(NOW).slice(0, 5));
+    expect(q?.pm10).toEqual([30, 40, 50, 60, null]);
+    expect(q?.pm25).toEqual([10, null, null, null, null]);
   });
 });

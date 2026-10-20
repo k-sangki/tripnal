@@ -41,6 +41,16 @@ export interface RawForecast {
   elevation: number | null;
   hourly: HourlySeries;
   source: string;
+  /** 관측소 예보 만조·간조. 있으면 해수면 자료에서 찾지 않고 이 시각을 쓴다 */
+  tideEvents?: DatedTideEvent[];
+}
+
+export interface DatedTideEvent {
+  /** "YYYY-MM-DD HH:MM" (한국 시간) */
+  at: string;
+  type: "high" | "low";
+  /** 평균 해수면 기준 m */
+  level: number;
 }
 
 export interface WeatherProvider {

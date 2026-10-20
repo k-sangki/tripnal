@@ -2,3 +2,4 @@ eccodes==2.50.0
 numpy
 boto3
 rasterio
+cdsapi

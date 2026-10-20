@@ -7,7 +7,7 @@ import type { HourlySeries, RawForecast, WeatherProvider } from "./types";
  *
  * - 격자(0.25°)의 둘러싼 네 점을 읽어 고도 보정 후 거리 가중(쌍선형)으로 지점 값을 낸다.
  * - 3·6시간 간격 값을 1시간 간격으로 풀고, 세 모델의 중간값을 쓴다 (openMeteo.ts와 같은 규칙).
- * - 체감온도·날씨 코드·자외선은 받은 값으로 계산한다. 강수 확률·바다·대기질은 아직 없다.
+ * - 체감온도·날씨 코드·자외선은 받은 값으로 계산한다. 파고는 GFS-Wave. 강수 확률·해수면·대기질은 아직 없다.
  */
 
 export const COLLECTED_MODELS = ["ecmwf", "gfs", "icon"] as const;
@@ -112,21 +112,27 @@ interface ModelHourly {
  * 순간값(기온 등)은 앞뒤 step 사이를 직선으로 잇고, 구간값(강수·돌풍)은 그 시각이 속한 구간 값을 쓴다
  * (강수는 구간 길이로 나눠 시간당 값으로).
  */
+/** run 기준 시간(step)의 순간값을 시각별로 직선 보간 */
+export function linearSteps(run: string, step: number[], vals: Num[], keys: string[]): Num[] {
+  const t0 = runTime(run);
+  const last = step[step.length - 1];
+  return keys.map((k) => {
+    const h = (kstKeyTime(k) - t0) / 3600e3;
+    if (h < 0 || h > last) return null;
+    const i = step.findIndex((s) => s >= h);
+    if (step[i] === h) return vals[i];
+    const a = vals[i - 1];
+    const b = vals[i];
+    if (a == null || b == null) return null;
+    return a + ((b - a) * (h - step[i - 1])) / (step[i] - step[i - 1]);
+  });
+}
+
 export function expand(p: PointFile, keys: string[]): Omit<ModelHourly, "elevation"> {
   const t0 = runTime(p.run);
   const hours = keys.map((k) => (kstKeyTime(k) - t0) / 3600e3);
   const last = p.step[p.step.length - 1];
-  const linear = (vals: Num[]) =>
-    hours.map((h) => {
-      if (h < 0 || h > last) return null;
-      const i = p.step.findIndex((s) => s >= h);
-      if (p.step[i] === h) return vals[i];
-      const a = vals[i - 1];
-      const b = vals[i];
-      if (a == null || b == null) return null;
-      const f = (h - p.step[i - 1]) / (p.step[i] - p.step[i - 1]);
-      return a + (b - a) * f;
-    });
+  const linear = (vals: Num[]) => linearSteps(p.run, p.step, vals, keys);
   const interval = (vals: Num[], perHour: boolean) =>
     hours.map((h) => {
       // h시 값 = (h-1, h] 구간. step 0 이전·마지막 이후는 없음
@@ -322,8 +328,11 @@ function cached<T>(key: string, load: () => Promise<T>): Promise<T> {
   return p;
 }
 
-const latestMemo = new Map<string, { at: number; run: Promise<string | null> }>();
-function latestRun(b: DataBucket, model: CollectedModel): Promise<string | null> {
+/** 최신 run은 5분 동안 기억한다 (버킷마다 따로) */
+const latestMemos = new WeakMap<DataBucket, Map<string, { at: number; run: Promise<string | null> }>>();
+function latestRun(b: DataBucket, model: CollectedModel | "wave"): Promise<string | null> {
+  let latestMemo = latestMemos.get(b);
+  if (!latestMemo) latestMemos.set(b, (latestMemo = new Map()));
   const hit = latestMemo.get(model);
   if (hit && Date.now() - hit.at < 5 * 60e3) return hit.run;
   const run = b
@@ -335,10 +344,54 @@ function latestRun(b: DataBucket, model: CollectedModel): Promise<string | null>
   return run;
 }
 
+/** GFS-Wave 바다 격자점 (collector/gfswave.py) */
+export interface WavePointFile {
+  run: string;
+  step: number[];
+  wave: Num[];
+  windwave: Num[];
+  period: Num[];
+}
+
+/**
+ * 파고. 둘러싼 네 점 중 바다인 점만 가중 평균한다. 네 점이 모두 육지면(내륙) 없음.
+ */
+export async function loadWave(b: DataBucket, cs: ReturnType<typeof corners>, keys: string[]) {
+  const run = await latestRun(b, "wave");
+  if (!run) return null;
+  const sea = await cached(`wave/${run}/sea.json`, () =>
+    b.get(`wave/${run}/sea.json`).then(async (o) => new Set(o ? await o.json<string[]>() : [])),
+  );
+  const near = cs.filter((c) => sea.has(`${c.lat.toFixed(2)}_${c.lon.toFixed(2)}`));
+  if (!near.length) return null;
+  const files = await Promise.all(
+    near.map((c) => {
+      const key = `wave/${run}/${c.lat.toFixed(2)}_${c.lon.toFixed(2)}.json`;
+      return cached(key, () => b.get(key).then((o) => (o ? o.json<WavePointFile>() : null)));
+    }),
+  );
+  const mix = (pick: (f: WavePointFile) => Num[]) => {
+    const series = files.map((f, i) => (f ? { w: near[i].w, v: linearSteps(f.run, f.step, pick(f), keys) } : null));
+    return keys.map((_, i) => {
+      let s = 0;
+      let ws = 0;
+      for (const x of series) {
+        if (!x || x.v[i] == null) continue;
+        s += x.v[i]! * x.w;
+        ws += x.w;
+      }
+      return ws > 0 ? round1(s / ws) : null;
+    });
+  };
+  return { waveHeight: mix((f) => f.wave), windWaveHeight: mix((f) => f.windwave) };
+}
+
 export async function loadCollected(b: DataBucket, lat: number, lon: number, elevation?: number, now = new Date()): Promise<RawForecast> {
   const keys = hourKeys(now);
   const cs = corners(lat, lon);
   const dem = elevation == null ? demElevation(b, lat, lon) : null;
+  // 바다가 없어도 예보는 보여준다
+  const wave = loadWave(b, cs, keys).catch(() => null);
   const models = await Promise.all(
     COLLECTED_MODELS.map(async (model) => {
       const run = await latestRun(b, model);
@@ -365,6 +418,8 @@ export async function loadCollected(b: DataBucket, lat: number, lon: number, ele
     lat,
     lon,
   );
+  const w = await wave;
+  if (w) Object.assign(hourly, w);
   const names: Record<CollectedModel, string> = { ecmwf: "ECMWF", gfs: "GFS", icon: "ICON" };
   return {
     latitude: lat,

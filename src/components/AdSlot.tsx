@@ -4,10 +4,10 @@ import { useEffect, useRef } from "react";
 
 const CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT?.trim();
 /**
- * 광고 자리 표시 여부. Open-Meteo 무료 API는 광고 사이트에서 쓸 수 없어서,
- * ECMWF·GFS·ICON 직접 수집으로 바꾸는 배포에서 true로 켠다 (2026-10-20 SK 결정).
+ * 광고 자리 표시 여부. Open-Meteo 무료 API는 광고 사이트에서 쓸 수 없어서 꺼 두었다가,
+ * 예보를 ECMWF·GFS·ICON 직접 수집으로 바꾼 뒤 켰다 (2026-10-20 SK 결정).
  */
-export const ADS_ENABLED = false;
+export const ADS_ENABLED = true;
 
 declare global {
   interface Window {

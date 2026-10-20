@@ -1,0 +1,7 @@
+== tripnalc.com
+harlee.ns.cloudflare.com.
+kip.ns.cloudflare.com.
+== www.tripnalc.com
+kip.ns.cloudflare.com.
+harlee.ns.cloudflare.com.
+{"Status":0,"TC":false,"RD":true,"RA":true,"AD":false,"CD":false,"Question":[{"name":"tripnalc.com.","type":2}],"Answer":[{"name":"tripnalc.com.","type":2,"TTL":21600,"data":"kip.ns.cloudflare.com."},{"name":"tripnalc.com.","type":2,"TTL":21600,"data":"harlee.ns.cloudflare.com."}],"Comment":"Response from 108.162.194.238."}

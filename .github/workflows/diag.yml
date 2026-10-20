@@ -21,9 +21,18 @@ jobs:
       - run: |
           set +e
           {
-          F='%{http_code} ttfb=%{time_starttransfer} total=%{time_total}'
-          for q in %EC%9E%90%EB%9D%BC%EC%84%AC %EA%B0%80%ED%8F%89 %EC%84%A4%EC%95%85%EC%82%B0 %EB%8C%80%EC%B2%9C %EC%A0%9C%EC%A3%BC %EB%B6%80%EC%82%B0 %EA%B0%80%ED%8F%89 %EA%B0%80%ED%8F%89; do curl -s -o p.out -D h.out -w "search $F " "https://tripnalc.com/api/search?q=$q"; grep -i '^server-timing\|^cf-ray' h.out | tr -d '\r' | tr '\n' ' '; echo; done
-          for k in 1 2 3; do curl -s -o /dev/null -w "robots $F\n" "https://tripnalc.com/robots.txt?k=$k"; done
+          curl -s -o p.out -w "baekdusan %{http_code} " "https://tripnalc.com/api/forecast?lat=42.006&lon=128.056&v=6"; head -c 160 p.out; echo
+          curl -s -o p.out -w "iceland %{http_code} " "https://tripnalc.com/api/forecast?lat=64.1466&lon=-21.9426&v=6"; head -c 160 p.out; echo
+          curl -s -o p.out -w "cusco %{http_code} " "https://tripnalc.com/api/forecast?lat=-13.532&lon=-71.9675&v=6"; head -c 160 p.out; echo
+          curl -s -o p.out -w "yellowknife %{http_code} " "https://tripnalc.com/api/forecast?lat=62.454&lon=-114.3718&v=6"; head -c 160 p.out; echo
+          curl -s -o p.out -w "manado %{http_code} " "https://tripnalc.com/api/forecast?lat=1.4748&lon=124.8421&v=6"; head -c 160 p.out; echo
+          curl -s -o p.out -w "addis-ababa %{http_code} " "https://tripnalc.com/api/forecast?lat=8.9806&lon=38.7578&v=6"; head -c 160 p.out; echo
+          curl -s -o p.out -w "sapa %{http_code} " "https://tripnalc.com/api/forecast?lat=22.3364&lon=103.8438&v=6"; head -c 160 p.out; echo
+          curl -s -o p.out -w "tsushima %{http_code} " "https://tripnalc.com/api/forecast?lat=34.203&lon=129.288&v=6"; head -c 160 p.out; echo
+          curl -s -o p.out -w "tokyo %{http_code} " "https://tripnalc.com/api/forecast?lat=35.6812&lon=139.7671&v=6"; head -c 160 p.out; echo
+          curl -s -o p.out -w "dolomites %{http_code} " "https://tripnalc.com/api/forecast?lat=46.5405&lon=12.1357&v=6"; head -c 160 p.out; echo
+          curl -s -o p.out -w "list %{http_code} " https://tripnalc.com/overseas; grep -o 'ov-card' p.out | wc -l
+          curl -s -o /dev/null -w "page %{http_code}\n" https://tripnalc.com/overseas/baekdusan
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com
           git add -A diag-out.txt; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026

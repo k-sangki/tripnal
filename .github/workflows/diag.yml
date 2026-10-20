@@ -21,9 +21,12 @@ jobs:
       - run: |
           set +e
           {
-          python collector/climate.py
-          ls -la src/data/climate.json
-          git add -f src/data/climate.json
+            for u in /overseas /overseas/osaka /overseas/osaka/8 /overseas/osaka/forecast /overseas/bangkok /overseas/rovaniemi/1 /overseas/osaka/13 ; do
+              echo "$u $(curl -s -o /tmp/p.html -w '%{http_code} %{time_total}' https://tripnalc.com$u)"
+              grep -o '<title>[^<]*' /tmp/p.html | head -1
+              grep -o '최근 날씨 소식</b>.\{0,300\}' /tmp/p.html | sed 's/<[^>]*>/ /g' | head -1
+            done
+            curl -s https://tripnalc.com/sitemap.xml | grep -c '<loc>'
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com
           git add -A diag-out.txt; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026

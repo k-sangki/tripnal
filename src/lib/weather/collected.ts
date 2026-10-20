@@ -1,13 +1,14 @@
 import { getPosition } from "suncalc";
 import { addDays, kstDate } from "@/lib/time";
-import type { HourlySeries, RawForecast, WeatherProvider } from "./types";
+import type { DatedTideEvent, HourlySeries, RawForecast, WeatherProvider } from "./types";
 
 /**
  * 직접 수집한 ECMWF·GFS·ICON 예보(collector/, R2 버킷 tripnal-data)를 읽는 provider.
  *
  * - 격자(0.25°)의 둘러싼 네 점을 읽어 고도 보정 후 거리 가중(쌍선형)으로 지점 값을 낸다.
  * - 3·6시간 간격 값을 1시간 간격으로 풀고, 세 모델의 중간값을 쓴다 (openMeteo.ts와 같은 규칙).
- * - 체감온도·날씨 코드·자외선은 받은 값으로 계산한다. 파고는 GFS-Wave, 강수 확률은 GEFS 앙상블. 해수면·대기질은 아직 없다.
+ * - 체감온도·날씨 코드·자외선은 받은 값으로 계산한다. 파고는 GFS-Wave, 강수 확률은 GEFS 앙상블,
+ *   미세먼지는 CAMS(5일), 만조·간조는 가까운 국립해양조사원 관측소 예보.
  */
 
 export const COLLECTED_MODELS = ["ecmwf", "gfs", "icon"] as const;
@@ -330,7 +331,7 @@ function cached<T>(key: string, load: () => Promise<T>): Promise<T> {
 
 /** 최신 run은 5분 동안 기억한다 (버킷마다 따로) */
 const latestMemos = new WeakMap<DataBucket, Map<string, { at: number; run: Promise<string | null> }>>();
-function latestRun(b: DataBucket, model: CollectedModel | "wave" | "gefs"): Promise<string | null> {
+function latestRun(b: DataBucket, model: CollectedModel | "wave" | "gefs" | "cams"): Promise<string | null> {
   let latestMemo = latestMemos.get(b);
   if (!latestMemo) latestMemos.set(b, (latestMemo = new Map()));
   const hit = latestMemo.get(model);
@@ -422,6 +423,116 @@ export async function loadProbability(b: DataBucket, cs: ReturnType<typeof corne
   });
 }
 
+/** CAMS 미세먼지 격자점 (collector/cams.py) */
+export interface AirPointFile {
+  run: string;
+  step: number[];
+  pm10: Num[];
+  pm25: Num[];
+}
+
+/** 미세먼지 µg/m³: 네 점 가중 평균을 시각별로 잇는다 (CAMS는 5일까지) */
+export async function loadAirQuality(b: DataBucket, cs: ReturnType<typeof corners>, keys: string[]) {
+  const run = await latestRun(b, "cams");
+  if (!run) return null;
+  const files = await Promise.all(
+    cs.map((c) => {
+      const key = `cams/${run}/${c.lat.toFixed(2)}_${c.lon.toFixed(2)}.json`;
+      return cached(key, () => b.get(key).then((o) => (o ? o.json<AirPointFile>() : null)));
+    }),
+  );
+  const mix = (pick: (f: AirPointFile) => Num[]) => {
+    const series = files.map((f, i) => (f ? { w: cs[i].w, v: linearSteps(f.run, f.step, pick(f), keys) } : null));
+    return keys.map((_, i) => {
+      let s = 0;
+      let ws = 0;
+      for (const x of series) {
+        if (!x || x.v[i] == null) continue;
+        s += x.v[i]! * x.w;
+        ws += x.w;
+      }
+      return ws > 0 ? Math.round(s / ws) : null;
+    });
+  };
+  if (!files.some((f) => f)) return null;
+  return { pm10: mix((f) => f.pm10), pm25: mix((f) => f.pm25) };
+}
+
+/** 국립해양조사원 관측소 (collector/tide.py) */
+export interface TideStation {
+  code: string;
+  name: string;
+  lat: number;
+  lon: number;
+}
+
+export interface TideFile extends TideStation {
+  /** 받은 기간 평균 조위 cm */
+  msl: number;
+  /** ["YYYY-MM-DD HH:MM", "H"|"L", 조위 cm] */
+  events: [string, "H" | "L", number][];
+}
+
+/** 이 거리(km) 안의 관측소만 쓴다. 바다 격자가 없는 곳은 TIDE_NEAR_KM 안일 때만 */
+const TIDE_MAX_KM = 25;
+const TIDE_NEAR_KM = 5;
+
+function distanceKm(lat1: number, lon1: number, lat2: number, lon2: number) {
+  const r = Math.PI / 180;
+  const x = (lon2 - lon1) * r * Math.cos(((lat1 + lat2) / 2) * r);
+  const y = (lat2 - lat1) * r;
+  return Math.hypot(x, y) * 6371;
+}
+
+/** "YYYY-MM-DD HH:MM"(KST) → epoch ms */
+function kstEventTime(at: string): number {
+  return Date.UTC(+at.slice(0, 4), +at.slice(5, 7) - 1, +at.slice(8, 10), +at.slice(11, 13), +at.slice(14, 16)) - 9 * 3600e3;
+}
+
+/**
+ * 가장 가까운 관측소의 만조·간조와, 그 사이를 코사인으로 이은 시각별 해수면 높이(m, 평균 해수면 기준).
+ * coastal: 둘러싼 격자에 바다가 있는지 (내륙이면 아주 가까운 관측소만 쓴다)
+ */
+export async function loadTide(b: DataBucket, lat: number, lon: number, keys: string[], coastal: boolean) {
+  const day = keys[0].slice(0, 10);
+  // 없을 때는 기억하지 않는다 (cached는 실패한 값을 지운다)
+  const stations = await cached(`tide/stations.json:${day}`, () =>
+    b.get("tide/stations.json").then((o) => {
+      if (!o) throw new Error("관측소 목록 없음");
+      return o.json<TideStation[]>();
+    }),
+  );
+  let best: TideStation | null = null;
+  let bestKm = Infinity;
+  for (const s of stations) {
+    const km = distanceKm(lat, lon, s.lat, s.lon);
+    if (km < bestKm) [best, bestKm] = [s, km];
+  }
+  if (!best || bestKm > (coastal ? TIDE_MAX_KM : TIDE_NEAR_KM)) return null;
+  const code = best.code;
+  const file = await cached(`tide/${code}.json:${day}`, () =>
+    b.get(`tide/${code}.json`).then((o) => {
+      if (!o) throw new Error(`${code} 없음`);
+      return o.json<TideFile>();
+    }),
+  );
+  if (!file.events.length) return null;
+  const events = file.events.map(([at, kind, cm]) => ({ at, t: kstEventTime(at), type: kind === "H" ? ("high" as const) : ("low" as const), level: Math.round(cm - file.msl) / 100 }));
+  let j = 0;
+  const seaLevel = keys.map((k) => {
+    const t = kstKeyTime(k);
+    while (j + 1 < events.length && events[j + 1].t <= t) j++;
+    const a = events[j];
+    const c = events[j + 1];
+    if (a.t === t) return a.level;
+    if (!c || a.t > t) return null;
+    const f = (t - a.t) / (c.t - a.t);
+    return Math.round((a.level + ((c.level - a.level) * (1 - Math.cos(Math.PI * f))) / 2) * 100) / 100;
+  });
+  const tideEvents: DatedTideEvent[] = events.filter((e) => e.at >= day).map(({ at, type, level }) => ({ at, type, level }));
+  return { seaLevel, tideEvents, station: file.name };
+}
+
 export async function loadCollected(b: DataBucket, lat: number, lon: number, elevation?: number, now = new Date()): Promise<RawForecast> {
   const keys = hourKeys(now);
   const cs = corners(lat, lon);
@@ -429,6 +540,7 @@ export async function loadCollected(b: DataBucket, lat: number, lon: number, ele
   // 바다가 없어도 예보는 보여준다
   const wave = loadWave(b, cs, keys).catch(() => null);
   const prob = loadProbability(b, cs, keys).catch(() => null);
+  const air = loadAirQuality(b, cs, keys).catch(() => null);
   const models = await Promise.all(
     COLLECTED_MODELS.map(async (model) => {
       const run = await latestRun(b, model);
@@ -457,8 +569,12 @@ export async function loadCollected(b: DataBucket, lat: number, lon: number, ele
   );
   const w = await wave;
   if (w) Object.assign(hourly, w);
+  const tide = await loadTide(b, lat, lon, keys, w != null).catch(() => null);
+  if (tide) hourly.seaLevel = tide.seaLevel;
   const p = await prob;
   if (p) hourly.precipitationProbability = p;
+  const q = await air;
+  if (q) Object.assign(hourly, q);
   const names: Record<CollectedModel, string> = { ecmwf: "ECMWF", gfs: "GFS", icon: "ICON" };
   return {
     latitude: lat,
@@ -466,6 +582,7 @@ export async function loadCollected(b: DataBucket, lat: number, lon: number, ele
     elevation: target ?? (gridElev == null ? null : Math.round(gridElev)),
     hourly,
     source: ok.map((m) => names[m.model]).join("·"),
+    ...(tide ? { tideEvents: tide.tideEvents } : {}),
   };
 }
 

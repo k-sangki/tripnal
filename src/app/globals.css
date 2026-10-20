@@ -1869,3 +1869,7 @@ th.dcol .pd {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.ov-search {
+  display: block;
+  width: 100%;
+}

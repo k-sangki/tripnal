@@ -8,7 +8,6 @@ jobs:
     permissions:
       contents: write
     env:
-      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
       R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
@@ -16,27 +15,37 @@ jobs:
       - uses: actions/checkout@v4
       - run: |
           set +e
-          {
-          echo "== wrangler r2 list (deploy token)"
-          npx -y wrangler@4 r2 bucket list 2>&1 | tail -15
-          echo "== token verify"
-          curl -s -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" https://api.cloudflare.com/client/v4/user/tokens/verify | head -c 300; echo
-          echo "== r2 objects"
           pip -q install boto3
-          python3 - <<'PY'
-          import boto3, os
+          rm -rf dd; mkdir -p dd
+          python3 - > diag-out.txt 2>&1 <<'PY'
+          import boto3, os, json, math, urllib.request
           s3 = boto3.client("s3", endpoint_url=f"https://{os.environ['CLOUDFLARE_ACCOUNT_ID']}.r2.cloudflarestorage.com", aws_access_key_id=os.environ["R2_ACCESS_KEY_ID"], aws_secret_access_key=os.environ["R2_SECRET_ACCESS_KEY"], region_name="auto")
-          for m in ["ecmwf","gfs","icon"]:
+          pts = {"seoul": (37.57, 126.98, None), "daecheong": (38.12, 128.47, 1708), "boryeong": (36.33, 126.6, None), "jeju": (33.5, 126.53, None), "jarasum": (37.82, 127.52, None)}
+          for m in ["ecmwf", "gfs", "icon"]:
               try:
-                  print(m, s3.get_object(Bucket="tripnal-data", Key=f"{m}/latest.json")["Body"].read()[:200])
-                  r = s3.list_objects_v2(Bucket="tripnal-data", Prefix=f"{m}/", Delimiter="/")
-                  print(" runs", [p["Prefix"] for p in r.get("CommonPrefixes", [])])
+                  lt = s3.get_object(Bucket="tripnal-data", Key=f"{m}/latest.json")["Body"].read()
               except Exception as e:
-                  print(m, "ERR", e)
-          o = s3.get_object(Bucket="tripnal-data", Key="ecmwf/latest.json")["Body"].read()
-          import json; run = json.loads(o)["run"]
-          print(s3.get_object(Bucket="tripnal-data", Key=f"ecmwf/{run}/37.50_127.00.json")["Body"].read()[:600])
+                  print(m, "no latest", e); continue
+              os.makedirs(f"dd/{m}", exist_ok=True)
+              open(f"dd/{m}/latest.json", "wb").write(lt)
+              run = json.loads(lt)["run"]; print(m, run)
+              for name, (la, lo, _) in pts.items():
+                  y0 = math.floor((la - 32.5) / 0.25); x0 = math.floor((lo - 124) / 0.25)
+                  for dy in (0, 1):
+                      for dx in (0, 1):
+                          k = f"{32.5 + (y0 + dy) * 0.25:.2f}_{124 + (x0 + dx) * 0.25:.2f}.json"
+                          os.makedirs(f"dd/{m}/{run}", exist_ok=True)
+                          try:
+                              open(f"dd/{m}/{run}/{k}", "wb").write(s3.get_object(Bucket="tripnal-data", Key=f"{m}/{run}/{k}")["Body"].read())
+                          except Exception as e:
+                              print("miss", m, k, e)
+          for name, (la, lo, el) in pts.items():
+              u = f"https://api.open-meteo.com/v1/forecast?latitude={la}&longitude={lo}&hourly=temperature_2m,apparent_temperature,precipitation,wind_speed_10m,wind_gusts_10m,wind_direction_10m,cloud_cover,weather_code,uv_index&models=ecmwf_ifs,gfs_seamless,icon_seamless&forecast_days=16&timezone=Asia/Seoul&wind_speed_unit=ms" + (f"&elevation={el}" if el else "")
+              try:
+                  open(f"dd/om_{name}.json", "wb").write(urllib.request.urlopen(u, timeout=60).read())
+              except Exception as e:
+                  print("om fail", name, e)
+          print("done")
           PY
-          } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com
-          git add diag-out.txt; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026
+          git add -A diag-out.txt dd; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026

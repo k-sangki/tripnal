@@ -192,6 +192,36 @@ a {
 .logo.on-dark .logo-nalc {
   color: #bff0dc;
 }
+.brand {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+.slogan {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.foot-slogan {
+  font-weight: 700;
+}
+.cap-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1.15;
+  flex-shrink: 0;
+}
+.cap-slogan {
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.85);
+}
+.cf:not(.narrow) .cap-slogan {
+  font-size: 14px;
+}
 .tagline {
   font-size: 13px;
   color: var(--muted);

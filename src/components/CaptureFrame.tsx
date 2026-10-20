@@ -7,6 +7,7 @@ import { periodLabel, type Period } from "@/lib/period";
 import type { DayForecast } from "@/lib/weather/types";
 import { ForecastTable } from "./ForecastTable";
 import { Logo } from "./Logo";
+import { SLOGAN_C } from "@/lib/brand";
 
 interface Props {
   frameRef: React.Ref<HTMLDivElement>;
@@ -116,7 +117,10 @@ export function CaptureFrame({ frameRef, ...p }: Props) {
         </div>
         <footer className="cf-foot">
           <span>{p.source && `예보 제공: ${p.source}`}</span>
-          <span className="cap-url">tripnalc.com</span>
+          <span className="cap-brand">
+            <span className="cap-slogan">{SLOGAN_C}</span>
+            <span className="cap-url">tripnalc.com</span>
+          </span>
         </footer>
       </div>
     </div>

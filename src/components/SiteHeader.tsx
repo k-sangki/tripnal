@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { Logo } from "./Logo";
+import { SLOGAN, SLOGAN_C } from "@/lib/brand";
 
 export function SiteHeader() {
   return (
     <header className="topbar">
-      <Link href="/" aria-label="트립날씨 tripnalc 홈">
+      <Link href="/" aria-label="트립날씨 tripnalc 홈" className="brand">
         <Logo />
+        <span className="slogan">{SLOGAN_C}</span>
       </Link>
       <Link href="/weather" className="tagline">
         장소별 날씨
@@ -27,6 +29,7 @@ export function SiteFooter() {
         <Link href="/privacy">개인정보처리방침</Link>
         <Link href="/contact">문의</Link>
       </nav>
+      <p className="foot-slogan">{SLOGAN}</p>
       <p>© 트립날씨 tripnalc.com</p>
     </footer>
   );

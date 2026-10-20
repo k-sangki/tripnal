@@ -1352,6 +1352,10 @@ a {
   color: #fff;
 }
 /* 강수량 */
+.ftab td.r-trace {
+  color: #3b7bff;
+  font-size: 0.85em;
+}
 .ftab td.r1 {
   background: #e8f0ff;
   color: #2563eb;

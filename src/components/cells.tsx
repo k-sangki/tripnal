@@ -106,7 +106,8 @@ export function cellValue(slot: Slot, metric: MetricKey): { text: string; cls?: 
     case "precip": {
       const p = slot.precip;
       if (p == null) return none;
-      if (p < 0.1) return { text: "·", cls: "v-none" };
+      // 값은 0.1mm 단위로 반올림돼 있어 0.1 미만은 곧 0. 강수 확률이 30% 이상이면 "조금 올 수 있음"으로 표시한다.
+      if (p < 0.1) return (slot.precipProb ?? 0) >= 30 ? { text: "0.1↓", cls: "r-trace" } : { text: "·", cls: "v-none" };
       return { text: rainText(p), cls: `r${rainLevel(p)}` };
     }
     case "precipProb": {

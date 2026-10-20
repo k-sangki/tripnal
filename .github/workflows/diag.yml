@@ -12,9 +12,9 @@ jobs:
       - run: |
           set +e
           {
-          for d in tripnalc.com www.tripnalc.com; do echo "== $d"; dig +short NS tripnalc.com; dig +short $d; done
-          curl -s "https://dns.google/resolve?name=tripnalc.com&type=NS"; echo
-          whois tripnalc.com 2>/dev/null | grep -i "name server\|creation" | head
+          sleep 60
+          for u in https://tripnal.com/ https://www.tripnal.com/weather/jarasum-autocamp https://tripnalc.com/ https://www.tripnalc.com/about https://tripnalc.com/ads.txt https://tripnalc.com/manifest.webmanifest; do echo "== $u"; curl -s -o /tmp/b -w "%{http_code} -> %{redirect_url}\n" "$u"; head -c 150 /tmp/b | tr '\n' ' '; echo; done
+          curl -s https://tripnalc.com/ | grep -o '<title>[^<]*</title>'
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com
           git add diag-out.txt; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026

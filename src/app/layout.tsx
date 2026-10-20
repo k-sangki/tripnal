@@ -23,8 +23,11 @@ export const metadata: Metadata = {
   applicationName: "tripnalc",
   openGraph: { type: "website", siteName: "tripnalc", locale: "ko_KR" },
   formatDetection: { telephone: false },
-  // 애드센스 사이트 소유 확인용
-  ...(ADSENSE ? { other: { "google-adsense-account": ADSENSE } } : {}),
+  // 사이트 소유 확인용 (애드센스, 네이버 서치어드바이저)
+  other: {
+    ...(ADSENSE ? { "google-adsense-account": ADSENSE } : {}),
+    "naver-site-verification": "336d370a97d1326e8a5a2fbb7cc0d3e0086580af",
+  },
 };
 
 export const viewport: Viewport = {

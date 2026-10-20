@@ -61,6 +61,22 @@ export function SearchBar({ onSelect, onLocate, locating }: Props) {
   const [searching, setSearching] = useState(false);
   const boxRef = useRef<HTMLDivElement>(null);
   const places = useRef<Place[] | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  // 검색 결과가 오기 전에 Enter(키보드 "검색")를 누르면, 그 검색어의 결과가 오는 대로 첫 번째를 고른다
+  const pendingEnter = useRef<string | null>(null);
+  const doneFor = useRef<string | null>(null);
+  const pick = (r: PlaceResult) => {
+    onSelect({ name: r.name, lat: r.lat, lon: r.lon, address: r.address });
+    pendingEnter.current = null;
+    setOpen(false);
+    setSearching(false);
+    setQ("");
+    inputRef.current?.blur();
+  };
+  const pickRef = useRef(pick);
+  useEffect(() => {
+    pickRef.current = pick;
+  });
   // 장소 목록은 검색창을 처음 누를 때 불러온다 (첫 화면 용량을 늘리지 않게)
   const loadPlaces = () => {
     if (!places.current) import("@/lib/places").then((m) => (places.current = m.PLACES));
@@ -70,6 +86,7 @@ export function SearchBar({ onSelect, onLocate, locating }: Props) {
 
   useEffect(() => {
     const term = q.trim();
+    doneFor.current = null;
     if (term.length < 1) return;
     // 우리 장소 목록에서 찾은 결과는 기다림 없이 바로 보여 주고, 카카오 결과가 오면 뒤에 붙인다
     if (places.current) {
@@ -82,7 +99,10 @@ export function SearchBar({ onSelect, onLocate, locating }: Props) {
       try {
         const remote = await searchRemote(term, ctrl.signal);
         if (ctrl.signal.aborted) return;
-        setResults(merge(places.current ? localMatches(places.current, term) : [], remote));
+        const merged = merge(places.current ? localMatches(places.current, term) : [], remote);
+        setResults(merged);
+        doneFor.current = term;
+        if (pendingEnter.current === term && merged[0]) return pickRef.current(merged[0]);
         setError(null);
         setOpen(true);
         setSearching(false);
@@ -90,6 +110,7 @@ export function SearchBar({ onSelect, onLocate, locating }: Props) {
         if ((e as Error).name !== "AbortError") {
           setError("검색에 실패했습니다. 잠시 후 다시 시도해 주세요.");
           setSearching(false);
+          pendingEnter.current = null;
         }
       }
     }, 150);
@@ -111,6 +132,7 @@ export function SearchBar({ onSelect, onLocate, locating }: Props) {
     <div className="search" ref={boxRef}>
       <div className="search-row">
         <input
+          ref={inputRef}
           className="search-input"
           type="search"
           inputMode="search"
@@ -123,12 +145,12 @@ export function SearchBar({ onSelect, onLocate, locating }: Props) {
             if (results.length) setOpen(true);
           }}
           onKeyDown={(e) => {
-            if (e.key === "Enter" && results[0]) {
-              const r = results[0];
-              onSelect({ name: r.name, lat: r.lat, lon: r.lon, address: r.address });
-              setOpen(false);
-              (e.target as HTMLInputElement).blur();
-            }
+            if (e.key !== "Enter") return;
+            const term = (e.target as HTMLInputElement).value.trim();
+            if (!term) return;
+            // 지금 보이는 목록이 이 검색어의 최종 결과일 때만 바로 고르고, 아니면 결과를 기다린다
+            if (doneFor.current === term && results[0]) pick(results[0]);
+            else pendingEnter.current = term;
           }}
         />
         <button className="icon-btn" onClick={onLocate} aria-label="현재 위치 날씨" title="현재 위치" disabled={locating}>
@@ -142,11 +164,7 @@ export function SearchBar({ onSelect, onLocate, locating }: Props) {
           {results.map((r) => (
             <li key={`${r.name}-${r.lat}-${r.lon}`}>
               <button
-                onClick={() => {
-                  onSelect({ name: r.name, lat: r.lat, lon: r.lon, address: r.address });
-                  setOpen(false);
-                  setQ("");
-                }}
+                onClick={() => pick(r)}
               >
                 <strong>{r.name}</strong>
                 <span className="muted">{r.address}</span>

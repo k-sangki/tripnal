@@ -18,13 +18,19 @@ jobs:
       - run: |
           set +e
           {
-          pip install -q -r collector/requirements.txt
-          time python3 collector/cams.py --out out
-          ls out/cams/*/ | wc -l
-          cat out/cams/latest.json; echo
-          cat out/cams/*/37.50_127.00.json; echo
-          cat out/cams/*/33.50_126.50.json | head -c 400; echo
-          python3 collector/upload.py out cams
+          python3 - <<'PY'
+          import json, urllib.request
+          for name, lat, lon in [("eulwang",37.447,126.372),("boryeong",36.31,126.51),("seoul",37.5665,126.978),("jeju",33.51,126.52)]:
+              for prov in ["collected", ""]:
+                  u=f"https://tripnalc.com/api/forecast?lat={lat}&lon={lon}"+(f"&provider={prov}" if prov else "")
+                  try:
+                      f=json.load(urllib.request.urlopen(urllib.request.Request(u, headers={"User-Agent":"diag"}), timeout=60))
+                  except Exception as e:
+                      print(name, prov, "ERR", e); continue
+                  d=f["days"]
+                  print(name, prov or "om", f["source"], "| tides0:", d[0]["tides"], "| tides1:", d[1]["tides"], "| ndays w tides", sum(1 for x in d if x["tides"]))
+                  print("   tide slots", [s["tide"] for s in d[1]["slots"]], "pm10", [s["pm10"] for s in d[1]["slots"]], "pm25", [s["pm25"] for s in d[1]["slots"]], "pm days", sum(1 for x in d if any(s["pm10"] is not None for s in x["slots"])))
+          PY
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com
           git add -A diag-out.txt; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026

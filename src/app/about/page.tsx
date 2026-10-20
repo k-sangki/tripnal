@@ -37,6 +37,7 @@ export default function About() {
         <li>Copernicus 대기 모니터링 서비스(CAMS) 미세먼지 예보 · Copernicus DEM 지형 고도 (© DLR e.V., Airbus Defence and Space GmbH, European Union)</li>
         <li>국립해양조사원 조석예보 (공공데이터포털)</li>
         <li>기상청 기상특보 (공공데이터포털)</li>
+        <li>장소 위치(산 정상·해수욕장·자전거길 인증센터·캠핑장·스키장): © OpenStreetMap contributors (ODbL)</li>
         <li>공유 미리보기 날씨 아이콘: Twemoji, CC BY 4.0</li>
       </ul>
       <h2>문의</h2>

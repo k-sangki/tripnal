@@ -1,0 +1,2995 @@
+{
+  "version": 0.6,
+  "generator": "Overpass API 0.7.62.11 87bfad18",
+  "osm3s": {
+    "timestamp_osm_base": "2026-10-20T08:46:02Z",
+    "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL."
+  },
+  "elements": [
+
+{
+  "type": "node",
+  "id": 2418314102,
+  "lat": 37.5987817,
+  "lon": 126.8003011,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "아라한강갑문 인증센터",
+    "name:en": "Ara Hangang Lock Certification Center",
+    "name:ko": "아라한강갑문 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425",
+    "wikimedia_commons": "File:Ara Hangang Sea Lock Certification Center.jpg"
+  }
+},
+{
+  "type": "node",
+  "id": 2418314103,
+  "lat": 37.5570165,
+  "lon": 126.6037992,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "아라서해갑문 인증센터",
+    "name:en": "Ara West Sea Lock Certification Center",
+    "name:ko": "아라서해갑문 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 2442183216,
+  "lat": 37.6622765,
+  "lon": 127.3704701,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "샛터삼거리 인증센터",
+    "name:en": "Saeteo Samgeori Certification Center",
+    "name:ko": "샛터삼거리 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 2466603848,
+  "lat": 34.8019485,
+  "lon": 126.4457597,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "영산강하구둑황포돛배 인증센터",
+    "name:en": "Yeongsangang Estuary Bank Certification Center",
+    "name:ko": "영산강하구둑황포돛배 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425",
+    "wikimedia_commons": "Yeongsangang Estuary Bank Certification Center.jpg"
+  }
+},
+{
+  "type": "node",
+  "id": 3259679694,
+  "lat": 35.3712177,
+  "lon": 127.0182532,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "담양댐 인증센터",
+    "name:en": "Damyang Dam Certification Center",
+    "name:ko": "담양댐 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425",
+    "wikimedia_commons": "File:Damyang Dam Certification Center.jpg"
+  }
+},
+{
+  "type": "node",
+  "id": 3259679695,
+  "lat": 35.3341361,
+  "lon": 127.0178045,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "메타세콰이어길 인증센터",
+    "name:en": "Metasequoia Road Certification Center",
+    "name:ko": "메타세콰이어길 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425",
+    "wikimedia_commons": "File:Metasequoia Road Certification Center.jpg"
+  }
+},
+{
+  "type": "node",
+  "id": 3259686268,
+  "lat": 35.2470325,
+  "lon": 126.8917256,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "담양대나무숲 인증센터",
+    "name:en": "Damyang Bamboo Forest Certification Center",
+    "name:ko": "담양대나무숲 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425",
+    "wikimedia_commons": "File:Damyang Bamboo Forest Certification Center.jpg"
+  }
+},
+{
+  "type": "node",
+  "id": 4317260107,
+  "lat": 35.5218691,
+  "lon": 127.1493012,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "섬진강댐 인증센터",
+    "name:en": "Seomjingang Dam Certification Center",
+    "name:ko": "섬진강댐 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425",
+    "wikimedia_commons": "File:Seomjinggang Dam Certification Center.jpg"
+  }
+},
+{
+  "type": "node",
+  "id": 4362509515,
+  "lat": 35.3157996,
+  "lon": 128.9742382,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "양산물문화관 인증센터",
+    "name:en": "Yangsan Water Culture Center Certification Center",
+    "name:ko": "양산물문화관 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 4421831288,
+  "lat": 36.6787501,
+  "lon": 127.4485928,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "무심천교 인증센터",
+    "name:en": "Musimcheon Bridge Certification Center",
+    "name:ko": "무심천교 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425",
+    "wikimedia_commons": "File:Musimcheon Bridge Certification Center.jpg"
+  }
+},
+{
+  "type": "node",
+  "id": 4689934991,
+  "lat": 33.4695366,
+  "lon": 126.3401100,
+  "tags": {
+    "check_date": "2026-04-07",
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "다락쉼터 인증센터",
+    "name:en": "Darak Shelter Certification Center",
+    "name:ko": "다락쉼터 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425",
+    "wikimedia_commons": "File:Darak Shelter Certification Center.jpg"
+  }
+},
+{
+  "type": "node",
+  "id": 4691615390,
+  "lat": 33.2523363,
+  "lon": 126.6231870,
+  "tags": {
+    "amenity": "bicycle_parking",
+    "bicycle_parking": "stands",
+    "capacity": "10",
+    "covered": "no",
+    "name": "쇠소깍 인증센터",
+    "name:ko": "쇠소깍 인증센터",
+    "operator": "Soesokkak bike stamp",
+    "source": "https://bike.go.kr/"
+  }
+},
+{
+  "type": "node",
+  "id": 4691641890,
+  "lat": 33.2358816,
+  "lon": 126.5150636,
+  "tags": {
+    "check_date": "2026-04-07",
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "법환바당 인증센터",
+    "name:en": "Beophwan Badang Certification Center",
+    "name:ko": "법환바당 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425",
+    "wikimedia_commons": "File:Beophwan Badang Certification Center.jpg"
+  }
+},
+{
+  "type": "node",
+  "id": 4691733115,
+  "lat": 33.3254493,
+  "lon": 126.8407967,
+  "tags": {
+    "check_date": "2026-04-07",
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "표선해변 인증센터",
+    "name:en": "Pyoseon Beach Certification Center",
+    "name:ko": "표선해변 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425",
+    "wikimedia_commons": "File:Pyoseon Beach Certification Center.jpg"
+  }
+},
+{
+  "type": "node",
+  "id": 4691930792,
+  "lat": 33.5568596,
+  "lon": 126.7598470,
+  "tags": {
+    "check_date": "2026-04-07",
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "김녕성세기해변 인증센터",
+    "name:en": "Gimnyeong Seongsegi Beach Certification Center",
+    "name:ko": "김녕성세기해변 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425",
+    "wikimedia_commons": "File:Gimnyeong Seongsegi Beach Certification Center.jpg"
+  }
+},
+{
+  "type": "node",
+  "id": 4693056093,
+  "lat": 33.5442080,
+  "lon": 126.6724822,
+  "tags": {
+    "check_date": "2026-04-07",
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "함덕서우봉해변 인증센터",
+    "name:en": "Hamdeok Seoubong Beach Certification Center",
+    "name:ko": "함덕서우봉해변 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425",
+    "wikimedia_commons": "File:Hamdeok Seoubong Beach Certification Center.jpg"
+  }
+},
+{
+  "type": "node",
+  "id": 4693076589,
+  "lat": 33.5150917,
+  "lon": 126.5111144,
+  "tags": {
+    "check_date": "2026-04-07",
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "용두암 인증센터",
+    "name:en": "Yongduam Certification Center",
+    "name:ko": "용두암 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 4693102294,
+  "lat": 33.4686755,
+  "lon": 126.9243208,
+  "tags": {
+    "check_date": "2026-04-07",
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "성산일출봉 인증센터",
+    "name:en": "Seongsan Ilchulbong Certification Center",
+    "name:ko": "성산일출봉 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425",
+    "wikimedia_commons": "File:Seongsan Ilchulbong Certification Center.jpg"
+  }
+},
+{
+  "type": "node",
+  "id": 5060891335,
+  "lat": 36.7660537,
+  "lon": 128.0008146,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "행촌교차로 인증센터",
+    "name:en": "Haengchon Crossroads Certification Center",
+    "name:ko": "행촌교차로 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425",
+    "wikimedia_commons": "File:Haengchon Crossroads Certification Center.jpg"
+  }
+},
+{
+  "type": "node",
+  "id": 5072409226,
+  "lat": 37.5533189,
+  "lon": 127.3125470,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "밝은광장 인증센터",
+    "name:en": "Balgeun Gwangjang Certification Center",
+    "name:ko": "밝은광장 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 5074268452,
+  "lat": 37.9204407,
+  "lon": 127.7130695,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "신매대교 인증센터",
+    "name:en": "Sinmae Bridge Certification Center",
+    "name:ko": "신매대교 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 5181130241,
+  "lat": 34.9598269,
+  "lon": 127.7614979,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "배알도수변공원 인증센터",
+    "name:en": "Baealdo Waterfront Park Certification Center",
+    "name:ko": "배알도수변공원 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425",
+    "wikimedia_commons": "File:Baealdo Waterfront Park Certification Center.jpg"
+  }
+},
+{
+  "type": "node",
+  "id": 5217636068,
+  "lat": 36.7995434,
+  "lon": 127.8235806,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "괴강교 인증센터",
+    "name:en": "Goegang Bridge Certification Center",
+    "name:ko": "괴강교 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425",
+    "wikimedia_commons": "File:Goegang Bridge Certification Center.jpg"
+  }
+},
+{
+  "type": "node",
+  "id": 5247713096,
+  "lat": 35.1822788,
+  "lon": 127.4695431,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "사성암 인증센터",
+    "name:en": "Saseongam Certification Center",
+    "name:ko": "사성암 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425",
+    "wikimedia_commons": "File:Saseongam Certification Center.jpg"
+  }
+},
+{
+  "type": "node",
+  "id": 5292371831,
+  "lat": 37.8053805,
+  "lon": 128.9072234,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "경포해변 인증센터",
+    "name:en": "Gyeongpo Beach Certification Center",
+    "name:ko": "경포해변 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 5359447346,
+  "lat": 36.4749758,
+  "lon": 127.4796337,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "대청댐 인증센터",
+    "name:en": "Daecheong Dam Certification Center",
+    "name:ko": "대청댐 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425",
+    "wikimedia_commons": "https://commons.wikimedia.org/wiki/File:Daechong_Dam_Certification_Center.jpg"
+  }
+},
+{
+  "type": "node",
+  "id": 5359507842,
+  "lat": 36.4699020,
+  "lon": 127.2565560,
+  "tags": {
+    "name": "세종보 인증센터 (무인)",
+    "tourism": "attraction"
+  }
+},
+{
+  "type": "node",
+  "id": 5359603671,
+  "lat": 36.4604300,
+  "lon": 127.1002920,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "공주보 인증센터",
+    "name:en": "Gongjubo Certification Center",
+    "name:ko": "공주보 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425",
+    "wikimedia_commons": "Main menu hide Main page Welcome Community portal Village pump Help center Participate Upload file Recent changes Latest files Random file Contact us Special pages Print/export Download as PDF Printable version Contents hide Beginning Summary Licensing Fi"
+  }
+},
+{
+  "type": "node",
+  "id": 5359603676,
+  "lat": 36.3174411,
+  "lon": 126.9417840,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "백제보 인증센터",
+    "name:en": "Baekjebo Certification Center",
+    "name:ko": "백제보 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425",
+    "wikimedia_commons": "File:Baekjebo Certification Center.jpg"
+  }
+},
+{
+  "type": "node",
+  "id": 5359915480,
+  "lat": 36.1310317,
+  "lon": 126.9218589,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "익산성당포구 인증센터",
+    "name:en": "Iksan Seongdangpogu Certification Center",
+    "name:ko": "익산성당포구 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425",
+    "wikimedia_commons": "File:Iksan Seongdangpogu Certification Center.jpg"
+  }
+},
+{
+  "type": "node",
+  "id": 5359915642,
+  "lat": 36.0205731,
+  "lon": 126.7644704,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "금강하굿둑 인증센터",
+    "name:en": "Geumgang Estuary Bank Certification Center",
+    "name:ko": "금강하굿둑 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425",
+    "wikimedia_commons": "File:Geumgang Estuary Bank Certification Center.jpg"
+  }
+},
+{
+  "type": "node",
+  "id": 5390411199,
+  "lat": 37.6875071,
+  "lon": 129.0380197,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "정동진 인증센터",
+    "name:en": "Jeongdongjin Certification Center",
+    "name:ko": "정동진 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 5390462522,
+  "lat": 37.5901302,
+  "lon": 129.0950237,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "망상해변 인증센터",
+    "name:en": "Mangsang Beach Certification Center",
+    "name:ko": "망상해변 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 5390505233,
+  "lat": 37.4761188,
+  "lon": 129.1599545,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "추암촛대바위 인증센터",
+    "name:en": "Chuam Chotdaebawi Certification Center",
+    "name:ko": "추암촛대바위 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 5403330286,
+  "lat": 36.5175544,
+  "lon": 127.3209268,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "합강공원 인증센터",
+    "name:en": "Hapgang Park Certification Center",
+    "name:ko": "합강공원 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425",
+    "wikimedia_commons": "File:Hapgang Park Certification Center.jpg"
+  }
+},
+{
+  "type": "node",
+  "id": 5449454066,
+  "lat": 37.8247684,
+  "lon": 127.5216541,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "경강교 인증센터",
+    "name:en": "Gyeonggang Bridge Certification Center",
+    "name:ko": "경강교 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 5470118732,
+  "lat": 35.3386216,
+  "lon": 127.1884903,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "향가유원지 인증센터",
+    "name:en": "Hyangga Park Certification Center",
+    "name:ko": "향가유원지 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425",
+    "wikimedia_commons": "File:Hyangga Park Certification Center.jpg"
+  }
+},
+{
+  "type": "node",
+  "id": 5470186344,
+  "lat": 35.4605186,
+  "lon": 127.2014727,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "장군목 인증센터",
+    "name:en": "Janggunmok Certification Center",
+    "name:ko": "장군목 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425",
+    "wikimedia_commons": "File:Janggunmok Certification Center.jpg"
+  }
+},
+{
+  "type": "node",
+  "id": 5483391036,
+  "lat": 35.3036854,
+  "lon": 127.3279890,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "횡탄정 인증센터",
+    "name:en": "Hoengtanjeong Certification Center",
+    "name:ko": "횡탄정 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425",
+    "wikimedia_commons": "File:Hwoingtanjeong Certification Center.jpg"
+  }
+},
+{
+  "type": "node",
+  "id": 5483417776,
+  "lat": 35.1849253,
+  "lon": 127.6210051,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "남도대교 인증센터",
+    "name:en": "Namdo Bridge Certification Center",
+    "name:ko": "남도대교 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425",
+    "wikimedia_commons": "File:Namdo Bridge Certification Center.jpg"
+  }
+},
+{
+  "type": "node",
+  "id": 5483417781,
+  "lat": 35.0794025,
+  "lon": 127.7216759,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "매화마을 인증센터",
+    "name:en": "Maewha Village Certification Center",
+    "name:ko": "매화마을 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425",
+    "wikimedia_commons": "File:Maehwa Village Certification Center.jpg"
+  }
+},
+{
+  "type": "node",
+  "id": 5542663073,
+  "lat": 35.1088008,
+  "lon": 128.9479612,
+  "tags": {
+    "ele": "0",
+    "information": "route_marker",
+    "material": "stone",
+    "name": "낙동강 하굿둑 인증센터 (자전거길)",
+    "name:en": "Bicycle Road Certification Center: Nakdonggang Estuary Bank",
+    "source:url": "http://www.bike.go.kr/certification?certificationSelect=2",
+    "tourism": "information"
+  }
+},
+{
+  "type": "node",
+  "id": 5542663075,
+  "lat": 35.3772190,
+  "lon": 128.5506650,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "창녕함안보 인증센터",
+    "name:en": "Changnyeonghamanbo Certification Center",
+    "name:ko": "창녕함안보 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 5542663076,
+  "lat": 35.5909229,
+  "lon": 128.3614388,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "합천창녕보 인증센터",
+    "name:en": "Hapcheonchangnyeongbo Certification Center",
+    "name:ko": "합천창녕보 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 5542663077,
+  "lat": 35.7370868,
+  "lon": 128.4191170,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "달성보 인증센터",
+    "name:en": "Dalseongbo Certification Center",
+    "name:ko": "달성보 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 5542663078,
+  "lat": 35.8420757,
+  "lon": 128.4627193,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "강정고령보 인증센터",
+    "name:en": "Gangjeonggoryeongbo Certification Center",
+    "name:ko": "강정고령보 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 5542663079,
+  "lat": 36.0153347,
+  "lon": 128.4008317,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "칠곡보 인증센터",
+    "name:en": "Chilgokbo Certification Center",
+    "name:ko": "칠곡보 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 5542663080,
+  "lat": 36.2373236,
+  "lon": 128.3495244,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "구미보 인증센터",
+    "name:en": "Gumibo Certification Center",
+    "name:ko": "구미보 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 5542663081,
+  "lat": 36.3588758,
+  "lon": 128.3062646,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "낙단보 인증센터",
+    "name:en": "Nakdanbo Certification Center",
+    "name:ko": "낙단보 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 5542663082,
+  "lat": 36.4311701,
+  "lon": 128.2500780,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "상주보 인증센터",
+    "name:en": "Sangjubo Certification Center",
+    "name:ko": "상주보 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 5542663084,
+  "lat": 36.4987294,
+  "lon": 128.2657936,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "상주상풍교 인증센터",
+    "name:en": "Sangjusangpung Bridge Certification Center",
+    "name:ko": "상주상풍교 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 5542663085,
+  "lat": 36.6556937,
+  "lon": 128.1408095,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "문경불정역 인증센터",
+    "name:en": "Mungyeong Buljeong Station Certification Center",
+    "name:ko": "문경불정역 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 5542663086,
+  "lat": 36.7516580,
+  "lon": 128.0316148,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "이화령휴게소 인증센터",
+    "name:en": "Ihwaryeong Rest Area Certification Center",
+    "name:ko": "이화령휴게소 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 5542663087,
+  "lat": 36.8487348,
+  "lon": 127.9893906,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "수안보온천 인증센터",
+    "name:en": "Suanbo Oncheon Certification Center",
+    "name:ko": "수안보온천 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425",
+    "wikimedia_commons": "File:Suanbo_Oncheon_Certification_Center.jpg"
+  }
+},
+{
+  "type": "node",
+  "id": 5542663088,
+  "lat": 37.0112691,
+  "lon": 127.9787172,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "충주댐 인증센터",
+    "name:en": "Chungjudam Certification Center",
+    "name:ko": "충주댐 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425",
+    "wikimedia_commons": "File:Chungju_Dam_Certification_Center.jpg"
+  }
+},
+{
+  "type": "node",
+  "id": 5542663089,
+  "lat": 36.9893227,
+  "lon": 127.9034273,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "충주탄금대 인증센터",
+    "name:en": "Chungju Tangeumdae Certification Center",
+    "name:ko": "충주탄금대 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425",
+    "wikimedia_commons": "File:Chungju Tangeumdae Certification Center.jpg"
+  }
+},
+{
+  "type": "node",
+  "id": 5542663090,
+  "lat": 37.1104178,
+  "lon": 127.8095073,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "비내섬 인증센터",
+    "name:en": "Binaesum Certification Center",
+    "name:ko": "비내섬 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 5542663091,
+  "lat": 37.2772629,
+  "lon": 127.6810335,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "강천보 인증센터",
+    "name:en": "Gangcheonbo Certification Center",
+    "name:ko": "강천보 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 5542663092,
+  "lat": 37.3263662,
+  "lon": 127.6052106,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "여주보 인증센터",
+    "name:en": "Yeojubo Certification Center",
+    "name:ko": "여주보 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 5542663093,
+  "lat": 37.4075069,
+  "lon": 127.5419824,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "이포보 인증센터",
+    "name:en": "Ipobo Certification Center",
+    "name:ko": "이포보 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 5542663094,
+  "lat": 37.4981158,
+  "lon": 127.4847236,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "양평군립미술관 인증센터",
+    "name:en": "Yangpyeong Art Museum Certification Center",
+    "name:ko": "양평군립미술관 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 5542663095,
+  "lat": 37.5224492,
+  "lon": 127.2951219,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "능내역 인증센터",
+    "name:en": "Neungnae Station Certification Center",
+    "name:ko": "능내역 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 5542663096,
+  "lat": 37.5465524,
+  "lon": 127.1202547,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "광나루자전거공원 인증센터",
+    "name:en": "Gwangnaru Bicycle Park Certification Center",
+    "name:ko": "광나루자전거공원 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 5542663097,
+  "lat": 37.5320792,
+  "lon": 127.0601642,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "뚝섬전망콤플렉스 인증센터",
+    "name:en": "Ttukseom Observatory Certification Center",
+    "name:ko": "뚝섬전망콤플렉스 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 5542663098,
+  "lat": 37.5345779,
+  "lon": 126.9132589,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "여의도 인증센터",
+    "name:en": "Yeouido Certification Center",
+    "name:ko": "여의도 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 5595066036,
+  "lat": 36.4764136,
+  "lon": 127.2595179,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "세종보 인증센터",
+    "name:en": "Sejongbo Certification Center",
+    "name:ko": "세종보 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425",
+    "wikimedia_commons": "File:Sejongbo Certification Center.jpg"
+  }
+},
+{
+  "type": "node",
+  "id": 5614160381,
+  "lat": 36.5775709,
+  "lon": 128.7587053,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "안동댐 인증센터",
+    "name:en": "Andong Dam Certification Center",
+    "name:ko": "안동댐 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425",
+    "wikimedia_commons": "File:Andong Dam Certification Center.jpg"
+  }
+},
+{
+  "type": "node",
+  "id": 6308543825,
+  "lat": 38.4013623,
+  "lon": 128.4742410,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "북천철교 인증센터",
+    "name:en": "Bukcheon Railroad Bridge Certification Center",
+    "name:ko": "북천철교 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 6320447032,
+  "lat": 38.2136220,
+  "lon": 128.6009475,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "영금정 인증센터",
+    "name:en": "Yeonggeumjeong Certification Center",
+    "name:ko": "영금정 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 6320447033,
+  "lat": 38.2490764,
+  "lon": 128.5681699,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "봉포해변 인증센터",
+    "name:en": "Bongpo Beach Certification Center",
+    "name:ko": "봉포해변 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 6432162385,
+  "lat": 36.4284828,
+  "lon": 129.4346462,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "해맞이공원 인증센터",
+    "name:en": "Sunrise Park Certification Center",
+    "name:ko": "해맞이공원 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 6433644385,
+  "lat": 37.2223750,
+  "lon": 129.3390036,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "임원 인증센터",
+    "name:en": "Imwon Certification Center",
+    "name:ko": "임원 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 6433644386,
+  "lat": 37.4187951,
+  "lon": 129.1962288,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "한재공원 인증센터",
+    "name:en": "Hanjae Park Certification Center",
+    "name:ko": "한재공원 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 6433644485,
+  "lat": 36.9769274,
+  "lon": 129.4071079,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "울진은어다리 인증센터",
+    "name:en": "Uljin Sweet Fish Bridge Certification Center",
+    "name:ko": "울진은어다리 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 6437406288,
+  "lat": 37.9183779,
+  "lon": 128.8080815,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "지경공원 인증센터",
+    "name:en": "Jigyeong Park Certification Center",
+    "name:ko": "지경공원 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 6437503289,
+  "lat": 38.0620401,
+  "lon": 128.6795880,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "동호해변 인증센터",
+    "name:en": "Dongho Beach Certification Center",
+    "name:ko": "동호해변 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 6572786691,
+  "lat": 34.9147897,
+  "lon": 126.5416218,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "느러지 인증센터",
+    "name:en": "Neureoji Observatory Certification Center",
+    "name:ko": "느러지 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425",
+    "wikimedia_commons": "File:Neureoji Observatory Certification Center.jpg"
+  }
+},
+{
+  "type": "node",
+  "id": 6967494301,
+  "lat": 38.2387988,
+  "lon": 127.1614565,
+  "tags": {
+    "name": "평화누리길 12코스 (통일이음길) 인증센터",
+    "tourism": "attraction"
+  }
+},
+{
+  "type": "node",
+  "id": 7911560212,
+  "lat": 38.5152427,
+  "lon": 128.4182552,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "description": "Publicly accessible bicycle passport certification booth for the East Coast Bicycle Path located outside the Civilian Control Line checkpoint area.",
+    "name": "통일전망대 인증센터",
+    "name:en": "Unification Observatory Certification Center",
+    "name:ko": "통일전망대 인증센터",
+    "official_name": "통일전망대(민통선외) 인증센터",
+    "official_name:en": "Unification Observatory (Outside the Civilian Control Line) Certification Center",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 8657538288,
+  "lat": 36.7441498,
+  "lon": 129.4620975,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "월송정 인증센터",
+    "name:en": "Wolsongjeong Certification Center",
+    "name:ko": "월송정 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 8657557852,
+  "lat": 36.8723750,
+  "lon": 129.4208080,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "망양휴게소 인증센터",
+    "name:en": "Mangnyang Service Area Certification Center",
+    "name:ko": "망양휴게소 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 8657558321,
+  "lat": 36.6004409,
+  "lon": 129.4120258,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "고래불해변 인증센터",
+    "name:en": "Goreabul Beach Certification Center",
+    "name:ko": "고래불해변 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 8764137136,
+  "lat": 35.0653972,
+  "lon": 126.7616203,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "승촌보 인증센터",
+    "name:en": "Seungchonbo Certification Center",
+    "name:ko": "승촌보 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425",
+    "wikimedia_commons": "File:Seungchonbo Certification Center.jpg"
+  }
+},
+{
+  "type": "node",
+  "id": 8773654577,
+  "lat": 34.9708762,
+  "lon": 126.6264308,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "죽산보 인증센터",
+    "name:en": "Juksanbo Certification Center",
+    "name:ko": "죽산보 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425",
+    "wikimedia_commons": "File:Juksanbo Certification Center.jpg"
+  }
+},
+{
+  "type": "node",
+  "id": 8773654589,
+  "lat": 34.9706852,
+  "lon": 126.6271225,
+  "tags": {
+    "information": "office",
+    "name": "죽산보 인증센터",
+    "tourism": "information"
+  }
+},
+{
+  "type": "node",
+  "id": 8863043617,
+  "lat": 33.2066907,
+  "lon": 126.2894737,
+  "tags": {
+    "check_date": "2026-04-07",
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "송악산 인증센터",
+    "name:en": "Songaksan Certification Center",
+    "name:ko": "송악산 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425",
+    "wikimedia_commons": "File:Songaksan Certification Center.jpg"
+  }
+},
+{
+  "type": "node",
+  "id": 8864759319,
+  "lat": 33.2522998,
+  "lon": 126.6232268,
+  "tags": {
+    "check_date": "2026-04-07",
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "쇠소깍 인증센터",
+    "name:en": "Soesokkak Certification Center",
+    "name:ko": "쇠소깍 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425",
+    "wikimedia_commons": "File:Soesokkak Certification Center.jpg"
+  }
+},
+{
+  "type": "node",
+  "id": 9774241804,
+  "lat": 35.8387405,
+  "lon": 128.4680721,
+  "tags": {
+    "addr:city": "대구광역시",
+    "addr:district": "달성군",
+    "addr:housenumber": "57",
+    "addr:postcode": "42917",
+    "addr:street": "강정본길",
+    "addr:subdistrict": "죽곡리",
+    "addr:town": "다사읍",
+    "name": "강정고령보 유인인증센터",
+    "name:en": "Gangjeong Goryeong-bo Manned Certification Center",
+    "operator": "K-water",
+    "tourism": "yes"
+  }
+},
+{
+  "type": "node",
+  "id": 10789699706,
+  "lat": 33.3698858,
+  "lon": 126.2064570,
+  "tags": {
+    "check_date": "2026-04-07",
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "해거름마을공원 인증센터",
+    "name:en": "Haegeoreum Park Certification Center",
+    "name:ko": "해거름마을공원 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425",
+    "wikimedia_commons": "File:Haegeoreum Park Certification Center.jpg"
+  }
+},
+{
+  "type": "node",
+  "id": 10882687853,
+  "lat": 35.5560738,
+  "lon": 129.0664473,
+  "tags": {
+    "name": "영남알프스완증인증센터",
+    "office": "yes"
+  }
+},
+{
+  "type": "node",
+  "id": 11647337836,
+  "lat": 35.0797770,
+  "lon": 127.7169520,
+  "tags": {
+    "information": "guidepost",
+    "name": "매화마을인증센터",
+    "tourism": "information"
+  }
+},
+{
+  "type": "node",
+  "id": 13608487522,
+  "lat": 36.7873651,
+  "lon": 127.5827335,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "백로공원 인증센터",
+    "name:en": "Baekro Park Certification Center",
+    "name:ko": "백로공원 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425",
+    "wikimedia_commons": "File:Baekro Park Certification Center.jpg"
+  }
+},
+{
+  "type": "node",
+  "id": 13608671409,
+  "lat": 35.1084386,
+  "lon": 128.9479307,
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "낙동강하구둑 인증센터",
+    "name:en": "Nakdonggang Estuary Bank Certification Center",
+    "name:ko": "낙동강하구둑 인증센터",
+    "opening_hours": "24/7",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 13842007299,
+  "lat": 37.1825598,
+  "lon": 127.0878736,
+  "tags": {
+    "access": "yes",
+    "bicycle": "yes",
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "covered": "yes",
+    "man_made": "kiosk",
+    "name": "화성시 무인인증센터",
+    "name:en": "Hwaseong-si Self-Service Bicycle Stamp Booth",
+    "name:ko": "화성시 무인인증센터",
+    "opening_hours": "24/7",
+    "operator": "화성시",
+    "operator:en": "Hwaseong City",
+    "self_service": "yes",
+    "supervised": "no",
+    "survey:date": "2026-05-11",
+    "tourism": "checkpoint",
+    "wikimedia_commons": "File:Hwaseong-si Certification Center.jpg"
+  }
+},
+{
+  "type": "node",
+  "id": 13846478101,
+  "lat": 38.5865811,
+  "lon": 128.3755861,
+  "tags": {
+    "bicycle": "no",
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "description": "Security-restricted bicycle passport certification booth for the East Coast Bicycle Path located inside the Civilian Control Line checkpoint area.",
+    "foot": "yes",
+    "name": "통일전망대 인증센터",
+    "name:en": "Unification Observatory Certification Center",
+    "name:ko": "통일전망대 인증센터",
+    "official_name": "통일전망대(민통선내) 인증센터",
+    "official_name:en": "Unification Observatory (Inside the Civilian Control Line) Certification Center",
+    "operator": "한국수자원공사",
+    "operator:en": "Korea Water Resources Corporation (K-Water)",
+    "self_service": "yes",
+    "source": "bike.go.kr",
+    "supervised": "no",
+    "tourism": "checkpoint",
+    "website": "https://www.bike.go.kr/content.do?key=2006176999425"
+  }
+},
+{
+  "type": "node",
+  "id": 14292314784,
+  "lat": 36.0429918,
+  "lon": 126.6794430,
+  "tags": {
+    "name": "항공보안장비 시험인증센터",
+    "name:ko": "항공보안장비 시험인증센터",
+    "office": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 432776264,
+  "center": {
+    "lat": 34.9599675,
+    "lon": 127.7594448
+  },
+  "nodes": [
+    4317322051,
+    4317322049,
+    4317322048,
+    4317322050,
+    4317322051
+  ],
+  "tags": {
+    "building": "kiosk",
+    "information": "office",
+    "name": "배알도수변공원 인증센터 (유인)",
+    "name:en": "Baealdo Waterside Park Certification Center",
+    "name:ko-Latn": "Baealdo Subyeongongwon Injeungsenteo",
+    "tourism": "information"
+  }
+},
+{
+  "type": "way",
+  "id": 775715694,
+  "center": {
+    "lat": 36.7886748,
+    "lon": 127.5715338
+  },
+  "nodes": [
+    7236731245,
+    7236731246,
+    7236731247,
+    7236731248,
+    7236731245
+  ],
+  "tags": {
+    "building": "yes",
+    "name": "증평체력인증센터"
+  }
+},
+{
+  "type": "way",
+  "id": 892799503,
+  "center": {
+    "lat": 35.9349640,
+    "lon": 126.9277559
+  },
+  "nodes": [
+    8297937680,
+    8297937681,
+    8297937682,
+    8297937683,
+    8297937684,
+    8297937685,
+    8297937686,
+    8297937687,
+    8297937680
+  ],
+  "tags": {
+    "building": "public",
+    "name": "농생명 ICT 검인증센터"
+  }
+},
+{
+  "type": "way",
+  "id": 892985056,
+  "center": {
+    "lat": 35.8950869,
+    "lon": 128.5703454
+  },
+  "nodes": [
+    8299471303,
+    8299471304,
+    8299471305,
+    8299471306,
+    8299471307,
+    8299471308,
+    8299471303
+  ],
+  "tags": {
+    "building": "public",
+    "name": "로봇표준화시험 인증센터"
+  }
+},
+{
+  "type": "way",
+  "id": 943640484,
+  "center": {
+    "lat": 36.6559721,
+    "lon": 128.1407772
+  },
+  "nodes": [
+    8737165511,
+    8737165510,
+    8737165508,
+    8737165509,
+    1400721383
+  ],
+  "tags": {
+    "highway": "service",
+    "name": "문경불정역 인증센터",
+    "name:en": "Bicycle Path Certification Center: Mungyeong Buljeong Station",
+    "name:ko": "문경불정역 인증센터",
+    "oneway": "no",
+    "service": "parking_aisle",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 943640485,
+  "center": {
+    "lat": 36.6559944,
+    "lon": 128.1407655
+  },
+  "nodes": [
+    8737165507,
+    8737165508
+  ],
+  "tags": {
+    "highway": "service",
+    "name": "문경불정역 인증센터",
+    "name:en": "Bicycle Path Certification Center: Mungyeong Buljeong Station",
+    "name:ko": "문경불정역 인증센터",
+    "oneway": "no",
+    "service": "parking_aisle",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 947400344,
+  "center": {
+    "lat": 35.0651669,
+    "lon": 126.7617604
+  },
+  "nodes": [
+    2466756779,
+    2466735165
+  ],
+  "tags": {
+    "bicycle": "yes",
+    "highway": "cycleway",
+    "name": "영산강 자전거길 (승촌보 인증센터 출입로)",
+    "name:en": "Yeongsangang (riv.) Bicycle Path (Seungchonbo)",
+    "name:ko": "영산강 자전거길 (승촌보 인증센터 출입로)",
+    "oneway": "no",
+    "segregated": "no"
+  }
+},
+{
+  "type": "way",
+  "id": 948087471,
+  "center": {
+    "lat": 34.8018054,
+    "lon": 126.4456411
+  },
+  "nodes": [
+    8775937168,
+    8775937169,
+    8775937170,
+    8775937171,
+    8775937172,
+    8775937173,
+    8775937174,
+    8775937175
+  ],
+  "tags": {
+    "bridge": "yes",
+    "highway": "cycleway",
+    "layer": "1",
+    "name": "영산강하구둑인증센터",
+    "name:en": "Bicycle Path Certification Center: Yeongsangang Estuary Bank",
+    "name:ko": "영산강하구둑인증센터",
+    "oneway": "no",
+    "surface": "wood",
+    "width": "1"
+  }
+},
+{
+  "type": "way",
+  "id": 948087473,
+  "center": {
+    "lat": 34.8019425,
+    "lon": 126.4457647
+  },
+  "nodes": [
+    13195672384,
+    13195672383,
+    8775937166,
+    8775937168
+  ],
+  "tags": {
+    "highway": "cycleway",
+    "name": "영산강하구둑인증센터",
+    "name:en": "Bicycle Path Certification Center: Yeongsangang Estuary Bank",
+    "name:ko": "영산강하구둑인증센터",
+    "oneway": "no",
+    "surface": "1"
+  }
+},
+{
+  "type": "way",
+  "id": 1165310740,
+  "center": {
+    "lat": 36.2647393,
+    "lon": 127.7663215
+  },
+  "nodes": [
+    10839015278,
+    10839015279,
+    10839015280,
+    10839015281,
+    10839015278
+  ],
+  "tags": {
+    "building": "yes",
+    "name": "한국도로공사 터널방재인증센터",
+    "name:en": "Korea Highway Corporation Tunnel Disaster Prevention Certification Center",
+    "name:ko": "한국도로공사 터널방재인증센터"
+  }
+},
+{
+  "type": "way",
+  "id": 1226895749,
+  "center": {
+    "lat": 37.6624031,
+    "lon": 127.0096542
+  },
+  "nodes": [
+    11377260487,
+    11377260488,
+    11377260489,
+    11377260490,
+    11377260487
+  ],
+  "tags": {
+    "addr:city": "서울특별시",
+    "addr:country": "KR",
+    "addr:district": "강북구",
+    "addr:subdistrict": "우이동",
+    "building": "yes",
+    "name": "BAC인증센터"
+  }
+},
+{
+  "type": "way",
+  "id": 1450921339,
+  "center": {
+    "lat": 34.9518503,
+    "lon": 127.8051745
+  },
+  "nodes": [
+    13306840682,
+    13306840683,
+    13306840684,
+    13306840685,
+    13306840682
+  ],
+  "tags": {
+    "building": "yes",
+    "name": "심해저자원개발설비인증센터",
+    "office": "research"
+  }
+},
+{
+  "type": "relation",
+  "id": 20700454,
+  "center": {
+    "lat": 37.9044780,
+    "lon": 128.8572949
+  },
+  "members": [
+    {
+      "type": "node",
+      "ref": 13846478101,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 7911560212,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 6308543825,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 6320447033,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 6320447032,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 6437503289,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 6437406288,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5292371831,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5390411199,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5390462522,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5390505233,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 6433644386,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 6433644385,
+      "role": ""
+    }
+  ],
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "동해안자전거길(강원) 인증센터",
+    "name:en": "East Coast Bicycle Path (Gangwon) Certification Centers",
+    "name:ko": "동해안자전거길(강원) 인증센터",
+    "network": "ncn",
+    "site": "checkpoint",
+    "type": "site"
+  }
+},
+{
+  "type": "relation",
+  "id": 20700521,
+  "center": {
+    "lat": 33.3817751,
+    "lon": 126.5653889
+  },
+  "members": [
+    {
+      "type": "node",
+      "ref": 4693076589,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 4689934991,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 10789699706,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 8863043617,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 4691641890,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 8864759319,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 4691733115,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 4693102294,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 4691930792,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 4693056093,
+      "role": ""
+    }
+  ],
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "제주환상자전거길 인증센터",
+    "name:en": "Jeju Fantasy Bicycle Path Certification Centers",
+    "name:ko": "제주환상자전거길 인증센터",
+    "network": "ncn",
+    "site": "checkpoint",
+    "type": "site"
+  }
+},
+{
+  "type": "relation",
+  "id": 20700522,
+  "center": {
+    "lat": 36.7027051,
+    "lon": 129.4346027
+  },
+  "members": [
+    {
+      "type": "node",
+      "ref": 6433644485,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 8657557852,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 8657538288,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 8657558321,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 6432162385,
+      "role": ""
+    }
+  ],
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "동해안자전거길(경북) 인증센터",
+    "name:en": "East Coast Bicycle Path (Gyeongbuk) Certification Centers",
+    "name:ko": "동해안자전거길(경북) 인증센터",
+    "network": "ncn",
+    "site": "checkpoint",
+    "type": "site"
+  }
+},
+{
+  "type": "relation",
+  "id": 20700619,
+  "center": {
+    "lat": 36.6585489,
+    "lon": 127.6608707
+  },
+  "members": [
+    {
+      "type": "node",
+      "ref": 5060891335,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5217636068,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 13608487522,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 4421831288,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5403330286,
+      "role": ""
+    }
+  ],
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "오천자전거길 인증센터",
+    "name:en": "Ocheon Bicycle Path Certification Centers",
+    "name:ko": "오천자전거길 인증센터",
+    "network": "ncn",
+    "site": "checkpoint",
+    "type": "site"
+  }
+},
+{
+  "type": "relation",
+  "id": 20700620,
+  "center": {
+    "lat": 35.2408480,
+    "lon": 127.4553995
+  },
+  "members": [
+    {
+      "type": "node",
+      "ref": 4317260107,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5470186344,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5470118732,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5483391036,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5247713096,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5483417776,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5483417781,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5181130241,
+      "role": ""
+    }
+  ],
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "섬진강자전거길 인증센터",
+    "name:en": "Seomjingang Bicycle Path Certification Centers",
+    "name:ko": "섬진강자전거길 인증센터",
+    "network": "ncn",
+    "site": "checkpoint",
+    "type": "site"
+  }
+},
+{
+  "type": "relation",
+  "id": 20700621,
+  "center": {
+    "lat": 35.0865831,
+    "lon": 126.7320065
+  },
+  "members": [
+    {
+      "type": "node",
+      "ref": 3259679694,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 3259679695,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 3259686268,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 8764137136,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 8773654577,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 6572786691,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 2466603848,
+      "role": ""
+    }
+  ],
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "영산강자전거길 인증센터",
+    "name:en": "Yeongsangang Bicycle Path Certification Centers",
+    "name:ko": "영산강자전거길 인증센터",
+    "network": "ncn",
+    "site": "checkpoint",
+    "type": "site"
+  }
+},
+{
+  "type": "relation",
+  "id": 20700622,
+  "center": {
+    "lat": 36.2484933,
+    "lon": 127.1220520
+  },
+  "members": [
+    {
+      "type": "node",
+      "ref": 5359447346,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5595066036,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5359603671,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5359603676,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5359915480,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5359915642,
+      "role": ""
+    }
+  ],
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "금강자전거길 인증센터",
+    "name:en": "Geumgang Bicycle Path Certification Centers",
+    "name:ko": "금강자전거길 인증센터",
+    "network": "ncn",
+    "site": "checkpoint",
+    "type": "site"
+  }
+},
+{
+  "type": "relation",
+  "id": 20700623,
+  "center": {
+    "lat": 36.7440261,
+    "lon": 128.0846105
+  },
+  "members": [
+    {
+      "type": "node",
+      "ref": 5542663089,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5542663087,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5542663086,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5542663085,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5542663084,
+      "role": ""
+    }
+  ],
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "새재자전거길 인증센터",
+    "name:en": "Saejae Bicycle Path Certification Centers",
+    "name:ko": "새재자전거길 인증센터",
+    "network": "ncn",
+    "site": "checkpoint",
+    "type": "site"
+  }
+},
+{
+  "type": "relation",
+  "id": 20700624,
+  "center": {
+    "lat": 37.7368798,
+    "lon": 127.5128083
+  },
+  "members": [
+    {
+      "type": "node",
+      "ref": 5072409226,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 2442183216,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5449454066,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5074268452,
+      "role": ""
+    }
+  ],
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "북한강자전거길 인증센터",
+    "name:en": "Bukhangang Bicycle Path Certification Centers",
+    "name:ko": "북한강자전거길 인증센터",
+    "network": "ncn",
+    "site": "checkpoint",
+    "type": "site"
+  }
+},
+{
+  "type": "relation",
+  "id": 20700625,
+  "center": {
+    "lat": 37.2093880,
+    "lon": 127.7603498
+  },
+  "members": [
+    {
+      "type": "node",
+      "ref": 5542663093,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5542663092,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5542663091,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5542663090,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5542663088,
+      "role": ""
+    }
+  ],
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "남한강자전거길 인증센터",
+    "name:en": "Namhangang Bicycle Path Certification Centers",
+    "name:ko": "남한강자전거길 인증센터",
+    "network": "ncn",
+    "site": "checkpoint",
+    "type": "site"
+  }
+},
+{
+  "type": "relation",
+  "id": 20700626,
+  "center": {
+    "lat": 37.2789107,
+    "lon": 127.4459881
+  },
+  "members": [
+    {
+      "type": "node",
+      "ref": 5542663098,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5542663097,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5542663096,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5542663095,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5542663094,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5542663093,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5542663092,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5542663091,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5542663090,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5542663088,
+      "role": ""
+    }
+  ],
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "한강자전거길 인증센터",
+    "name:en": "Hangang Bicycle Path Certification Centers",
+    "name:ko": "한강자전거길 인증센터",
+    "network": "ncn",
+    "site": "checkpoint",
+    "type": "site"
+  }
+},
+{
+  "type": "relation",
+  "id": 20700627,
+  "center": {
+    "lat": 37.5778991,
+    "lon": 126.7020501
+  },
+  "members": [
+    {
+      "type": "node",
+      "ref": 2418314103,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 2418314102,
+      "role": ""
+    }
+  ],
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "아라자전거길 인증센터",
+    "name:en": "Ara Bicycle Path Certification Centers",
+    "name:ko": "아라자전거길 인증센터",
+    "network": "ncn",
+    "site": "checkpoint",
+    "type": "site"
+  }
+},
+{
+  "type": "relation",
+  "id": 20700628,
+  "center": {
+    "lat": 35.8430047,
+    "lon": 128.6121581
+  },
+  "members": [
+    {
+      "type": "node",
+      "ref": 5614160381,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5542663082,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5542663081,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5542663080,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5542663079,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5542663078,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5542663077,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5542663076,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 5542663075,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 4362509515,
+      "role": ""
+    },
+    {
+      "type": "node",
+      "ref": 13608671409,
+      "role": ""
+    }
+  ],
+  "tags": {
+    "checkpoint": "cycling",
+    "checkpoint:type": "stamp",
+    "name": "낙동강자전거길 인증센터",
+    "name:en": "Nakdonggang Bicycle Path Certification Centers",
+    "name:ko": "낙동강자전거길 인증센터",
+    "network": "ncn",
+    "site": "checkpoint",
+    "type": "site"
+  }
+}
+
+  ]
+}

@@ -183,6 +183,13 @@ a {
   margin-left: 2px;
   transform: translateY(-1px);
 }
+/* 로고의 점은 c 오른쪽 위로 올려 °C처럼 (글자 크기를 따라가게 em 단위) */
+.logo .logo-dot {
+  width: 0.3em;
+  height: 0.3em;
+  margin-left: 0.04em;
+  transform: translateY(-0.5em);
+}
 .logo-nalc {
   color: #1f6e62;
 }

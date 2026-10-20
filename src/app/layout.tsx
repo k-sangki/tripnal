@@ -4,6 +4,8 @@ import "./globals.css";
 export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://tripnalc.com";
 // 시크릿에 줄바꿈이 섞여 들어와도 ads.txt·스크립트 주소가 깨지지 않게 다듬는다
 const ADSENSE = process.env.NEXT_PUBLIC_ADSENSE_CLIENT?.trim();
+// Cloudflare Web Analytics (쿠키 없는 방문 통계)
+const CF_BEACON = process.env.NEXT_PUBLIC_CF_BEACON_TOKEN?.trim();
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -46,6 +48,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       </head>
       <body>
         {children}
+        {CF_BEACON && (
+          <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon={JSON.stringify({ token: CF_BEACON })} />
+        )}
       </body>
     </html>
   );

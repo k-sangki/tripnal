@@ -20,6 +20,7 @@ import eccodes
 import numpy as np
 
 from collect import LAT_MAX, LAT_MIN, LON_MAX, LON_MIN, RES, http, retry
+from overseas import POINTS
 
 BASE = "https://noaa-gefs-pds.s3.amazonaws.com"
 MEMBERS = ["gec00"] + [f"gep{i:02d}" for i in range(1, 31)]
@@ -46,8 +47,20 @@ def latest_run():
     raise SystemExit("올라온 run을 찾지 못함")
 
 
+def x_index(lat0, lon0, ni, res=0.5):
+    """해외 지점(0.25°)마다 둘러싼 0.5° 칸 네 개의 (행, 열, 가중치), 모양 (n, 4)"""
+    y = np.array([(lat0 - la) / res for la, _ in POINTS])
+    x = np.array([((lo - lon0) % 360) / res for _, lo in POINTS])
+    y0, x0 = np.floor(y).astype(int), np.floor(x).astype(int)
+    fy, fx = y - y0, x - x0
+    rows = np.stack([y0, y0 + 1, y0, y0 + 1], 1)
+    cols = np.stack([x0, x0, x0 + 1, x0 + 1], 1) % ni
+    w = np.stack([(1 - fy) * (1 - fx), fy * (1 - fx), (1 - fy) * fx, fy * fx], 1)
+    return rows, cols, w
+
+
 def apcp(run, member, step):
-    """한국 영역(0.5°, 북→남) 6시간 강수 mm"""
+    """한국 영역(0.5°, 북→남) 6시간 강수 mm, 영역 북·서 끝 좌표, 해외 지점 둘레 칸 값 (n, 4)"""
     url = path(run, member, step)
     lines = http(f"{url}.idx").decode().splitlines()
     for i, line in enumerate(lines):
@@ -74,7 +87,8 @@ def apcp(run, member, step):
     r1 = int(np.ceil((lat0 - LAT_MIN) / res))
     c0 = int(np.floor(((LON_MIN - lon0) % 360) / res))
     c1 = int(np.ceil(((LON_MAX - lon0) % 360) / res))
-    return vals[r0 : r1 + 1, c0 : c1 + 1], lat0 - r0 * res, lon0 + c0 * res
+    rows, cols, _ = x_index(lat0, lon0, ni)
+    return vals[r0 : r1 + 1, c0 : c1 + 1], lat0 - r0 * res, lon0 + c0 * res, vals[rows, cols], (lat0, lon0, ni)
 
 
 def main():
@@ -119,7 +133,18 @@ def main():
                 json.dump(point, fp, separators=(",", ":"))
     with open(os.path.join(a.out, "gefs", "latest.json"), "w") as fp:
         json.dump({"run": run, "lat": [LAT_MIN, LAT_MAX], "lon": [LON_MIN, LON_MAX], "res": RES}, fp)
-    print("points", len(lats) * len(lons), flush=True)
+    # 해외 여행지: 둘레 0.5° 칸 네 개의 확률을 가중 평균
+    _, _, w = x_index(*res[0][4])
+    for i, (lat, lon) in enumerate(POINTS):
+        values = []
+        for s in steps:
+            stack = np.stack([res[k][3][i] for k, (_, js) in enumerate(jobs) if js == s])
+            p = (stack >= THRESHOLD).mean(axis=0) * 100
+            values.append(int(round(float((p * w[i]).sum()))))
+        point = {"model": "gefs05", "run": run, "lat": lat, "lon": lon, "step": steps, "prob": values}
+        with open(os.path.join(folder, f"{lat:.2f}_{lon:.2f}.json"), "w") as fp:
+            json.dump(point, fp, separators=(",", ":"))
+    print("points", len(lats) * len(lons) + len(POINTS), flush=True)
 
 
 if __name__ == "__main__":

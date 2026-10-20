@@ -18,18 +18,35 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - run: pip install -r collector/requirements.txt
       - run: |
           set +e
           {
-          for u in / /weather/gayasan /weather/anheung-port /weather/yongpyong /weather/bike-ipobo; do curl -s -o p.html -w "$u %{http_code} %{time_total}s " "https://tripnalc.com$u"; grep -o '<title>[^<]*' p.html; done
-          curl -s https://tripnalc.com/sitemap.xml | grep -c "<loc>"
+          cd collector
+          python collect.py --steps 0,3,150 --out ../o 2>&1 | tail -3
+          python gfs.py --steps 0,3 --out ../o 2>&1 | tail -3
+          python icon.py --steps 0,3 --out ../o 2>&1 | tail -3
+          python gefs.py --steps 6,12 --out ../o 2>&1 | tail -3
+          cd ..
           python3 - <<'PY'
-          import json, urllib.request
-          for slug, lat, lon, elev in [("gayasan",35.8231,128.1180,1430),("anheung-port",36.6744,126.1294,None),("hamdeok-beach",33.5429,126.6701,None)]:
-              q = f"lat={lat}&lon={lon}&v=6" + (f"&elev={elev}" if elev else "")
-              f = json.load(urllib.request.urlopen(urllib.request.Request(f"https://tripnalc.com/api/forecast?{q}", headers={"User-Agent":"diag"}), timeout=60))
-              d = f["days"][0]
-              print(slug, f["elevation"], d["tMin"], d["tMax"], len(d.get("tides") or []))
+          import json, os, glob, math
+          for m in ["ecmwf","gfs","icon","gefs"]:
+              run = json.load(open(f"o/{m}/latest.json"))["run"]
+              files = glob.glob(f"o/{m}/{run}/*.json")
+              print(m, run, len(files))
+          def show(lat, lon, name):
+              y0, x0 = math.floor(lat/0.25)*0.25+0.0, math.floor(lon/0.25)*0.25+0.0
+              out=[name]
+              for m in ["ecmwf","gfs","icon"]:
+                  run = json.load(open(f"o/{m}/latest.json"))["run"]
+                  p = json.load(open(f"o/{m}/{run}/{y0:.2f}_{x0:.2f}.json"))
+                  out.append(f"{m}:t={p['temp'][:2]} el={p['elevation']} wind={p['wind'][:2]} cl={p['cloud'][:2]}")
+              run = json.load(open("o/gefs/latest.json"))["run"]
+              out.append("gefs:"+str(json.load(open(f"o/gefs/{run}/{y0:.2f}_{x0:.2f}.json"))["prob"]))
+              print(" | ".join(out))
+          for n,la,lo in [("seoul",37.5665,126.978),("tokyo",35.6812,139.7671),("london",51.5072,-0.1276),("honolulu",21.3069,-157.8583),("sydney",-33.8688,151.2093),("bangkok",13.7563,100.5018),("cancun",21.1619,-86.8515),("queenstown",-45.0312,168.6626)]:
+              try: show(la,lo,n)
+              except Exception as e: print(n, "ERR", e)
           PY
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com

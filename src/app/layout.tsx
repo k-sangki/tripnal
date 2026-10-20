@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { PullToRefresh } from "@/components/PullToRefresh";
 import "./globals.css";
 
 export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://tripnalc.com";
@@ -36,6 +37,8 @@ export const viewport: Viewport = {
   themeColor: "#0E3B36",
   width: "device-width",
   initialScale: 1,
+  // 아이폰 상태바 아래까지 화면을 쓰고, 상태바 자리는 globals.css의 body::before가 단색으로 덮는다
+  viewportFit: "cover",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -57,6 +60,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         )}
       </head>
       <body>
+        <PullToRefresh />
         {children}
         {CF_BEACON && (
           <script dangerouslySetInnerHTML={{ __html: beacon(CF_BEACON) }} />

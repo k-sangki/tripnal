@@ -1,0 +1,20 @@
+name: diag
+on:
+  push:
+    branches: [claude/diag-1026]
+jobs:
+  d:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          set +e
+          {
+          for d in tripnalc.com www.tripnalc.com; do echo "== $d"; dig +short NS tripnalc.com; dig +short $d; done
+          curl -s "https://dns.google/resolve?name=tripnalc.com&type=NS"; echo
+          whois tripnalc.com 2>/dev/null | grep -i "name server\|creation" | head
+          } > diag-out.txt 2>&1
+          git config user.name diag; git config user.email diag@example.com
+          git add diag-out.txt; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026

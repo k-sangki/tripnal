@@ -1,6 +1,6 @@
 import { SiteFooter, SiteHeader } from "./SiteHeader";
 
-export const CONTACT_EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "contact@tripnal.com";
+export const CONTACT_EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "contact@tripnalc.com";
 
 export function TextPage({ title, children }: { title: string; children: React.ReactNode }) {
   return (

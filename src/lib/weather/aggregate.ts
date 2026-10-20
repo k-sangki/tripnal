@@ -144,6 +144,7 @@ export function aggregate(raw: RawForecast, now: Date = new Date()): Forecast {
       sunrise: sun.sunrise,
       sunset: sun.sunset,
       predictability: raw.predictability?.[date] ?? null,
+      change: raw.change?.[date] ?? null,
       tides: raw.tideEvents
         ? raw.tideEvents.filter((e) => e.at.startsWith(date)).map((e) => ({ time: e.at.slice(11, 16), type: e.type, level: e.level }))
         : h.seaLevel

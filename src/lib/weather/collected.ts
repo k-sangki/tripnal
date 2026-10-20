@@ -1,6 +1,6 @@
 import { getPosition } from "suncalc";
 import { addDays, kstDate } from "@/lib/time";
-import type { DatedTideEvent, HourlySeries, RawForecast, WeatherProvider } from "./types";
+import type { DatedTideEvent, ForecastChange, HourlySeries, RawForecast, WeatherProvider } from "./types";
 
 /**
  * 직접 수집한 ECMWF·GFS·ICON 예보(collector/, R2 버킷 tripnal-data)를 읽는 provider.
@@ -380,20 +380,76 @@ function cached<T>(key: string, load: () => Promise<T>): Promise<T> {
   return p;
 }
 
-/** 최신 run은 5분 동안 기억한다 (버킷마다 따로) */
-const latestMemos = new WeakMap<DataBucket, Map<string, { at: number; run: Promise<string | null> }>>();
-function latestRun(b: DataBucket, model: CollectedModel | "wave" | "gefs" | "cams"): Promise<string | null> {
+type LatestInfo = { run: string; runs?: string[] } | null;
+
+/** 최신 run(과 남아 있는 지난 run 목록)은 5분 동안 기억한다 (버킷마다 따로) */
+const latestMemos = new WeakMap<DataBucket, Map<string, { at: number; info: Promise<LatestInfo> }>>();
+function latestInfo(b: DataBucket, model: CollectedModel | "wave" | "gefs" | "cams"): Promise<LatestInfo> {
   let latestMemo = latestMemos.get(b);
   if (!latestMemo) latestMemos.set(b, (latestMemo = new Map()));
   const hit = latestMemo.get(model);
-  if (hit && Date.now() - hit.at < 5 * 60e3) return hit.run;
-  const run = b
+  if (hit && Date.now() - hit.at < 5 * 60e3) return hit.info;
+  const info = b
     .get(`${model}/latest.json`)
-    .then((o) => (o ? o.json<{ run: string }>() : null))
-    .then((j) => j?.run ?? null)
+    .then((o) => (o ? o.json<{ run: string; runs?: string[] }>() : null))
     .catch(() => null);
-  latestMemo.set(model, { at: Date.now(), run });
-  return run;
+  latestMemo.set(model, { at: Date.now(), info });
+  return info;
+}
+
+function latestRun(b: DataBucket, model: CollectedModel | "wave" | "gefs" | "cams"): Promise<string | null> {
+  return latestInfo(b, model).then((i) => i?.run ?? null);
+}
+
+/**
+ * 비교할 지난 예보 run: 남아 있는 run 중 최신보다 약 하루 전에 가장 가까운 것.
+ * 9시간 안쪽 run은 너무 가까워 비교하지 않는다.
+ */
+export function previousRun(info: LatestInfo): string | null {
+  if (!info?.runs?.length) return null;
+  const t = runTime(info.run);
+  const older = info.runs.filter((r) => runTime(r) <= t - 9 * 3600e3);
+  if (!older.length) return null;
+  return older.reduce((a, r) => (Math.abs(t - runTime(r) - 24 * 3600e3) < Math.abs(t - runTime(a) - 24 * 3600e3) ? r : a));
+}
+
+/** 하루 단위 최고·최저 기온과 강수 합. 그날 시각이 다 채워진 경우만 */
+function dailyOf(h: HourlySeries) {
+  const out = new Map<string, { tMax: number; tMin: number; precip: number; wind: number }>();
+  const by = new Map<string, number[]>();
+  h.time.forEach((t, i) => {
+    const d = t.slice(0, 10);
+    if (!by.has(d)) by.set(d, []);
+    by.get(d)!.push(i);
+  });
+  for (const [d, idx] of by) {
+    const temps = present(idx.map((i) => h.temperature[i]));
+    const rain = present(idx.map((i) => h.precipitation[i]));
+    if (temps.length < idx.length || rain.length < idx.length - 1) continue;
+    const wind = present(idx.map((i) => h.windSpeed[i]));
+    out.set(d, { tMax: Math.max(...temps), tMin: Math.min(...temps), precip: rain.reduce((a, b) => a + b, 0), wind: wind.length ? Math.max(...wind) : 0 });
+  }
+  return out;
+}
+
+/** 지난 예보 대비 날짜별 변화 (최고·최저 기온 °C, 강수 mm, 최대 풍속 m/s) */
+export function forecastChange(now: HourlySeries, before: HourlySeries) {
+  const a = dailyOf(now);
+  const b = dailyOf(before);
+  const out: Record<string, ForecastChange> = {};
+  for (const [d, x] of a) {
+    const y = b.get(d);
+    if (!y) continue;
+    out[d] = {
+      tMax: Math.round((x.tMax - y.tMax) * 10) / 10,
+      tMin: Math.round((x.tMin - y.tMin) * 10) / 10,
+      precip: Math.round((x.precip - y.precip) * 10) / 10,
+      precipBefore: Math.round(y.precip * 10) / 10,
+      wind: Math.round((x.wind - y.wind) * 10) / 10,
+      windBefore: Math.round(y.wind * 10) / 10,
+    };
+  }
+  return out;
 }
 
 /** GFS-Wave 바다 격자점 (collector/gfswave.py) */
@@ -592,21 +648,21 @@ export async function loadCollected(b: DataBucket, lat: number, lon: number, ele
   const wave = loadWave(b, cs, keys).catch(() => null);
   const prob = loadProbability(b, cs, keys).catch(() => null);
   const air = loadAirQuality(b, cs, keys).catch(() => null);
-  const models = await Promise.all(
-    COLLECTED_MODELS.map(async (model) => {
-      const run = await latestRun(b, model);
-      if (!run) return null;
-      const files = await Promise.all(
-        cs.map((c) => {
-          const key = pointKey(model, run, c.lat, c.lon);
-          return cached(key, () => b.get(key).then((o) => (o ? o.json<PointFile>() : null)));
-        }),
-      );
-      const points = files.flatMap((file, i) => (file ? [{ file, w: cs[i].w }] : []));
-      if (!points.length) return null;
-      return { model, run, points };
-    }),
-  );
+  const load = async (model: CollectedModel, run: string | null) => {
+    if (!run) return null;
+    const files = await Promise.all(
+      cs.map((c) => {
+        const key = pointKey(model, run, c.lat, c.lon);
+        return cached(key, () => b.get(key).then((o) => (o ? o.json<PointFile>() : null)));
+      }),
+    );
+    const points = files.flatMap((file, i) => (file ? [{ file, w: cs[i].w }] : []));
+    return points.length ? { model, run, points } : null;
+  };
+  const infos = await Promise.all(COLLECTED_MODELS.map((m) => latestInfo(b, m)));
+  // 지난 예보(약 하루 전)도 같이 읽어 두고, 실패해도 예보는 보여준다
+  const previous = Promise.all(COLLECTED_MODELS.map((m, i) => load(m, previousRun(infos[i])).catch(() => null)));
+  const models = await Promise.all(COLLECTED_MODELS.map((m, i) => load(m, infos[i]?.run ?? null)));
   const ok = models.filter((m) => m != null);
   if (!ok.length) throw new Error("수집 예보가 없음");
   // 지점 고도를 모르면 지형 고도 격자에서, 그것도 없으면 모델 지형 고도를 쓴다 (보정 없음)
@@ -622,6 +678,12 @@ export async function loadCollected(b: DataBucket, lat: number, lon: number, ele
   if (p) hourly.precipitationProbability = p;
   const q = await air;
   if (q) Object.assign(hourly, q);
+  const prevModels = (await previous).filter((m) => m != null);
+  // 지난 예보도 같은 모델들이 다 있을 때만 비교한다 (모델 구성이 다르면 중간값이 달라져서)
+  const change =
+    prevModels.length === ok.length && ok.length
+      ? forecastChange(hourly, blendCollected(prevModels.map((m) => combineCorners(m.points, keys, target)), keys, lat, lon))
+      : null;
   const names: Record<CollectedModel, string> = { ecmwf: "ECMWF", gfs: "GFS", icon: "ICON" };
   return {
     latitude: lat,
@@ -631,6 +693,7 @@ export async function loadCollected(b: DataBucket, lat: number, lon: number, ele
     source: ok.map((m) => names[m.model]).join("·"),
     ...(tide ? { tideEvents: tide.tideEvents } : {}),
     predictability: predictability(perModel, keys, p),
+    ...(change ? { change } : {}),
   };
 }
 

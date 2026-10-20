@@ -29,7 +29,7 @@ export interface AppPlace {
   slug?: string;
 }
 
-const FORECAST_VERSION = "5";
+const FORECAST_VERSION = "6";
 
 interface Props {
   initialPlace: AppPlace | null;

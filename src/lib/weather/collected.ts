@@ -1,6 +1,6 @@
 import { getPosition } from "suncalc";
 import { addDays, kstDate } from "@/lib/time";
-import type { DatedTideEvent, HourlySeries, RawForecast, WeatherProvider } from "./types";
+import type { DatedTideEvent, ForecastChange, HourlySeries, RawForecast, WeatherProvider } from "./types";
 
 /**
  * 직접 수집한 ECMWF·GFS·ICON 예보(collector/, R2 버킷 tripnal-data)를 읽는 provider.
@@ -415,7 +415,7 @@ export function previousRun(info: LatestInfo): string | null {
 
 /** 하루 단위 최고·최저 기온과 강수 합. 그날 시각이 다 채워진 경우만 */
 function dailyOf(h: HourlySeries) {
-  const out = new Map<string, { tMax: number; tMin: number; precip: number }>();
+  const out = new Map<string, { tMax: number; tMin: number; precip: number; wind: number }>();
   const by = new Map<string, number[]>();
   h.time.forEach((t, i) => {
     const d = t.slice(0, 10);
@@ -426,16 +426,17 @@ function dailyOf(h: HourlySeries) {
     const temps = present(idx.map((i) => h.temperature[i]));
     const rain = present(idx.map((i) => h.precipitation[i]));
     if (temps.length < idx.length || rain.length < idx.length - 1) continue;
-    out.set(d, { tMax: Math.max(...temps), tMin: Math.min(...temps), precip: rain.reduce((a, b) => a + b, 0) });
+    const wind = present(idx.map((i) => h.windSpeed[i]));
+    out.set(d, { tMax: Math.max(...temps), tMin: Math.min(...temps), precip: rain.reduce((a, b) => a + b, 0), wind: wind.length ? Math.max(...wind) : 0 });
   }
   return out;
 }
 
-/** 지난 예보 대비 날짜별 변화 (최고·최저 기온 °C, 강수 mm) */
+/** 지난 예보 대비 날짜별 변화 (최고·최저 기온 °C, 강수 mm, 최대 풍속 m/s) */
 export function forecastChange(now: HourlySeries, before: HourlySeries) {
   const a = dailyOf(now);
   const b = dailyOf(before);
-  const out: Record<string, { tMax: number; tMin: number; precip: number; precipBefore: number }> = {};
+  const out: Record<string, ForecastChange> = {};
   for (const [d, x] of a) {
     const y = b.get(d);
     if (!y) continue;
@@ -444,6 +445,8 @@ export function forecastChange(now: HourlySeries, before: HourlySeries) {
       tMin: Math.round((x.tMin - y.tMin) * 10) / 10,
       precip: Math.round((x.precip - y.precip) * 10) / 10,
       precipBefore: Math.round(y.precip * 10) / 10,
+      wind: Math.round((x.wind - y.wind) * 10) / 10,
+      windBefore: Math.round(y.wind * 10) / 10,
     };
   }
   return out;

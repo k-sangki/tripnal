@@ -56,6 +56,9 @@ export interface ForecastChange {
   /** 하루 강수 합 차이 mm, 지난 예보의 강수 합 mm */
   precip: number;
   precipBefore: number;
+  /** 하루 최대 풍속 차이 m/s, 지난 예보의 최대 풍속 m/s */
+  wind?: number;
+  windBefore?: number;
 }
 
 export interface DatedTideEvent {

@@ -1642,6 +1642,12 @@ th.dcol .pd {
 .chg-cold {
   color: #1971c2;
 }
+.chg-windy {
+  color: #c2255c;
+}
+.chg-calm {
+  color: #2b8a3e;
+}
 .chg-same {
   color: var(--muted);
   font-weight: 500;

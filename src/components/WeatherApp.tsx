@@ -276,8 +276,13 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
             )
           )}
 
-          <div style={{ height: 12 }} />
-          <AdSlot slot={AD_SLOTS.bottom} />
+          {/* 예보가 있으면 위 광고와 붙지 않게 아래 광고는 빼고, 예보를 못 불러왔을 때만 보인다 */}
+          {!forecast && !loading && (
+            <>
+              <div style={{ height: 12 }} />
+              <AdSlot slot={AD_SLOTS.bottom} />
+            </>
+          )}
         </div>
       </main>
 

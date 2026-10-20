@@ -1,6 +1,6 @@
 name: Deploy
 
-# main 에 합쳐지면 Cloudflare Workers(tripnal.com)로 배포한다.
+# main 에 합쳐지면 Cloudflare Workers(tripnalc.com)로 배포한다.
 # 필요한 값은 저장소 Settings > Secrets and variables > Actions 에 넣는다.
 on:
   push:
@@ -16,7 +16,7 @@ jobs:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       # 브라우저용 값은 빌드할 때 코드에 들어간다
-      NEXT_PUBLIC_SITE_URL: https://tripnal.com
+      NEXT_PUBLIC_SITE_URL: https://tripnalc.com
       NEXT_PUBLIC_KAKAO_JS_KEY: ${{ secrets.NEXT_PUBLIC_KAKAO_JS_KEY }}
       NEXT_PUBLIC_ADSENSE_CLIENT: ${{ secrets.NEXT_PUBLIC_ADSENSE_CLIENT }}
       NEXT_PUBLIC_CF_BEACON_TOKEN: ${{ secrets.NEXT_PUBLIC_CF_BEACON_TOKEN }}

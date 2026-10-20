@@ -504,6 +504,8 @@ function DailyTable({
             </td>
           ))}
         </tr>
+        {/* 강수는 날씨 아이콘 바로 아래에 고정 */}
+        {rows.filter((k) => k === "precip").flatMap((k) => metricRow(k, em(k)))}
         {days.some((d) => d.change) && (
           <tr className="r-chg">
             <th scope="row" className="lbl">
@@ -517,7 +519,7 @@ function DailyTable({
             ))}
           </tr>
         )}
-        {rows.flatMap((k) => metricRow(k, em(k)))}
+        {rows.filter((k) => k !== "precip").flatMap((k) => metricRow(k, em(k)))}
         {(["sunrise", "sunset"] as const).filter(sunEm).map(sunRow)}
       </tbody>
       <tbody className="ft-more" hidden={!open}>

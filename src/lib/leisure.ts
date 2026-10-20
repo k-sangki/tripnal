@@ -126,10 +126,10 @@ export interface Leisure {
   sun?: "sunrise" | "sunset" | "both";
 }
 
-/** 기온·체감은 항상 맨 위에 둔다 (날씨 아이콘 바로 아래) */
-export const TOP_METRICS: MetricKey[] = ["temp", "feels"];
+/** 강수는 날씨 아이콘 바로 아래, 그다음 기온·체감을 항상 맨 위에 둔다 */
+export const TOP_METRICS: MetricKey[] = ["precip", "temp", "feels"];
 
-/** 기온·체감 다음에 그룹의 주 지표, 그 아래 나머지 기본 지표, 필요 없는 추가 지표는 더보기로 */
+/** 강수·기온·체감 다음에 그룹의 주 지표, 그 아래 나머지 기본 지표, 필요 없는 추가 지표는 더보기로 */
 export function rowsForGroup(g: ActivityGroup): { rows: MetricKey[]; more: MetricKey[] } {
   const primary = g.primary.filter((k) => !TOP_METRICS.includes(k));
   const rest: MetricKey[] = BASE_METRICS.filter((k) => !TOP_METRICS.includes(k) && !primary.includes(k));

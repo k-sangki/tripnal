@@ -19,11 +19,14 @@ jobs:
           set +e
           {
           curl -s -m 30 "https://www.data.go.kr/data/15156018/openapi.do" -o page.html
-          grep -o 'apis\.data\.go\.kr[^"<> ]*' page.html | sort -u | head
-          grep -oiE '(swagger|oas)[^"<> ]{0,150}' page.html | sort -u | head
-          grep -oE 'publicDataDetailPk[^,]{0,60}|uddi:[0-9a-f-]+' page.html | sort -u | head
-          grep -oE '<a [^>]*hwp[^>]*>' page.html | head -3
-          grep -oE 'fn_fileDownload\([^)]*\)|fileDetailSn[^,]{0,40}|atchFileId[^,]{0,60}' page.html | sort -u | head
+          python3 - <<'PY'
+          import re
+          h=open("page.html",encoding="utf-8",errors="ignore").read()
+          i=h.find("swaggerJson")
+          print(h[i-200:i+200] if i>=0 else "no swaggerJson")
+          for m in re.finditer(r'"paths"', h):
+              print(h[m.start()-100:m.start()+4000]); break
+          PY
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com
           git add -A diag-out.txt; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026

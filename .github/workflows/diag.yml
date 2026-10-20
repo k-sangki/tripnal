@@ -15,37 +15,17 @@ jobs:
       - uses: actions/checkout@v4
       - run: |
           set +e
-          pip -q install boto3
-          rm -rf dd; mkdir -p dd
-          python3 - > diag-out.txt 2>&1 <<'PY'
-          import boto3, os, json, math, urllib.request
-          s3 = boto3.client("s3", endpoint_url=f"https://{os.environ['CLOUDFLARE_ACCOUNT_ID']}.r2.cloudflarestorage.com", aws_access_key_id=os.environ["R2_ACCESS_KEY_ID"], aws_secret_access_key=os.environ["R2_SECRET_ACCESS_KEY"], region_name="auto")
-          pts = {"seoul": (37.57, 126.98, None), "daecheong": (38.12, 128.47, 1708), "boryeong": (36.33, 126.6, None), "jeju": (33.5, 126.53, None), "jarasum": (37.82, 127.52, None)}
-          for m in ["ecmwf", "gfs", "icon"]:
-              try:
-                  lt = s3.get_object(Bucket="tripnal-data", Key=f"{m}/latest.json")["Body"].read()
-              except Exception as e:
-                  print(m, "no latest", e); continue
-              os.makedirs(f"dd/{m}", exist_ok=True)
-              open(f"dd/{m}/latest.json", "wb").write(lt)
-              run = json.loads(lt)["run"]; print(m, run)
-              for name, (la, lo, _) in pts.items():
-                  y0 = math.floor((la - 32.5) / 0.25); x0 = math.floor((lo - 124) / 0.25)
-                  for dy in (0, 1):
-                      for dx in (0, 1):
-                          k = f"{32.5 + (y0 + dy) * 0.25:.2f}_{124 + (x0 + dx) * 0.25:.2f}.json"
-                          os.makedirs(f"dd/{m}/{run}", exist_ok=True)
-                          try:
-                              open(f"dd/{m}/{run}/{k}", "wb").write(s3.get_object(Bucket="tripnal-data", Key=f"{m}/{run}/{k}")["Body"].read())
-                          except Exception as e:
-                              print("miss", m, k, e)
-          for name, (la, lo, el) in pts.items():
-              u = f"https://api.open-meteo.com/v1/forecast?latitude={la}&longitude={lo}&hourly=temperature_2m,apparent_temperature,precipitation,wind_speed_10m,wind_gusts_10m,wind_direction_10m,cloud_cover,weather_code,uv_index&models=ecmwf_ifs,gfs_seamless,icon_seamless&forecast_days=16&timezone=Asia/Seoul&wind_speed_unit=ms" + (f"&elevation={el}" if el else "")
-              try:
-                  open(f"dd/om_{name}.json", "wb").write(urllib.request.urlopen(u, timeout=60).read())
-              except Exception as e:
-                  print("om fail", name, e)
-          print("done")
-          PY
+          for q in "lat=37.82&lon=127.52" "lat=38.12&lon=128.47&elev=1708" "lat=33.5&lon=126.53"; do
+            echo "== $q"
+            curl -s "https://tripnalc.com/api/forecast?$q&provider=collected&v=x1" -o c.json -w "%{http_code} %{time_total}s\n"
+            curl -s "https://tripnalc.com/api/forecast?$q&v=x1" -o o.json
+            python3 -c "
+          import json
+          c=json.load(open('c.json')); o=json.load(open('o.json'))
+          print('src', c.get('source'), c.get('elevation'), '|', o.get('source'), o.get('elevation'), c.get('error'))
+          for dc, do in list(zip(c['days'], o['days']))[:16:3]:
+              print(dc['date'], 'T', dc['tMin'], dc['tMax'], 'vs', do['tMin'], do['tMax'], 'P', round(dc['precipSum'],1), 'vs', round(do['precipSum'],1), 'G', dc['gustMax'], 'vs', do['gustMax'], 'code', dc['code'], do['code'])
+          "
+          done > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com
-          git add -A diag-out.txt dd; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026
+          git add -A diag-out.txt; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026

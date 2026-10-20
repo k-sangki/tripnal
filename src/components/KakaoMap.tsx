@@ -1,68 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-
-const KEY = process.env.NEXT_PUBLIC_KAKAO_JS_KEY;
-
-/* 카카오맵 SDK 최소 타입 */
-interface KLatLng {
-  getLat(): number;
-  getLng(): number;
-}
-interface KMap {
-  setCenter(p: KLatLng): void;
-  relayout(): void;
-}
-interface KMarker {
-  setPosition(p: KLatLng): void;
-}
-interface KOverlay {
-  setPosition(p: KLatLng): void;
-  setMap(m: KMap | null): void;
-}
-interface KakaoMaps {
-  load(cb: () => void): void;
-  LatLng: new (lat: number, lng: number) => KLatLng;
-  Map: new (el: HTMLElement, opts: { center: KLatLng; level: number }) => KMap;
-  Marker: new (opts: { position: KLatLng; map: KMap }) => KMarker;
-  CustomOverlay: new (opts: { position: KLatLng; content: HTMLElement; yAnchor?: number; clickable?: boolean }) => KOverlay;
-  event: { addListener(target: KMap, type: string, cb: (e: { latLng: KLatLng }) => void): void };
-}
-declare global {
-  interface Window {
-    kakao?: { maps: KakaoMaps };
-  }
-}
-
-let loader: Promise<KakaoMaps> | null = null;
-
-function loadSdk(): Promise<KakaoMaps> {
-  if (loader) return loader;
-  loader = new Promise((resolve, reject) => {
-    const s = document.createElement("script");
-    s.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${KEY}&autoload=false`;
-    s.async = true;
-    // 도메인이 등록되지 않았으면 카카오가 스크립트를 거부해 onerror가 난다
-    const fail = (reason: string) => {
-      loader = null;
-      reject(new Error(reason));
-    };
-    const timer = setTimeout(() => fail("timeout"), 10000);
-    s.onload = () => {
-      if (!window.kakao?.maps) return fail("blocked");
-      window.kakao.maps.load(() => {
-        clearTimeout(timer);
-        resolve(window.kakao!.maps);
-      });
-    };
-    s.onerror = () => {
-      clearTimeout(timer);
-      fail("blocked");
-    };
-    document.head.appendChild(s);
-  });
-  return loader;
-}
+import { KAKAO_JS_KEY as KEY, loadSdk, type KLatLng, type KMap, type KMarker, type KakaoMaps } from "@/lib/kakaoSdk";
 
 /** 위치 확인·선택용 지도. 지도를 누르면 "이 위치의 예보 보기" 버튼이 뜨고, 누르면 그 지점의 날씨로 바뀐다. */
 export function KakaoMap({ lat, lon, onPick }: { lat: number; lon: number; onPick: (lat: number, lon: number) => void }) {

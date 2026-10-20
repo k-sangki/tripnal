@@ -18,30 +18,14 @@ jobs:
       - run: |
           set +e
           {
-          python3 - <<'PY'
-          import json, os, urllib.request, urllib.parse, concurrent.futures as cf, datetime as dt
-          key=os.environ["KHOA_API_KEY"]
-          d=(dt.datetime.utcnow()+dt.timedelta(hours=9)).strftime("%Y%m%d")
-          def q(code):
-              u="https://apis.data.go.kr/1192136/tideFcstHghLw/GetTideFcstHghLwApiService?"+urllib.parse.urlencode({"serviceKey":key,"obsCode":code,"reqDate":d,"type":"json","numOfRows":20})
-              try:
-                  return code, urllib.request.urlopen(u, timeout=30).read().decode()
-              except Exception as e:
-                  return code, "ERR "+str(e)
-          print(q("DT_0001")[1][:1500])
-          codes=[f"DT_{i:04d}" for i in range(1,100)]+[f"SO_{i:04d}" for i in range(500,800)]+[f"IE_{i:04d}" for i in range(1,70)]
-          found={}
-          with cf.ThreadPoolExecutor(8) as ex:
-              for code, body in ex.map(q, codes):
-                  try:
-                      it=json.loads(body)["body"]["items"]["item"]
-                      it=it if isinstance(it,list) else [it]
-                      if it: found[code]=[it[0]["obsvtrNm"], it[0]["lat"], it[0]["lot"], len(it)]
-                  except Exception:
-                      pass
-          print(len(found))
-          print(json.dumps(found, ensure_ascii=False))
-          PY
+          pip install -q boto3
+          time python3 collector/tide.py --out out
+          ls out/tide | wc -l
+          head -c 600 out/tide/DT_0001.json; echo
+          cat out/tide/stations.json | head -c 300; echo
+          python3 collector/upload.py out tide
+          echo SECOND RUN
+          time python3 collector/tide.py --out out2
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com
           git add -A diag-out.txt; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026

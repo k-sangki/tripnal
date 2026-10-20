@@ -37,6 +37,9 @@ jobs:
         env:
           KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
           OPEN_METEO_API_KEY: ${{ secrets.OPEN_METEO_API_KEY }}
+          # 공공데이터포털 인증키 (조석예보와 같은 키, 기상특보 조회에 씀)
+          DATA_GO_KR_KEY: ${{ secrets.KHOA_API_KEY }}
         run: |
           if [ -n "$KAKAO_REST_API_KEY" ]; then echo "$KAKAO_REST_API_KEY" | npx wrangler secret put KAKAO_REST_API_KEY; fi
           if [ -n "$OPEN_METEO_API_KEY" ]; then echo "$OPEN_METEO_API_KEY" | npx wrangler secret put OPEN_METEO_API_KEY; fi
+          if [ -n "$DATA_GO_KR_KEY" ]; then echo "$DATA_GO_KR_KEY" | npx wrangler secret put DATA_GO_KR_KEY; fi

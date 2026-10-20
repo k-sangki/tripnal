@@ -17,6 +17,7 @@ import { KakaoMap } from "./KakaoMap";
 import { LeisureTabs } from "./LeisureTabs";
 import { PeriodPicker } from "./PeriodPicker";
 import { SearchBar } from "./SearchBar";
+import { WarningTicker } from "./WarningTicker";
 
 export interface AppPlace {
   name: string;
@@ -255,6 +256,7 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
         </div>
 
         <div className="o-fc">
+          <WarningTicker address={place?.address} />
           {loading && !forecast ? (
             <div className="skeleton" />
           ) : (

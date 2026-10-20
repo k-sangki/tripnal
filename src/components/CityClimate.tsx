@@ -17,12 +17,15 @@ export function MonthCards({
   good,
   current,
   selected,
+  onSelect,
 }: {
   slug: string;
   normals: MonthNormal[];
   good: GoodMonth[];
   current?: number;
   selected?: number;
+  /** 있으면 페이지를 옮기지 않고 그 자리에서 달을 바꾼다 */
+  onSelect?: (month: number) => void;
 }) {
   const goodMap = new Map(good.map((g) => [g.month, g]));
   return (
@@ -31,8 +34,8 @@ export function MonthCards({
         const month = i + 1;
         const g = goodMap.get(month);
         const cls = ["month-card", g ? "good" : "", selected === month ? "on" : ""].filter(Boolean).join(" ");
-        return (
-          <Link key={month} href={`/overseas/${slug}/${month}`} className={cls} aria-current={selected === month ? "page" : undefined}>
+        const inner = (
+          <>
             <span className="mc-head">
               <b>{month}월</b>
               {g ? <em>{g.reason ?? "추천"}</em> : current === month ? <i>지금</i> : null}
@@ -41,6 +44,15 @@ export function MonthCards({
               <span className="t-hi">{Math.round(m.hi)}°</span> / <span className="t-lo">{Math.round(m.lo)}°</span>
             </span>
             <span className="mc-rain">💧 {m.rain}mm</span>
+          </>
+        );
+        return onSelect ? (
+          <button key={month} type="button" className={cls} aria-pressed={selected === month} onClick={() => onSelect(month)}>
+            {inner}
+          </button>
+        ) : (
+          <Link key={month} href={`/overseas/${slug}/${month}`} className={cls} aria-current={selected === month ? "page" : undefined}>
+            {inner}
           </Link>
         );
       })}
@@ -49,7 +61,17 @@ export function MonthCards({
 }
 
 /** 월별 기온(최고~최저 막대)과 강수량 막대 그래프. 누르면 그 달로 */
-export function ClimateChart({ slug, normals, selected }: { slug: string; normals: MonthNormal[]; selected?: number }) {
+export function ClimateChart({
+  slug,
+  normals,
+  selected,
+  onSelect,
+}: {
+  slug: string;
+  normals: MonthNormal[];
+  selected?: number;
+  onSelect?: (month: number) => void;
+}) {
   const max = Math.max(...normals.map((m) => m.hi));
   const min = Math.min(...normals.map((m) => m.lo));
   const span = Math.max(1, max - min);
@@ -62,8 +84,9 @@ export function ClimateChart({ slug, normals, selected }: { slug: string; normal
           const month = i + 1;
           const top = ((max - m.hi) / span) * H;
           const height = Math.max(4, ((m.hi - m.lo) / span) * H);
-          return (
-            <Link key={month} href={`/overseas/${slug}/${month}`} className={`cc-col${selected === month ? " on" : ""}`} aria-label={`${month}월`}>
+          const cls = `cc-col${selected === month ? " on" : ""}`;
+          const inner = (
+            <>
               <span className="cc-temp" style={{ height: H + 36 }}>
                 <span className="cc-hi" style={{ top }}>
                   {Math.round(m.hi)}°
@@ -78,6 +101,15 @@ export function ClimateChart({ slug, normals, selected }: { slug: string; normal
               </span>
               <span className="cc-mm">{m.rain}</span>
               <span className="cc-month">{month}월</span>
+            </>
+          );
+          return onSelect ? (
+            <button key={month} type="button" className={cls} aria-label={`${month}월`} aria-pressed={selected === month} onClick={() => onSelect(month)}>
+              {inner}
+            </button>
+          ) : (
+            <Link key={month} href={`/overseas/${slug}/${month}`} className={cls} aria-label={`${month}월`}>
+              {inner}
             </Link>
           );
         })}

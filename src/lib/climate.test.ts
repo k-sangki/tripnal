@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { clothesFor, climateSummary, getNormals, goodMonths, localMonth, monthGuide, monthRanges, weatherIssues } from "@/lib/climate";
+import { clothesFor, climateSummary, getNormals, goodMonths, localMonth, monthGuide, monthRanges } from "@/lib/climate";
+import { weatherIssues } from "@/lib/climateIssues";
 import { DESTINATIONS, getDestination } from "@/lib/overseas";
 import type { Forecast } from "@/lib/weather/types";
 
@@ -44,7 +45,7 @@ describe("climate", () => {
     const day = (date: string, tMax: number, tMin: number, precipSum: number) =>
       ({ date, tMax, tMin, precipSum, gustMax: 5, slots: [] }) as unknown as Forecast["days"][number];
     const f = { days: [day("2026-10-21", 22, 14, 0), day("2026-10-22", 21, 13, 80)] } as Forecast;
-    const issues = weatherIssues(getDestination("osaka")!, f);
+    const issues = weatherIssues(getNormals("osaka")!, f);
     expect(issues.map((x) => x.kind)).toEqual(["rain"]);
     expect(issues[0].text).toContain("10/22(목)");
   });

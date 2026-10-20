@@ -97,6 +97,19 @@ def fields(run, step):
     return out
 
 
+def retry(fn, *args, tries=3):
+    """step 하나가 실패하면(일시적인 S3 오류·덜 올라온 파일) 잠시 뒤 통째로 다시 받는다"""
+    for i in range(tries):
+        try:
+            return fn(*args)
+        except Exception as e:
+            if i == tries - 1:
+                # GitHub Actions 주석으로 남겨 API로도 원인을 볼 수 있게 한다
+                print(f"::error::{fn.__name__}{args}: {type(e).__name__}: {e}", flush=True)
+                raise
+            time.sleep(20 * (i + 1))
+
+
 def r1(x):
     return None if x is None or (isinstance(x, float) and math.isnan(x)) else round(float(x), 1)
 
@@ -112,7 +125,7 @@ def main():
     print("run", run, "steps", len(steps), flush=True)
 
     with cf.ThreadPoolExecutor(4) as ex:
-        data = dict(zip(steps, ex.map(lambda s: fields(run, s), steps)))
+        data = dict(zip(steps, ex.map(lambda s: retry(fields, run, s), steps)))
 
     nlat, nlon = data[steps[0]]["2t"].shape
     elev = data[0]["z"] / 9.80665 if 0 in data else None

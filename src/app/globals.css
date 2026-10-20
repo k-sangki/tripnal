@@ -1536,3 +1536,48 @@ a {
 .ft.cap .ft-scroll {
   overflow: visible;
 }
+
+/* ---------- 기상특보 띠 ---------- */
+.warn-ticker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  background: #fff4e5;
+  color: #8a4b00;
+  font-size: 14px;
+  font-weight: 600;
+  overflow: hidden;
+}
+.warn-badge {
+  flex: none;
+  font-weight: 800;
+}
+.warn-track {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.warn-text {
+  display: inline-block;
+  padding-left: 100%;
+  animation: warn-scroll linear infinite;
+}
+@keyframes warn-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .warn-text {
+    padding-left: 0;
+    animation: none;
+    white-space: normal;
+  }
+}

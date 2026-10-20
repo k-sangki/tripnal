@@ -252,7 +252,15 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
             <div className="hero-meta">
               <span className="pill mint">{periodLabel(period)}</span>
               {forecast?.elevation != null && <span className="pill">⛰️ 해발 {Math.round(forecast.elevation).toLocaleString()}m</span>}
-              {place && forecast && <AlertButton key={`${place.lat},${place.lon}`} place={place} act={leisureId} from={period.from} to={period.to} />}
+              {place && forecast && <AlertButton
+                  key={`${place.lat},${place.lon}`}
+                  place={place}
+                  act={leisureId}
+                  from={period.from}
+                  to={period.to}
+                  today={today}
+                  onPeriod={(p) => setPeriod(clampPeriod(p.from, p.to, today))}
+                />}
             </div>
           </section>
         </div>

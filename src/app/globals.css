@@ -386,13 +386,21 @@ a {
 }
 
 /* ---------- 캡처 버튼 / 시트 ---------- */
-.fab {
+.fab-bar {
   position: fixed;
   z-index: 30;
   left: 50%;
   bottom: calc(16px + env(safe-area-inset-bottom));
   transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  width: max-content;
+  max-width: calc(100vw - 24px);
+}
+.fab {
   display: inline-flex;
+  flex: none;
+  white-space: nowrap;
   align-items: center;
   gap: 8px;
   height: 54px;
@@ -409,7 +417,52 @@ a {
   transform: none;
 }
 .fab:active {
-  transform: translateX(-50%) scale(0.97);
+  transform: scale(0.97);
+}
+.fab-sub {
+  padding: 0 16px;
+  background: #fff;
+  color: var(--pine);
+  font-size: 15px;
+  box-shadow: 0 8px 24px rgba(14, 59, 54, 0.2);
+}
+.fab-sub span {
+  font-size: 18px;
+  font-weight: 800;
+}
+.install-guide ol {
+  margin: 12px 0 16px;
+  padding-left: 20px;
+  line-height: 1.7;
+}
+.ios-share {
+  display: inline-block;
+  padding: 0 6px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font-size: 13px;
+}
+.install-actions {
+  display: flex;
+  gap: 8px;
+}
+.install-actions .share-btn {
+  flex: 1;
+}
+@media (max-width: 359px) {
+  .fab {
+    height: 48px;
+    padding: 0 14px;
+    font-size: 14px;
+  }
+  .fab-sub {
+    padding: 0 12px;
+    font-size: 13px;
+  }
+}
+.save-tip {
+  margin-top: 8px;
+  font-size: 13px;
 }
 .sheet-bg {
   position: fixed;

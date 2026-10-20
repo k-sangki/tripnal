@@ -22,12 +22,99 @@ function pickScale(el: HTMLElement) {
 
 const nextFrame = () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
 
+/** 웹폰트 파일 → data URL. 한 번 받은 파일은 다시 받지 않는다 */
+const fontData = new Map<string, Promise<string>>();
+function dataUrl(url: string) {
+  let p = fontData.get(url);
+  if (!p) {
+    p = fetch(url)
+      .then((r) => r.blob())
+      .then((b) => new Promise<string>((res, rej) => {
+        const fr = new FileReader();
+        fr.onload = () => res(fr.result as string);
+        fr.onerror = rej;
+        fr.readAsDataURL(b);
+      }));
+    p.catch(() => fontData.delete(url));
+    fontData.set(url, p);
+  }
+  return p;
+}
+
+function covers(range: string, codes: number[]) {
+  return range.split(",").some((part) => {
+    const [a, b] = part.trim().replace(/^U\+/i, "").split("-");
+    const lo = parseInt(a.replace(/\?/g, "0"), 16);
+    const hi = b ? parseInt(b, 16) : parseInt(a.replace(/\?/g, "F"), 16);
+    return codes.some((c) => c >= lo && c <= hi);
+  });
+}
+
+/**
+ * 캡처에 쓰인 글자가 들어 있는 웹폰트 조각만 골라 @font-face로 만든다.
+ * Pretendard는 92조각(약 3MB)이라 다 넣으면 캡처가 몇 초씩 걸린다.
+ */
+async function fontCss(el: HTMLElement): Promise<string | undefined> {
+  const codes = Array.from(new Set(Array.from(el.textContent ?? "", (ch) => ch.codePointAt(0)!)));
+  const rules: { css: string; url: string }[] = [];
+  for (const sheet of Array.from(document.styleSheets)) {
+    let list: CSSRuleList;
+    try {
+      list = sheet.cssRules;
+    } catch {
+      continue;
+    }
+    for (const rule of Array.from(list)) {
+      if (!(rule instanceof CSSFontFaceRule)) continue;
+      const range = rule.style.getPropertyValue("unicode-range");
+      if (range && !covers(range, codes)) continue;
+      const m = rule.style.getPropertyValue("src").match(/url\(["']?([^"')]+)["']?\)/);
+      if (!m) continue;
+      rules.push({ css: rule.cssText, url: new URL(m[1], sheet.href ?? location.href).href });
+    }
+  }
+  if (!rules.length) return undefined;
+  const parts = await Promise.all(
+    rules.map(async ({ css, url }) => {
+      const data = await dataUrl(url);
+      return css.replace(/src:[^;]+;?/, `src: url("${data}") format("woff2");`);
+    }),
+  );
+  return parts.join("\n");
+}
+
+const sides = (p: string, suf = "") => ["top", "right", "bottom", "left"].map((x) => `${p}-${x}${suf}`);
+/**
+ * 복사할 스타일 속성. 노드마다 모든 계산 스타일(약 350개)을 읽으면 표가 큰 캡처(3시간 간격 16일)는
+ * 몇 초가 걸려서, 이 사이트 CSS가 실제로 쓰는 속성만 복사한다. globals.css에 새 속성을 쓰면 여기도 넣는다.
+ */
+const STYLE_PROPS = [
+  "display", "position", "top", "right", "bottom", "left", "z-index", "box-sizing",
+  "width", "height", "min-width", "min-height", "max-width", "max-height",
+  ...sides("margin"), ...sides("padding"),
+  ...sides("border", "-width"), ...sides("border", "-style"), ...sides("border", "-color"),
+  "border-top-left-radius", "border-top-right-radius", "border-bottom-left-radius", "border-bottom-right-radius",
+  "border-collapse", "border-spacing", "table-layout", "caption-side",
+  "background-color", "background-image", "background-size", "background-position", "background-repeat", "background-clip",
+  "color", "font-family", "font-size", "font-weight", "font-style", "font-variant-numeric", "font-feature-settings",
+  "line-height", "letter-spacing", "text-align", "vertical-align", "white-space", "word-break", "overflow-wrap",
+  "text-decoration-line", "text-decoration-color", "text-overflow", "text-transform",
+  "overflow-x", "overflow-y", "visibility", "opacity", "transform", "transform-origin", "box-shadow",
+  "flex-direction", "flex-wrap", "flex-grow", "flex-shrink", "flex-basis", "order",
+  "align-items", "align-self", "align-content", "justify-content", "justify-items", "row-gap", "column-gap",
+  "grid-template-columns", "grid-template-rows", "grid-column-start", "grid-column-end",
+  "object-fit", "object-position", "list-style-type", "fill", "stroke", "stroke-width", "-webkit-font-smoothing",
+];
+
 export async function captureElement(el: HTMLElement): Promise<Blob> {
   el.classList.add("capturing");
   try {
     await document.fonts?.ready;
     await nextFrame();
+    const cssText = await fontCss(el).catch(() => undefined);
     const blob = await domToBlob(el, {
+      font: cssText ? { cssText } : undefined,
+      includeStyleProperties: STYLE_PROPS,
       scale: pickScale(el),
       backgroundColor: "#0E3B36",
       type: "image/png",
@@ -71,13 +158,25 @@ export function CaptureSheet({ target, fileName, shareTitle, shareUrl, onClose }
   const file = blob ? new File([blob], fileName, { type: "image/png" }) : null;
   const canShareFile = typeof navigator !== "undefined" && !!file && !!navigator.canShare?.({ files: [file] });
 
-  const save = () => {
-    if (!preview) return;
+  // 아이폰은 웹에서 사진첩에 바로 넣을 수 없어 공유 메뉴의 "이미지 저장"을 쓴다.
+  // 안드로이드·PC는 파일로 받으면 갤러리(Download 앨범)에 바로 보인다.
+  const ios = typeof navigator !== "undefined" && (/iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1));
+
+  const save = async () => {
+    if (!preview || !file) return;
+    if (ios && canShareFile) {
+      try {
+        await navigator.share({ files: [file] });
+      } catch {
+        // 사용자가 취소한 경우
+      }
+      return;
+    }
     const a = document.createElement("a");
     a.href = preview;
     a.download = fileName;
     a.click();
-    setToast("이미지를 저장했어요");
+    setToast(/Android/.test(navigator.userAgent) ? "갤러리에 저장했어요" : "이미지를 저장했어요");
   };
 
   const shareImage = async () => {
@@ -133,14 +232,14 @@ export function CaptureSheet({ target, fileName, shareTitle, shareUrl, onClose }
           <div className="skeleton" />
         )}
         <div className="share-grid">
+          <button className="share-btn primary" onClick={save} disabled={!blob}>
+            이미지 저장
+          </button>
           {canShareFile && (
-            <button className="share-btn primary" onClick={shareImage} disabled={!blob}>
+            <button className="share-btn" onClick={shareImage} disabled={!blob}>
               이미지 공유하기 (카톡·인스타·카페·블로그)
             </button>
           )}
-          <button className={`share-btn${canShareFile ? "" : " primary"}`} onClick={save} disabled={!blob}>
-            이미지 저장
-          </button>
           <button className="share-btn" onClick={shareLink}>
             링크 공유
           </button>
@@ -151,6 +250,7 @@ export function CaptureSheet({ target, fileName, shareTitle, shareUrl, onClose }
             링크 복사
           </button>
         </div>
+        {ios && <p className="muted save-tip">저장 메뉴가 열리면 &quot;이미지 저장&quot;을 누르세요. 미리보기를 길게 눌러도 저장할 수 있어요.</p>}
         <p className="muted" style={{ marginTop: 12 }}>
           블로그·카페 글에는 저장한 이미지를 올리고 링크를 함께 붙여 보세요.
         </p>

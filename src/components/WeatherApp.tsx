@@ -10,6 +10,7 @@ import type { Forecast } from "@/lib/weather/types";
 import { AD_SLOTS, AdSlot } from "./AdSlot";
 import { CaptureFrame } from "./CaptureFrame";
 import { CaptureSheet } from "./CaptureSheet";
+import { InstallButton } from "./InstallButton";
 import { ForecastTable } from "./ForecastTable";
 import { IntervalPicker } from "./IntervalPicker";
 import { KakaoMap } from "./KakaoMap";
@@ -281,9 +282,13 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
       </main>
 
       {forecast && !capturing && (
-        <button className="fab" onClick={() => setCapturing(true)}>
-          <i className="logo-dot" aria-hidden /> 캡처해서 공유
-        </button>
+        // 오른손으로 누르기 쉽게 캡처를 오른쪽에 둔다
+        <div className="fab-bar">
+          <InstallButton />
+          <button className="fab" onClick={() => setCapturing(true)}>
+            <i className="logo-dot" aria-hidden /> 캡처해서 공유
+          </button>
+        </div>
       )}
       {capturing && forecast && place && (
         <CaptureFrame

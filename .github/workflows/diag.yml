@@ -20,8 +20,8 @@ jobs:
           {
           python3 - <<'PY'
           import json, urllib.request
-          for name, lat, lon in [("eulwang",37.447,126.372),("boryeong",36.31,126.51),("seoul",37.5665,126.978),("jeju",33.51,126.52)]:
-              for prov in ["collected", ""]:
+          for name, lat, lon in [("eulwang",37.447,126.372),("seorak",38.119,128.465),("boryeong",36.31,126.51),("seoul",37.5665,126.978),("jeju",33.51,126.52)]:
+              for prov in [""]:
                   u=f"https://tripnalc.com/api/forecast?lat={lat}&lon={lon}"+(f"&provider={prov}" if prov else "")
                   try:
                       f=json.load(urllib.request.urlopen(urllib.request.Request(u, headers={"User-Agent":"diag"}), timeout=60))
@@ -30,6 +30,11 @@ jobs:
                   d=f["days"]
                   print(name, prov or "om", f["source"], "| tides0:", d[0]["tides"], "| tides1:", d[1]["tides"], "| ndays w tides", sum(1 for x in d if x["tides"]))
                   print("   tide slots", [s["tide"] for s in d[1]["slots"]], "pm10", [s["pm10"] for s in d[1]["slots"]], "pm25", [s["pm25"] for s in d[1]["slots"]], "pm days", sum(1 for x in d if any(s["pm10"] is not None for s in x["slots"])))
+          import time
+          for u in ['https://tripnalc.com/about','https://tripnalc.com/privacy']:
+              b=urllib.request.urlopen(urllib.request.Request(u, headers={'User-Agent':'diag'}), timeout=60).read().decode()
+              print(u, 'ECMWF 공개' in b, '적합도' in b, 'Open-Meteo' in b, '외부 예보 제공처로 보내지' in b)
+              t=time.time(); urllib.request.urlopen(urllib.request.Request('https://tripnalc.com/api/forecast?lat=35.15&lon=129.11', headers={'User-Agent':'diag'}), timeout=60).read(); print('busan secs', round(time.time()-t,2))
           PY
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com

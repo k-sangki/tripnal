@@ -1837,7 +1837,7 @@ th.dcol .pd {
 /* ---------- 해외 여행지 목록 (작은 카드 격자) ---------- */
 .ov-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
   gap: 8px;
 }
 .ov-card {
@@ -1855,19 +1855,33 @@ th.dcol .pd {
 .ov-card:hover {
   background: #e3efec;
 }
-.ov-card b {
+.ov-name {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  min-width: 0;
+}
+.ov-name b {
+  flex: none;
+  max-width: 100%;
   font-size: 14px;
   line-height: 1.3;
   letter-spacing: -0.03em;
   word-break: keep-all;
 }
-.ov-card span {
-  margin-top: 2px;
+.ov-name i {
+  min-width: 0;
+  font-style: normal;
   font-size: 11px;
   color: var(--muted);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.ov-country {
+  margin-top: 2px;
+  font-size: 11px;
+  color: var(--muted);
 }
 .ov-search {
   display: block;

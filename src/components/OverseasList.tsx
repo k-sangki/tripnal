@@ -9,10 +9,11 @@ import type { Destination } from "@/lib/overseas";
 function Card({ d }: { d: Destination }) {
   return (
     <Link href={`/overseas/${d.slug}`} className="ov-card" title={`${d.name} 날씨`}>
-      <b>{d.name}</b>
-      <span>
-        {d.country} · {d.en}
+      <span className="ov-name">
+        <b>{d.name}</b>
+        <i>{d.en}</i>
       </span>
+      <span className="ov-country">{d.country}</span>
     </Link>
   );
 }

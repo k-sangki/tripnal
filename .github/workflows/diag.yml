@@ -21,18 +21,9 @@ jobs:
       - run: |
           set +e
           {
-          curl -s -o p.out -w "baekdusan %{http_code} " "https://tripnalc.com/api/forecast?lat=42.006&lon=128.056&v=6"; head -c 160 p.out; echo
-          curl -s -o p.out -w "iceland %{http_code} " "https://tripnalc.com/api/forecast?lat=64.1466&lon=-21.9426&v=6"; head -c 160 p.out; echo
-          curl -s -o p.out -w "cusco %{http_code} " "https://tripnalc.com/api/forecast?lat=-13.532&lon=-71.9675&v=6"; head -c 160 p.out; echo
-          curl -s -o p.out -w "yellowknife %{http_code} " "https://tripnalc.com/api/forecast?lat=62.454&lon=-114.3718&v=6"; head -c 160 p.out; echo
-          curl -s -o p.out -w "manado %{http_code} " "https://tripnalc.com/api/forecast?lat=1.4748&lon=124.8421&v=6"; head -c 160 p.out; echo
-          curl -s -o p.out -w "addis-ababa %{http_code} " "https://tripnalc.com/api/forecast?lat=8.9806&lon=38.7578&v=6"; head -c 160 p.out; echo
-          curl -s -o p.out -w "sapa %{http_code} " "https://tripnalc.com/api/forecast?lat=22.3364&lon=103.8438&v=6"; head -c 160 p.out; echo
-          curl -s -o p.out -w "tsushima %{http_code} " "https://tripnalc.com/api/forecast?lat=34.203&lon=129.288&v=6"; head -c 160 p.out; echo
-          curl -s -o p.out -w "tokyo %{http_code} " "https://tripnalc.com/api/forecast?lat=35.6812&lon=139.7671&v=6"; head -c 160 p.out; echo
-          curl -s -o p.out -w "dolomites %{http_code} " "https://tripnalc.com/api/forecast?lat=46.5405&lon=12.1357&v=6"; head -c 160 p.out; echo
-          curl -s -o p.out -w "list %{http_code} " https://tripnalc.com/overseas; grep -o 'ov-card' p.out | wc -l
-          curl -s -o /dev/null -w "page %{http_code}\n" https://tripnalc.com/overseas/baekdusan
+          python collector/climate.py
+          ls -la src/data/climate.json
+          git add -f src/data/climate.json
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com
           git add -A diag-out.txt; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026

@@ -19,7 +19,7 @@ import sys
 
 import eccodes
 
-from collect import LAT_MAX, LAT_MIN, LON_MAX, LON_MIN, RES, http, r1
+from collect import LAT_MAX, LAT_MIN, LON_MAX, LON_MIN, RES, http, r1, retry
 
 BASE = "https://noaa-gfs-bdp-pds.s3.amazonaws.com"
 STEPS = list(range(0, 385, 3))
@@ -117,7 +117,7 @@ def main():
     print("run", run, "steps", len(steps), flush=True)
 
     with cf.ThreadPoolExecutor(8) as ex:
-        data = dict(zip(steps, ex.map(lambda s: fields(run, s), steps)))
+        data = dict(zip(steps, ex.map(lambda s: retry(fields, run, s), steps)))
 
     nlat, nlon = data[steps[0]]["2t"].shape
     elev = data[0].get("z") if 0 in data else None

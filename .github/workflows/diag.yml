@@ -21,22 +21,8 @@ jobs:
       - run: |
           set +e
           {
-          for u in /overseas /overseas/tokyo /overseas/paris /overseas/honolulu /overseas/fukuoka "/api/og?slug=paris"; do curl -s -o p.out -w "$u %{http_code} %{content_type} " "https://tripnalc.com$u"; grep -ao '<title>[^<]*' p.out | head -1; echo; done
-          curl -s https://tripnalc.com/ | grep -o "해외 날씨" | head -1
-          curl -s https://tripnalc.com/sitemap.xml | grep -c "<loc>"
-          python3 - <<'PY'
-          import json, urllib.request
-          d = json.load(open("src/data/overseas.json"))
-          bad = []
-          for x in d:
-              try:
-                  f = json.load(urllib.request.urlopen(urllib.request.Request(f"https://tripnalc.com/api/forecast?lat={x['lat']}&lon={x['lon']}&v=6&t=1", headers={"User-Agent":"diag"}), timeout=60))
-                  a = f["days"][0]; b = f["days"][-1]
-                  print(x["slug"], f.get("utcOffset"), f["source"], len(f["days"]), a["date"], a["tMin"], a["tMax"], a["sunrise"], a["precipProbMax"], "| last", b["date"], b["tMax"])
-              except Exception as e:
-                  bad.append((x["slug"], str(e)))
-          print("bad", bad)
-          PY
+          for x in "18.7883&lon=98.9853" "16.0544&lon=108.2022"; do for k in 1 2 3; do curl -s -o p.out -w "%{http_code} " "https://tripnalc.com/api/forecast?lat=$x&v=6&t=$k"; head -c 200 p.out; echo; sleep 3; done; done
+          for u in /overseas/da-nang /overseas/chiang-mai; do curl -s -o p.out -w "$u %{http_code}\n" "https://tripnalc.com$u"; done
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com
           git add -A diag-out.txt; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026

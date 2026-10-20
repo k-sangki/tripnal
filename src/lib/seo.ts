@@ -13,23 +13,25 @@ export function topic(word: string): string {
 }
 
 /**
- * 장소 페이지 제목. "{장소} 16일 날씨"를 맨 앞에 두고 레저별 롱테일 키워드를 붙인다.
- * (물때·파고는 해양 데이터가 붙은 뒤 낚시 제목에 추가한다)
+ * 장소 페이지 제목. "{장소} 날씨"를 맨 앞에 두고, 많이 찾는 검색어(이번주·주말 날씨, 물때표, 16일)를 레저별로 붙인다.
+ * (네이버·구글 자동완성 기준 2026-10-20: "○○ 이번주 날씨", "○○ 주말 날씨", "○○ 물때표", "○○ 해수욕장 날씨", "○○ 스키장 날씨")
  */
 export function placeTitle(p: Place): string {
   switch (p.leisure) {
     case "camping":
-      return `${p.name} 16일 날씨 · 주말 캠핑 날씨 3시간 간격`;
+      return `${p.name} 날씨 · 이번주·주말 캠핑 날씨 16일`;
     case "fishing":
-      return `${p.name} 16일 날씨 · 주말 바다낚시 바람·날씨`;
+      return `${p.name} 물때표·바다 날씨 · 이번주 바람·파고 16일`;
     case "hiking":
-      return `${p.name} 16일 날씨 · 정상 기온·바람 (해발 ${p.elevation?.toLocaleString()}m)`;
+      return `${p.name} 날씨 · 등산 정상 기온·바람 16일${p.elevation ? ` (해발 ${p.elevation.toLocaleString()}m)` : ""}`;
     case "cycling":
-      return `${p.name} 16일 날씨 · 라이딩 바람 예보 3시간 간격`;
+      return `${p.name} 날씨 · 자전거 라이딩 바람 예보 16일`;
+    case "ski":
+      return `${p.name} 날씨 · 스키장 이번주 눈·기온 16일`;
     case "travel":
-      return `${p.name} 16일 날씨 · 주말 여행 날씨 3시간 간격`;
+      return `${p.name} 날씨 · 이번주·주말 여행 날씨 16일`;
     default:
-      return `${p.name} 16일 날씨 · ${getLeisure(p.leisure).label} 날씨 3시간 간격`;
+      return `${p.name} 날씨 · 이번주 ${getLeisure(p.leisure).label} 날씨 16일`;
   }
 }
 
@@ -39,9 +41,9 @@ export function placeDescription(p: Place): string {
     p.leisure === "hiking"
       ? "정상 고도로 보정한 기온과 돌풍, 일출 시간을"
       : p.leisure === "fishing"
-        ? "풍속·풍향과 돌풍, 일출 시간을"
+        ? "물때표(만조·간조), 파고, 풍속·풍향과 돌풍을"
         : "기온·체감온도·비·돌풍과 일몰 시간을";
-  return `${p.name}(${p.region}) 오늘부터 16일까지 3시간 간격 날씨. ${extra} ${l.label}에 맞게 한눈에 보여드리고, 이번 주말 날씨도 바로 확인할 수 있습니다.`;
+  return `${p.name}(${p.region}) 오늘부터 16일까지 3시간 간격 날씨. ${extra} ${l.label}에 맞게 한눈에 보여드리고, 이번주 날씨와 주말 날씨도 바로 확인할 수 있습니다.`;
 }
 
 /** 검색엔진과 사용자에게 보여줄 요약 문장 (서버에서 렌더링) */

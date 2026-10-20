@@ -32,13 +32,29 @@ interface OpenMeteoResponse {
 }
 
 /**
- * 모델 순서. 앞쪽 며칠은 기상청(LDPS 1.5km + GDPS), 그 뒤는 ECMWF IFS,
- * 둘 다 비어 있는 값(강수 확률·자외선, 15일 이후 등)은 Open-Meteo 기본 조합(best_match)으로 채운다.
+ * 모델 순서. 앞쪽 사흘은 기상청(LDPS 1.5km + GDPS)을 먼저 쓰고,
+ * 그 뒤는 ECMWF·GFS·ICON 세 모델의 중간값을 쓴다 (한 모델만 튀는 돌풍·강수를 걸러낸다).
+ * 비어 있는 값(강수 확률·자외선, 15일 이후 등)은 Open-Meteo 기본 조합(best_match)으로 채운다.
  */
-export const MODELS = ["kma_seamless", "ecmwf_ifs", "best_match"] as const;
+export const MODELS = ["kma_seamless", "ecmwf_ifs", "best_match", "gfs_seamless", "icon_seamless"] as const;
 type Model = (typeof MODELS)[number];
 /** 기상청 모델을 먼저 쓰는 기간 (시간) */
 const KMA_HOURS = 72;
+/** 사흘 뒤부터 중간값을 내는 모델 */
+const ENSEMBLE: readonly Model[] = ["ecmwf_ifs", "gfs_seamless", "icon_seamless"];
+/** 중간값을 내는 변수. 풍향·확률·자외선·시정·날씨 코드는 그대로 ECMWF 우선 */
+const MEDIAN_VARS = new Set<string>([
+  "temperature_2m",
+  "apparent_temperature",
+  "precipitation",
+  "cloud_cover",
+  "wind_speed_10m",
+  "wind_gusts_10m",
+  "snowfall",
+  "cape",
+]);
+/** 뇌우 코드(95~99)는 두 모델 이상이 같은 시각에 낼 때만 남긴다 */
+const THUNDER_AGREE = 2;
 
 export function buildOpenMeteoUrl(lat: number, lon: number, apiKey?: string, elevation?: number, models?: readonly Model[]): string {
   // 유료 키가 있으면 customer- 호스트를 쓴다 (상업용).
@@ -95,31 +111,51 @@ type Series = (number | null)[];
 
 /**
  * 여러 모델을 한 번에 요청하면 변수 이름 뒤에 _모델명이 붙어 온다.
- * 시각마다 정해진 모델 순서대로 처음 나오는 값을 골라 하나의 시계열로 합친다.
+ * 앞쪽 사흘은 기상청 → ECMWF → 기본 순서로 처음 나오는 값을 고르고,
+ * 그 뒤는 ECMWF·GFS·ICON 중간값(없으면 ECMWF → 기본 → 기상청 순서)으로 하나의 시계열을 만든다.
  */
 export function blendModels(json: OpenMeteoResponse, models: readonly Model[] = MODELS): OpenMeteoResponse {
   const h = json.hourly as unknown as Record<string, Series | string[]>;
   const time = json.hourly.time;
   const start = time.findIndex((t) => t.slice(0, 13) >= kstNowHour());
   const from = start < 0 ? 0 : start;
+  const series = (v: string, m: Model) => (models.includes(m) ? (h[`${v}_${m}`] as Series | undefined) : undefined);
   const out: Record<string, Series | string[]> = { time };
   for (const v of HOURLY) {
-    const byModel = models.map((m) => h[`${v}_${m}`] as Series | undefined);
-    if (byModel.every((x) => !x)) {
+    if (models.every((m) => !h[`${v}_${m}`])) {
       if (h[v]) out[v] = h[v];
       continue;
     }
-    out[v] = time.map((_, i) => {
-      // 앞쪽은 기상청 → ECMWF → 기본, 그 뒤는 ECMWF → 기본 → 기상청
-      const order = i - from < KMA_HOURS ? [0, 1, 2] : [1, 2, 0];
-      for (const j of order) {
-        const x = byModel[j]?.[i];
+    const at = (m: Model, i: number) => series(v, m)?.[i] ?? null;
+    const first = (order: readonly Model[], i: number) => {
+      for (const m of order) {
+        const x = at(m, i);
         if (x != null) return x;
       }
       return null;
+    };
+    out[v] = time.map((_, i) => {
+      if (i - from < KMA_HOURS) return first(["kma_seamless", "ecmwf_ifs", "best_match"], i);
+      const fallback = () => first(["ecmwf_ifs", "best_match", "kma_seamless"], i);
+      if (MEDIAN_VARS.has(v)) return median(ENSEMBLE.map((m) => at(m, i))) ?? fallback();
+      if (v === "weather_code") {
+        const x = fallback();
+        if (x == null || x < 95) return x;
+        const agree = ENSEMBLE.filter((m) => (at(m, i) ?? 0) >= 95).length;
+        // 혼자 낸 뇌우는 소나기로 낮춘다
+        return agree >= THUNDER_AGREE ? x : 81;
+      }
+      return fallback();
     });
   }
   return { ...json, hourly: out as OpenMeteoResponse["hourly"] };
+}
+
+function median(xs: (number | null)[]): number | null {
+  const v = xs.filter((x): x is number => x != null).sort((a, b) => a - b);
+  if (!v.length) return null;
+  const m = v.length >> 1;
+  return v.length % 2 ? v[m] : Math.round(((v[m - 1] + v[m]) / 2) * 10) / 10;
 }
 
 function kstNowHour(): string {
@@ -176,7 +212,7 @@ export const openMeteoProvider: WeatherProvider = {
       .then((j) => {
         const json = blendModels(j);
         if (!json.hourly.temperature_2m?.some((x) => x != null)) throw new Error("모델 조합 응답에 기온이 없음");
-        return { json, source: "Open-Meteo (기상청·ECMWF)" };
+        return { json, source: "Open-Meteo (기상청·ECMWF·GFS·ICON)" };
       })
       .catch(() =>
         fetchJsonCached<OpenMeteoResponse>(buildOpenMeteoUrl(lat, lon, key, elevation), 1800).then((json) => ({ json, source: "Open-Meteo" })),

@@ -106,22 +106,137 @@ const STYLE_PROPS = [
   "object-fit", "object-position", "list-style-type", "fill", "stroke", "stroke-width", "-webkit-font-smoothing",
 ];
 
+/**
+ * 페이지 CSS 규칙을 모은다. 미디어 쿼리는 지금 화면 기준으로 풀어 넣는다
+ * (이미지 안에서는 미디어 쿼리가 캡처 틀 크기로 다시 계산되기 때문).
+ * @font-face는 fontCss가 글자에 맞는 조각만 따로 넣는다.
+ */
+function pageCss(): string {
+  const out: string[] = [];
+  const walk = (rules: CSSRuleList) => {
+    for (const r of Array.from(rules)) {
+      if (r instanceof CSSFontFaceRule) continue;
+      if (r instanceof CSSMediaRule) {
+        if (window.matchMedia(r.conditionText).matches) walk(r.cssRules);
+        continue;
+      }
+      if (r instanceof CSSSupportsRule) {
+        if (CSS.supports(r.conditionText)) walk(r.cssRules);
+        continue;
+      }
+      out.push(r.cssText);
+    }
+  };
+  for (const sheet of Array.from(document.styleSheets)) {
+    try {
+      walk(sheet.cssRules);
+    } catch {
+      // 읽을 수 없는 외부 스타일시트
+    }
+  }
+  return out.join("\n");
+}
+
+/**
+ * SVG 이미지 안의 웹폰트는 decode() 뒤에 따로 풀려서, 바로 그리면 글자가 빠진다.
+ * 작은 캔버스에 되풀이해 그려 보고 몇 번 연속으로 같아지면(글꼴이 다 들어오면) 끝낸다.
+ */
+async function fontsSettled(img: HTMLImageElement, w: number, h: number) {
+  const c = document.createElement("canvas");
+  c.width = Math.max(1, Math.round(w / 3));
+  c.height = Math.max(1, Math.round(h / 3));
+  const ctx = c.getContext("2d", { willReadFrequently: true });
+  if (!ctx) return;
+  const start = performance.now();
+  let last = -1;
+  let same = 0;
+  while (performance.now() - start < 2500) {
+    ctx.clearRect(0, 0, c.width, c.height);
+    ctx.drawImage(img, 0, 0, c.width, c.height);
+    const d = ctx.getImageData(0, 0, c.width, c.height).data;
+    let sum = 0;
+    for (let i = 0; i < d.length; i += 16) sum = (sum + d[i] * 31 + d[i + 3]) % 1_000_000_007;
+    same = sum === last ? same + 1 : 0;
+    last = sum;
+    if (same >= 2 && performance.now() - start > 150) return;
+    await new Promise((r) => setTimeout(r, 60));
+  }
+}
+
+/**
+ * 빠른 캡처: 노드를 그대로 복제하고 페이지 CSS를 통째로 넣은 SVG를 캔버스에 그린다.
+ * 노드마다 계산 스타일을 읽어 인라인으로 박는 방식(modern-screenshot)보다 휴대폰에서 몇 배 빠르다.
+ * 캡처 틀(.cf)은 클래스만으로 모양이 정해지므로 같은 CSS를 넣으면 화면과 같게 그려진다.
+ */
+async function fastCapture(el: HTMLElement, scale: number, fonts: string | undefined): Promise<Blob> {
+  const w = el.offsetWidth;
+  const h = el.offsetHeight;
+  const clone = el.cloneNode(true) as HTMLElement;
+  clone.querySelectorAll(".ad-slot, .no-capture").forEach((n) => n.remove());
+  // html·body에 걸린 글꼴·색 같은 상속 값은 감싸는 div에 옮긴다 (이미지 안에는 body가 없다)
+  const body = getComputedStyle(document.body);
+  const wrap = document.createElement("div");
+  wrap.setAttribute("xmlns", "http://www.w3.org/1999/xhtml");
+  for (const k of ["font-family", "color", "line-height", "word-break", "-webkit-font-smoothing"]) {
+    wrap.style.setProperty(k, body.getPropertyValue(k));
+  }
+  // 모바일 크롬의 글자 자동 확대가 이미지 안에서 켜지지 않게 한다
+  wrap.style.setProperty("-webkit-text-size-adjust", "100%");
+  wrap.style.setProperty("text-size-adjust", "100%");
+  wrap.style.width = `${w}px`;
+  wrap.style.height = `${h}px`;
+  wrap.appendChild(clone);
+  // font-display: swap이면 이미지가 웹폰트를 기다리지 않고 대체 글꼴로 그려진다
+  const faces = (fonts ?? "").replace(/font-display:\s*[\w-]+;?/g, "font-display: block;");
+  const css = `${faces}\n${pageCss()}`.replace(/]]>/g, "]] >");
+  const svg =
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">` +
+    `<style><![CDATA[${css}]]></style>` +
+    `<foreignObject width="100%" height="100%">${new XMLSerializer().serializeToString(wrap)}</foreignObject></svg>`;
+  const img = new Image();
+  img.decoding = "sync";
+  img.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+  await img.decode();
+  await fontsSettled(img, w, h);
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.floor(w * scale);
+  canvas.height = Math.floor(h * scale);
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("no canvas");
+  ctx.fillStyle = "#0E3B36";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+  const blob = await new Promise<Blob | null>((r) => canvas.toBlob(r, "image/png"));
+  if (!blob) throw new Error("capture failed");
+  return blob;
+}
+
+/** 예전 방식: 노드마다 계산 스타일을 복사한다. 빠른 캡처가 실패하면 쓴다 */
+async function slowCapture(el: HTMLElement, scale: number, cssText: string | undefined): Promise<Blob> {
+  const blob = await domToBlob(el, {
+    font: cssText ? { cssText } : undefined,
+    includeStyleProperties: STYLE_PROPS,
+    scale,
+    backgroundColor: "#0E3B36",
+    type: "image/png",
+    filter: (n) => !(n instanceof HTMLElement && (n.classList.contains("ad-slot") || n.classList.contains("no-capture"))),
+  });
+  if (!blob) throw new Error("capture failed");
+  return blob;
+}
+
 export async function captureElement(el: HTMLElement): Promise<Blob> {
   el.classList.add("capturing");
   try {
     await document.fonts?.ready;
     await nextFrame();
     const cssText = await fontCss(el).catch(() => undefined);
-    const blob = await domToBlob(el, {
-      font: cssText ? { cssText } : undefined,
-      includeStyleProperties: STYLE_PROPS,
-      scale: pickScale(el),
-      backgroundColor: "#0E3B36",
-      type: "image/png",
-      filter: (n) => !(n instanceof HTMLElement && (n.classList.contains("ad-slot") || n.classList.contains("no-capture"))),
-    });
-    if (!blob) throw new Error("capture failed");
-    return blob;
+    const scale = pickScale(el);
+    try {
+      return await fastCapture(el, scale, cssText);
+    } catch {
+      return await slowCapture(el, scale, cssText);
+    }
   } finally {
     el.classList.remove("capturing");
   }

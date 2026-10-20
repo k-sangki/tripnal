@@ -1,6 +1,6 @@
-# tripnal
+# tripnalc (트립날씨)
 
-캠핑·낚시·등산·사이클·여행을 위한 대한민국 16일 날씨 (3시간 간격). https://tripnal.com
+캠핑·낚시·등산·사이클·여행을 위한 대한민국 16일 날씨 (3시간 간격). https://tripnalc.com
 
 ## 기능
 
@@ -8,7 +8,7 @@
 - 오늘부터 최대 16일 예보를 표 하나에 담아 좌우로 넘겨 봄. 간격은 일·12h·6h·3h, 날짜 구분선·낮밤 색·바람 세기 색 표시: 기온, 체감온도, 강수(확률), 구름, 풍속·풍향, 돌풍, 일출·일몰, 지점 고도
 - 기간 선택: 오늘 / 3일 / 이번 주말 / 7일 / 16일 전체 / 직접 선택(16일 버튼에서 시작·끝을 차례로 누름)
 - 활동별 화면: 23개 활동을 7개 그룹으로 묶고, 그룹마다 주로 봐야 할 지표(파고·조석·낙뢰·노면·일교차·결빙·적설·가시거리·미세먼지·자외선·기류 등)를 표 맨 위로 올림. 좋음·나쁨 같은 판정은 하지 않음
-- 캡처 버튼: 선택한 모든 날을 화면 한 장(휴대폰은 기기 화면, PC는 모니터 비율)에 맞춘 이미지로 저장·공유. 우하단 `tripnal.com` 워터마크(휴대폰 공유창, 네이버 블로그·카페, 링크)
+- 캡처 버튼: 선택한 모든 날을 화면 한 장(휴대폰은 기기 화면, PC는 모니터 비율)에 맞춘 이미지로 저장·공유. 우하단 `tripnalc.com` 워터마크(휴대폰 공유창, 네이버 블로그·카페, 링크)
 - 장소별 검색 노출 페이지: `/weather/{slug}` (예: `/weather/jarasum-autocamp`), sitemap, 구조화 데이터
 - 애드센스 슬롯(예보 아래, PC 사이드, 하단). 캡처 이미지에는 광고가 들어가지 않음
 
@@ -35,7 +35,7 @@ npm test && npm run lint && npm run typecheck
 1. `npx wrangler login`
 2. 서버 키 등록: `npx wrangler secret put KAKAO_REST_API_KEY` (공개 후 `OPEN_METEO_API_KEY`도)
 3. 브라우저용 키(`NEXT_PUBLIC_*`)는 빌드 시점에 필요하므로 `.env.production`에 넣는다
-4. `npm run deploy` → `wrangler.jsonc`의 routes로 tripnal.com, www.tripnal.com에 연결
+4. `npm run deploy` → `wrangler.jsonc`의 routes로 tripnalc.com, www.tripnalc.com(그리고 예전 주소 tripnal.com·www, tripnalc.com으로 영구 이동)에 연결
 
 ## 데이터 출처·라이선스
 

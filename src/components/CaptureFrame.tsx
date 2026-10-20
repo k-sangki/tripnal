@@ -116,7 +116,7 @@ export function CaptureFrame({ frameRef, ...p }: Props) {
         </div>
         <footer className="cf-foot">
           <span>{p.source && `예보 제공: ${p.source}`}</span>
-          <span className="cap-url">tripnal.com</span>
+          <span className="cap-url">tripnalc.com</span>
         </footer>
       </div>
     </div>

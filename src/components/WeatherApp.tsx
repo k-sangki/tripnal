@@ -195,9 +195,9 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
 
   const days = useMemo(() => (forecast ? forecast.days.filter((d) => inPeriod(d.date, period)) : []), [forecast, period]);
 
-  const shareUrl = typeof window === "undefined" ? "https://tripnal.com" : window.location.href;
-  const shareTitle = place ? `${place.name} ${periodLabel(period)} ${leisure.label} 날씨` : "tripnal 날씨";
-  const fileName = `tripnal_${place?.name ?? "weather"}_${period.from}_${period.to}_${interval}.png`.replace(/\s+/g, "_");
+  const shareUrl = typeof window === "undefined" ? "https://tripnalc.com" : window.location.href;
+  const shareTitle = place ? `${place.name} ${periodLabel(period)} ${leisure.label} 날씨` : "tripnalc 날씨";
+  const fileName = `tripnalc_${place?.name ?? "weather"}_${period.from}_${period.to}_${interval}.png`.replace(/\s+/g, "_");
   const getTarget = useCallback(() => captureRef.current, []);
 
   return (

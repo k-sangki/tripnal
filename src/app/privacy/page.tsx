@@ -3,7 +3,7 @@ import { CONTACT_EMAIL, TextPage } from "@/components/TextPage";
 
 export const metadata: Metadata = {
   title: "개인정보처리방침",
-  description: "tripnal 개인정보처리방침",
+  description: "tripnalc 개인정보처리방침",
   alternates: { canonical: "/privacy" },
 };
 
@@ -12,7 +12,7 @@ export default function Privacy() {
     <TextPage title="개인정보처리방침">
       <p>시행일: 2026년 10월 19일</p>
       <p>
-        tripnal(이하 &quot;서비스&quot;)은 회원가입 없이 이용할 수 있으며, 이름·전화번호·이메일 같은 개인정보를 수집하지 않습니다. 서비스 이용 과정에서
+        tripnalc(이하 &quot;서비스&quot;)는 회원가입 없이 이용할 수 있으며, 이름·전화번호·이메일 같은 개인정보를 수집하지 않습니다. 서비스 이용 과정에서
         처리되는 정보와 처리 방법은 다음과 같습니다.
       </p>
 

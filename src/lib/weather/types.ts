@@ -47,6 +47,8 @@ export interface RawForecast {
   predictability?: Record<string, number>;
   /** 날짜별 지난 예보(약 하루 전) 대비 변화 */
   change?: Record<string, ForecastChange>;
+  /** 시각(time)의 기준 시간대: UTC와의 차이(분). 없으면 한국 시간 */
+  utcOffset?: number;
 }
 
 export interface ForecastChange {
@@ -72,7 +74,8 @@ export interface DatedTideEvent {
 export interface WeatherProvider {
   name: string;
   /** elevation: 산 정상 등 기온 보정에 쓸 고도(m). 없으면 지형 자료 값 */
-  fetchHourly(lat: number, lon: number, elevation?: number): Promise<RawForecast>;
+  /** utcOffset: 해외 장소의 현지 시간대(분). 없으면 한국 시간 */
+  fetchHourly(lat: number, lon: number, elevation?: number, utcOffset?: number): Promise<RawForecast>;
 }
 
 /** 3시간 묶음 한 칸 */
@@ -142,6 +145,8 @@ export interface Forecast {
   latitude: number;
   longitude: number;
   elevation: number | null;
+  /** 해외 장소: 날짜·시각의 기준인 현지 시간대(UTC와의 차이, 분). 없으면 한국 시간 */
+  utcOffset?: number;
   source: string;
   /** ISO, 생성 시각 */
   generatedAt: string;

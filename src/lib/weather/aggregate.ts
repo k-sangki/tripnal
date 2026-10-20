@@ -1,5 +1,5 @@
 import { getTimes } from "suncalc";
-import { kstHourMinute, kstNoon } from "@/lib/time";
+import { KST_OFFSET_MIN, kstHourMinute, kstNoon } from "@/lib/time";
 import type { DayForecast, Forecast, RawForecast, Slot, TideEvent } from "./types";
 
 type Num = number | null;
@@ -32,13 +32,13 @@ function mean(values: Num[]): Num {
   return xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : null;
 }
 
-/** 일출·일몰 "HH:MM" (한국 시간) */
-export function sunTimes(date: string, lat: number, lon: number) {
-  const t = getTimes(kstNoon(date), lat, lon);
+/** 일출·일몰 "HH:MM" (한국 시간, 해외는 offsetMin 현지 시간) */
+export function sunTimes(date: string, lat: number, lon: number, offsetMin = KST_OFFSET_MIN) {
+  const t = getTimes(kstNoon(date, offsetMin), lat, lon);
   const ok = (d: Date | null): d is Date => d != null && !Number.isNaN(d.getTime());
   return {
-    sunrise: ok(t.sunrise) ? kstHourMinute(t.sunrise) : null,
-    sunset: ok(t.sunset) ? kstHourMinute(t.sunset) : null,
+    sunrise: ok(t.sunrise) ? kstHourMinute(t.sunrise, offsetMin) : null,
+    sunset: ok(t.sunset) ? kstHourMinute(t.sunset, offsetMin) : null,
   };
 }
 
@@ -93,7 +93,7 @@ export function aggregate(raw: RawForecast, now: Date = new Date()): Forecast {
 
   const days: DayForecast[] = [];
   for (const [date, idx] of byDate) {
-    const sun = sunTimes(date, raw.latitude, raw.longitude);
+    const sun = sunTimes(date, raw.latitude, raw.longitude, raw.utcOffset);
     const riseMin = toMinutes(sun.sunrise) ?? 6 * 60;
     const setMin = toMinutes(sun.sunset) ?? 18 * 60;
 
@@ -157,6 +157,7 @@ export function aggregate(raw: RawForecast, now: Date = new Date()): Forecast {
     latitude: raw.latitude,
     longitude: raw.longitude,
     elevation: raw.elevation,
+    ...(raw.utcOffset != null && raw.utcOffset !== KST_OFFSET_MIN ? { utcOffset: raw.utcOffset } : {}),
     source: raw.source,
     generatedAt: now.toISOString(),
     days,

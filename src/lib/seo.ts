@@ -47,9 +47,10 @@ export function placeDescription(p: Place): string {
 }
 
 /** 검색엔진과 사용자에게 보여줄 요약 문장 (서버에서 렌더링) */
-export function placeSummary(p: Place, f: Forecast, now = new Date()): string[] {
+export function placeSummary(p: Pick<Place, "name" | "leisure">, f: Forecast, now = new Date()): string[] {
   const l = getLeisure(p.leisure);
-  const today = kstDate(now);
+  // 해외 여행지는 현지 날짜 기준
+  const today = kstDate(now, f.utcOffset);
   const lines: string[] = [];
   const wk = presetPeriod("weekend", today);
   const weekend = f.days.filter((d) => inPeriod(d.date, wk));

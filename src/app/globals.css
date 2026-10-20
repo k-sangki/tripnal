@@ -222,7 +222,27 @@ a {
 .cf:not(.narrow) .cap-slogan {
   font-size: 14px;
 }
+.top-nav {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-shrink: 0;
+}
+.nav-overseas {
+  font-family: "Black Han Sans", var(--font);
+  font-size: 18px;
+  letter-spacing: -0.01em;
+  color: #1f6e62;
+  white-space: nowrap;
+}
+/* 좁은 화면에서는 헤더 슬로건을 빼서 메뉴 두 개가 한 줄에 들어가게 (푸터·캡처에는 그대로) */
+@media (max-width: 389px) {
+  .topbar .slogan {
+    display: none;
+  }
+}
 .tagline {
+  white-space: nowrap;
   font-size: 13px;
   color: var(--muted);
 }

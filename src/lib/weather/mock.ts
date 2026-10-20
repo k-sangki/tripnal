@@ -2,8 +2,8 @@ import { addDays, kstDate } from "@/lib/time";
 import type { RawForecast, WeatherProvider } from "./types";
 
 /** 외부 API 없이 화면을 개발·테스트하기 위한 가짜 예보 (WEATHER_PROVIDER=mock). 값은 좌표와 시각으로 결정된다. */
-export function mockRaw(lat: number, lon: number, now: Date = new Date(), elevation?: number): RawForecast {
-  const start = kstDate(now);
+export function mockRaw(lat: number, lon: number, now: Date = new Date(), elevation?: number, utcOffset?: number): RawForecast {
+  const start = kstDate(now, utcOffset);
   const seed = Math.abs(Math.sin(lat * 12.9898 + lon * 78.233)) * 1000;
   const rnd = (i: number) => {
     const x = Math.sin(seed + i * 1.618) * 43758.5453;
@@ -101,7 +101,7 @@ export function mockRaw(lat: number, lon: number, now: Date = new Date(), elevat
 
 export const mockProvider: WeatherProvider = {
   name: "mock",
-  async fetchHourly(lat, lon, elevation) {
-    return mockRaw(lat, lon, new Date(), elevation);
+  async fetchHourly(lat, lon, elevation, utcOffset) {
+    return { ...mockRaw(lat, lon, new Date(), elevation, utcOffset), ...(utcOffset != null ? { utcOffset } : {}) };
   },
 };

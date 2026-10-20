@@ -12,12 +12,23 @@ import type { Forecast } from "@/lib/weather/types";
 /** 요청마다 그린다. 예보 자체는 엣지 캐시에 30분 보관된다(src/lib/cache.ts). */
 export const dynamic = "force-dynamic";
 
-export async function generateMetadata({ params }: PageProps<"/weather/[slug]">): Promise<Metadata> {
+/** 미리보기 이미지 주소. 공유 링크에 붙은 레저·기간을 그대로 넘긴다 */
+function ogImage(slug: string, sp: Record<string, string | string[] | undefined>) {
+  const q = new URLSearchParams({ slug });
+  for (const k of ["act", "from", "to"]) {
+    const v = sp[k];
+    if (typeof v === "string") q.set(k, v);
+  }
+  return `/api/og?${q}`;
+}
+
+export async function generateMetadata({ params, searchParams }: PageProps<"/weather/[slug]">): Promise<Metadata> {
   const place = getPlace((await params).slug);
   if (!place) return {};
   const title = placeTitle(place);
   const description = placeDescription(place);
   const url = `/weather/${place.slug}`;
+  const image = ogImage(place.slug, await searchParams);
   return {
     title,
     description,
@@ -29,7 +40,8 @@ export async function generateMetadata({ params }: PageProps<"/weather/[slug]">)
       ...(place.aliases ?? []).map((a) => `${a} 날씨`),
     ],
     alternates: { canonical: url },
-    openGraph: { title, description, url },
+    openGraph: { title, description, url, images: [{ url: image, width: 1200, height: 630 }] },
+    twitter: { card: "summary_large_image", title, description, images: [image] },
   };
 }
 

@@ -3,6 +3,25 @@
 import { useEffect, useRef, useState } from "react";
 import type { PlaceResult } from "@/lib/geo";
 import type { Place } from "@/lib/places";
+import { loadSdk, sdkSearch } from "@/lib/kakaoSdk";
+
+let sdkBroken = false;
+
+/** 카카오 SDK로 브라우저에서 바로 찾고, 안 되면(도메인 미등록 등) 서버 검색으로 대신한다 */
+async function searchRemote(term: string, signal: AbortSignal): Promise<PlaceResult[]> {
+  if (!sdkBroken) {
+    try {
+      // SDK가 막혀 응답이 없을 때 오래 기다리지 않게 3초까지만
+      return await Promise.race([sdkSearch(term), new Promise<never>((_, rej) => setTimeout(() => rej(new Error("timeout")), 3000))]);
+    } catch {
+      sdkBroken = true;
+    }
+  }
+  const res = await fetch(`/api/search?q=${encodeURIComponent(term)}`, { signal });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json.error);
+  return json.results;
+}
 
 const norm = (s: string) => s.replace(/\s+/g, "").toLowerCase();
 
@@ -45,6 +64,8 @@ export function SearchBar({ onSelect, onLocate, locating }: Props) {
   // 장소 목록은 검색창을 처음 누를 때 불러온다 (첫 화면 용량을 늘리지 않게)
   const loadPlaces = () => {
     if (!places.current) import("@/lib/places").then((m) => (places.current = m.PLACES));
+    // 카카오 SDK도 미리 불러 둔다 (첫 검색 대기 줄이기)
+    if (!sdkBroken) loadSdk().catch(() => (sdkBroken = true));
   };
 
   useEffect(() => {
@@ -59,10 +80,9 @@ export function SearchBar({ onSelect, onLocate, locating }: Props) {
     const ctrl = new AbortController();
     const t = setTimeout(async () => {
       try {
-        const res = await fetch(`/api/search?q=${encodeURIComponent(term)}`, { signal: ctrl.signal });
-        const json = await res.json();
-        if (!res.ok) throw new Error(json.error);
-        setResults(merge(places.current ? localMatches(places.current, term) : [], json.results));
+        const remote = await searchRemote(term, ctrl.signal);
+        if (ctrl.signal.aborted) return;
+        setResults(merge(places.current ? localMatches(places.current, term) : [], remote));
         setError(null);
         setOpen(true);
         setSearching(false);

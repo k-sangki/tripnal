@@ -1,6 +1,6 @@
 name: Collect
 
-# ECMWF·GFS 공개 예보에서 한국 영역을 잘라 R2(tripnal-data)에 올린다.
+# ECMWF·GFS·ICON 공개 예보에서 한국 영역을 잘라 R2(tripnal-data)에 올린다.
 # 00·12 UTC run의 360시간 자료가 다 올라오는 시각(약 8시간 뒤)에 맞춰 돈다.
 # 필요한 값: CLOUDFLARE_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY (Settings > Secrets and variables > Actions)
 on:
@@ -56,3 +56,24 @@ jobs:
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
           R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
         run: python collector/upload.py out gfs
+
+  icon:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: collector/requirements.txt
+      - run: pip install -r collector/requirements.txt
+      # DWD는 최근 run만 남겨 두므로 항상 최신 run을 받는다
+      - name: 받기·자르기
+        run: python collector/icon.py --out out
+      - name: R2에 올리기
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+        run: python collector/upload.py out icon

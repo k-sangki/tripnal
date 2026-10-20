@@ -19,6 +19,7 @@ import { LeisureTabs } from "./LeisureTabs";
 import { PeriodPicker } from "./PeriodPicker";
 import { SearchBar } from "./SearchBar";
 import { WarningTicker } from "./WarningTicker";
+import { WelcomePopup } from "./WelcomePopup";
 
 export interface AppPlace {
   name: string;
@@ -339,6 +340,8 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
           source={forecast.source}
         />
       )}
+      {/* 해외 여행지는 알림이 없으므로 안내도 띄우지 않는다 */}
+      {!overseas && !capturing && <WelcomePopup />}
       {capturing && <CaptureSheet target={getTarget} fileName={fileName} shareTitle={shareTitle} shareUrl={shareUrl} onClose={() => setCapturing(false)} />}
     </div>
   );

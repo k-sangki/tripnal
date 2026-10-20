@@ -18,12 +18,11 @@ jobs:
       - run: |
           set +e
           {
-          python3 - <<'PY'
-          import json, urllib.request
-          for name, lat, lon in [("seoul",37.5665,126.978),("jeju",33.51,126.52),("seorak",38.119,128.465),("busan",35.15,129.11),("gwangju",35.16,126.85)]:
-              f=json.load(urllib.request.urlopen(urllib.request.Request(f"https://tripnalc.com/api/forecast?lat={lat}&lon={lon}&v=pd", headers={"User-Agent":"diag"}), timeout=60))
-              print(name, [d.get("predictability") for d in f["days"]], [round(d["precipSum"]) for d in f["days"]])
-          PY
+          curl -s -o og.png -w "og %{http_code} %{content_type} %{size_download} %{time_total}\n" -A "facebookexternalhit/1.1" "https://tripnalc.com/api/og?lat=37.5665&lon=126.978&name=%EC%84%9C%EC%9A%B8&act=camping&from=2026-10-24&to=2026-10-26"
+          curl -s -o /dev/null -w "og-slug %{http_code} %{size_download} %{time_total}\n" "https://tripnalc.com/api/og?slug=jarasum-autocamp"
+          curl -s -A "kakaotalk-scrap/1.0" "https://tripnalc.com/?lat=37.5665&lon=126.978&name=%EC%84%9C%EC%9A%B8&act=camping&from=2026-10-24&to=2026-10-26" | grep -oE '<meta property="og:(title|description|image)"[^>]*>'
+          base64 -w0 og.png > og.b64; echo; echo b64 $(wc -c < og.b64)
+          cat og.b64
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com
           git add -A diag-out.txt; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026

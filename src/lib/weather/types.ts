@@ -45,6 +45,17 @@ export interface RawForecast {
   tideEvents?: DatedTideEvent[];
   /** 날짜("YYYY-MM-DD")별 예측 가능성 % (모델·앙상블이 얼마나 비슷하게 내다보는지) */
   predictability?: Record<string, number>;
+  /** 날짜별 지난 예보(약 하루 전) 대비 변화 */
+  change?: Record<string, ForecastChange>;
+}
+
+export interface ForecastChange {
+  /** 최고·최저 기온 차이 °C */
+  tMax: number;
+  tMin: number;
+  /** 하루 강수 합 차이 mm, 지난 예보의 강수 합 mm */
+  precip: number;
+  precipBefore: number;
 }
 
 export interface DatedTideEvent {
@@ -120,6 +131,8 @@ export interface DayForecast {
   tides: TideEvent[];
   /** 예측 가능성 % (10 단위). 계산할 수 없는 provider는 null */
   predictability?: number | null;
+  /** 지난 예보 대비 변화. 비교할 예보가 없으면 null */
+  change?: ForecastChange | null;
 }
 
 export interface Forecast {

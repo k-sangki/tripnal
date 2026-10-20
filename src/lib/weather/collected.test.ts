@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { apparent, corners, expand, hourKeys, loadAirQuality, loadCollected, loadProbability, loadTide, loadWave, pointKey, predictability, uvIndex, weatherCode, type DataBucket, type PointFile } from "./collected";
+import { apparent, corners, expand, hourKeys, loadAirQuality, loadCollected, loadProbability, loadTide, loadWave, pointKey, predictability, previousRun, uvIndex, weatherCode, type DataBucket, type PointFile } from "./collected";
 
 // 2026-10-20 00:00 KST = 2026-10-19 15:00 UTC
 const NOW = new Date("2026-10-20T03:00:00+09:00");
@@ -225,5 +225,13 @@ describe("직접 수집 예보", () => {
     expect(agree["2026-11-04"]).toBeLessThan(60);
     const split = predictability([model(6, 0), model(10, 0.5), model(13, 0)], keys, Array(n).fill(50));
     expect(split["2026-10-20"]).toBeLessThanOrEqual(40);
+  });
+
+  it("비교할 지난 예보는 약 하루 전 run", () => {
+    expect(previousRun({ run: "2026102000", runs: ["2026102000", "2026101912", "2026101900"] })).toBe("2026101900");
+    expect(previousRun({ run: "2026102000", runs: ["2026102000", "2026101912"] })).toBe("2026101912");
+    // 6시간 전 run만 있으면 비교하지 않는다
+    expect(previousRun({ run: "2026102006", runs: ["2026102006", "2026102000"] })).toBeNull();
+    expect(previousRun({ run: "2026102000" })).toBeNull();
   });
 });

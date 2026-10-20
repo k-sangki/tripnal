@@ -1623,3 +1623,37 @@ th.dcol .pd {
   color: var(--muted);
   white-space: nowrap;
 }
+
+/* ---------- 예보 변화 ---------- */
+.chg {
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.chg-wet {
+  color: #1c64d6;
+}
+.chg-dry {
+  color: #b36b00;
+}
+.chg-warm {
+  color: #d9480f;
+}
+.chg-cold {
+  color: #1971c2;
+}
+.chg-same {
+  color: var(--muted);
+  font-weight: 500;
+}
+.r-chg td {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+.r-chg .lbl small {
+  display: block;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--muted);
+  white-space: nowrap;
+}

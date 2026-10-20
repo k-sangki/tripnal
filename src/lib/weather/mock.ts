@@ -90,6 +90,10 @@ export function mockRaw(lat: number, lon: number, now: Date = new Date(), elevat
       pm10,
       pm25,
     },
+    // 지난 예보 대비 변화 (화면 확인용)
+    change: Object.fromEntries(
+      [...new Set(time.map((t) => t.slice(0, 10)))].slice(0, 15).map((d, k) => [d, { tMax: [0, 3, -1, 0, -2.5][k % 5], tMin: 0, precip: [0, 0, 8, -6, 0][k % 5], precipBefore: [0, 0, 0, 6, 0][k % 5] }]),
+    ),
     // 날이 멀수록 낮아지는 예측 가능성 (화면 확인용)
     predictability: Object.fromEntries([...new Set(time.map((t) => t.slice(0, 10)))].map((d, k) => [d, Math.max(30, 90 - Math.floor(k / 2) * 10)])),
   };

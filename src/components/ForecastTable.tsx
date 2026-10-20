@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { METRIC_LABEL, type Leisure, type MetricKey } from "@/lib/leisure";
+import { changeText } from "@/lib/change";
 import { muldae } from "@/lib/muldae";
 import { daySummary, isPast, regroup, slotHead, slotHours, type Interval, stepHours } from "@/lib/interval";
 import { weekday, weekdayKo } from "@/lib/time";
@@ -40,6 +41,18 @@ function Predict({ p, label }: { p?: number | null; label?: boolean }) {
     <span className={`pd pd-${lv}`} title="예측 가능성: 여러 예보가 이날 날씨를 얼마나 비슷하게 내다보는지">
       <span className="pd-v">{p}%</span>
       {label && <span className="pd-l">예측 가능성</span>}
+    </span>
+  );
+}
+
+/** 지난 예보 대비 가장 큰 변화 한 가지 */
+function Change({ d, prefix }: { d: DayForecast; prefix?: string }) {
+  const c = changeText(d.change);
+  if (!c) return null;
+  return (
+    <span className={`chg ${c.cls}`} title="약 하루 전 예보와 비교한 변화">
+      {prefix}
+      {c.text}
     </span>
   );
 }
@@ -288,6 +301,11 @@ export function ForecastTable({ days, leisure, interval, today, nowHour, capture
                           {(open || sunEm("sunrise")) && <span className="sun-t">🌅{d.sunrise ?? "-"}</span>}
                           {(open || sunEm("sunset")) && <span className="sun-t">🌇{d.sunset ?? "-"}</span>}
                         </div>
+                        {d.change && (
+                          <div className="dh-l2">
+                            <Change d={d} prefix="지난 예보보다 " />
+                          </div>
+                        )}
                         {showTides && (
                           <div className="dh-l2 tides">
                             <TideText d={d} />
@@ -486,6 +504,19 @@ function DailyTable({
             </td>
           ))}
         </tr>
+        {days.some((d) => d.change) && (
+          <tr className="r-chg">
+            <th scope="row" className="lbl">
+              <span>예보 변화</span>
+              <small>어제 대비</small>
+            </th>
+            {cols.map(({ d }) => (
+              <td key={d.date} className="ds">
+                <Change d={d} />
+              </td>
+            ))}
+          </tr>
+        )}
         {rows.flatMap((k) => metricRow(k, em(k)))}
         {(["sunrise", "sunset"] as const).filter(sunEm).map(sunRow)}
       </tbody>

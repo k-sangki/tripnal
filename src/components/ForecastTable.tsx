@@ -32,6 +32,18 @@ interface Col {
   mark?: "max" | "min";
 }
 
+/** 예측 가능성: 80% 이상 초록, 60~70% 노랑, 그 아래 주황 */
+function Predict({ p, label }: { p?: number | null; label?: boolean }) {
+  if (p == null) return null;
+  const lv = p >= 80 ? "hi" : p >= 60 ? "mid" : "lo";
+  return (
+    <span className={`pd pd-${lv}`} title="예측 가능성: 여러 예보가 이날 날씨를 얼마나 비슷하게 내다보는지">
+      <span className="pd-v">{p}%</span>
+      {label && <span className="pd-l">예측 가능성</span>}
+    </span>
+  );
+}
+
 function wdClass(date: string) {
   const w = weekday(date);
   return w === 6 ? "d-sat" : w === 0 ? "d-sun" : undefined;
@@ -270,6 +282,7 @@ export function ForecastTable({ days, leisure, interval, today, nowHour, capture
                           <span className="hl">
                             <span className="v-hi">{fmt(d.tMax, "°")}</span>/<span className="v-lo">{fmt(d.tMin, "°")}</span>
                           </span>
+                          <Predict p={d.predictability} label />
                         </div>
                         <div className="dh-l2">
                           {(open || sunEm("sunrise")) && <span className="sun-t">🌅{d.sunrise ?? "-"}</span>}
@@ -451,11 +464,13 @@ function DailyTable({
         <tr className="ft-time">
           <th className="lbl">
             <span>날짜</span>
+            {days.some((d) => d.predictability != null) && <small className="pd-head">예측</small>}
           </th>
           {cols.map(({ d }) => (
             <th key={d.date} className={`dcol ds${d.date === today ? " now" : ""}`}>
               <b className={d.date === today ? undefined : wdClass(d.date)}>{d.date === today ? "오늘" : dateText(d.date)}</b>
               <small>{weekdayKo(d.date)}</small>
+              <Predict p={d.predictability} />
             </th>
           ))}
         </tr>

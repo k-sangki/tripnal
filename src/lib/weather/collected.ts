@@ -283,6 +283,57 @@ export function blendCollected(models: ModelHourly[], keys: string[], lat: numbe
   };
 }
 
+const present = (xs: Num[]) => xs.filter((x): x is number => x != null && Number.isFinite(x));
+const mean = (xs: number[]) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : null);
+
+/**
+ * 날짜별 예측 가능성(%). 실제 적중률이 아니라 예보끼리 얼마나 같은 날씨를 내다보는지다.
+ * - 세 모델의 기온·풍속 차이, 비가 오는지에 대한 엇갈림, 비 양의 차이
+ * - GEFS 31개 앙상블의 강수 확률이 50%에 가까울수록(반반으로 갈릴수록) 낮춘다
+ * - 모델이 하나뿐인 먼 날은 비교할 수 없으므로, 날이 멀수록 상한을 낮춘다
+ * 결과는 30~90을 10 단위로 둔다.
+ */
+export function predictability(models: ModelHourly[], keys: string[], prob: Num[] | null): Record<string, number> {
+  const byDate = new Map<string, number[]>();
+  keys.forEach((k, i) => {
+    const d = k.slice(0, 10);
+    if (!byDate.has(d)) byDate.set(d, []);
+    byDate.get(d)!.push(i);
+  });
+  const out: Record<string, number> = {};
+  [...byDate.entries()].forEach(([date, idx], day) => {
+    const speed = (m: ModelHourly, i: number) => (m.u[i] == null || m.v[i] == null ? null : Math.hypot(m.u[i]!, m.v[i]!));
+    const spread = (pick: (m: ModelHourly, i: number) => Num) =>
+      mean(
+        idx.flatMap((i) => {
+          const xs = present(models.map((m) => pick(m, i)));
+          return xs.length >= 2 ? [Math.max(...xs) - Math.min(...xs)] : [];
+        }),
+      );
+    const temp = spread((m, i) => m.temp[i]);
+    const wind = spread(speed);
+    // 하루 강수 합이 모델마다 있는 경우만 (뒤쪽 날은 모델이 줄어든다)
+    const totals = models.flatMap((m) => {
+      const xs = idx.map((i) => m.precip[i]);
+      return xs.every((x) => x == null) ? [] : [present(xs).reduce((a, b) => a + b, 0)];
+    });
+    const n = Math.min(totals.length, temp == null ? 1 : 3);
+    const wet = totals.filter((t) => t >= 1).length;
+    const split = totals.length >= 2 && wet > 0 && wet < totals.length ? 1 : 0;
+    const amount = totals.length >= 2 && wet === totals.length ? (Math.max(...totals) - Math.min(...totals)) / (Math.max(...totals) + 5) : 0;
+    // 앙상블이 반반으로 갈린 정도 0~1
+    const ps = prob ? present(idx.map((i) => prob[i])) : [];
+    const ens = ps.length ? mean(ps.map((p) => 1 - Math.abs(p / 50 - 1)))! : null;
+    let score = 100 - 6 * (temp ?? 0) - 2.5 * (wind ?? 0) - 18 * split - 15 * amount - 30 * (ens ?? 0.3);
+    // 비교할 모델이 하나뿐이면 차이를 알 수 없으니 깎는다
+    if (n < 2) score -= 10;
+    const cap = 92 - 3 * day;
+    const v = Math.round(Math.min(score, cap) / 10) * 10;
+    out[date] = Math.max(30, Math.min(90, v));
+  });
+  return out;
+}
+
 /** R2 버킷에서 필요한 최소 기능 */
 export interface DataBucket {
   get(
@@ -561,12 +612,8 @@ export async function loadCollected(b: DataBucket, lat: number, lon: number, ele
   // 지점 고도를 모르면 지형 고도 격자에서, 그것도 없으면 모델 지형 고도를 쓴다 (보정 없음)
   const target = elevation ?? (await dem);
   const gridElev = median(ok.map((m) => combineCorners(m.points, keys.slice(0, 1), null).elevation));
-  const hourly = blendCollected(
-    ok.map((m) => combineCorners(m.points, keys, target)),
-    keys,
-    lat,
-    lon,
-  );
+  const perModel = ok.map((m) => combineCorners(m.points, keys, target));
+  const hourly = blendCollected(perModel, keys, lat, lon);
   const w = await wave;
   if (w) Object.assign(hourly, w);
   const tide = await loadTide(b, lat, lon, keys, w != null).catch(() => null);
@@ -583,6 +630,7 @@ export async function loadCollected(b: DataBucket, lat: number, lon: number, ele
     hourly,
     source: ok.map((m) => names[m.model]).join("·"),
     ...(tide ? { tideEvents: tide.tideEvents } : {}),
+    predictability: predictability(perModel, keys, p),
   };
 }
 

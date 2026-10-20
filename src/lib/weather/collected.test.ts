@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { apparent, corners, expand, hourKeys, loadAirQuality, loadCollected, loadProbability, loadTide, loadWave, pointKey, uvIndex, weatherCode, type DataBucket, type PointFile } from "./collected";
+import { apparent, corners, expand, hourKeys, loadAirQuality, loadCollected, loadProbability, loadTide, loadWave, pointKey, predictability, uvIndex, weatherCode, type DataBucket, type PointFile } from "./collected";
 
 // 2026-10-20 00:00 KST = 2026-10-19 15:00 UTC
 const NOW = new Date("2026-10-20T03:00:00+09:00");
@@ -200,5 +200,30 @@ describe("직접 수집 예보", () => {
     const q = await loadAirQuality(bucket, corners(37.5, 127), hourKeys(NOW).slice(0, 5));
     expect(q?.pm10).toEqual([30, 40, 50, 60, null]);
     expect(q?.pm25).toEqual([10, null, null, null, null]);
+  });
+
+  it("예측 가능성은 모델이 비슷하면 높고, 엇갈리면 낮다", () => {
+    const keys = hourKeys(NOW);
+    const n = keys.length;
+    const model = (temp: number, precip: number) => ({
+      temp: Array(n).fill(temp),
+      dew: Array(n).fill(0),
+      u: Array(n).fill(1),
+      v: Array(n).fill(1),
+      gust: Array(n).fill(3),
+      precip: Array(n).fill(precip),
+      snow: Array(n).fill(0),
+      cloud: Array(n).fill(0),
+      cape: Array(n).fill(0),
+      vis: Array(n).fill(null),
+      elevation: 0,
+    });
+    const dry = Array(n).fill(0);
+    const agree = predictability([model(10, 0), model(10.3, 0), model(9.8, 0)], keys, dry);
+    expect(agree["2026-10-20"]).toBe(90);
+    // 먼 날은 상한이 낮아진다
+    expect(agree["2026-11-04"]).toBeLessThan(60);
+    const split = predictability([model(6, 0), model(10, 0.5), model(13, 0)], keys, Array(n).fill(50));
+    expect(split["2026-10-20"]).toBeLessThanOrEqual(40);
   });
 });

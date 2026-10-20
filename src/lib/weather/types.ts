@@ -43,6 +43,8 @@ export interface RawForecast {
   source: string;
   /** 관측소 예보 만조·간조. 있으면 해수면 자료에서 찾지 않고 이 시각을 쓴다 */
   tideEvents?: DatedTideEvent[];
+  /** 날짜("YYYY-MM-DD")별 예측 가능성 % (모델·앙상블이 얼마나 비슷하게 내다보는지) */
+  predictability?: Record<string, number>;
 }
 
 export interface DatedTideEvent {
@@ -116,6 +118,8 @@ export interface DayForecast {
   sunset: string | null;
   /** 만조·간조 (해수면 자료가 있는 바다 근처만) */
   tides: TideEvent[];
+  /** 예측 가능성 % (10 단위). 계산할 수 없는 provider는 null */
+  predictability?: number | null;
 }
 
 export interface Forecast {

@@ -58,9 +58,9 @@ export default async function PlacePage({ params }: PageProps<"/weather/[slug]">
       {
         "@type": "BreadcrumbList",
         itemListElement: [
-          { "@type": "ListItem", position: 1, name: "tripnal", item: "https://tripnal.com/" },
-          { "@type": "ListItem", position: 2, name: "장소별 날씨", item: "https://tripnal.com/weather" },
-          { "@type": "ListItem", position: 3, name: `${place.name} 날씨`, item: `https://tripnal.com/weather/${place.slug}` },
+          { "@type": "ListItem", position: 1, name: "tripnalc", item: "https://tripnalc.com/" },
+          { "@type": "ListItem", position: 2, name: "장소별 날씨", item: "https://tripnalc.com/weather" },
+          { "@type": "ListItem", position: 3, name: `${place.name} 날씨`, item: `https://tripnalc.com/weather/${place.slug}` },
         ],
       },
     ],

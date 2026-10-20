@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { PLACES } from "@/lib/places";
 
-const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://tripnal.com";
+const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://tripnalc.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();

@@ -107,7 +107,7 @@ export function InstallButton() {
               className="sheet install-guide"
               onClick={(e) => e.stopPropagation()}
             >
-              <b>홈 화면에 tripnal 추가하기</b>
+              <b>홈 화면에 tripnalc 추가하기</b>
               <ol>
                 <li>
                   화면 아래(또는 위)의{" "}

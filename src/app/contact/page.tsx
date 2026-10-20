@@ -3,14 +3,14 @@ import { CONTACT_EMAIL, TextPage } from "@/components/TextPage";
 
 export const metadata: Metadata = {
   title: "문의하기",
-  description: "tripnal 서비스 문의, 오류 제보, 장소 추가 요청, 광고·제휴 문의 안내.",
+  description: "tripnalc 서비스 문의, 오류 제보, 장소 추가 요청, 광고·제휴 문의 안내.",
   alternates: { canonical: "/contact" },
 };
 
 export default function Contact() {
   return (
     <TextPage title="문의하기">
-      <p>tripnal에 대한 의견을 아래 이메일로 보내주세요. 보통 영업일 기준 3일 안에 답변드립니다.</p>
+      <p>tripnalc에 대한 의견을 아래 이메일로 보내주세요. 보통 영업일 기준 3일 안에 답변드립니다.</p>
       <p style={{ fontSize: 18, fontWeight: 700 }}>
         <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
       </p>

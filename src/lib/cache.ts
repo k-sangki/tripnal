@@ -16,7 +16,7 @@ export async function fetchJsonCached<T>(url: string, ttlSeconds: number, init?:
   const cache = edgeCache();
   // 키는 우리 도메인 아래의 가상 주소로 만들고, 비밀값(apikey)은 빼고 쓴다
   const clean = url.replace(/([?&])apikey=[^&]*&?/, "$1");
-  const key = new Request(`https://tripnal.com/__cache/${encodeURIComponent(clean)}`);
+  const key = new Request(`https://tripnalc.com/__cache/${encodeURIComponent(clean)}`);
   if (cache) {
     const hit = await cache.match(key);
     if (hit) return (await hit.json()) as T;

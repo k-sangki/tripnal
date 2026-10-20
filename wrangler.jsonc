@@ -15,11 +15,13 @@
     }
   ],
   "routes": [
+    { "pattern": "tripnalc.com", "custom_domain": true },
+    { "pattern": "www.tripnalc.com", "custom_domain": true },
     { "pattern": "tripnal.com", "custom_domain": true },
     { "pattern": "www.tripnal.com", "custom_domain": true }
   ],
   "vars": {
     "WEATHER_PROVIDER": "open-meteo",
-    "NEXT_PUBLIC_SITE_URL": "https://tripnal.com"
+    "NEXT_PUBLIC_SITE_URL": "https://tripnalc.com"
   }
 }

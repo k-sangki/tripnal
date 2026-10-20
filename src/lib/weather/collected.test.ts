@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { apparent, corners, expand, hourKeys, loadCollected, pointKey, uvIndex, weatherCode, type DataBucket, type PointFile } from "./collected";
+import { apparent, corners, expand, hourKeys, loadCollected, loadWave, pointKey, uvIndex, weatherCode, type DataBucket, type PointFile } from "./collected";
 
 // 2026-10-20 00:00 KST = 2026-10-19 15:00 UTC
 const NOW = new Date("2026-10-20T03:00:00+09:00");
@@ -101,5 +101,24 @@ describe("직접 수집 예보", () => {
     expect(auto.hourly.temperature[0]).toBe(8.8);
     // 북위 37.6° = 39.5에서 1.9° 아래 → 456행, 동경 127.1° → 744열
     expect(ranges).toEqual([(456 * 1920 + 744) * 2]);
+  });
+
+  it("파고는 바다인 격자점만 섞고, 모두 육지면 없다", async () => {
+    const cs = corners(36.3, 126.4);
+    const files: Record<string, unknown> = {
+      "wave/latest.json": { run: "2026101915" },
+      "wave/2026101915/sea.json": ["36.25_126.25"],
+      "wave/2026101915/36.25_126.25.json": { run: "2026101915", step: [0, 3], wave: [1, 2], windwave: [0.5, 0.5], period: [5, 5] },
+    };
+    const bucket: DataBucket = {
+      async get(key) {
+        const v = files[key];
+        return v ? { json: async <T,>() => v as T, arrayBuffer: async () => new ArrayBuffer(0) } : null;
+      },
+    };
+    const keys = hourKeys(NOW).slice(0, 4);
+    const w = await loadWave(bucket, cs, keys);
+    expect(w?.waveHeight).toEqual([1, 1.3, 1.7, 2]);
+    expect(await loadWave(bucket, corners(37.6, 127.1), keys)).toBeNull();
   });
 });

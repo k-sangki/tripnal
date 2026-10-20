@@ -68,7 +68,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(SITE_LD) }} />
       <WeatherApp initialPlace={place} initialLeisure={one(sp.act)} initialFrom={one(sp.from)} initialTo={one(sp.to)} initialInterval={one(sp.int)} />
       <section className="card seo-text" style={{ marginTop: 16 }}>
-        <h2>놀러갈 땐, 트립날씨: 캠핑날씨·여행날씨·이번주 날씨를 16일까지</h2>
+        <h2>놀러 갈 땐, 트립날씨: 캠핑날씨·여행날씨·이번주 날씨를 16일까지</h2>
         <p>
           트립날씨(tripnalc)는 캠핑, 등산, 낚시, 자전거, 여행처럼 밖에서 노는 날을 위한 날씨입니다. 이번주 날씨와 주말 날씨는 물론 16일 뒤까지 3시간 간격으로
           기온·비·바람·돌풍을 보여 주고, 바다는 물때표(만조·간조)와 파고, 산은 정상 고도로 보정한 기온을 함께 보여 줍니다.

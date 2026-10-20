@@ -13,7 +13,7 @@ function beacon(token: string) {
   return `(function(){try{var q=new URLSearchParams(location.search).get("me");if(q==="1")localStorage.setItem("tripnal-me","1");if(q==="0")localStorage.removeItem("tripnal-me");if(localStorage.getItem("tripnal-me"))return}catch(e){}var s=document.createElement("script");s.defer=true;s.src="https://static.cloudflareinsights.com/beacon.min.js";s.setAttribute("data-cf-beacon",${JSON.stringify(JSON.stringify({ token }))});document.body.appendChild(s)})()`;
 }
 
-const DESCRIPTION = "놀러갈 땐, 트립날씨. 캠핑날씨·여행날씨·등산·낚시 물때표까지, 이번주 날씨와 주말 날씨를 16일까지 3시간 간격으로. 비·바람·돌풍을 한눈에 보고 캡처해 공유하세요.";
+const DESCRIPTION = "놀러 갈 땐, 트립날씨. 캠핑날씨·여행날씨·등산·낚시 물때표까지, 이번주 날씨와 주말 날씨를 16일까지 3시간 간격으로. 비·바람·돌풍을 한눈에 보고 캡처해 공유하세요.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

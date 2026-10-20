@@ -18,14 +18,13 @@ jobs:
       - run: |
           set +e
           {
-          pip install -q boto3
-          time python3 collector/tide.py --out out
-          ls out/tide | wc -l
-          head -c 600 out/tide/DT_0001.json; echo
-          cat out/tide/stations.json | head -c 300; echo
-          python3 collector/upload.py out tide
-          echo SECOND RUN
-          time python3 collector/tide.py --out out2
+          pip install -q -r collector/requirements.txt
+          time python3 collector/cams.py --out out
+          ls out/cams/*/ | wc -l
+          cat out/cams/latest.json; echo
+          cat out/cams/*/37.50_127.00.json; echo
+          cat out/cams/*/33.50_126.50.json | head -c 400; echo
+          python3 collector/upload.py out cams
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com
           git add -A diag-out.txt; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026

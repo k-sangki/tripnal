@@ -795,7 +795,7 @@ a {
   display: flex;
   padding: 3px;
   border-radius: 12px;
-  background: var(--chip);
+  background: #e3efec;
 }
 .seg button {
   flex: 1 1 0;
@@ -803,12 +803,12 @@ a {
   border-radius: 9px;
   font-size: 14px;
   font-weight: 700;
-  color: var(--muted);
+  color: var(--pine-2);
 }
 .seg button[aria-pressed="true"] {
-  background: var(--card);
-  color: var(--pine);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  background: var(--pine);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(14, 59, 54, 0.25);
 }
 
 /* ---------- 적합도 점 ---------- */

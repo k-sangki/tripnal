@@ -13,9 +13,9 @@ export default function OverseasIndex() {
   return (
     <div className="shell">
       <SiteHeader />
-      <h1 style={{ fontSize: 24, letterSpacing: "-0.03em" }}>해외여행 날씨 16일</h1>
+      <h1 style={{ fontSize: 24, letterSpacing: "-0.03em" }}>해외 {DESTINATIONS.length}곳의 월별·실시간 16일 날씨</h1>
       <p className="muted" style={{ margin: "4px 0 12px" }}>
-        {DESTINATIONS.length}곳의 여행지 중 하나를 고르면 현지 시간으로 16일까지 날씨를 보여드립니다.
+        여행지를 고르면 현지 시간으로 16일까지 날씨를 보여드립니다.
       </p>
       <OverseasList destinations={DESTINATIONS} groups={DESTINATION_GROUPS} />
       <SiteFooter />

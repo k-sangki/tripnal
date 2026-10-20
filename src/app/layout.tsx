@@ -7,6 +7,11 @@ const ADSENSE = process.env.NEXT_PUBLIC_ADSENSE_CLIENT?.trim();
 // Cloudflare Web Analytics (쿠키 없는 방문 통계)
 const CF_BEACON = process.env.NEXT_PUBLIC_CF_BEACON_TOKEN?.trim();
 
+// 운영자 기기는 통계에서 뺀다: 주소 뒤에 ?me=1 로 한 번 열면 그 브라우저는 계속 빠지고, ?me=0 으로 되돌린다
+function beacon(token: string) {
+  return `(function(){try{var q=new URLSearchParams(location.search).get("me");if(q==="1")localStorage.setItem("tripnal-me","1");if(q==="0")localStorage.removeItem("tripnal-me");if(localStorage.getItem("tripnal-me"))return}catch(e){}var s=document.createElement("script");s.defer=true;s.src="https://static.cloudflareinsights.com/beacon.min.js";s.setAttribute("data-cf-beacon",${JSON.stringify(JSON.stringify({ token }))});document.body.appendChild(s)})()`;
+}
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
@@ -49,7 +54,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body>
         {children}
         {CF_BEACON && (
-          <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon={JSON.stringify({ token: CF_BEACON })} />
+          <script dangerouslySetInnerHTML={{ __html: beacon(CF_BEACON) }} />
         )}
       </body>
     </html>

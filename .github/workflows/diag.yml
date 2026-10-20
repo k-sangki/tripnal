@@ -18,35 +18,24 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install -r collector/requirements.txt
       - run: |
           set +e
           {
-          cd collector
-          python collect.py --steps 0,3,150 --out ../o 2>&1 | tail -3
-          python gfs.py --steps 0,3 --out ../o 2>&1 | tail -3
-          python icon.py --steps 0,3 --out ../o 2>&1 | tail -3
-          python gefs.py --steps 6,12 --out ../o 2>&1 | tail -3
-          cd ..
+          for u in /overseas /overseas/tokyo /overseas/paris /overseas/honolulu /overseas/fukuoka "/api/og?slug=paris"; do curl -s -o p.out -w "$u %{http_code} %{content_type} " "https://tripnalc.com$u"; grep -ao '<title>[^<]*' p.out | head -1; echo; done
+          curl -s https://tripnalc.com/ | grep -o "해외 날씨" | head -1
+          curl -s https://tripnalc.com/sitemap.xml | grep -c "<loc>"
           python3 - <<'PY'
-          import json, os, glob, math
-          for m in ["ecmwf","gfs","icon","gefs"]:
-              run = json.load(open(f"o/{m}/latest.json"))["run"]
-              files = glob.glob(f"o/{m}/{run}/*.json")
-              print(m, run, len(files))
-          def show(lat, lon, name):
-              y0, x0 = math.floor(lat/0.25)*0.25+0.0, math.floor(lon/0.25)*0.25+0.0
-              out=[name]
-              for m in ["ecmwf","gfs","icon"]:
-                  run = json.load(open(f"o/{m}/latest.json"))["run"]
-                  p = json.load(open(f"o/{m}/{run}/{y0:.2f}_{x0:.2f}.json"))
-                  out.append(f"{m}:t={p['temp'][:2]} el={p['elevation']} wind={p['wind'][:2]} cl={p['cloud'][:2]}")
-              run = json.load(open("o/gefs/latest.json"))["run"]
-              out.append("gefs:"+str(json.load(open(f"o/gefs/{run}/{y0:.2f}_{x0:.2f}.json"))["prob"]))
-              print(" | ".join(out))
-          for n,la,lo in [("seoul",37.5665,126.978),("tokyo",35.6812,139.7671),("london",51.5072,-0.1276),("honolulu",21.3069,-157.8583),("sydney",-33.8688,151.2093),("bangkok",13.7563,100.5018),("cancun",21.1619,-86.8515),("queenstown",-45.0312,168.6626)]:
-              try: show(la,lo,n)
-              except Exception as e: print(n, "ERR", e)
+          import json, urllib.request
+          d = json.load(open("src/data/overseas.json"))
+          bad = []
+          for x in d:
+              try:
+                  f = json.load(urllib.request.urlopen(urllib.request.Request(f"https://tripnalc.com/api/forecast?lat={x['lat']}&lon={x['lon']}&v=6&t=1", headers={"User-Agent":"diag"}), timeout=60))
+                  a = f["days"][0]; b = f["days"][-1]
+                  print(x["slug"], f.get("utcOffset"), f["source"], len(f["days"]), a["date"], a["tMin"], a["tMax"], a["sunrise"], a["precipProbMax"], "| last", b["date"], b["tMax"])
+              except Exception as e:
+                  bad.append((x["slug"], str(e)))
+          print("bad", bad)
           PY
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com

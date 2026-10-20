@@ -10,17 +10,17 @@ describe("activities", () => {
       for (const k of BASE_METRICS) expect(l.rows).toContain(k);
     }
   });
-  it("기온·체감이 맨 위, 그다음 그룹의 주 지표가 주어진 순서대로", () => {
+  it("강수·기온·체감이 맨 위, 그다음 그룹의 주 지표가 주어진 순서대로", () => {
     for (const g of GROUPS) {
       const l = LEISURES.find((x) => x.group === g.id)!;
       const primary = g.primary.filter((k) => !TOP_METRICS.includes(k));
-      expect(l.rows.slice(0, 2)).toEqual(TOP_METRICS);
-      expect(l.rows.slice(2, 2 + primary.length)).toEqual(primary);
+      expect(l.rows.slice(0, 3)).toEqual(TOP_METRICS);
+      expect(l.rows.slice(3, 3 + primary.length)).toEqual(primary);
     }
   });
-  it("낚시는 파고·물때·풍랑이 기온·체감 바로 아래, 캠핑은 일교차", () => {
-    expect(getLeisure("fishing").rows.slice(2, 5)).toEqual(["wave", "tide", "windWave"]);
-    expect(getLeisure("camping").rows[2]).toBe("range");
+  it("낚시는 파고·물때·풍랑이 강수·기온·체감 바로 아래, 캠핑은 일교차", () => {
+    expect(getLeisure("fishing").rows.slice(3, 6)).toEqual(["wave", "tide", "windWave"]);
+    expect(getLeisure("camping").rows[3]).toBe("range");
     expect(getLeisure("camping").more).toContain("wave");
   });
   it("강수 확률은 따로 줄을 두지 않고, 구름은 사진·드라이브 등에서만 밖에 둔다", () => {

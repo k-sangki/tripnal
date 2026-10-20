@@ -21,27 +21,12 @@ jobs:
       - run: |
           set +e
           {
-          python3 - <<'PY'
-          import json, urllib.request, urllib.parse, time
-          seeds = ["날씨","주말 날씨","이번주 날씨","캠핑 날씨","캠핑장 날씨","낚시 날씨","바다 날씨","물때","물때표","등산 날씨","산 날씨","여행 날씨","제주 날씨","강원도 날씨","10일 날씨","15일 날씨","16일 날씨","한달 날씨","장기 날씨","주간 날씨","캠핑","백패킹 날씨","라이딩 날씨","자전거 날씨","골프 날씨","스키장 날씨","해수욕장 날씨","바람","풍속","파고","트립날씨","여행날씨","캠핑날씨","이번주날씨"]
-          out = {}
-          for q in seeds:
-              r = {}
-              try:
-                  u = "https://ac.search.naver.com/nx/ac?" + urllib.parse.urlencode({"q": q, "con": 1, "frm": "nv", "ans": 2, "r_format": "json", "r_enc": "UTF-8", "r_unicode": 0, "t_koreng": 1, "run": 2, "rev": 4, "q_enc": "UTF-8", "st": 100})
-                  j = json.load(urllib.request.urlopen(urllib.request.Request(u, headers={"User-Agent": "Mozilla/5.0"}), timeout=20))
-                  r["naver"] = [i[0] for i in j["items"][0]]
-              except Exception as e:
-                  r["naver"] = str(e)
-              try:
-                  u = "https://suggestqueries.google.com/complete/search?" + urllib.parse.urlencode({"client": "firefox", "hl": "ko", "gl": "kr", "q": q})
-                  r["google"] = json.loads(urllib.request.urlopen(urllib.request.Request(u, headers={"User-Agent": "Mozilla/5.0"}), timeout=20).read().decode("utf-8", "replace"))[1]
-              except Exception as e:
-                  r["google"] = str(e)
-              out[q] = r
-              time.sleep(0.3)
-          print(json.dumps(out, ensure_ascii=False, indent=1))
-          PY
+          mkdir -p osm
+          q() { curl -s --retry 3 -m 300 -A "tripnalc-diag" --data-urlencode "data=$2" https://overpass-api.de/api/interpreter -o osm/$1.json; echo "$1 $(wc -c < osm/$1.json)"; }
+          B="33.0,124.5,38.7,131.0"
+          q beach "[out:json][timeout:240];nwr[name~\"해수욕장|해변\"]($B);out center;"
+          q ski "[out:json][timeout:240];(nwr[landuse=winter_sports][name]($B);nwr[name~\"스키\"][leisure=sports_centre]($B);nwr[name~\"리조트|스키장\"][sport=skiing]($B););out center;"
+          git add osm
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com
           git add -A diag-out.txt; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026

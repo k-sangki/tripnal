@@ -289,6 +289,19 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
                     `기온은 해발 ${Math.round(forecast.elevation)}m 기준으로 보정된 값입니다. 바람은 고도 보정이 되지 않아 높은 산에서는 실제보다 약할 수 있습니다. `}
                   예보 제공: {forecast.source}
                 </p>
+                {forecast.source.includes("·") && (
+                  <section className="card model-note">
+                    <h2>세 모델 가운데 값이라 덜 빗나가요</h2>
+                    <p>
+                      트립날씨는 유럽(ECMWF)·미국(GFS)·독일(ICON) 세 기관의 예보를 모두 받아 시각마다 가운데 값을 씁니다. 많이 쓰는 지도형 바람 예보
+                      사이트는 보통 한 모델만 기본으로 보여 줘서, 그 모델이 빗나가면 화면도 같이 빗나갑니다. 가운데 값을 쓰면 한 모델이 비나 기온을 크게
+                      틀려도 나머지 둘이 잡아 주어, 기온·바람과 특히 3일 뒤부터의 예보에서 오차가 줄어드는 경향이 있습니다.
+                    </p>
+                    <p className="muted">
+                      국지성 소나기처럼 좁은 곳에 내리는 비는 약하게 보일 수 있으니 강수 확률과 날짜별 예측 가능성 %를 함께 보세요.
+                    </p>
+                  </section>
+                )}
                 <div style={{ height: 12 }} />
                 <AdSlot slot={AD_SLOTS.afterSummary} />
               </div>

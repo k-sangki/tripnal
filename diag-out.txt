@@ -1,19 +1,4 @@
-== https://tripnal.com/
-308 -> https://tripnalc.com/
-
-== https://www.tripnal.com/weather/jarasum-autocamp
-308 -> https://tripnalc.com/weather/jarasum-autocamp
-
-== https://tripnalc.com/
-200 -> 
-<!DOCTYPE html><html lang="ko"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet
-== https://www.tripnalc.com/about
-308 -> https://tripnalc.com/about
-
-== https://tripnalc.com/ads.txt
-200 -> 
-google.com, pub-2807429912252096, DIRECT, f08c47fec0942fa0 
-== https://tripnalc.com/manifest.webmanifest
-200 -> 
-{"name":"tripnalc - 캠핑·낚시·등산 16일 날씨","short_name":"tripnalc","description":"대한민국 어디든 16일까지 3시간 간격 레�
-<title>tripnalc - 캠핑·낚시·등산 16일 날씨 (3시간 간격)</title>
+ecmwf 2026101912
+gfs 2026101918
+icon 2026102000
+done

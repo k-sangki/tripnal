@@ -9,6 +9,8 @@ import { tzOffsetMin } from "@/lib/time";
 export interface Destination {
   slug: string;
   name: string;
+  /** 영문 이름 (목록 카드에 작게) */
+  en: string;
   country: string;
   /** 목록 화면의 묶음 (일본, 동남아 등) */
   group: string;

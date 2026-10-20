@@ -289,6 +289,16 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
                     `기온은 해발 ${Math.round(forecast.elevation)}m 기준으로 보정된 값입니다. 바람은 고도 보정이 되지 않아 높은 산에서는 실제보다 약할 수 있습니다. `}
                   예보 제공: {forecast.source}
                 </p>
+                {forecast.source.includes("·") && (
+                  <section className="card model-note">
+                    <h2>세 모델 가운데 값이라 덜 빗나가요</h2>
+                    <p>
+                      트립날씨는 단일 모델만 기본으로 보여주는 일반 지도형 사이트와 달리, 유럽(ECMWF)·미국(GFS)·독일(ICON) 3개 예보의 시간대별 중간값을
+                      사용합니다. 한 모델이 크게 빗나가도 나머지 둘이 잡아주어 기온·바람과 3일 이후 중기 예보의 오차가 적습니다.
+                    </p>
+                    <p className="muted">단, 좁은 지역의 소나기는 약하게 표시될 수 있으니 강수 확률과 예측 가능성(%)을 함께 참고하세요.</p>
+                  </section>
+                )}
                 <div style={{ height: 12 }} />
                 <AdSlot slot={AD_SLOTS.afterSummary} />
               </div>

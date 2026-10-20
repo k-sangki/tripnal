@@ -248,6 +248,22 @@ a {
     display: none;
   }
 }
+.model-note {
+  margin-top: 12px;
+}
+.model-note h2 {
+  margin: 0 0 6px;
+  font-size: 15px;
+  letter-spacing: -0.02em;
+}
+.model-note p {
+  margin: 0 0 6px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.model-note p:last-child {
+  margin-bottom: 0;
+}
 .tagline {
   white-space: nowrap;
   font-size: 13px;

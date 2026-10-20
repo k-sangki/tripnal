@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
-const CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT;
+const CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT?.trim();
 
 declare global {
   interface Window {
@@ -44,8 +44,8 @@ export function AdSlot({ slot, format = "auto" }: { slot?: string; format?: stri
 }
 
 export const AD_SLOTS = {
-  afterSummary: process.env.NEXT_PUBLIC_AD_SLOT_SUMMARY,
-  betweenDays: process.env.NEXT_PUBLIC_AD_SLOT_DAYS,
-  side: process.env.NEXT_PUBLIC_AD_SLOT_SIDE,
-  bottom: process.env.NEXT_PUBLIC_AD_SLOT_BOTTOM,
+  afterSummary: process.env.NEXT_PUBLIC_AD_SLOT_SUMMARY?.trim(),
+  betweenDays: process.env.NEXT_PUBLIC_AD_SLOT_DAYS?.trim(),
+  side: process.env.NEXT_PUBLIC_AD_SLOT_SIDE?.trim(),
+  bottom: process.env.NEXT_PUBLIC_AD_SLOT_BOTTOM?.trim(),
 };

@@ -140,7 +140,7 @@ describe("openMeteo", () => {
     expect(r.hourly.precipitation_probability![80]).toBe(40);
   });
 
-  it("사흘 뒤부터는 ECMWF·GFS·ICON 중간값을 쓰고, 혼자 낸 뇌우는 소나기로 낮춘다", () => {
+  it("기상청 값이 없으면 ECMWF·GFS·ICON 중간값을 쓰고, 혼자 낸 뇌우는 소나기로 낮춘다", () => {
     const n = 100;
     const t0 = Date.UTC(2020, 0, 1);
     const time = Array.from({ length: n }, (_, i) => new Date(t0 + i * 3600e3).toISOString().slice(0, 16));
@@ -162,8 +162,9 @@ describe("openMeteo", () => {
         weather_code_icon_seamless: fill(61),
       } as never,
     });
-    expect([r.hourly.wind_gusts_10m![10], r.hourly.wind_gusts_10m![80]]).toEqual([17, 6]);
-    expect([r.hourly.weather_code![10], r.hourly.weather_code![80], r.hourly.weather_code![90]]).toEqual([95, 81, 95]);
+    // 기상청 값이 비어 있으면 앞쪽 사흘도 중간값을 쓴다
+    expect([r.hourly.wind_gusts_10m![10], r.hourly.wind_gusts_10m![80]]).toEqual([6, 6]);
+    expect([r.hourly.weather_code![10], r.hourly.weather_code![80], r.hourly.weather_code![90]]).toEqual([81, 81, 95]);
   });
 
   it("모델 목록을 URL에 넣는다", () => {

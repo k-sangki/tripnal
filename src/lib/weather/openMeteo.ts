@@ -32,8 +32,8 @@ interface OpenMeteoResponse {
 }
 
 /**
- * 모델 순서. 앞쪽 사흘은 기상청(LDPS 1.5km + GDPS)을 먼저 쓰고,
- * 그 뒤는 ECMWF·GFS·ICON 세 모델의 중간값을 쓴다 (한 모델만 튀는 돌풍·강수를 걸러낸다).
+ * 모델 순서. 앞쪽 사흘은 기상청(LDPS 1.5km + GDPS) 값이 있으면 먼저 쓰고,
+ * 그 밖에는 ECMWF·GFS·ICON 세 모델의 중간값을 쓴다 (한 모델만 튀는 돌풍·강수를 걸러낸다).
  * 비어 있는 값(강수 확률·자외선, 15일 이후 등)은 Open-Meteo 기본 조합(best_match)으로 채운다.
  */
 export const MODELS = ["kma_seamless", "ecmwf_ifs", "best_match", "gfs_seamless", "icon_seamless"] as const;
@@ -111,8 +111,8 @@ type Series = (number | null)[];
 
 /**
  * 여러 모델을 한 번에 요청하면 변수 이름 뒤에 _모델명이 붙어 온다.
- * 앞쪽 사흘은 기상청 → ECMWF → 기본 순서로 처음 나오는 값을 고르고,
- * 그 뒤는 ECMWF·GFS·ICON 중간값(없으면 ECMWF → 기본 → 기상청 순서)으로 하나의 시계열을 만든다.
+ * 앞쪽 사흘은 기상청 값이 있으면 그것을 쓰고,
+ * 나머지는 ECMWF·GFS·ICON 중간값(없으면 ECMWF → 기본 → 기상청 순서)으로 하나의 시계열을 만든다.
  */
 export function blendModels(json: OpenMeteoResponse, models: readonly Model[] = MODELS): OpenMeteoResponse {
   const h = json.hourly as unknown as Record<string, Series | string[]>;
@@ -135,7 +135,11 @@ export function blendModels(json: OpenMeteoResponse, models: readonly Model[] = 
       return null;
     };
     out[v] = time.map((_, i) => {
-      if (i - from < KMA_HOURS) return first(["kma_seamless", "ecmwf_ifs", "best_match"], i);
+      // 기상청 값이 있으면 앞쪽 사흘은 그대로 쓴다 (Open-Meteo의 기상청 자료는 2026-04부터 갱신이 멈춰 비어 올 수 있다)
+      if (i - from < KMA_HOURS) {
+        const k = at("kma_seamless", i);
+        if (k != null) return k;
+      }
       const fallback = () => first(["ecmwf_ifs", "best_match", "kma_seamless"], i);
       if (MEDIAN_VARS.has(v)) return median(ENSEMBLE.map((m) => at(m, i))) ?? fallback();
       if (v === "weather_code") {
@@ -212,7 +216,7 @@ export const openMeteoProvider: WeatherProvider = {
       .then((j) => {
         const json = blendModels(j);
         if (!json.hourly.temperature_2m?.some((x) => x != null)) throw new Error("모델 조합 응답에 기온이 없음");
-        return { json, source: "Open-Meteo (기상청·ECMWF·GFS·ICON)" };
+        return { json, source: "Open-Meteo (ECMWF·GFS·ICON)" };
       })
       .catch(() =>
         fetchJsonCached<OpenMeteoResponse>(buildOpenMeteoUrl(lat, lon, key, elevation), 1800).then((json) => ({ json, source: "Open-Meteo" })),

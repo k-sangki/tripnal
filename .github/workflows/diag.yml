@@ -19,18 +19,11 @@ jobs:
           set +e
           {
           python3 - <<'PY'
-          import os, urllib.request, urllib.parse
-          key=os.environ["KHOA_API_KEY"]
-          base="https://apis.data.go.kr/1360000/WthrWrnInfoService/"
-          for op, extra in [("getPwnStatus",{}),("getWthrWrnList",{"stnId":"108"}),("getWthrWrnMsg",{"stnId":"108"}),("getPwnCd",{"areaCode":"L1100100"})]:
-              q={"serviceKey":key,"dataType":"JSON","numOfRows":"10","pageNo":"1",**extra}
-              try:
-                  b=urllib.request.urlopen(base+op+"?"+urllib.parse.urlencode(q), timeout=30).read().decode()
-              except Exception as e:
-                  b="ERR "+str(e)
-              print("==", op); print(b[:2500])
+          import json, urllib.request
+          for name, lat, lon in [("seoul",37.5665,126.978),("jeju",33.51,126.52),("seorak",38.119,128.465),("busan",35.15,129.11),("gwangju",35.16,126.85)]:
+              f=json.load(urllib.request.urlopen(urllib.request.Request(f"https://tripnalc.com/api/forecast?lat={lat}&lon={lon}&v=pd", headers={"User-Agent":"diag"}), timeout=60))
+              print(name, [d.get("predictability") for d in f["days"]], [round(d["precipSum"]) for d in f["days"]])
           PY
-          curl -s "https://apihub.kma.go.kr/" -o /dev/null -w "apihub %{http_code}\n"
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com
           git add -A diag-out.txt; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026

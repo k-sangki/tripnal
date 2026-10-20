@@ -15,7 +15,7 @@ export default function OverseasIndex() {
       <SiteHeader />
       <h1 style={{ fontSize: 24, letterSpacing: "-0.03em" }}>해외 {DESTINATIONS.length}곳의 월별·실시간 16일 날씨</h1>
       <p className="muted" style={{ margin: "4px 0 12px" }}>
-        여행지를 고르면 현지 시간으로 16일까지 날씨를 보여드립니다.
+        여행지를 고르면 여행하기 좋은 달과 월별 평년 날씨, 현지 시간 기준 실시간 16일 날씨를 보여드립니다.
       </p>
       <OverseasList destinations={DESTINATIONS} groups={DESTINATION_GROUPS} />
       <SiteFooter />

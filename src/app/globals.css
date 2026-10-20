@@ -115,6 +115,16 @@ a {
 .o-ad {
   order: 6;
 }
+@media (min-width: 1024px) {
+  /* 긴 예보 표를 내려 봐도 왼쪽 광고가 화면에 남도록 */
+  .a-side {
+    align-self: stretch;
+  }
+  .o-ad {
+    position: sticky;
+    top: 16px;
+  }
+}
 
 @media (min-width: 1024px) {
   .shell {

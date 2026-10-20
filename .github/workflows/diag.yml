@@ -18,31 +18,12 @@ jobs:
       - run: |
           set +e
           {
-          echo "keys: khoa=${#KHOA_API_KEY} ads=${#ADS_API_KEY}"
-          for i in $(seq 15155990 15156060); do
-            n=$(curl -s -m 15 "https://www.data.go.kr/catalog/$i/openapi.json" | python3 -c "import sys,json
-          try:
-            d=json.load(sys.stdin); print(d.get('name',''), '|', d.get('url','') or '', '|', (d.get('distribution') or [{}])[0].get('contentUrl','') if isinstance(d.get('distribution'),list) else '')
-          except Exception: pass" 2>/dev/null)
-            case "$n" in *조석*|*조위*) echo "$i $n";; esac
-          done
-          pip -q install "cdsapi>=0.7.4" eccodes 2>&1 | tail -1
-          python3 - <<'PY'
-          import cdsapi, os, datetime as dt, time
-          t=time.time()
-          c = cdsapi.Client(url="https://ads.atmosphere.copernicus.eu/api", key=os.environ["ADS_API_KEY"])
-          d=(dt.datetime.utcnow()-dt.timedelta(days=1)).strftime("%Y-%m-%d")
-          try:
-              c.retrieve("cams-global-atmospheric-composition-forecasts", {"variable":["particulate_matter_10um","particulate_matter_2.5um"],"date":[f"{d}/{d}"],"time":["00:00"],"leadtime_hour":["0","3","120"],"type":["forecast"],"area":[39.5,124,32.5,132],"data_format":"grib"}, "cams.grib")
-              print("cams ok", os.path.getsize("cams.grib"), round(time.time()-t), "s")
-              import eccodes
-              with open("cams.grib","rb") as f:
-                  while (m := eccodes.codes_grib_new_from_file(f)) is not None:
-                      print(eccodes.codes_get(m,"shortName"), eccodes.codes_get(m,"step"), eccodes.codes_get(m,"Ni"), eccodes.codes_get(m,"Nj"), eccodes.codes_get(m,"latitudeOfFirstGridPointInDegrees"), eccodes.codes_get(m,"longitudeOfFirstGridPointInDegrees"), eccodes.codes_get(m,"iDirectionIncrementInDegrees"), max(eccodes.codes_get_values(m)))
-                      eccodes.codes_release(m)
-          except Exception as e:
-              print("cams fail", e)
-          PY
+          curl -s -m 30 "https://www.data.go.kr/data/15156018/openapi.do" -o page.html
+          grep -o 'apis\.data\.go\.kr[^"<> ]*' page.html | sort -u | head
+          grep -oiE '(swagger|oas)[^"<> ]{0,150}' page.html | sort -u | head
+          grep -oE 'publicDataDetailPk[^,]{0,60}|uddi:[0-9a-f-]+' page.html | sort -u | head
+          grep -oE '<a [^>]*hwp[^>]*>' page.html | head -3
+          grep -oE 'fn_fileDownload\([^)]*\)|fileDetailSn[^,]{0,40}|atchFileId[^,]{0,60}' page.html | sort -u | head
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com
           git add -A diag-out.txt; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026

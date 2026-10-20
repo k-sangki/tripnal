@@ -286,6 +286,7 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
                 <p className="muted" style={{ marginTop: 12 }}>
                   {(interval === "6h" || interval === "12h") && "기온·체감은 낮 칸은 최고, 밤 칸은 최저 값입니다. "}
                   {overseas && "날짜와 시각은 모두 현지 시간입니다. "}
+                  {"강수 0.1↓는 강수 확률은 30% 이상이지만 양은 0.1mm 미만으로 예상되는 칸입니다. "}
                   {forecast.elevation != null &&
                     `기온은 해발 ${Math.round(forecast.elevation)}m 기준으로 보정된 값입니다. 바람은 고도 보정이 되지 않아 높은 산에서는 실제보다 약할 수 있습니다. `}
                   예보 제공: {forecast.source}

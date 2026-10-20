@@ -21,12 +21,11 @@ jobs:
       - run: |
           set +e
           {
-            for u in /overseas /overseas/osaka /overseas/osaka/8 /overseas/osaka/forecast /overseas/bangkok /overseas/rovaniemi/1 /overseas/osaka/13 ; do
+            for u in /overseas/osaka /overseas/paris /overseas/bangkok /overseas/osaka /overseas/sapporo; do
               echo "$u $(curl -s -o /tmp/p.html -w '%{http_code} %{time_total}' https://tripnalc.com$u)"
-              grep -o '<title>[^<]*' /tmp/p.html | head -1
-              grep -o '최근 날씨 소식</b>.\{0,300\}' /tmp/p.html | sed 's/<[^>]*>/ /g' | head -1
+              grep -o '서유럽\|동유럽\|월별 날씨</h2>' /tmp/p.html | sort | uniq -c
             done
-            curl -s https://tripnalc.com/sitemap.xml | grep -c '<loc>'
+            curl -s https://tripnalc.com/overseas | grep -o '<h2 class="card-title">[^<]*' | sed 's/.*>//' | tr '\n' ' '
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com
           git add -A diag-out.txt; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026

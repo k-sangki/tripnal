@@ -32,6 +32,20 @@
   box-sizing: border-box;
 }
 
+/* 아이폰 Safari(iOS 26)는 상태바 밑으로 지나가는 내용을 흐리게 덮는다.
+ * 상태바 높이만큼 고정된 단색 띠를 두면 Safari가 그 색으로 상태바를 칠해 흐림이 생기지 않는다. */
+body::before {
+  content: "";
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: env(safe-area-inset-top, 0px);
+  background: var(--bg);
+  pointer-events: none;
+}
+
 html,
 body {
   margin: 0;
@@ -42,6 +56,10 @@ body {
   -webkit-font-smoothing: antialiased;
   -webkit-text-size-adjust: 100%;
   word-break: keep-all;
+}
+/* 상태바·노치 자리만큼 띄운다 (viewport-fit=cover) */
+body {
+  padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) 0 env(safe-area-inset-left, 0px);
 }
 
 button,
@@ -1679,4 +1697,31 @@ th.dcol .pd {
   font-weight: 500;
   color: var(--muted);
   white-space: nowrap;
+}
+
+/* ---------- 당겨서 새로고침 (홈 화면 앱) ---------- */
+.ptr {
+  position: fixed;
+  z-index: 90;
+  top: calc(env(safe-area-inset-top, 0px) - 36px);
+  left: 50%;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--card);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--pine);
+  font-size: 20px;
+  font-weight: 700;
+}
+.ptr .spin {
+  animation: ptr-spin 0.8s linear infinite;
+}
+@keyframes ptr-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }

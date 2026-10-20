@@ -9,7 +9,7 @@ describe("period", () => {
     expect(presetPeriod("weekend", "2026-10-24")).toEqual({ from: "2026-10-24", to: "2026-10-25" });
     expect(presetPeriod("weekend", "2026-10-25")).toEqual({ from: "2026-10-25", to: "2026-10-25" });
   });
-  it("16일 전체는 오늘 포함 16일", () => {
+  it("16일은 오늘 포함 16일", () => {
     expect(presetPeriod("16d", "2026-10-19")).toEqual({ from: "2026-10-19", to: "2026-11-03" });
   });
   it("범위를 벗어나거나 뒤집힌 기간을 바로잡는다", () => {

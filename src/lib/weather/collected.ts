@@ -371,7 +371,8 @@ export async function loadWave(b: DataBucket, cs: ReturnType<typeof corners>, ke
     }),
   );
   const mix = (pick: (f: WavePointFile) => Num[]) => {
-    const series = files.map((f, i) => (f ? { w: near[i].w, v: linearSteps(f.run, f.step, pick(f), keys) } : null));
+    // 지점이 격자선 위에 있으면 바다 쪽 점의 가중치가 0일 수 있어 아주 작은 값을 더한다 (해안 지점)
+    const series = files.map((f, i) => (f ? { w: near[i].w + 1e-3, v: linearSteps(f.run, f.step, pick(f), keys) } : null));
     return keys.map((_, i) => {
       let s = 0;
       let ws = 0;

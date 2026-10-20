@@ -6,7 +6,7 @@ import type { Forecast, WeatherProvider } from "./types";
 
 /**
  * 예보 데이터 공급자. WEATHER_PROVIDER 값만 바꾸면 화면 쪽은 그대로 쓸 수 있다.
- * collected: 직접 수집한 ECMWF·GFS·ICON (R2), open-meteo: Open-Meteo API
+ * collected: 직접 수집한 ECMWF·GFS·ICON (R2, 운영), open-meteo: Open-Meteo API (광고 사이트에서는 쓰지 않는다), mock: 개발·테스트
  */
 const PROVIDERS: Record<string, WeatherProvider> = {
   "open-meteo": openMeteoProvider,
@@ -16,7 +16,7 @@ const PROVIDERS: Record<string, WeatherProvider> = {
 
 /** name: 전환 전 비교용으로 다른 provider를 고를 때 (/api/forecast?provider=collected) */
 export function getProvider(name?: string): WeatherProvider {
-  return PROVIDERS[name ?? process.env.WEATHER_PROVIDER ?? "open-meteo"] ?? openMeteoProvider;
+  return PROVIDERS[name ?? process.env.WEATHER_PROVIDER ?? "collected"] ?? collectedProvider;
 }
 
 /** 대한민국(부속 도서 포함) 대략 범위 */

@@ -23,7 +23,7 @@
     { "pattern": "www.tripnal.com", "custom_domain": true }
   ],
   "vars": {
-    "WEATHER_PROVIDER": "open-meteo",
+    "WEATHER_PROVIDER": "collected",
     "NEXT_PUBLIC_SITE_URL": "https://tripnalc.com"
   }
 }

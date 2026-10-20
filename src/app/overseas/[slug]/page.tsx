@@ -1,22 +1,23 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ForecastButton, GuideCard, MonthCards } from "@/components/CityClimate";
 import { SiteFooter, SiteHeader } from "@/components/SiteHeader";
-import { WeatherApp } from "@/components/WeatherApp";
+import { CLIMATE_SOURCE, climateSummary, getIntro, getNormals, goodMonths, localMonth, monthGuide, monthRanges, weatherIssues } from "@/lib/climate";
 import { DESTINATIONS, destinationOffset, getDestination, type Destination } from "@/lib/overseas";
-import { placeSummary } from "@/lib/seo";
 import { getForecast } from "@/lib/weather";
 import type { Forecast } from "@/lib/weather/types";
 
-/** 요청마다 그린다 (현지 날짜가 바뀌므로) */
+/** 요청마다 그린다 (현지 달·16일 예보가 바뀌므로) */
 export const dynamic = "force-dynamic";
 
 function title(d: Destination) {
-  return `${d.name} 날씨 · 이번주 ${d.country} 여행 날씨 16일`;
+  return `${d.name} 날씨 · 여행하기 좋은 달과 월별 옷차림`;
 }
 
 function description(d: Destination) {
-  return `${d.name}(${d.country}) 오늘부터 16일까지 3시간 간격 날씨를 현지 시간으로. 기온·체감온도·비·바람과 일출·일몰을 한눈에 보고 해외여행 일정과 옷차림을 정하세요.`;
+  const good = monthRanges(goodMonths(d.slug).map((g) => g.month));
+  return `${d.name}(${d.country}) 여행하기 좋은 달은 ${good}. 1~12월 평년 기온·강수량과 달별 옷차림·준비물·주의할 점, 실시간 16일 날씨까지 한 번에 보세요.`;
 }
 
 export async function generateMetadata({ params }: PageProps<"/overseas/[slug]">): Promise<Metadata> {
@@ -27,17 +28,21 @@ export async function generateMetadata({ params }: PageProps<"/overseas/[slug]">
   return {
     title: title(d),
     description: description(d),
-    keywords: [d.name, ...(d.aliases ?? [])].flatMap((n) => [`${n} 날씨`, `${n} 이번주 날씨`, `${n} 16일 날씨`]),
+    keywords: [d.name, ...(d.aliases ?? [])].flatMap((n) => [`${n} 날씨`, `${n} 여행 날씨`, `${n} 여행 시기`, `${n} 옷차림`]),
     alternates: { canonical: url },
     openGraph: { title: title(d), description: description(d), url, images: [{ url: image, width: 1200, height: 630 }] },
     twitter: { card: "summary_large_image", title: title(d), description: description(d), images: [image] },
   };
 }
 
-export default async function DestinationPage({ params }: PageProps<"/overseas/[slug]">) {
+export default async function CityPage({ params }: PageProps<"/overseas/[slug]">) {
   const d = getDestination((await params).slug);
   if (!d) notFound();
+  const normals = getNormals(d.slug);
   const offset = destinationOffset(d);
+  const month = localMonth(offset);
+  const good = goodMonths(d.slug);
+  const guide = monthGuide(d, month);
 
   let forecast: Forecast | null = null;
   try {
@@ -45,6 +50,8 @@ export default async function DestinationPage({ params }: PageProps<"/overseas/[
   } catch (e) {
     console.error(e);
   }
+  const issues = forecast ? weatherIssues(d, forecast) : [];
+  const today = forecast?.days[0];
 
   const related = DESTINATIONS.filter((x) => x.slug !== d.slug && x.group === d.group);
   const jsonLd = {
@@ -66,21 +73,76 @@ export default async function DestinationPage({ params }: PageProps<"/overseas/[
     <div className="shell">
       <SiteHeader />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <WeatherApp
-        initialPlace={{ name: d.name, lat: d.lat, lon: d.lon, address: d.country, slug: d.slug }}
-        initialForecast={forecast}
-        initialLeisure="travel"
-        headingSuffix="16일 날씨"
-        overseasOffset={offset}
-      />
 
-      <section className="card seo-text" style={{ marginTop: 16 }}>
-        <h2>{d.name} 여행 날씨 요약</h2>
-        {forecast ? placeSummary({ name: d.name, leisure: "travel" }, forecast).map((line) => <p key={line}>{line}</p>) : <p>예보를 불러오는 중입니다.</p>}
-        <p>
-          {d.name}({d.country})의 날씨를 오늘부터 최대 16일까지 3시간 간격으로, 모두 현지 시간 기준으로 보여드립니다. 기간을 직접 고르면 여행 일정만
-          볼 수 있고, 캡처 버튼으로 이미지를 저장해 일행과 공유할 수 있습니다.
+      <section className="hero city-hero">
+        <div className="hero-top">
+          <Link href="/overseas" className="city-back">
+            ← 해외 날씨
+          </Link>
+          <span>
+            {d.country} · {d.group}
+          </span>
+        </div>
+        <h1 className="city-name">
+          {d.name} <small>{d.en}</small>
+        </h1>
+        {getIntro(d.slug) && <p className="city-intro">{getIntro(d.slug)}</p>}
+        <ul className="city-facts">
+          {climateSummary(d).map((line) => (
+            <li key={line}>{line}</li>
+          ))}
+          {good.length > 0 && <li>여행하기 좋은 달은 {monthRanges(good.map((g) => g.month))}이에요.</li>}
+        </ul>
+        <div className="city-issues">
+          <b>최근 날씨 소식</b>
+          {today && today.tMax != null && today.tMin != null && (
+            <p>
+              오늘 현지 최고 {Math.round(today.tMax)}°C, 최저 {Math.round(today.tMin)}°C
+            </p>
+          )}
+          {issues.length ? (
+            issues.map((x) => (
+              <p key={x.kind}>
+                <span className={`issue-tag ${x.kind}`}>{x.label}</span> {x.text}
+              </p>
+            ))
+          ) : (
+            <p>{forecast ? "앞으로 16일 동안 평년과 크게 다른 날씨는 없을 전망이에요." : "예보를 불러오지 못했어요."}</p>
+          )}
+        </div>
+        <ForecastButton slug={d.slug} light />
+      </section>
+
+      {normals && (
+        <section className="card" style={{ marginTop: 12 }}>
+          <h2 className="card-title">{d.name} 월별 날씨</h2>
+          <p className="muted month-help">
+            <span className="good-key" /> 여행하기 좋은 달 · 달을 누르면 평년 기온과 강수량을 자세히 볼 수 있어요.
+          </p>
+          <MonthCards slug={d.slug} normals={normals} good={good} current={month} />
+          <p className="muted" style={{ margin: "10px 0 0" }}>
+            평년값: {CLIMATE_SOURCE}(현지 고도 보정)로 계산한 낮 최고·아침 최저 기온 평균과 월 강수량입니다.
+          </p>
+        </section>
+      )}
+
+      {guide && (
+        <GuideCard
+          title={`지금(${month}월) ${d.name} 여행 가이드`}
+          guide={guide}
+          more={
+            <p className="guide-more">
+              <Link href={`/overseas/${d.slug}/${month}`}>{month}월 날씨 자세히 보기 →</Link>
+            </p>
+          }
+        />
+      )}
+
+      <section className="card" style={{ marginTop: 12, textAlign: "center" }}>
+        <p className="sub" style={{ margin: "0 0 10px" }}>
+          여행 날짜가 16일 안이라면 실시간 예보로 확인하세요.
         </p>
+        <ForecastButton slug={d.slug} />
       </section>
 
       {related.length > 0 && (

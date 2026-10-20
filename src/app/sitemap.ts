@@ -17,11 +17,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "hourly" as const,
       priority: 0.9,
     })),
-    ...DESTINATIONS.map((d) => ({
-      url: `${BASE}/overseas/${d.slug}`,
-      lastModified: now,
-      changeFrequency: "hourly" as const,
-      priority: 0.8,
-    })),
+    ...DESTINATIONS.flatMap((d) => [
+      { url: `${BASE}/overseas/${d.slug}`, lastModified: now, changeFrequency: "daily" as const, priority: 0.8 },
+      { url: `${BASE}/overseas/${d.slug}/forecast`, lastModified: now, changeFrequency: "hourly" as const, priority: 0.7 },
+      ...Array.from({ length: 12 }, (_, i) => ({
+        url: `${BASE}/overseas/${d.slug}/${i + 1}`,
+        lastModified: now,
+        changeFrequency: "monthly" as const,
+        priority: 0.6,
+      })),
+    ]),
   ];
 }

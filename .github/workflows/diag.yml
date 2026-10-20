@@ -21,18 +21,14 @@ jobs:
       - run: |
           set +e
           {
-          pip install -q boto3 pywebpush
-          curl -s -w ' [%{http_code}]' https://tripnalc.com/api/alerts; echo
-          ID=$(curl -s -X POST https://tripnalc.com/api/alerts -H 'Content-Type: application/json' -d '{"subscription":{"endpoint":"https://example.com/push/test","keys":{"p256dh":"BFake","auth":"fake"}},"place":{"name":"테스트","lat":37.81,"lon":127.52},"act":"camping","from":"2026-10-24","to":"2026-10-25"}' | tee /dev/stderr | python3 -c 'import sys,json;print(json.load(sys.stdin)["id"])')
-          echo id $ID
-          python3 - <<'PY'
-          import boto3,os,json
-          s3=boto3.client("s3",endpoint_url=f"https://{os.environ['CLOUDFLARE_ACCOUNT_ID']}.r2.cloudflarestorage.com",aws_access_key_id=os.environ["R2_ACCESS_KEY_ID"],aws_secret_access_key=os.environ["R2_SECRET_ACCESS_KEY"],region_name="auto")
-          for o in s3.list_objects_v2(Bucket="tripnal-data",Prefix="alerts")["Contents"]:
-              print(o["Key"], o["Size"])
-          PY
-          python3 collector/alerts.py --dry-run
-          curl -s -X DELETE "https://tripnalc.com/api/alerts?id=$ID"; echo
+          mkdir -p osm
+          q() { curl -s --retry 3 -m 300 -A "tripnalc-diag" --data-urlencode "data=$2" https://overpass-api.de/api/interpreter -o osm/$1.json; echo "$1 $(wc -c < osm/$1.json)"; }
+          B="33.0,124.5,38.7,131.0"
+          q peaks "[out:json][timeout:240];node[natural=peak][name]($B);out;"
+          q cert "[out:json][timeout:240];nwr[name~\"인증센터\"]($B);out center;"
+          q camp "[out:json][timeout:240];nwr[tourism=camp_site][name]($B);out center;"
+          q port "[out:json][timeout:240];(nwr[name~\"항$\"][\"seamark:type\"];nwr[name~\"항$\"][harbour];nwr[name~\"항$\"][landuse=harbour];nwr[name~\"항$\"][place];nwr[name~\"방파제\"];nwr[man_made=breakwater][name];nwr[industrial=port][name];);out center;"
+          git add osm
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com
           git add -A diag-out.txt; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026

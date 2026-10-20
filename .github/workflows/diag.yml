@@ -21,12 +21,16 @@ jobs:
       - run: |
           set +e
           {
-          mkdir -p osm
-          q() { curl -s --retry 3 -m 300 -A "tripnalc-diag" --data-urlencode "data=$2" https://overpass-api.de/api/interpreter -o osm/$1.json; echo "$1 $(wc -c < osm/$1.json)"; }
-          B="33.0,124.5,38.7,131.0"
-          q beach "[out:json][timeout:240];nwr[name~\"해수욕장|해변\"]($B);out center;"
-          q ski "[out:json][timeout:240];(nwr[landuse=winter_sports][name]($B);nwr[name~\"스키\"][leisure=sports_centre]($B);nwr[name~\"리조트|스키장\"][sport=skiing]($B););out center;"
-          git add osm
+          for u in / /weather/gayasan /weather/anheung-port /weather/yongpyong /weather/bike-ipobo; do curl -s -o p.html -w "$u %{http_code} %{time_total}s " "https://tripnalc.com$u"; grep -o '<title>[^<]*' p.html; done
+          curl -s https://tripnalc.com/sitemap.xml | grep -c "<loc>"
+          python3 - <<'PY'
+          import json, urllib.request
+          for slug, lat, lon, elev in [("gayasan",35.8231,128.1180,1430),("anheung-port",36.6744,126.1294,None),("hamdeok-beach",33.5429,126.6701,None)]:
+              q = f"lat={lat}&lon={lon}&v=6" + (f"&elev={elev}" if elev else "")
+              f = json.load(urllib.request.urlopen(urllib.request.Request(f"https://tripnalc.com/api/forecast?{q}", headers={"User-Agent":"diag"}), timeout=60))
+              d = f["days"][0]
+              print(slug, f["elevation"], d["tMin"], d["tMax"], len(d.get("tides") or []))
+          PY
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com
           git add -A diag-out.txt; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026

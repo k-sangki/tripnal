@@ -2264,3 +2264,52 @@ th.dcol .pd {
   background: var(--rain);
   opacity: 0.6;
 }
+/* 월 카드·그래프 칸을 버튼으로 쓸 때 */
+button.month-card,
+button.cc-col {
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+button.cc-col {
+  border: 0;
+  background: none;
+  text-align: center;
+}
+button.cc-col.on {
+  background: var(--mint-soft);
+}
+.month-card.on {
+  box-shadow: 0 0 0 2px var(--pine);
+  outline: none;
+}
+.month-detail {
+  scroll-margin-top: 12px;
+}
+.good-badge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: var(--mint);
+  color: var(--pine);
+  font-size: 12px;
+  vertical-align: 2px;
+}
+.month-stats.light {
+  margin: 0 0 16px;
+}
+.month-stats.light div {
+  background: var(--chip);
+}
+.month-stats.light span {
+  color: var(--muted);
+}
+.cc-title {
+  margin: 0 0 8px;
+  font-size: 15px;
+}
+.issues-loading {
+  opacity: 0.6;
+}

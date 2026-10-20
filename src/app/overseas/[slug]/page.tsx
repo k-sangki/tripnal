@@ -1,14 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ForecastButton, GuideCard, MonthCards } from "@/components/CityClimate";
+import { ForecastButton } from "@/components/CityClimate";
+import { CityIssues, CityMonths } from "@/components/CityMonths";
 import { SiteFooter, SiteHeader } from "@/components/SiteHeader";
-import { CLIMATE_SOURCE, climateSummary, getIntro, getNormals, goodMonths, localMonth, monthGuide, monthRanges, weatherIssues } from "@/lib/climate";
+import { CLIMATE_SOURCE, climateSummary, getIntro, getNormals, goodMonths, localMonth, monthGuide, monthRanges } from "@/lib/climate";
 import { DESTINATIONS, destinationOffset, getDestination, type Destination } from "@/lib/overseas";
-import { getForecast } from "@/lib/weather";
-import type { Forecast } from "@/lib/weather/types";
 
-/** 요청마다 그린다 (현지 달·16일 예보가 바뀌므로) */
+/** 요청마다 그린다 (현지 달이 바뀌므로). 16일 예보는 브라우저에서 따로 받아 페이지가 기다리지 않는다 */
 export const dynamic = "force-dynamic";
 
 function title(d: Destination) {
@@ -42,17 +41,6 @@ export default async function CityPage({ params }: PageProps<"/overseas/[slug]">
   const offset = destinationOffset(d);
   const month = localMonth(offset);
   const good = goodMonths(d.slug);
-  const guide = monthGuide(d, month);
-
-  let forecast: Forecast | null = null;
-  try {
-    forecast = await getForecast(d.lat, d.lon, d.elevation, undefined, offset);
-  } catch (e) {
-    console.error(e);
-  }
-  const issues = forecast ? weatherIssues(d, forecast) : [];
-  const today = forecast?.days[0];
-
   const related = DESTINATIONS.filter((x) => x.slug !== d.slug && x.group === d.group);
   const jsonLd = {
     "@context": "https://schema.org",
@@ -93,48 +81,19 @@ export default async function CityPage({ params }: PageProps<"/overseas/[slug]">
           ))}
           {good.length > 0 && <li>여행하기 좋은 달은 {monthRanges(good.map((g) => g.month))}이에요.</li>}
         </ul>
-        <div className="city-issues">
-          <b>최근 날씨 소식</b>
-          {today && today.tMax != null && today.tMin != null && (
-            <p>
-              오늘 현지 최고 {Math.round(today.tMax)}°C, 최저 {Math.round(today.tMin)}°C
-            </p>
-          )}
-          {issues.length ? (
-            issues.map((x) => (
-              <p key={x.kind}>
-                <span className={`issue-tag ${x.kind}`}>{x.label}</span> {x.text}
-              </p>
-            ))
-          ) : (
-            <p>{forecast ? "앞으로 16일 동안 평년과 크게 다른 날씨는 없을 전망이에요." : "예보를 불러오지 못했어요."}</p>
-          )}
-        </div>
+        {normals && <CityIssues lat={d.lat} lon={d.lon} normals={normals} />}
         <ForecastButton slug={d.slug} light />
       </section>
 
       {normals && (
-        <section className="card" style={{ marginTop: 12 }}>
-          <h2 className="card-title">{d.name} 월별 날씨</h2>
-          <p className="muted month-help">
-            <span className="good-key" /> 여행하기 좋은 달 · 달을 누르면 평년 기온과 강수량을 자세히 볼 수 있어요.
-          </p>
-          <MonthCards slug={d.slug} normals={normals} good={good} current={month} />
-          <p className="muted" style={{ margin: "10px 0 0" }}>
-            평년값: {CLIMATE_SOURCE}(현지 고도 보정)로 계산한 낮 최고·아침 최저 기온 평균과 월 강수량입니다.
-          </p>
-        </section>
-      )}
-
-      {guide && (
-        <GuideCard
-          title={`지금(${month}월) ${d.name} 여행 가이드`}
-          guide={guide}
-          more={
-            <p className="guide-more">
-              <Link href={`/overseas/${d.slug}/${month}`}>{month}월 날씨 자세히 보기 →</Link>
-            </p>
-          }
+        <CityMonths
+          slug={d.slug}
+          name={d.name}
+          normals={normals}
+          good={good}
+          guides={normals.map((_, i) => monthGuide(d, i + 1))}
+          current={month}
+          source={CLIMATE_SOURCE}
         />
       )}
 

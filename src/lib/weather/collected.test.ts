@@ -120,6 +120,9 @@ describe("직접 수집 예보", () => {
     const w = await loadWave(bucket, cs, keys);
     expect(w?.waveHeight).toEqual([1, 1.3, 1.7, 2]);
     expect(await loadWave(bucket, corners(37.6, 127.1), keys)).toBeNull();
+    // 격자선 위 해안 지점: 바다 점 가중치가 0이어도 값을 낸다
+    const coast = await loadWave(bucket, corners(36.0, 126.25), keys);
+    expect(coast?.waveHeight[0]).toBe(1);
   });
 
   it("강수 확률은 그 시각이 속한 6시간 구간 값", async () => {

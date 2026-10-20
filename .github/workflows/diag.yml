@@ -7,14 +7,36 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+      R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
     steps:
       - uses: actions/checkout@v4
       - run: |
           set +e
           {
-          curl -s https://tripnalc.com/ > /tmp/h
-          grep -o '<meta name="naver-site-verification"[^>]*>' /tmp/h
-          grep -o 'cloudflareinsights[^;]*' /tmp/h | head -c 300; echo
+          echo "== wrangler r2 list (deploy token)"
+          npx -y wrangler@4 r2 bucket list 2>&1 | tail -15
+          echo "== token verify"
+          curl -s -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" https://api.cloudflare.com/client/v4/user/tokens/verify | head -c 300; echo
+          echo "== r2 objects"
+          pip -q install boto3
+          python3 - <<'PY'
+          import boto3, os
+          s3 = boto3.client("s3", endpoint_url=f"https://{os.environ['CLOUDFLARE_ACCOUNT_ID']}.r2.cloudflarestorage.com", aws_access_key_id=os.environ["R2_ACCESS_KEY_ID"], aws_secret_access_key=os.environ["R2_SECRET_ACCESS_KEY"], region_name="auto")
+          for m in ["ecmwf","gfs","icon"]:
+              try:
+                  print(m, s3.get_object(Bucket="tripnal-data", Key=f"{m}/latest.json")["Body"].read()[:200])
+                  r = s3.list_objects_v2(Bucket="tripnal-data", Prefix=f"{m}/", Delimiter="/")
+                  print(" runs", [p["Prefix"] for p in r.get("CommonPrefixes", [])])
+              except Exception as e:
+                  print(m, "ERR", e)
+          o = s3.get_object(Bucket="tripnal-data", Key="ecmwf/latest.json")["Body"].read()
+          import json; run = json.loads(o)["run"]
+          print(s3.get_object(Bucket="tripnal-data", Key=f"ecmwf/{run}/37.50_127.00.json")["Body"].read()[:600])
+          PY
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com
           git add diag-out.txt; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026

@@ -15,16 +15,17 @@ jobs:
       - uses: actions/checkout@v4
       - run: |
           set +e
-          for q in "lat=37.82&lon=127.52" "lat=38.12&lon=128.47&elev=1708" "lat=33.5&lon=126.53"; do
+          for q in "lat=36.33&lon=126.6" "lat=33.5&lon=126.53" "lat=37.57&lon=126.98"; do
             echo "== $q"
-            curl -s "https://tripnalc.com/api/forecast?$q&provider=collected&v=x1" -o c.json -w "%{http_code} %{time_total}s\n"
-            curl -s "https://tripnalc.com/api/forecast?$q&v=x1" -o o.json
+            curl -s "https://tripnalc.com/api/forecast?$q&provider=collected&v=x2" -o c.json -w "%{http_code} %{time_total}s\n"
+            curl -s "https://tripnalc.com/api/forecast?$q&v=x2" -o o.json
             python3 -c "
           import json
           c=json.load(open('c.json')); o=json.load(open('o.json'))
-          print('src', c.get('source'), c.get('elevation'), '|', o.get('source'), o.get('elevation'), c.get('error'))
-          for dc, do in list(zip(c['days'], o['days']))[:16:3]:
-              print(dc['date'], 'T', dc['tMin'], dc['tMax'], 'vs', do['tMin'], do['tMax'], 'P', round(dc['precipSum'],1), 'vs', round(do['precipSum'],1), 'G', dc['gustMax'], 'vs', do['gustMax'], 'code', dc['code'], do['code'])
+          for dc, do in list(zip(c['days'], o['days']))[:16:2]:
+              sc=[s for s in dc['slots']]; so=[s for s in do['slots']]
+              print(dc['date'], 'prob', [s['precipProb'] for s in sc], 'vs', [s['precipProb'] for s in so])
+              print('     wave', [s['wave'] for s in sc], 'vs', [s['wave'] for s in so])
           "
           done > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com

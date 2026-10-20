@@ -1,4 +1,9 @@
-class="adsbygoogle ad-slot" client=… data-ad-slot="3462530957" data-ad-format="auto" data-full-width-responsive="true"
-class="adsbygoogle ad-slot" client=… data-ad-slot="1560176368" data-ad-format="auto" data-full-width-responsive="true"
-1
-google.com, pub-2807429912252096, DIRECT, f08c47fec0942fa0
+== getPwnStatus
+ERR HTTP Error 403: Forbidden
+== getWthrWrnList
+ERR HTTP Error 403: Forbidden
+== getWthrWrnMsg
+ERR HTTP Error 403: Forbidden
+== getPwnCd
+ERR HTTP Error 403: Forbidden
+apihub 200

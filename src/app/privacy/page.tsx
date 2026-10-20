@@ -52,6 +52,9 @@ export default function Privacy() {
         </a>
         을 참고하세요.
       </p>
+      <p>
+        방문 통계는 Cloudflare Web Analytics로 집계합니다. 쿠키를 쓰지 않고 개인을 식별하지 않으며, 페이지 조회 수·유입 경로·기기 종류 같은 합계만 봅니다.
+      </p>
 
       <h2>5. 문의</h2>
       <p>

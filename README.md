@@ -44,4 +44,4 @@ npm test && npm run lint && npm run typecheck
 
 ## 예보 직접 수집 (진행 중)
 
-`collector/`는 ECMWF IFS 공개 예보(0.25°, CC-BY-4.0)에서 한국 영역(북위 32.5~39.5, 동경 124~132)만 잘라 격자점별 JSON으로 만들고 R2 `tripnal-data` 버킷에 올립니다. `.github/workflows/collect.yml`이 하루 두 번(00·12 UTC run) 돌고, 수동으로도 실행할 수 있습니다. 화면에 쓰기 전까지는 Open-Meteo 예보를 그대로 씁니다.
+`collector/`는 ECMWF IFS 공개 예보(0.25°, CC-BY-4.0)에서 한국 영역(북위 32.5~39.5, 동경 124~132)만 잘라 격자점별 JSON으로 만들고 R2 `tripnal-data` 버킷에 올립니다. `.github/workflows/collect.yml`이 하루 두 번(00·12 UTC run) 돌고, 수동으로도 실행할 수 있습니다. `collector/gfs.py`는 같은 방식으로 NOAA GFS(0.25°, 3시간 간격 384시간, 시정 포함)를 받아 `gfs/`에 올립니다. 화면에 쓰기 전까지는 Open-Meteo 예보를 그대로 씁니다.

@@ -1,0 +1,26 @@
+name: DEM
+
+# 기온 고도 보정에 쓰는 한국 지형 고도 격자를 만들어 R2(tripnal-data/dem/)에 올린다.
+# 원본이 바뀌지 않으므로 필요할 때만 손으로 돌린다 (Actions > DEM > Run workflow).
+on:
+  workflow_dispatch:
+
+jobs:
+  dem:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: collector/requirements.txt
+      - run: pip install -r collector/requirements.txt
+      - run: python collector/dem.py --out out
+      - name: R2에 올리기
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+        run: python collector/upload.py out dem

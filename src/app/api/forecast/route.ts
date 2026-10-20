@@ -13,7 +13,9 @@ export async function GET(request: Request) {
     return Response.json({ error: "대한민국 안의 위치만 볼 수 있습니다." }, { status: 400 });
   }
   try {
-    const forecast = await getForecast(lat, lon, elevation);
+    // 직접 수집 예보로 바꾸기 전에 같은 지점을 비교해 보는 용도
+    const provider = searchParams.get("provider") === "collected" ? "collected" : undefined;
+    const forecast = await getForecast(lat, lon, elevation, provider);
     return Response.json(forecast, {
       headers: { "Cache-Control": "public, max-age=600, s-maxage=1800" },
     });

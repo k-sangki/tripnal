@@ -367,6 +367,23 @@ a {
   background: var(--mint);
   color: var(--pine);
 }
+.alert-pill {
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: inherit;
+  font-family: inherit;
+  cursor: pointer;
+}
+.alert-pill.on {
+  background: #ffd43b;
+  border-color: #ffd43b;
+  color: var(--pine);
+}
+.alert-msg {
+  flex-basis: 100%;
+  font-size: 13px;
+  line-height: 1.45;
+  opacity: 0.9;
+}
 
 /* ---------- 등급 ---------- */
 

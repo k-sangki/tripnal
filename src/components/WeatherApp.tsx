@@ -9,6 +9,7 @@ import { kstDate, kstHourKey } from "@/lib/time";
 import type { Forecast } from "@/lib/weather/types";
 import { AD_SLOTS, AdSlot } from "./AdSlot";
 import { CaptureFrame } from "./CaptureFrame";
+import { AlertButton } from "./AlertButton";
 import { CaptureSheet } from "./CaptureSheet";
 import { InstallButton } from "./InstallButton";
 import { ForecastTable } from "./ForecastTable";
@@ -251,6 +252,7 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
             <div className="hero-meta">
               <span className="pill mint">{periodLabel(period)}</span>
               {forecast?.elevation != null && <span className="pill">⛰️ 해발 {Math.round(forecast.elevation).toLocaleString()}m</span>}
+              {place && forecast && <AlertButton key={`${place.lat},${place.lon}`} place={place} act={leisureId} from={period.from} to={period.to} />}
             </div>
           </section>
         </div>

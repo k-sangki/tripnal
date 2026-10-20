@@ -1,6 +1,7 @@
 name: Collect
 
-# ECMWF·GFS·ICON 공개 예보, GFS-Wave 파고, GEFS 강수 확률, CAMS 미세먼지, 국립해양조사원 만조·간조를 한국 영역만 R2(tripnal-data)에 올린다.
+# ECMWF·GFS·ICON 공개 예보, GFS-Wave 파고, GEFS 강수 확률, CAMS 미세먼지, 국립해양조사원 만조·간조를 한국 영역만 R2(tripnal-data)에 올리고,
+# 끝나면 저장한 여행의 날씨 변화 알림을 보낸다.
 # 00·12 UTC run의 360시간 자료가 다 올라오는 시각(약 8시간 뒤)에 맞춰 돈다.
 # 필요한 값: CLOUDFLARE_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, KHOA_API_KEY, ADS_API_KEY (Settings > Secrets and variables > Actions)
 on:
@@ -161,3 +162,24 @@ jobs:
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
           R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
         run: python collector/upload.py out cams
+
+  # 저장한 여행의 예보가 크게 바뀌었으면 웹 푸시로 알린다 (새 예보가 다 올라간 뒤)
+  alerts:
+    needs: [ecmwf, gfs, icon, gefs]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install boto3 pywebpush
+      # 사이트가 최신 run 정보를 5분 동안 기억하므로 새 예보를 읽도록 조금 기다린다
+      - run: sleep 360
+      - name: 비교·발송
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+        run: python collector/alerts.py

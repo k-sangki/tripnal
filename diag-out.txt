@@ -1,12 +1,13 @@
-/overseas/osaka 200 0.653410
-      1 월별 날씨</h2>
-/overseas/paris 200 1.044399
-      4 서유럽
-      1 월별 날씨</h2>
-/overseas/bangkok 200 0.565291
-      1 월별 날씨</h2>
-/overseas/osaka 200 0.907757
-      1 월별 날씨</h2>
-/overseas/sapporo 200 0.143541
-      1 월별 날씨</h2>
-일본 중화권 동남아시아 중동·아시아 아프리카 남태평양 오세아니아 서유럽 동유럽 미주 
+apple-icon.png?apple-icon.1gsc_n0brtoxi.png
+apple-icon.png?apple-icon.1gsc_n0brtoxi.png\
+gtag("config","G-ETYG3HMZ2M")
+gtag/js?id=G-ETYG3HMZ2M
+icon.svg?icon.05ncajxh7-h61.svg
+icon.svg?icon.05ncajxh7-h61.svg\
+ov-banner
+{"name":"tripnalc - 캠핑·낚시·등산 16일 날씨","short_name":"tripnalc","description":"놀러 갈 땐, 트립날씨. 대한민국 어디든 16일까지 3시간 간격 레저 날씨","start_url":"/","scope":"/","display":"standalone","background_color":"#0E3B36","theme_color":"#0E3B36","lang":"ko","icons":[{"src":"/icon-v2-192.png","sizes":"192x192","type":"image/png"},{"src":"/icon-v2-512.png","sizes":"512x512","type":"image/png"},{"src":"/icon-v2-maskable-512.png","sizes":"512x512","type":"image/png","purpose":"maskable"}]}
+/icon-v2-192.png 200 6468
+/icon-v2-512.png 200 18161
+/icon-v2-maskable-512.png 200 11208
+/icon-192.png 200 6468
+0

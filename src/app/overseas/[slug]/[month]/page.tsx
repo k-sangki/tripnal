@@ -146,6 +146,9 @@ export default async function MonthPage({ params }: PageProps<"/overseas/[slug]/
             </Link>
           ))}
         </nav>
+        <p className="city-links-all">
+          <Link href={`/overseas/month/${m}`}>{m}월에 가기 좋은 다른 여행지 →</Link>
+        </p>
       </section>
       <SiteFooter />
     </div>

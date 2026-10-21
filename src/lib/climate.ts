@@ -303,3 +303,28 @@ export function travelPrep(d: Destination): PrepItem[] {
   });
   return out;
 }
+
+/* ---------- 월별 추천 여행지 ---------- */
+
+export interface MonthPick {
+  d: Destination;
+  normal: MonthNormal;
+  reason?: string;
+  score: number;
+}
+
+/** 그 달이 "여행하기 좋은 달"인 여행지를 묶음별로, 날씨 점수 높은 순으로 */
+export function bestForMonth(list: Destination[], month: number): Map<string, MonthPick[]> {
+  const out = new Map<string, MonthPick[]>();
+  for (const d of list) {
+    const normals = getNormals(d.slug);
+    const g = goodMonths(d.slug).find((x) => x.month === month);
+    if (!normals || !g) continue;
+    const normal = normals[month - 1];
+    const arr = out.get(d.group) ?? [];
+    arr.push({ d, normal, reason: g.reason, score: monthScore(normal) });
+    out.set(d.group, arr);
+  }
+  for (const arr of out.values()) arr.sort((a, b) => b.score - a.score);
+  return out;
+}

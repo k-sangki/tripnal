@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { SiteFooter, SiteHeader } from "@/components/SiteHeader";
+import { SiteFooter, SiteHeader, StripBanner } from "@/components/SiteHeader";
 import { LEISURES } from "@/lib/leisure";
 import { PLACES } from "@/lib/places";
 
@@ -15,6 +15,7 @@ export default function PlacesIndex() {
     <div className="shell">
       <SiteHeader />
       <h1 style={{ fontSize: 24, letterSpacing: "-0.03em" }}>장소별 이번주·16일 날씨</h1>
+      <StripBanner href="/weekend" title="이번 주말 날씨 좋은 곳" cta="보기 →" />
       {LEISURES.map((l) => {
         const list = PLACES.filter((p) => p.leisure === l.id);
         if (!list.length) return null;

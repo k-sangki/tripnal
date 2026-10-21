@@ -268,7 +268,15 @@ a {
   font-size: 24px;
   letter-spacing: -0.01em;
 }
+.ov-banner.long b {
+  font-size: 19px;
+}
+.ov-banner-title i {
+  font-style: normal;
+  font-size: 0.9em;
+}
 .ov-banner span {
+  flex-shrink: 0;
   font-size: 13px;
   font-weight: 600;
   color: #4b6a64;
@@ -2414,4 +2422,150 @@ button.cc-col.on {
 .city-links-all a {
   font-weight: 700;
   color: var(--pine);
+}
+
+/* 해외 도시 머리 카드: 시차·통화·플러그·비행시간 칩 */
+.city-info {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.city-info li {
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+/* 이번 주말 날씨 좋은 곳 (/weekend) */
+.wk-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.wk-list li + li {
+  border-top: 1px solid var(--line);
+}
+.wk-list a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  color: var(--ink);
+}
+.wk-rank {
+  width: 22px;
+  flex-shrink: 0;
+  font-weight: 800;
+  color: var(--pine);
+  text-align: center;
+}
+.wk-name,
+.wk-wx {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.wk-name {
+  flex: 1;
+}
+.wk-name b {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.wk-name small,
+.wk-wx small {
+  font-size: 12px;
+  color: var(--muted);
+}
+.wk-wx {
+  align-items: flex-end;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.wk-score {
+  flex-shrink: 0;
+  min-width: 40px;
+  padding: 4px 0;
+  border-radius: 10px;
+  background: var(--chip);
+  font-size: 13px;
+  font-weight: 800;
+  text-align: center;
+  color: var(--ink-2);
+}
+.wk-score.mid {
+  background: #fff4cc;
+  color: #8a6400;
+}
+.wk-score.hi {
+  background: #d9f5e9;
+  color: var(--pine);
+}
+
+/* 월별 추천 여행지 (/overseas/month/{m}) */
+.month-chips {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+}
+.month-chips a {
+  padding: 7px 0;
+  border-radius: 999px;
+  background: #fff;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink-2);
+}
+.month-chips a.on {
+  background: var(--pine);
+  color: #fff;
+}
+.best-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+}
+.best-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #ecfaf4;
+  color: var(--ink);
+}
+.best-name {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+}
+.best-name small {
+  font-size: 11.5px;
+  color: var(--muted);
+}
+.best-wx {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+.best-card em {
+  align-self: flex-start;
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: var(--pine);
+  color: #fff;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 700;
 }

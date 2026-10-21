@@ -21,11 +21,11 @@ jobs:
       - run: |
           set +e
           {
-            for u in /overseas/osaka /overseas/paris /overseas/bangkok /overseas/osaka /overseas/sapporo; do
-              echo "$u $(curl -s -o /tmp/p.html -w '%{http_code} %{time_total}' https://tripnalc.com$u)"
-              grep -o '서유럽\|동유럽\|월별 날씨</h2>' /tmp/p.html | sort | uniq -c
-            done
-            curl -s https://tripnalc.com/overseas | grep -o '<h2 class="card-title">[^<]*' | sed 's/.*>//' | tr '\n' ' '
+            curl -s https://tripnalc.com/ > /tmp/h.html
+            grep -o 'gtag/js?id=[A-Z0-9-]*\|gtag("config","[^"]*")\|ov-banner\|apple-icon[^"]*\|icon.svg[^"]*' /tmp/h.html | sort -u
+            curl -s https://tripnalc.com/manifest.webmanifest | head -c 600; echo
+            for f in /icon-v2-192.png /icon-v2-512.png /icon-v2-maskable-512.png /icon-192.png; do echo "$f $(curl -s -o /dev/null -w '%{http_code} %{size_download}' https://tripnalc.com$f)"; done
+            curl -s https://tripnalc.com/overseas | grep -c 'ov-banner'
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com
           git add -A diag-out.txt; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026

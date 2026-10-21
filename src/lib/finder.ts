@@ -130,11 +130,29 @@ export function finderTitle(q: FinderQuery, count: number): string {
   return `${head} 여행지 ${count}곳`;
 }
 
-/** 빠른 선택 */
-export const PRESETS: { id: string; label: string; apply: (q: FinderQuery) => FinderQuery }[] = [
-  { id: "winter", label: "🏖️ 겨울 탈출", apply: (q) => ({ ...q, months: [12, 1, 2], seasons: ["peak", "shoulder"], temp: "hot" }) },
-  { id: "short", label: "✈️ 2박3일 가까운 곳", apply: (q) => ({ ...q, flight: 3, nearTz: true, seasons: ["peak", "shoulder"] }) },
-  { id: "cheap", label: "💸 비수기 가성비", apply: (q) => ({ ...q, seasons: ["off"], temp: null }) },
-  { id: "shoulder", label: "🌦️ 간절기 실속", apply: (q) => ({ ...q, seasons: ["shoulder"], temp: null }) },
-  { id: "cool", label: "🍁 선선한 날씨", apply: (q) => ({ ...q, seasons: ["peak", "shoulder"], temp: "cool" }) },
+/**
+ * 빠른 선택. 누를 때마다 기본 조건에서 새로 시작해 앞서 누른 빠른 선택의 조건(비행시간·기온 등)이 남지 않게 한다.
+ * 고른 지역만 그대로 둔다.
+ */
+export interface Preset {
+  id: string;
+  label: string;
+  set: Partial<FinderQuery>;
+}
+
+export const PRESETS: Preset[] = [
+  { id: "winter", label: "🏖️ 겨울 탈출", set: { months: [1, 2, 12], seasons: ["peak", "shoulder"], temp: "hot" } },
+  { id: "short", label: "✈️ 2박3일 가까운 곳", set: { flight: 3, nearTz: true, seasons: ["peak", "shoulder"] } },
+  { id: "cheap", label: "💸 비수기 가성비", set: { seasons: ["off"] } },
+  { id: "shoulder", label: "🌦️ 간절기 실속", set: { seasons: ["shoulder"] } },
+  { id: "cool", label: "🍁 선선한 날씨", set: { seasons: ["peak", "shoulder"], temp: "cool" } },
 ];
+
+export function applyPreset(p: Preset, q: FinderQuery, month: number): FinderQuery {
+  return { ...defaultQuery(month), groups: q.groups, ...p.set };
+}
+
+/** 지금 조건이 이 빠른 선택을 누른 상태 그대로인지 */
+export function presetActive(p: Preset, q: FinderQuery, month: number): boolean {
+  return toSearch(applyPreset(p, q, month), month) === toSearch(q, month);
+}

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { defaultQuery, finderTitle, parseQuery, runFinder, toSearch } from "@/lib/finder";
+import { applyPreset, defaultQuery, finderTitle, parseQuery, presetActive, PRESETS, runFinder, toSearch } from "@/lib/finder";
 import { DESTINATIONS, getDestination } from "@/lib/overseas";
 import { finderRows, seasons, wetDry } from "@/lib/season";
 
@@ -57,5 +57,28 @@ describe("wetDry", () => {
     expect(bkk.wet).toContain(8);
     expect(bkk.dry).toContain(1);
     expect(wetDry(getDestination("tokyo")!)).toBeNull();
+  });
+});
+
+describe("빠른 선택", () => {
+  const p = (id: string) => PRESETS.find((x) => x.id === id)!;
+  it("앞서 누른 빠른 선택의 조건이 남지 않는다", () => {
+    const winter = applyPreset(p("winter"), defaultQuery(10), 10);
+    const cheap = applyPreset(p("cheap"), winter, 10);
+    expect(cheap).toEqual({ ...defaultQuery(10), seasons: ["off"] });
+    const short = applyPreset(p("short"), winter, 10);
+    expect(short.temp).toBeNull();
+    expect(short.months).toEqual([10]);
+  });
+  it("고른 지역은 그대로 둔다", () => {
+    const q = { ...defaultQuery(10), groups: ["동남아시아"] };
+    expect(applyPreset(p("cheap"), q, 10).groups).toEqual(["동남아시아"]);
+  });
+  it("누른 빠른 선택만 켜진 것으로 본다", () => {
+    const q = applyPreset(p("cool"), defaultQuery(10), 10);
+    expect(PRESETS.filter((x) => presetActive(x, q, 10)).map((x) => x.id)).toEqual(["cool"]);
+    // 주소에서 다시 읽어도 켜진 상태
+    const back = parseQuery(new URLSearchParams(toSearch(applyPreset(p("winter"), q, 10), 10).slice(1)), 10);
+    expect(presetActive(p("winter"), back, 10)).toBe(true);
   });
 });

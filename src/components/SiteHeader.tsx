@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Logo } from "./Logo";
 import { SLOGAN, SLOGAN_C } from "@/lib/brand";
 
-/** overseasBanner: 맨 위 "해외여행 보러가기" 띠 카드 (해외 날씨 페이지에서는 끈다) */
+/** overseasBanner: 맨 위 "해외날씨 보러가기" 띠 카드 (해외 날씨 페이지에서는 끈다) */
 export function SiteHeader({
   overseasBanner = true,
 }: {
@@ -23,13 +23,13 @@ export function SiteHeader({
       </header>
       {overseasBanner && (
         <Link href="/overseas" className="ov-banner">
-          {/* "해외여행" 네 글자만 담은 제목용 글꼴 (구글 폰트 text= 부분 로드라 몇 KB) */}
+          {/* "해외날씨" 네 글자만 담은 제목용 글꼴 (구글 폰트 text= 부분 로드라 몇 KB) */}
           <link
             rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&text=%ED%95%B4%EC%99%B8%EC%97%AC%ED%96%89&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&text=%ED%95%B4%EC%99%B8%EB%82%A0%EC%94%A8&display=swap"
             precedence="default"
           />
-          <b>해외여행</b>
+          <b>해외날씨</b>
           <span>보러가기 →</span>
         </Link>
       )}

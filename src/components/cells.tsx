@@ -95,6 +95,18 @@ export function WindArrow({ dir }: { dir: number | null }) {
   );
 }
 
+/**
+ * 강수량 칸 색. 양은 세 모델 중간값, 확률은 앙상블 비율이라 서로 어긋날 수 있어서
+ * 확률이 낮으면 색을 눌러 준다: 20% 미만은 회색(사실상 안 옴), 20~40%는 한 단계 연하게.
+ */
+export function rainClass(mm: number, prob: number | null | undefined): string {
+  const level = rainLevel(mm);
+  if (prob == null) return `r${level}`;
+  if (prob < 20) return "r-low";
+  if (prob < 40) return `r${Math.max(1, level - 1)}`;
+  return `r${level}`;
+}
+
 /** 표에 들어갈 값 하나의 글자와 색 단계 */
 export function cellValue(slot: Slot, metric: MetricKey): { text: string; cls?: string } {
   const none = { text: "-", cls: "v-none" };
@@ -108,7 +120,7 @@ export function cellValue(slot: Slot, metric: MetricKey): { text: string; cls?: 
       if (p == null) return none;
       // 값은 0.1mm 단위로 반올림돼 있어 0.1 미만은 곧 0. 강수 확률이 30% 이상이면 "조금 올 수 있음"으로 표시한다.
       if (p < 0.1) return (slot.precipProb ?? 0) >= 30 ? { text: "0.1↓", cls: "r-trace" } : { text: "·", cls: "v-none" };
-      return { text: rainText(p), cls: `r${rainLevel(p)}` };
+      return { text: rainText(p), cls: rainClass(p, slot.precipProb) };
     }
     case "precipProb": {
       const v = slot.precipProb;

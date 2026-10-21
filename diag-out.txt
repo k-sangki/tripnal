@@ -1,58 +1,16 @@
 
 [notice] A new release of pip is available: 26.2.1 -> 26.2.2
 [notice] To update, run: pip install --upgrade pip
-실패 juheulsan HTTP Error 500: Internal Server Error
-실패 iho-tewoo-beach HTTP Error 500: Internal Server Error
-실패 gwakji-beach HTTP Error 500: Internal Server Error
-실패 seonyudo-beach HTTP Error 503: Service Unavailable
-실패 ilgwang-beach HTTP Error 503: Service Unavailable
-실패 jangsa-beach HTTP Error 503: Service Unavailable
-실패 sejong HTTP Error 503: Service Unavailable
-실패 andong HTTP Error 503: Service Unavailable
-실패 suncheon HTTP Error 503: Service Unavailable
-실패 alpensia HTTP Error 503: Service Unavailable
-실패 elysian-gangchon HTTP Error 503: Service Unavailable
-실패 muju-deogyusan-resort HTTP Error 503: Service Unavailable
-실패 o2-resort Unterminated string starting at: line 1 column 4094 (char 4093)
-실패 bike-ara-hangang HTTP Error 503: Service Unavailable
-실패 bike-gwangnaru HTTP Error 503: Service Unavailable
-실패 bike-balgeun-gwangjang HTTP Error 503: Service Unavailable
-실패 bears-town HTTP Error 503: Service Unavailable
-실패 bike-saetteo HTTP Error 503: Service Unavailable
-실패 bike-binaeseom HTTP Error 503: Service Unavailable
-실패 bike-ihwaryeong HTTP Error 503: Service Unavailable
-실패 bike-ipobo HTTP Error 503: Service Unavailable
-실패 bike-chungju-dam HTTP Error 503: Service Unavailable
-실패 bike-buljeong HTTP Error 503: Service Unavailable
-실패 bike-gangjeong-goryeongbo HTTP Error 503: Service Unavailable
-실패 bike-gumibo HTTP Error 503: Service Unavailable
-실패 bike-hapcheon-changnyeongbo HTTP Error 500: Internal Server Error
-실패 bike-sangjubo HTTP Error 503: Service Unavailable
-실패 bike-daecheong-dam HTTP Error 503: Service Unavailable
-실패 bike-changnyeong-hamanbo HTTP Error 503: Service Unavailable
-실패 bike-gongjubo HTTP Error 503: Service Unavailable
+실패 tongyeong HTTP Error 500: Internal Server Error
 실패 bike-damyang-dam HTTP Error 503: Service Unavailable
-실패 bike-juksanbo HTTP Error 503: Service Unavailable
-실패 bike-baekjebo HTTP Error 503: Service Unavailable
-실패 bike-gyeonggang-bridge HTTP Error 503: Service Unavailable
-실패 dalgung-camp HTTP Error 503: Service Unavailable
-실패 deogyudae-camp HTTP Error 503: Service Unavailable
-실패 songgye-camp HTTP Error 500: Internal Server Error
-실패 cheongpungho-camp HTTP Error 503: Service Unavailable
-실패 pyeongchang-camp HTTP Error 503: Service Unavailable
-실패 biseulsan-camp HTTP Error 503: Service Unavailable
-실패 naewonsa-camp HTTP Error 503: Service Unavailable
-주말 ['2026-10-24', '2026-10-25'] · 265곳 · 실패 41곳
+실패 bike-juksanbo HTTP Error 500: Internal Server Error
+실패 bike-baealdo HTTP Error 500: Internal Server Error
+실패 bike-sinmae-bridge HTTP Error 503: Service Unavailable
+실패 seoraktong-camp HTTP Error 503: Service Unavailable
+실패 dowon-camp The read operation timed out
+주말 ['2026-10-24', '2026-10-25'] · 299곳 · 실패 7곳
 uploaded weekend/latest.json
-/ 200 0.216736
-/weekend 503 0.078505
-/overseas 200 0.396996
-/overseas/month/10 200 0.108502
-/overseas/tokyo 200 0.169054
-/weather 200 0.192939
-wk-rank">1
-wk-rank">2
-wk-rank">3
-wk-rank">4
-wk-rank">5
-12
+0
+
+10월에 가기 좋은 해외 여행지
+10월에 가기 좋은 해외 여행지

@@ -21,13 +21,14 @@ jobs:
       - run: |
           set +e
           {
-            git fetch -q origin main && git checkout origin/main -- collector src/lib/places.ts
-            pip install -q boto3
-            python collector/weekend.py
-            curl -s https://tripnalc.com/weekend -o w.html; grep -c 'wk-rank' w.html; grep -o '주말 [^<]* 가기 좋은 곳' w.html
-            curl -s https://tripnalc.com/overseas/tokyo -o t.html; grep -o 'city-info.\{0,400\}' t.html | head -c 600; echo
-            curl -s https://tripnalc.com/overseas -o o.html; grep -o '[0-9]*월에 가기 좋은 해외 여행지' o.html | head -2
-            curl -s https://tripnalc.com/weather -o x.html; grep -o '이번 주말 날씨 좋은 곳' x.html | head -1
+            for u in /weekend /overseas/tokyo /overseas /weather /overseas/month/10 /overseas/tokyo/10; do
+              f=$(echo $u | tr / _).html
+              echo "$u $(curl -s -o $f -w '%{http_code} %{time_total} %{size_download}' "https://tripnalc.com$u")"
+            done
+            grep -c 'wk-rank' _weekend.html; grep -o '주말 [^<]* 가기 좋은 곳' _weekend.html; grep -o '정리하는 중' _weekend.html
+            grep -o 'city-info.\{0,300\}' _overseas_tokyo.html | sed 's/<[^>]*>/ /g' | head -c 500; echo
+            grep -o '이번 주말 날씨 좋은 곳' _weather.html | head -1
+            grep -o '10월에 가기 좋은 다른 여행지' _overseas_tokyo_10.html | head -1
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com
           git add -A diag-out.txt; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026

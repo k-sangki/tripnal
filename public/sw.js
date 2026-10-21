@@ -12,8 +12,8 @@ self.addEventListener("push", (e) => {
   e.waitUntil(
     self.registration.showNotification(data.title || "트립날씨", {
       body: data.body || "",
-      icon: "/icon-192.png",
-      badge: "/icon-192.png",
+      icon: "/icon-v2-192.png",
+      badge: "/icon-v2-192.png",
       tag: data.tag,
       data: { url: data.url || "/" },
     }),

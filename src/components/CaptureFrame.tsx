@@ -24,6 +24,13 @@ interface Props {
 }
 
 const GAP = 14;
+
+/** 캡처 우하단 "예보 제공"에 쓰는 기관 이름 (괄호 안은 흐리게) */
+const SOURCE_NAMES: Record<string, string> = {
+  ECMWF: "유럽 중기 기상예보 센터",
+  GFS: "미국 NOAA·NCEP",
+  ICON: "독일기상청 DWD",
+};
 /** 날짜가 적을 때 너무 크게 키우지 않는다 */
 const MAX_ZOOM = 1.8;
 
@@ -116,7 +123,21 @@ export function CaptureFrame({ frameRef, ...p }: Props) {
           </div>
         </div>
         <footer className="cf-foot">
-          <span>{p.source && `예보 제공: ${p.source}`}</span>
+          {p.source && (
+            <span className="cf-src">
+              예보 제공 :{" "}
+              {p.source.split("·").map((s, i) => (
+                <span key={s}>
+                  {i > 0 && " · "}
+                  {/* 한 기관 이름이 줄 중간에서 끊기지 않게 */}
+                  <span className="cf-src-item">
+                    {s}
+                    {SOURCE_NAMES[s] && <span className="cf-src-sub"> ({SOURCE_NAMES[s]})</span>}
+                  </span>
+                </span>
+              ))}
+            </span>
+          )}
           <span className="cap-brand">
             <span className="cap-slogan">{SLOGAN_C}</span>
             <span className="cap-url">tripnalc.com</span>

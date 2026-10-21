@@ -284,8 +284,8 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
                   <section className="card model-note">
                     <h2>세 예보 모델의 중간값이라 덜 빗나가요</h2>
                     <p>
-                      트립날씨는 단일 모델만 기본으로 보여주는 일반 지도형 사이트와 달리, 유럽(ECMWF)·미국(GFS)·독일(ICON) 3개 예보의 시간대별 중간값을
-                      사용합니다. 한 모델이 크게 빗나가도 나머지 둘이 잡아주어 기온·바람과 3일 이후 중기 예보의 오차가 적습니다.
+                      트립날씨는 단일 모델만 기본으로 보여주는 일반 지도형 사이트와 달리, <b>유럽(ECMWF)·미국(GFS)·독일(ICON)</b> 3개 예보의 시간대별
+                      중간값을 사용합니다. 한 모델이 크게 빗나가도 나머지 둘이 잡아주어 기온·바람과 3일 이후 중기 예보의 오차가 적습니다.
                     </p>
                     <p className="muted">단, 좁은 지역의 소나기는 약하게 표시될 수 있으니 강수 확률과 예측 가능성(%)을 함께 참고하세요.</p>
                   </section>

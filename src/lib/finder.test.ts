@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { defaultQuery, finderTitle, parseQuery, runFinder, toSearch } from "@/lib/finder";
 import { DESTINATIONS, getDestination } from "@/lib/overseas";
-import { finderRows, seasons } from "@/lib/season";
+import { finderRows, seasons, wetDry } from "@/lib/season";
 
 const rows = finderRows(DESTINATIONS, new Date("2026-10-21T00:00:00Z"));
 
@@ -48,5 +48,14 @@ describe("finder 제목·주소 추가", () => {
     const q = { ...defaultQuery(1), months: [12, 1, 2], seasons: ["peak", "shoulder"] as ("peak" | "shoulder")[], temp: "hot" as const };
     expect(finderTitle(q, 41)).toBe("12~2월 더운 해외 여행지 41곳");
     expect(toSearch(q, 1)).toBe("?m=12,1,2&s=peak,shoulder&t=hot");
+  });
+});
+
+describe("wetDry", () => {
+  it("열대 여행지의 우기·건기를 고른다", () => {
+    const bkk = wetDry(getDestination("bangkok")!)!;
+    expect(bkk.wet).toContain(8);
+    expect(bkk.dry).toContain(1);
+    expect(wetDry(getDestination("tokyo")!)).toBeNull();
   });
 });

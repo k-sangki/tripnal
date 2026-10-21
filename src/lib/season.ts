@@ -66,6 +66,30 @@ export function seasons(d: Destination): MonthSeason[] | null {
   });
 }
 
+/* ---------- 우기·건기 ---------- */
+
+/** 사이에 낀 한 달은 같은 철로 본다 (5~7월, 9~10월 → 5~10월) */
+function fillGaps(ms: number[]): number[] {
+  const s = new Set(ms);
+  for (let m = 1; m <= 12; m++) if (!s.has(m) && s.has(prevM(m)) && s.has(nextM(m))) s.add(m);
+  return [...s].sort((a, b) => a - b);
+}
+
+/**
+ * 열대 여행지의 우기·건기 달. 검색 제목("다낭 우기·건기")에 쓴다.
+ * 재분석 강수량은 부풀려지는 편이라 절대값과 그곳 연평균 대비를 같이 본다. 둘 다 2달 이상일 때만 돌려준다.
+ */
+export function wetDry(d: Destination): { wet: number[]; dry: number[] } | null {
+  if (Math.abs(d.lat) >= 25) return null;
+  const normals = getNormals(d.slug);
+  if (!normals) return null;
+  const mean = normals.reduce((a, n) => a + n.rain, 0) / 12;
+  const pick = (ok: (rain: number) => boolean) => normals.flatMap((n, i) => (ok(n.rain) ? [i + 1] : []));
+  const wet = fillGaps(pick((r) => r >= Math.max(150, mean * 1.2)));
+  const dry = fillGaps(pick((r) => r <= Math.max(60, mean * 0.5))).filter((m) => !wet.includes(m));
+  return wet.length >= 2 && dry.length >= 2 ? { wet, dry } : null;
+}
+
 /* ---------- 여행지 찾기 화면에 넘기는 자료 ---------- */
 
 /** 서울 평년값 (기상청 1991~2020 평년, 낮 최고·아침 최저 °C). "서울보다 몇 도" 비교용 */

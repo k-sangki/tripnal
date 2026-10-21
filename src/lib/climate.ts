@@ -248,3 +248,58 @@ export function monthGuide(d: Destination, month: number): MonthGuide | null {
 export function localMonth(utcOffsetMin: number, now: Date = new Date()): number {
   return new Date(now.getTime() + utcOffsetMin * 60000).getUTCMonth() + 1;
 }
+
+/* ---------- 여행 준비 ---------- */
+
+export interface PrepItem {
+  icon: string;
+  title: string;
+  text: string;
+}
+
+/** 도시 페이지 "여행 준비" 카드: 평년값으로 고른 예약·이동·비·보험 안내 */
+export function travelPrep(d: Destination): PrepItem[] {
+  const months = getNormals(d.slug);
+  if (!months) return [];
+  const out: PrepItem[] = [];
+  const good = monthRanges(goodMonths(d.slug).map((g) => g.month));
+  if (good && good !== "1년 내내") {
+    out.push({
+      icon: "✈️",
+      title: "항공권·숙소 예약",
+      text: `여행하기 좋은 ${good}은 찾는 사람이 많은 시기예요. 항공권과 숙소는 일찍 예약할수록 고르기 쉬워요.`,
+    });
+  } else {
+    out.push({ icon: "✈️", title: "항공권·숙소 예약", text: "날짜가 정해지면 항공권과 숙소를 먼저 예약해 두세요. 연휴·방학 기간은 일찍 차요." });
+  }
+  const minHi = Math.min(...months.map((m) => m.hi));
+  const minLo = Math.min(...months.map((m) => m.lo));
+  if (minHi >= 27) out.push({ icon: "🏨", title: "숙소 고르기", text: "1년 내내 더운 곳이라 숙소의 에어컨과 수영장 여부를 확인해 두면 좋아요." });
+  else if (minLo <= -10) out.push({ icon: "🏨", title: "숙소 고르기", text: "겨울이 매우 추운 곳이라 겨울에는 난방이 잘 되는 숙소인지 확인해 두세요." });
+
+  const icy = months.map((m, i) => (m.lo <= 0 ? i + 1 : 0)).filter(Boolean);
+  out.push({
+    icon: "🚗",
+    title: "렌터카·이동",
+    text:
+      "렌터카로 다닐 계획이라면 출국 전에 국제운전면허증을 발급받아 두세요. 나라마다 필요한 서류가 다르니 미리 확인하세요." +
+      (icy.length ? ` ${monthRanges(icy)}에는 아침 기온이 영하로 내려가 빙판길이 생길 수 있어요.` : ""),
+  });
+
+  const wet = months.map((m, i) => (m.rain >= 150 ? i + 1 : 0)).filter(Boolean);
+  if (wet.length && wet.length < 12) {
+    out.push({ icon: "☔", title: "비 오는 날 일정", text: `${monthRanges(wet)}에 간다면 비 오는 날을 위해 박물관·쇼핑몰 같은 실내 일정도 함께 짜 두세요.` });
+  } else if (wet.length === 12) {
+    out.push({ icon: "☔", title: "비 오는 날 일정", text: "1년 내내 비가 잦은 곳이라 실내 일정과 우산을 늘 챙겨 두세요." });
+  }
+
+  const storm = stormSeason(d);
+  out.push({
+    icon: "🛡️",
+    title: "여행자 보험",
+    text: storm
+      ? `${monthRanges(storm.months)}에는 ${storm.name}으로 항공편이 지연·결항될 수 있어요. 여행자 보험과 항공권 변경·환불 조건을 미리 확인하세요.`
+      : "해외 병원비는 비싼 편이라 여행자 보험을 들어 두면 안심이에요.",
+  });
+  return out;
+}

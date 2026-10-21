@@ -63,3 +63,18 @@ export function SiteFooter() {
     </footer>
   );
 }
+
+/** "해외날씨 보러가기"와 같은 모양의 띠 카드. 제목 글자만 담은 제목용 글꼴을 따로 불러온다 */
+export function StripBanner({ href, title, cta = "보러가기 →", icon }: { href: string; title: string; cta?: string; icon?: string }) {
+  const font = `https://fonts.googleapis.com/css2?family=Black+Han+Sans&text=${encodeURIComponent([...new Set(title)].join(""))}&display=swap`;
+  return (
+    <Link href={href} className={`ov-banner${title.length > 8 ? " long" : ""}`}>
+      <link rel="stylesheet" href={font} precedence="default" />
+      <b className="ov-banner-title">
+        {icon && <i aria-hidden>{icon}</i>}
+        {title}
+      </b>
+      <span>{cta}</span>
+    </Link>
+  );
+}

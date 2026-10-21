@@ -6,6 +6,7 @@ import { ForecastButton, TravelPrepCard } from "@/components/CityClimate";
 import { CityIssues, CityMonths } from "@/components/CityMonths";
 import { SiteFooter, SiteHeader } from "@/components/SiteHeader";
 import { CLIMATE_SOURCE, climateSummary, getIntro, getNormals, goodMonths, localMonth, monthGuide, monthRanges, travelPrep } from "@/lib/climate";
+import { travelFacts } from "@/lib/countryInfo";
 import { DESTINATIONS, destinationOffset, getDestination, type Destination } from "@/lib/overseas";
 
 /** 요청마다 그린다 (현지 달이 바뀌므로). 16일 예보는 브라우저에서 따로 받아 페이지가 기다리지 않는다 */
@@ -88,6 +89,7 @@ export default async function CityPage({ params }: PageProps<"/overseas/[slug]">
           ))}
           {good.length > 0 && <li>여행하기 좋은 달은 {monthRanges(good.map((g) => g.month))}이에요.</li>}
         </ul>
+        <CityFacts d={d} />
         {normals && <CityIssues lat={d.lat} lon={d.lon} normals={normals} />}
         <ForecastButton slug={d.slug} light />
       </section>
@@ -137,5 +139,18 @@ export default async function CityPage({ params }: PageProps<"/overseas/[slug]">
       )}
       <SiteFooter />
     </div>
+  );
+}
+
+/** 여행 기본 정보 칩: 시차·통화·플러그·비행시간 */
+function CityFacts({ d }: { d: Destination }) {
+  const f = travelFacts(d);
+  return (
+    <ul className="city-info">
+      <li>🕒 {f.timeDiff}</li>
+      {f.currency && <li>💱 {f.currency}</li>}
+      {f.plug && <li>🔌 {f.plug}</li>}
+      <li>✈️ {f.flight}</li>
+    </ul>
   );
 }

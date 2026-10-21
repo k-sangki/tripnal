@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { OverseasList } from "@/components/OverseasList";
-import { SiteFooter, SiteHeader } from "@/components/SiteHeader";
+import { SiteFooter, SiteHeader, StripBanner } from "@/components/SiteHeader";
+import { localMonth } from "@/lib/climate";
+import { KST_OFFSET_MIN } from "@/lib/time";
 import { DESTINATIONS, DESTINATION_GROUPS } from "@/lib/overseas";
 
 export const metadata: Metadata = {
@@ -9,7 +11,11 @@ export const metadata: Metadata = {
   alternates: { canonical: "/overseas" },
 };
 
+/** 이번 달 추천 띠가 달마다 바뀌도록 요청 때 그린다 */
+export const dynamic = "force-dynamic";
+
 export default function OverseasIndex() {
+  const month = localMonth(KST_OFFSET_MIN);
   return (
     <div className="shell">
       <SiteHeader overseasBanner={false} />
@@ -17,6 +23,7 @@ export default function OverseasIndex() {
       <p className="muted" style={{ margin: "4px 0 12px" }}>
         여행지를 고르면 여행하기 좋은 달과 월별 평년 날씨, 현지 시간 기준 실시간 16일 날씨를 보여드립니다.
       </p>
+      <StripBanner href={`/overseas/month/${month}`} title={`${month}월에 가기 좋은 해외 여행지`} cta="보기 →" />
       <OverseasList destinations={DESTINATIONS} groups={DESTINATION_GROUPS} />
       <SiteFooter />
     </div>

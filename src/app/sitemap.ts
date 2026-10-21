@@ -10,6 +10,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/`, lastModified: now, changeFrequency: "hourly", priority: 1 },
     { url: `${BASE}/weather`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE}/overseas`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${BASE}/weekend`, lastModified: now, changeFrequency: "daily", priority: 0.8 },
+    ...Array.from({ length: 12 }, (_, i) => ({
+      url: `${BASE}/overseas/month/${i + 1}`,
+      lastModified: now,
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    })),
     ...["/about", "/privacy", "/contact"].map((path) => ({ url: `${BASE}${path}`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.3 })),
     ...PLACES.map((p) => ({
       url: `${BASE}/weather/${p.slug}`,

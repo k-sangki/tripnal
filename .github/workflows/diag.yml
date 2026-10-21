@@ -21,8 +21,10 @@ jobs:
       - run: |
           set +e
           {
-            curl -sSfL -o /tmp/p.otf https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/public/static/Pretendard-ExtraBold.otf
-            pip install -q fonttools
+            pip install -q fonttools brotli
+            for u in dist/public/static/alternative/Pretendard-ExtraBold.ttf dist/web/static/woff2/Pretendard-ExtraBold.woff2 dist/web/static/woff/Pretendard-ExtraBold.woff; do
+              curl -sSfL -o /tmp/p.font https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/$u && echo "got $u" && break
+            done
             python glyphs.py
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com

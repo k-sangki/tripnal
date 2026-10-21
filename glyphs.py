@@ -2,7 +2,7 @@ import json
 from fontTools.ttLib import TTFont
 from fontTools.pens.svgPathPen import SVGPathPen
 from fontTools.pens.boundsPen import BoundsPen
-f = TTFont("/tmp/p.otf")
+f = TTFont("/tmp/p.font")
 gs = f.getGlyphSet(); cmap = f.getBestCmap()
 out = {"upm": f["head"].unitsPerEm, "glyphs": {}}
 for ch in "nalc":

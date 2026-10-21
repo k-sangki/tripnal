@@ -132,7 +132,7 @@ export function finderTitle(q: FinderQuery, count: number): string {
 
 /**
  * 빠른 선택. 누를 때마다 기본 조건에서 새로 시작해 앞서 누른 빠른 선택의 조건(비행시간·기온 등)이 남지 않게 한다.
- * 고른 지역만 그대로 둔다.
+ * 고른 지역과 달은 그대로 둔다. 단 달을 정하는 빠른 선택(겨울 탈출)에서 옮겨 올 때는 그 달을 버리고 이번 달로 돌아간다.
  */
 export interface Preset {
   id: string;
@@ -149,7 +149,9 @@ export const PRESETS: Preset[] = [
 ];
 
 export function applyPreset(p: Preset, q: FinderQuery, month: number): FinderQuery {
-  return { ...defaultQuery(month), groups: q.groups, ...p.set };
+  const fromMonthPreset = PRESETS.some((x) => x.set.months && x !== p && presetActive(x, q, month));
+  const months = fromMonthPreset ? [month] : q.months;
+  return { ...defaultQuery(month), groups: q.groups, months, ...p.set };
 }
 
 /** 지금 조건이 이 빠른 선택을 누른 상태 그대로인지 */

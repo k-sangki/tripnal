@@ -65,7 +65,7 @@ export default async function DestinationForecastPage({ params }: PageProps<"/ov
 
   return (
     <div className="shell">
-      <SiteHeader />
+      <SiteHeader overseasBanner={false} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Link href={`/overseas/${d.slug}`} className="city-crumb">
         ← {d.name} 월별 날씨·여행 정보

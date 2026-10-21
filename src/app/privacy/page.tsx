@@ -60,7 +60,12 @@ export default function Privacy() {
         을 참고하세요.
       </p>
       <p>
-        방문 통계는 Cloudflare Web Analytics로 집계합니다. 쿠키를 쓰지 않고 개인을 식별하지 않으며, 페이지 조회 수·유입 경로·기기 종류 같은 합계만 봅니다.
+        방문 통계는 Cloudflare Web Analytics와 Google 애널리틱스로 집계합니다. Cloudflare Web Analytics는 쿠키를 쓰지 않습니다. Google 애널리틱스는 쿠키로 방문을
+        구분하며, 페이지 조회 수·유입 경로·기기 종류 같은 합계만 봅니다. Google 애널리틱스 수집을 원하지 않으면{" "}
+        <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer">
+          Google 애널리틱스 차단 부가기능
+        </a>
+        을 쓸 수 있습니다.
       </p>
 
       <h2>6. 문의</h2>

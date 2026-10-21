@@ -8,9 +8,17 @@ const ADSENSE = process.env.NEXT_PUBLIC_ADSENSE_CLIENT?.trim();
 // Cloudflare Web Analytics (쿠키 없는 방문 통계)
 const CF_BEACON = process.env.NEXT_PUBLIC_CF_BEACON_TOKEN?.trim();
 
+// Google 애널리틱스 4 (측정 ID는 공개 값)
+const GA_ID = "G-ETYG3HMZ2M";
+
 // 운영자 기기는 통계에서 뺀다: 주소 뒤에 ?me=1 로 한 번 열면 그 브라우저는 계속 빠지고, ?me=0 으로 되돌린다
 function beacon(token: string) {
   return `(function(){try{var q=new URLSearchParams(location.search).get("me");if(q==="1")localStorage.setItem("tripnal-me","1");if(q==="0")localStorage.removeItem("tripnal-me");if(localStorage.getItem("tripnal-me"))return}catch(e){}var s=document.createElement("script");s.defer=true;s.src="https://static.cloudflareinsights.com/beacon.min.js";s.setAttribute("data-cf-beacon",${JSON.stringify(JSON.stringify({ token }))});document.body.appendChild(s)})()`;
+}
+
+/** GA4 기본 태그. 통계에서 뺀 운영자 브라우저(?me=1)는 GA4도 끈다 */
+function gtagInit(id: string) {
+  return `(function(){try{var q=new URLSearchParams(location.search).get("me");if(q==="1")localStorage.setItem("tripnal-me","1");if(q==="0")localStorage.removeItem("tripnal-me");if(localStorage.getItem("tripnal-me"))window["ga-disable-${id}"]=true}catch(e){}})();window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","${id}");`;
 }
 
 const DESCRIPTION = "놀러 갈 땐, 트립날씨. 캠핑날씨·여행날씨·등산·낚시 물때표까지, 이번주 날씨와 주말 날씨를 16일까지 3시간 간격으로. 비·바람·돌풍을 한눈에 보고 캡처해 공유하세요.";
@@ -59,6 +67,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE}`}
           />
         )}
+        {/* Google tag (gtag.js) */}
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} />
+        <script dangerouslySetInnerHTML={{ __html: gtagInit(GA_ID) }} />
       </head>
       <body>
         <PullToRefresh />

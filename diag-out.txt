@@ -1,13 +1,12 @@
-apple-icon.png?apple-icon.1gsc_n0brtoxi.png
-apple-icon.png?apple-icon.1gsc_n0brtoxi.png\
-gtag("config","G-ETYG3HMZ2M")
-gtag/js?id=G-ETYG3HMZ2M
-icon.svg?icon.05ncajxh7-h61.svg
-icon.svg?icon.05ncajxh7-h61.svg\
-ov-banner
-{"name":"tripnalc - 캠핑·낚시·등산 16일 날씨","short_name":"tripnalc","description":"놀러 갈 땐, 트립날씨. 대한민국 어디든 16일까지 3시간 간격 레저 날씨","start_url":"/","scope":"/","display":"standalone","background_color":"#0E3B36","theme_color":"#0E3B36","lang":"ko","icons":[{"src":"/icon-v2-192.png","sizes":"192x192","type":"image/png"},{"src":"/icon-v2-512.png","sizes":"512x512","type":"image/png"},{"src":"/icon-v2-maskable-512.png","sizes":"512x512","type":"image/png","purpose":"maskable"}]}
-/icon-v2-192.png 200 6468
-/icon-v2-512.png 200 18161
-/icon-v2-maskable-512.png 200 11208
-/icon-192.png 200 6468
-0
+curl: (22) The requested URL returned error: 404
+
+[notice] A new release of pip is available: 26.2.1 -> 26.2.2
+[notice] To update, run: pip install --upgrade pip
+Traceback (most recent call last):
+  File "/home/runner/work/tripnal/tripnal/glyphs.py", line 5, in <module>
+    f = TTFont("/tmp/p.otf")
+        ^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/fontTools/ttLib/ttFont.py", line 293, in __init__
+    file = open(file, "rb")
+           ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/p.otf'

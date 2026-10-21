@@ -21,11 +21,9 @@ jobs:
       - run: |
           set +e
           {
-            curl -s https://tripnalc.com/ > /tmp/h.html
-            grep -o 'gtag/js?id=[A-Z0-9-]*\|gtag("config","[^"]*")\|ov-banner\|apple-icon[^"]*\|icon.svg[^"]*' /tmp/h.html | sort -u
-            curl -s https://tripnalc.com/manifest.webmanifest | head -c 600; echo
-            for f in /icon-v2-192.png /icon-v2-512.png /icon-v2-maskable-512.png /icon-192.png; do echo "$f $(curl -s -o /dev/null -w '%{http_code} %{size_download}' https://tripnalc.com$f)"; done
-            curl -s https://tripnalc.com/overseas | grep -c 'ov-banner'
+            curl -sSfL -o /tmp/p.otf https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/public/static/Pretendard-ExtraBold.otf
+            pip install -q fonttools
+            python glyphs.py
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com
           git add -A diag-out.txt; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026

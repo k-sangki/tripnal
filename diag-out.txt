@@ -1,16 +1,5 @@
-
-[notice] A new release of pip is available: 26.2.1 -> 26.2.2
-[notice] To update, run: pip install --upgrade pip
-실패 tongyeong HTTP Error 500: Internal Server Error
-실패 bike-damyang-dam HTTP Error 503: Service Unavailable
-실패 bike-juksanbo HTTP Error 500: Internal Server Error
-실패 bike-baealdo HTTP Error 500: Internal Server Error
-실패 bike-sinmae-bridge HTTP Error 503: Service Unavailable
-실패 seoraktong-camp HTTP Error 503: Service Unavailable
-실패 dowon-camp The read operation timed out
-주말 ['2026-10-24', '2026-10-25'] · 299곳 · 실패 7곳
-uploaded weekend/latest.json
-0
-
-10월에 가기 좋은 해외 여행지
-10월에 가기 좋은 해외 여행지
+/overseas?m=1,2,12&s=peak,shoulder&t=hot 200
+<h1 style="font-size:24px;letter-spacing:-0.03em">12~2월 더운 해외 여행지 41곳
+aria-pressed="true">🏖️ 겨울 탈출
+aria-pressed="true">1
+aria-pressed="true">2

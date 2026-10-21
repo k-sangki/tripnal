@@ -50,7 +50,7 @@ export default async function DestinationForecastPage({ params }: PageProps<"/ov
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
-      { "@type": "Place", name: d.name, address: d.country, geo: { "@type": "GeoCoordinates", latitude: d.lat, longitude: d.lon } },
+      { "@type": "TouristDestination", name: d.name, address: d.country, geo: { "@type": "GeoCoordinates", latitude: d.lat, longitude: d.lon } },
       {
         "@type": "BreadcrumbList",
         itemListElement: [

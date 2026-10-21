@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { AD_SLOTS, AdSlot } from "@/components/AdSlot";
 import { ForecastButton } from "@/components/CityClimate";
 import { CityIssues, CityMonths } from "@/components/CityMonths";
 import { SiteFooter, SiteHeader } from "@/components/SiteHeader";
@@ -16,7 +17,7 @@ function title(d: Destination) {
 
 function description(d: Destination) {
   const good = monthRanges(goodMonths(d.slug).map((g) => g.month));
-  return `${d.name}(${d.country}) 여행하기 좋은 달은 ${good}. 1~12월 평년 기온·강수량과 달별 옷차림·준비물·주의할 점, 실시간 16일 날씨까지 한 번에 보세요.`;
+  return `${d.name}(${d.country}) 여행하기 좋은 달은 ${good}. 1~12월 평년 기온·강수량과 달별 옷차림·준비물·주의할 점, 실시간 16일 날씨까지 한 번에 보고 해외여행 일정을 계획하세요.`;
 }
 
 export async function generateMetadata({ params }: PageProps<"/overseas/[slug]">): Promise<Metadata> {
@@ -45,7 +46,13 @@ export default async function CityPage({ params }: PageProps<"/overseas/[slug]">
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
-      { "@type": "Place", name: d.name, address: d.country, geo: { "@type": "GeoCoordinates", latitude: d.lat, longitude: d.lon } },
+      {
+        "@type": "TouristDestination",
+        name: d.name,
+        address: d.country,
+        ...(getIntro(d.slug) ? { description: getIntro(d.slug) } : {}),
+        geo: { "@type": "GeoCoordinates", latitude: d.lat, longitude: d.lon },
+      },
       {
         "@type": "BreadcrumbList",
         itemListElement: [
@@ -98,6 +105,11 @@ export default async function CityPage({ params }: PageProps<"/overseas/[slug]">
           goodText={monthRanges(good.map((g) => g.month))}
         />
       )}
+
+      {/* 여행 가이드 바로 아래 광고 (여행·숙박 광고가 붙기 좋은 자리) */}
+      <div style={{ marginTop: 12 }}>
+        <AdSlot slot={AD_SLOTS.afterSummary} />
+      </div>
 
       <section className="card" style={{ marginTop: 12, textAlign: "center" }}>
         <p className="sub" style={{ margin: "0 0 10px" }}>

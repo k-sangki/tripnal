@@ -43,7 +43,25 @@ export function placeDescription(p: Place): string {
       : p.leisure === "fishing"
         ? "물때표(만조·간조), 파고, 풍속·풍향과 돌풍을"
         : "기온·체감온도·비·돌풍과 일몰 시간을";
-  return `${p.name}(${p.region}) 오늘부터 16일까지 3시간 간격 날씨. ${extra} ${l.label}에 맞게 한눈에 보여드리고, 이번주 날씨와 주말 날씨도 바로 확인할 수 있습니다.`;
+  return `${p.name}(${p.region}) 오늘부터 16일까지 3시간 간격 날씨. ${extra} ${l.label}에 맞게 한눈에 보여드리고, 이번주·주말 날씨로 여행 일정을 계획할 수 있습니다.`;
+}
+
+/**
+ * 구조화 데이터의 장소 종류. 검색엔진·광고가 날씨 페이지가 아니라 여행지(캠핑장·스키장·해변·산) 페이지로 읽게 한다.
+ * (화면에는 보이지 않는다)
+ */
+export function placeSchemaType(p: Pick<Place, "name" | "slug" | "leisure">): string {
+  if (/해수욕장|해변/.test(p.name)) return "Beach";
+  switch (p.leisure) {
+    case "camping":
+      return "Campground";
+    case "ski":
+      return "SkiResort";
+    case "hiking":
+      return "Mountain";
+    default:
+      return "TouristDestination";
+  }
 }
 
 /** 검색엔진과 사용자에게 보여줄 요약 문장 (서버에서 렌더링) */

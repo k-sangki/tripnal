@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { AD_SLOTS, AdSlot } from "@/components/AdSlot";
 import { ClimateChart, ForecastButton, GuideCard } from "@/components/CityClimate";
 import { SiteFooter, SiteHeader } from "@/components/SiteHeader";
 import { CLIMATE_SOURCE, getNormals, goodMonths, monthGuide } from "@/lib/climate";
@@ -22,7 +23,7 @@ function title(d: Destination, m: number) {
 
 function description(d: Destination, m: number) {
   const n = getNormals(d.slug)![m - 1];
-  return `${d.name}(${d.country}) ${m}월 평년 날씨는 낮 최고 ${Math.round(n.hi)}°C, 아침 최저 ${Math.round(n.lo)}°C, 강수량 ${n.rain}mm. ${m}월 여행 옷차림과 준비물, 날씨 주의할 점을 알려드려요.`;
+  return `${d.name}(${d.country}) ${m}월 평년 날씨는 낮 최고 ${Math.round(n.hi)}°C, 아침 최저 ${Math.round(n.lo)}°C, 강수량 ${n.rain}mm. ${m}월 여행 일정 계획에 필요한 옷차림과 준비물, 날씨 주의할 점을 알려드려요.`;
 }
 
 export async function generateMetadata({ params }: PageProps<"/overseas/[slug]/[month]">): Promise<Metadata> {
@@ -55,12 +56,17 @@ export default async function MonthPage({ params }: PageProps<"/overseas/[slug]/
 
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "트립날씨", item: "https://tripnalc.com/" },
-      { "@type": "ListItem", position: 2, name: "해외 날씨", item: "https://tripnalc.com/overseas" },
-      { "@type": "ListItem", position: 3, name: `${d.name} 날씨`, item: `https://tripnalc.com/overseas/${d.slug}` },
-      { "@type": "ListItem", position: 4, name: `${d.name} ${m}월 날씨`, item: `https://tripnalc.com/overseas/${d.slug}/${m}` },
+    "@graph": [
+      { "@type": "TouristDestination", name: d.name, address: d.country, geo: { "@type": "GeoCoordinates", latitude: d.lat, longitude: d.lon } },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "트립날씨", item: "https://tripnalc.com/" },
+          { "@type": "ListItem", position: 2, name: "해외 날씨", item: "https://tripnalc.com/overseas" },
+          { "@type": "ListItem", position: 3, name: `${d.name} 날씨`, item: `https://tripnalc.com/overseas/${d.slug}` },
+          { "@type": "ListItem", position: 4, name: `${d.name} ${m}월 날씨`, item: `https://tripnalc.com/overseas/${d.slug}/${m}` },
+        ],
+      },
     ],
   };
 
@@ -112,6 +118,11 @@ export default async function MonthPage({ params }: PageProps<"/overseas/[slug]/
       </section>
 
       {guide && <GuideCard title={`${m}월 ${d.name} 여행 가이드`} guide={guide} />}
+
+      {/* 여행 가이드 바로 아래 광고 (여행·숙박 광고가 붙기 좋은 자리) */}
+      <div style={{ marginTop: 12 }}>
+        <AdSlot slot={AD_SLOTS.afterSummary} />
+      </div>
 
       <nav className="month-nav">
         <Link href={`/overseas/${d.slug}/${prev}`}>← {prev}월</Link>

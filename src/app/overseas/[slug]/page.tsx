@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AD_SLOTS, AdSlot } from "@/components/AdSlot";
-import { ForecastButton } from "@/components/CityClimate";
+import { ForecastButton, TravelPrepCard } from "@/components/CityClimate";
 import { CityIssues, CityMonths } from "@/components/CityMonths";
 import { SiteFooter, SiteHeader } from "@/components/SiteHeader";
-import { CLIMATE_SOURCE, climateSummary, getIntro, getNormals, goodMonths, localMonth, monthGuide, monthRanges } from "@/lib/climate";
+import { CLIMATE_SOURCE, climateSummary, getIntro, getNormals, goodMonths, localMonth, monthGuide, monthRanges, travelPrep } from "@/lib/climate";
 import { DESTINATIONS, destinationOffset, getDestination, type Destination } from "@/lib/overseas";
 
 /** 요청마다 그린다 (현지 달이 바뀌므로). 16일 예보는 브라우저에서 따로 받아 페이지가 기다리지 않는다 */
@@ -105,6 +105,8 @@ export default async function CityPage({ params }: PageProps<"/overseas/[slug]">
           goodText={monthRanges(good.map((g) => g.month))}
         />
       )}
+
+      {normals && <TravelPrepCard title={`${d.name} 여행 준비`} items={travelPrep(d)} />}
 
       {/* 여행 가이드 바로 아래 광고 (여행·숙박 광고가 붙기 좋은 자리) */}
       <div style={{ marginTop: 12 }}>

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { clothesFor, climateSummary, getNormals, goodMonths, localMonth, monthGuide, monthRanges } from "@/lib/climate";
+import { clothesFor, climateSummary, getNormals, goodMonths, localMonth, monthGuide, monthRanges, travelPrep } from "@/lib/climate";
 import { weatherIssues } from "@/lib/climateIssues";
 import { DESTINATIONS, getDestination } from "@/lib/overseas";
 import type { Forecast } from "@/lib/weather/types";
@@ -53,5 +53,22 @@ describe("climate", () => {
   it("현지 달", () => {
     expect(localMonth(540, new Date("2026-12-31T16:00:00Z"))).toBe(1);
     expect(localMonth(-300, new Date("2027-01-01T03:00:00Z"))).toBe(12);
+  });
+});
+
+describe("travelPrep", () => {
+  it("모든 여행지에 예약·이동·보험 안내가 있다", () => {
+    for (const d of DESTINATIONS) {
+      if (!getNormals(d.slug)) continue;
+      const titles = travelPrep(d).map((x) => x.title);
+      expect(titles).toContain("항공권·숙소 예약");
+      expect(titles).toContain("렌터카·이동");
+      expect(titles).toContain("여행자 보험");
+    }
+  });
+  it("태풍 지역은 결항 안내, 더운 곳은 숙소 안내", () => {
+    const bkk = travelPrep(getDestination("bangkok")!);
+    expect(bkk.find((x) => x.title === "여행자 보험")!.text).toContain("태풍");
+    expect(bkk.some((x) => x.title === "숙소 고르기")).toBe(true);
   });
 });

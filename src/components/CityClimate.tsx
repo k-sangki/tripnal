@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { GoodMonth, MonthGuide, MonthNormal } from "@/lib/climate";
+import type { GoodMonth, MonthGuide, MonthNormal, PrepItem } from "@/lib/climate";
 
 /** 실시간 16일 예보 페이지로 가는 버튼 */
 export function ForecastButton({ slug, light }: { slug: string; light?: boolean }) {
@@ -173,6 +173,23 @@ export function GuideCard({ title, guide, more }: { title: string; guide: MonthG
         </div>
       )}
       {more}
+    </section>
+  );
+}
+
+/** 여행 준비: 예약·숙소·이동·비·보험 안내 */
+export function TravelPrepCard({ title, items }: { title: string; items: PrepItem[] }) {
+  return (
+    <section className="card guide" style={{ marginTop: 12 }}>
+      <h2 className="card-title">{title}</h2>
+      {items.map((x) => (
+        <div key={x.title}>
+          <h3>
+            {x.icon} {x.title}
+          </h3>
+          <p>{x.text}</p>
+        </div>
+      ))}
     </section>
   );
 }

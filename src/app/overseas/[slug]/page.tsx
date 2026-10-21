@@ -94,6 +94,8 @@ export default async function CityPage({ params }: PageProps<"/overseas/[slug]">
           guides={normals.map((_, i) => monthGuide(d, i + 1))}
           current={month}
           source={CLIMATE_SOURCE}
+          country={d.country}
+          goodText={monthRanges(good.map((g) => g.month))}
         />
       )}
 
@@ -106,15 +108,17 @@ export default async function CityPage({ params }: PageProps<"/overseas/[slug]">
 
       {related.length > 0 && (
         <section className="card" style={{ marginTop: 12 }}>
-          <h2 className="card-title">{d.group} 다른 여행지 날씨</h2>
-          <nav className="place-links">
+          <h2 className="card-title">{d.group} 다른 여행지</h2>
+          <nav className="city-links">
             {related.map((x) => (
               <Link key={x.slug} href={`/overseas/${x.slug}`}>
-                {x.name} 날씨
+                <b>{x.name}</b>
               </Link>
             ))}
-            <Link href="/overseas">해외 날씨 전체</Link>
           </nav>
+          <p className="city-links-all">
+            <Link href="/overseas">해외 날씨 전체 보기 →</Link>
+          </p>
         </section>
       )}
       <SiteFooter />

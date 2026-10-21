@@ -1,7 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { CaptureSheet } from "@/components/CaptureSheet";
 import { ClimateChart, GuideCard, MonthCards } from "@/components/CityClimate";
+import { InstallButton } from "@/components/InstallButton";
+import { Logo } from "@/components/Logo";
+import { SLOGAN_C } from "@/lib/brand";
 import type { GoodMonth, MonthGuide, MonthNormal } from "@/lib/climate";
 import { weatherIssues, type WeatherIssue } from "@/lib/climateIssues";
 import type { Forecast } from "@/lib/weather/types";
@@ -18,6 +22,8 @@ export function CityMonths({
   guides,
   current,
   source,
+  country,
+  goodText,
 }: {
   slug: string;
   name: string;
@@ -26,8 +32,14 @@ export function CityMonths({
   guides: (MonthGuide | null)[];
   current: number;
   source: string;
+  country: string;
+  /** "4~5월, 10~11월" 같은 좋은 달 묶음 (캡처 머리글) */
+  goodText: string;
 }) {
   const [month, setMonth] = useState(current);
+  const [capturing, setCapturing] = useState(false);
+  const captureRef = useRef<HTMLDivElement>(null);
+  const getTarget = useCallback(() => captureRef.current, []);
   const detail = useRef<HTMLDivElement>(null);
   const n = normals[month - 1];
   const g = good.find((x) => x.month === month);
@@ -83,7 +95,103 @@ export function CityMonths({
         </section>
         {guide && <GuideCard title={`${month}월 ${name} 여행 가이드`} guide={guide} />}
       </div>
+
+      {!capturing && (
+        // 메인 화면과 같은 자리·모양의 공유 버튼
+        <div className="fab-bar">
+          <InstallButton />
+          <button className="fab" onClick={() => setCapturing(true)}>
+            <i className="logo-dot" aria-hidden /> 캡처해서 공유
+          </button>
+        </div>
+      )}
+      {capturing && (
+        <>
+          <CityCapture
+            frameRef={captureRef}
+            slug={slug}
+            name={name}
+            country={country}
+            goodText={goodText}
+            normals={normals}
+            good={good}
+            month={month}
+            guide={guide}
+            source={source}
+          />
+          <CaptureSheet
+            target={getTarget}
+            fileName={`tripnalc_${name}_월별날씨_${month}월.png`.replace(/\s+/g, "_")}
+            shareTitle={`${name} 월별 날씨 · 여행하기 좋은 달`}
+            shareUrl={window.location.href}
+            onClose={() => setCapturing(false)}
+          />
+        </>
+      )}
     </>
+  );
+}
+
+/** 캡처 이미지: 도시 이름·좋은 달·12달 카드·고른 달 요약을 화면 밖에 그린다 */
+function CityCapture({
+  frameRef,
+  slug,
+  name,
+  country,
+  goodText,
+  normals,
+  good,
+  month,
+  guide,
+  source,
+}: {
+  frameRef: React.Ref<HTMLDivElement>;
+  slug: string;
+  name: string;
+  country: string;
+  goodText: string;
+  normals: MonthNormal[];
+  good: GoodMonth[];
+  month: number;
+  guide: MonthGuide | null;
+  source: string;
+}) {
+  const [narrow] = useState(() => window.innerWidth < 600);
+  const n = normals[month - 1];
+  return (
+    <div className="cf-host" aria-hidden>
+      <div ref={frameRef} className={`cf city-cf${narrow ? " narrow" : ""}`} style={{ width: narrow ? 420 : 760 }}>
+        <header className="cf-head">
+          <Logo dark size={narrow ? 22 : 28} />
+          <div className="cf-title">
+            <b>{name} 월별 날씨</b>
+            <span>{country}</span>
+          </div>
+        </header>
+        {goodText && (
+          <p className="city-cf-good">
+            여행하기 좋은 달 <b>{goodText}</b>
+          </p>
+        )}
+        <MonthCards slug={slug} normals={normals} good={good} selected={month} />
+        <div className="city-cf-month">
+          <b>{month}월 평년</b> 낮 {Math.round(n.hi)}° · 아침 {Math.round(n.lo)}° · 강수 {n.rain}mm · 습도 {n.hum}%
+          {guide && (
+            <span>
+              옷차림: {guide.day}
+              {guide.night !== guide.day && ` / 아침저녁 ${guide.night}`}
+            </span>
+          )}
+        </div>
+        <footer className="cf-foot">
+          <span>평년값: {source}</span>
+          <span className="cap-brand">
+            <span className="cap-slogan">{SLOGAN_C}</span>
+            <span className="cap-url">tripnalc.com</span>
+          </span>
+        </footer>
+      </div>
+    </div>
   );
 }
 

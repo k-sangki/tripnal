@@ -127,11 +127,11 @@ export default async function MonthPage({ params }: PageProps<"/overseas/[slug]/
       </section>
 
       <section className="card" style={{ marginTop: 12 }}>
-        <h2 className="card-title">{m}월 다른 여행지 날씨</h2>
-        <nav className="place-links">
+        <h2 className="card-title">{d.group} 다른 여행지 {m}월 날씨</h2>
+        <nav className="city-links">
           {DESTINATIONS.filter((x) => x.slug !== d.slug && x.group === d.group).map((x) => (
             <Link key={x.slug} href={`/overseas/${x.slug}/${m}`}>
-              {x.name} {m}월
+              <b>{x.name}</b>
             </Link>
           ))}
         </nav>

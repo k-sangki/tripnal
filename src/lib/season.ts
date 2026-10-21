@@ -85,6 +85,8 @@ export interface FinderMonth {
 export interface FinderRow {
   slug: string;
   name: string;
+  en: string;
+  aliases?: string[];
   country: string;
   group: string;
   /** 인천에서 어림한 비행시간 */
@@ -103,6 +105,8 @@ export function finderRows(list: Destination[], now: Date = new Date()): FinderR
     out.push({
       slug: d.slug,
       name: d.name,
+      en: d.en,
+      aliases: d.aliases,
       country: d.country,
       group: d.group,
       flight: flightHours(d),

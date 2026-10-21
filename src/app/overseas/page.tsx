@@ -1,31 +1,18 @@
 import type { Metadata } from "next";
-import { OverseasList } from "@/components/OverseasList";
-import { SiteFooter, SiteHeader, StripBanner } from "@/components/SiteHeader";
+import { OverseasFinder, toParams } from "@/components/OverseasFinder";
 import { localMonth } from "@/lib/climate";
 import { KST_OFFSET_MIN } from "@/lib/time";
-import { DESTINATIONS, DESTINATION_GROUPS } from "@/lib/overseas";
 
 export const metadata: Metadata = {
-  title: "해외 날씨 - 일본·중국·동남아·괌·유럽·미주 해외여행 이번주·16일 날씨",
-  description: "도쿄·오사카·후쿠오카, 상하이·타이베이, 다낭·방콕·세부, 괌·시드니, 파리·로마, 뉴욕·하와이 등 해외여행지 날씨를 현지 시간으로 16일까지 3시간 간격으로 확인하세요.",
+  title: "해외 날씨·여행지 찾기 - 일본·동남아·유럽 해외여행 월별·16일 날씨와 가기 좋은 달",
+  description:
+    "도쿄·오사카, 타이베이, 다낭·방콕·세부, 괌·시드니, 파리·로마, 뉴욕·하와이 등 해외 여행지를 날씨 좋은 때·간절기·비수기, 지역, 비행시간으로 골라 보고 월별 평년 날씨와 현지 시간 16일 날씨를 확인하세요.",
   alternates: { canonical: "/overseas" },
 };
 
-/** 이번 달 추천 띠가 달마다 바뀌도록 요청 때 그린다 */
+/** 이번 달이 미리 골라지도록 요청 때 그린다 */
 export const dynamic = "force-dynamic";
 
-export default function OverseasIndex() {
-  const month = localMonth(KST_OFFSET_MIN);
-  return (
-    <div className="shell">
-      <SiteHeader overseasBanner={false} />
-      <h1 style={{ fontSize: 24, letterSpacing: "-0.03em" }}>해외 {DESTINATIONS.length}곳의 월별·실시간 16일 날씨</h1>
-      <p className="muted" style={{ margin: "4px 0 12px" }}>
-        여행지를 고르면 여행하기 좋은 달과 월별 평년 날씨, 현지 시간 기준 실시간 16일 날씨를 보여드립니다.
-      </p>
-      <StripBanner href={`/overseas/month/${month}`} title={`${month}월에 가기 좋은 해외 여행지`} cta="보기 →" />
-      <OverseasList destinations={DESTINATIONS} groups={DESTINATION_GROUPS} />
-      <SiteFooter />
-    </div>
-  );
+export default async function OverseasIndex({ searchParams }: PageProps<"/overseas">) {
+  return <OverseasFinder month={localMonth(KST_OFFSET_MIN)} sp={await toParams(searchParams)} />;
 }

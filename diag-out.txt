@@ -1,9 +1,19 @@
 
 [notice] A new release of pip is available: 26.2.1 -> 26.2.2
 [notice] To update, run: pip install --upgrade pip
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+KeyError: 'files'
 curl: (22) The requested URL returned error: 404
-curl: (22) The requested URL returned error: 404
-curl: (22) The requested URL returned error: 404
+usage: fonttools varLib.instancer [-h] [-o OUTPUT.ttf] [--static]
+                                  [--no-optimize] [--no-overlap-flag]
+                                  [--remove-overlaps]
+                                  [--ignore-overlap-errors]
+                                  [--update-name-table] [--downgrade-cff2]
+                                  [--no-recalc-timestamp] [--no-recalc-bounds]
+                                  [-v | -q]
+                                  INPUT.ttf [AXIS=LOC ...]
+fonttools varLib.instancer: error: No such file '/tmp/v.woff2'
 Traceback (most recent call last):
   File "/home/runner/work/tripnal/tripnal/glyphs.py", line 5, in <module>
     f = TTFont("/tmp/p.font")

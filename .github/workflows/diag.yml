@@ -24,12 +24,10 @@ jobs:
             git fetch -q origin main && git checkout origin/main -- collector src/lib/places.ts
             pip install -q boto3
             python collector/weekend.py
-            for u in / /weekend /overseas /overseas/month/10 /overseas/tokyo /weather; do
-              echo "$u $(curl -s -o /tmp/p.html -w '%{http_code} %{time_total}' https://tripnalc.com$u)"
-            done
-            curl -s https://tripnalc.com/weekend | grep -o '주말 캠핑 가기 좋은 곳\|정리하는 중\|wk-rank">[0-9]*' | head -5
-            curl -s https://tripnalc.com/overseas/tokyo | grep -o '한국과 시차 없음\|엔(JPY)\|비행 약 [0-9]*시간' | head
-            curl -s https://tripnalc.com/sitemap.xml | grep -c overseas/month
+            curl -s https://tripnalc.com/weekend -o w.html; grep -c 'wk-rank' w.html; grep -o '주말 [^<]* 가기 좋은 곳' w.html
+            curl -s https://tripnalc.com/overseas/tokyo -o t.html; grep -o 'city-info.\{0,400\}' t.html | head -c 600; echo
+            curl -s https://tripnalc.com/overseas -o o.html; grep -o '[0-9]*월에 가기 좋은 해외 여행지' o.html | head -2
+            curl -s https://tripnalc.com/weather -o x.html; grep -o '이번 주말 날씨 좋은 곳' x.html | head -1
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com
           git add -A diag-out.txt; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026

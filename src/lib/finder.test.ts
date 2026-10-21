@@ -70,6 +70,12 @@ describe("빠른 선택", () => {
     expect(short.temp).toBeNull();
     expect(short.months).toEqual([10]);
   });
+  it("고른 달은 그대로 두고, 겨울 탈출에서 옮겨 오면 이번 달로 돌아간다", () => {
+    const q = { ...defaultQuery(10), months: [9, 10, 11] };
+    expect(applyPreset(p("cheap"), q, 10).months).toEqual([9, 10, 11]);
+    const winter = applyPreset(p("winter"), q, 10);
+    expect(applyPreset(p("shoulder"), winter, 10).months).toEqual([10]);
+  });
   it("고른 지역은 그대로 둔다", () => {
     const q = { ...defaultQuery(10), groups: ["동남아시아"] };
     expect(applyPreset(p("cheap"), q, 10).groups).toEqual(["동남아시아"]);

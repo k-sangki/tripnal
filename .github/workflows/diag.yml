@@ -21,11 +21,10 @@ jobs:
       - run: |
           set +e
           {
-            G=$(python3 -c "import urllib.parse;print(urllib.parse.quote('동남아시아'))")
-            for u in "/overseas/month/10" "/overseas/month/10?m=9,10,11&s=shoulder&g=$G" "/overseas/month/8?s=off" "/overseas/bangkok" "/"; do
+            for u in "/overseas" "/overseas/month/3" "/weather" "/"; do
               f=$(echo "$u" | md5sum | cut -c1-8).html
-              echo "$u $(curl -s -o $f -w '%{http_code} %{time_total} %{size_download}' "https://tripnalc.com$u")"
-              grep -o '<h1[^>]*>[^<]*' $f | head -1; grep -c 'tf-card' $f; grep -o 'mc-sh' $f | head -1
+              echo "$u $(curl -s -o $f -w '%{http_code} %{size_download}' "https://tripnalc.com$u")"
+              grep -o '<h1[^>]*>[^<]*' $f | head -1; grep -o 'ov-search' $f | head -1; grep -o '3초 만에 골라보기' $f | head -1; grep -o '해외날씨·여행지' $f | head -1
             done
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com

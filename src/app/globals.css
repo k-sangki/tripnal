@@ -2312,3 +2312,72 @@ button.cc-col.on {
 .issues-loading {
   opacity: 0.6;
 }
+/* 해외 도시 캡처 이미지 */
+.city-cf {
+  gap: 16px;
+}
+.city-cf-good {
+  margin: 0;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.85);
+}
+.city-cf-good b {
+  color: var(--mint);
+}
+.city-cf .month-grid {
+  grid-template-columns: repeat(4, 1fr);
+}
+.city-cf:not(.narrow) .month-grid {
+  grid-template-columns: repeat(6, 1fr);
+}
+.city-cf .month-card.on {
+  box-shadow: 0 0 0 3px var(--mint);
+}
+.city-cf-month {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  font-size: 14px;
+  line-height: 1.45;
+}
+.city-cf-month b {
+  color: var(--mint);
+}
+.city-cf-month span {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.8);
+}
+/* 같은 묶음의 다른 여행지 (이름만, 카드 격자) */
+.city-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
+  gap: 8px;
+}
+.city-links a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 6px 8px;
+  border-radius: 12px;
+  background: var(--chip);
+  color: var(--ink);
+  font-size: 14px;
+  text-align: center;
+  word-break: keep-all;
+  text-decoration: none;
+}
+.city-links a:hover {
+  background: #e3efec;
+}
+.city-links-all {
+  margin: 12px 0 0;
+  font-size: 14px;
+}
+.city-links-all a {
+  font-weight: 700;
+  color: var(--pine);
+}

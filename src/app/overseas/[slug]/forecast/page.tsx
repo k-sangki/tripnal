@@ -89,15 +89,17 @@ export default async function DestinationForecastPage({ params }: PageProps<"/ov
 
       {related.length > 0 && (
         <section className="card" style={{ marginTop: 12 }}>
-          <h2 className="card-title">{d.group} 다른 여행지 날씨</h2>
-          <nav className="place-links">
+          <h2 className="card-title">{d.group} 다른 여행지 16일 날씨</h2>
+          <nav className="city-links">
             {related.map((x) => (
               <Link key={x.slug} href={`/overseas/${x.slug}/forecast`}>
-                {x.name} 16일 날씨
+                <b>{x.name}</b>
               </Link>
             ))}
-            <Link href="/overseas">해외 날씨 전체</Link>
           </nav>
+          <p className="city-links-all">
+            <Link href="/overseas">해외 날씨 전체 보기 →</Link>
+          </p>
         </section>
       )}
       <SiteFooter />

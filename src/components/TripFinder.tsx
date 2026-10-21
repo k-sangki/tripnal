@@ -6,6 +6,8 @@ import { useMemo, useState } from "react";
 import {
   FLIGHTS,
   PRESETS,
+  applyPreset,
+  presetActive,
   SEASON_LABEL,
   SORT_LABEL,
   TEMP_LABEL,
@@ -126,7 +128,18 @@ export function TripFinder({
 
       <nav className="tf-presets" aria-label="빠른 선택" style={{ marginTop: 12 }}>
         {PRESETS.map((p) => (
-          <button key={p.id} type="button" onClick={() => update(p.apply(q))}>
+          <button
+            key={p.id}
+            type="button"
+            className={presetActive(p, q, month) ? "on" : undefined}
+            aria-pressed={presetActive(p, q, month)}
+            onClick={() => {
+              const next = applyPreset(p, q, month);
+              // 빠른 선택이 접힌 필터(비행시간·기온·시차)를 바꾸면 펼쳐서 보여 준다
+              if (next.flight || next.temp || next.nearTz) setMore(true);
+              update(next);
+            }}
+          >
             {p.label}
           </button>
         ))}

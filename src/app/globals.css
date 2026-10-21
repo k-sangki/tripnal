@@ -2637,6 +2637,11 @@ button.cc-col.on {
   color: var(--pine);
   cursor: pointer;
 }
+.tf-presets button.on {
+  border-color: var(--pine);
+  background: var(--pine);
+  color: #fff;
+}
 .tf-filters .month-chips button {
   background: var(--chip);
 }

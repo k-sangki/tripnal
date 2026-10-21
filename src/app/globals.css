@@ -245,10 +245,22 @@ a {
   margin-bottom: 12px;
   padding: 0 18px;
   border-radius: var(--radius-sm);
-  background: var(--card);
+  /* 사이트 민트를 옅게 깐 그라데이션 (글자는 진한 초록이라 묻히지 않게) */
+  background: linear-gradient(100deg, #c9f2e0 0%, #e3f9f0 45%, #ffffff 100%);
   box-shadow: var(--shadow);
-  color: #1f6e62;
+  color: var(--pine);
   text-decoration: none;
+}
+.ov-banner-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.ov-plane {
+  width: 22px;
+  height: 22px;
+  fill: var(--pine);
+  transform: rotate(45deg);
 }
 .ov-banner b {
   font-family: "Black Han Sans", var(--font);
@@ -259,7 +271,7 @@ a {
 .ov-banner span {
   font-size: 13px;
   font-weight: 600;
-  color: var(--muted);
+  color: #4b6a64;
 }
 /* 좁은 화면에서는 헤더 슬로건을 빼서 메뉴 두 개가 한 줄에 들어가게 (푸터·캡처에는 그대로) */
 @media (max-width: 389px) {

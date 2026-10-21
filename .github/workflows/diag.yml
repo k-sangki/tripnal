@@ -22,9 +22,6 @@ jobs:
           set +e
           {
             pip install -q fonttools brotli
-            curl -s "https://data.jsdelivr.com/v1/packages/gh/orioncactus/pretendard@v1.3.9?structure=flat" | python -c "import json,sys;[print(f['name']) for f in json.load(sys.stdin)['files'] if 'ExtraBold' in f['name'] or 'Variable.woff2' in f['name'] or 'Variable.ttf' in f['name']]" | head -20
-            curl -sSfL -o /tmp/v.woff2 https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/woff2/PretendardVariable.woff2 && echo got-var
-            fonttools varLib.instancer /tmp/v.woff2 wght=800 -o /tmp/p.font && echo inst-ok
             python glyphs.py
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com

@@ -235,7 +235,7 @@ a {
   gap: 12px;
   flex-shrink: 0;
 }
-/* 맨 위 "해외여행 보러가기" 띠 카드 (세로 좁고 가로로 꽉 차게) */
+/* 맨 위 "해외날씨 보러가기" 띠 카드 (세로 좁고 가로로 꽉 차게) */
 .ov-banner {
   display: flex;
   align-items: center;

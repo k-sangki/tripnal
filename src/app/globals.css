@@ -1103,6 +1103,21 @@ a {
   color: rgba(255, 255, 255, 0.6);
   font-size: 12px;
 }
+.cf-src {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+}
+.cf:not(.narrow) .cf-src {
+  font-size: 18px;
+}
+.cf-src-item {
+  white-space: nowrap;
+}
+.cf-src-sub {
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.55);
+}
 .cap-url {
   font-size: 20px;
   font-weight: 800;

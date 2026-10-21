@@ -5,7 +5,7 @@ import { SiteFooter, SiteHeader } from "@/components/SiteHeader";
 import { WeatherApp } from "@/components/WeatherApp";
 import { getLeisure } from "@/lib/leisure";
 import { PLACES, getPlace } from "@/lib/places";
-import { placeDescription, placeSummary, placeTitle } from "@/lib/seo";
+import { placeDescription, placeSchemaType, placeSummary, placeTitle } from "@/lib/seo";
 import { getForecast } from "@/lib/weather";
 import type { Forecast } from "@/lib/weather/types";
 
@@ -64,7 +64,7 @@ export default async function PlacePage({ params }: PageProps<"/weather/[slug]">
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "Place",
+        "@type": placeSchemaType(place),
         name: place.name,
         address: place.region,
         geo: { "@type": "GeoCoordinates", latitude: place.lat, longitude: place.lon, ...(place.elevation ? { elevation: place.elevation } : {}) },

@@ -7,6 +7,7 @@ import { CityIssues, CityMonths } from "@/components/CityMonths";
 import { SiteFooter, SiteHeader } from "@/components/SiteHeader";
 import { CLIMATE_SOURCE, climateSummary, getIntro, getNormals, goodMonths, localMonth, monthGuide, monthRanges, travelPrep } from "@/lib/climate";
 import { travelFacts } from "@/lib/countryInfo";
+import { seasons } from "@/lib/season";
 import { DESTINATIONS, destinationOffset, getDestination, type Destination } from "@/lib/overseas";
 
 /** 요청마다 그린다 (현지 달이 바뀌므로). 16일 예보는 브라우저에서 따로 받아 페이지가 기다리지 않는다 */
@@ -105,6 +106,7 @@ export default async function CityPage({ params }: PageProps<"/overseas/[slug]">
           source={CLIMATE_SOURCE}
           country={d.country}
           goodText={monthRanges(good.map((g) => g.month))}
+          seasons={seasons(d) ?? undefined}
         />
       )}
 

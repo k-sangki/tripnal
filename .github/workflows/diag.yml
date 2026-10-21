@@ -21,10 +21,10 @@ jobs:
       - run: |
           set +e
           {
-            u="/weather/jarasum-autocamp"
+            u="/overseas?m=1,2,12&s=peak,shoulder&t=hot"
             echo "$u $(curl -s -o p.html -w '%{http_code}' "https://tripnalc.com$u")"
-            for c in $(grep -o '/_next/static/chunks/[^"]*\.js' p.html | sort -u); do curl -s "https://tripnalc.com$c" >> all.js; done
-            grep -o '유럽 중기 기상예보 센터' all.js | head -1; grep -o 'cf-src-sub' all.js | head -1; grep -o '독일기상청 DWD' all.js | head -1
+            grep -o '<h1[^>]*>[^<]*' p.html | head -1
+            grep -o 'aria-pressed="true"[^>]*>[^<]*' p.html | head -3
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com
           git add -A diag-out.txt; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026

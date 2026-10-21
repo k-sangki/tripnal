@@ -7,6 +7,7 @@ import { InstallButton } from "@/components/InstallButton";
 import { Logo } from "@/components/Logo";
 import { SLOGAN_C } from "@/lib/brand";
 import type { GoodMonth, MonthGuide, MonthNormal } from "@/lib/climate";
+import type { MonthSeason } from "@/lib/season";
 import { weatherIssues, type WeatherIssue } from "@/lib/climateIssues";
 import type { Forecast } from "@/lib/weather/types";
 
@@ -24,6 +25,7 @@ export function CityMonths({
   source,
   country,
   goodText,
+  seasons,
 }: {
   slug: string;
   name: string;
@@ -35,6 +37,8 @@ export function CityMonths({
   country: string;
   /** "4~5월, 10~11월" 같은 좋은 달 묶음 (캡처 머리글) */
   goodText: string;
+  /** 달별 시즌 (성수기·간절기·비수기와 이유) */
+  seasons?: MonthSeason[];
 }) {
   const [month, setMonth] = useState(current);
   const [capturing, setCapturing] = useState(false);
@@ -44,6 +48,7 @@ export function CityMonths({
   const n = normals[month - 1];
   const g = good.find((x) => x.month === month);
   const guide = guides[month - 1];
+  const season = seasons?.[month - 1];
 
   const pick = (m: number) => {
     setMonth(m);
@@ -61,7 +66,15 @@ export function CityMonths({
         <p className="muted month-help">
           <span className="good-key" /> 여행하기 좋은 달 · 달을 누르면 아래에 평년 기온과 강수량이 나와요.
         </p>
-        <MonthCards slug={slug} normals={normals} good={good} current={current} selected={month} onSelect={pick} />
+        <MonthCards
+          slug={slug}
+          normals={normals}
+          good={good}
+          current={current}
+          selected={month}
+          onSelect={pick}
+          shoulder={seasons?.flatMap((x, i) => (x.kind === "shoulder" ? [i + 1] : []))}
+        />
       </section>
 
       <div ref={detail} className="month-detail">
@@ -69,6 +82,15 @@ export function CityMonths({
           <h2 className="card-title">
             {name} {month}월 날씨{g && <span className="good-badge">{g.reason ?? "여행하기 좋은 달"}</span>}
           </h2>
+          {season && season.kind !== "peak" && (
+            <p className="season-note">
+              <i className={`tf-badge ${season.kind}`}>{season.kind === "shoulder" ? "간절기" : "비수기"}</i> {season.reason}.{" "}
+              {season.kind === "shoulder"
+                ? "성수기보다 보통 항공권·숙소가 저렴하고, 날씨도 잘 걸리면 괜찮은 때예요."
+                : "날씨는 아쉽지만 보통 항공권·숙소가 가장 저렴한 시기예요."}
+              {season.storm && ` ⚠️ ${season.storm} 시기라 항공편 결항 가능성을 확인하세요.`}
+            </p>
+          )}
           <div className="month-stats light">
             <div>
               <span>평균 최고</span>

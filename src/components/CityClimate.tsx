@@ -18,6 +18,7 @@ export function MonthCards({
   current,
   selected,
   onSelect,
+  shoulder,
 }: {
   slug: string;
   normals: MonthNormal[];
@@ -26,6 +27,8 @@ export function MonthCards({
   selected?: number;
   /** 있으면 페이지를 옮기지 않고 그 자리에서 달을 바꾼다 */
   onSelect?: (month: number) => void;
+  /** 간절기인 달 (작게 표시) */
+  shoulder?: number[];
 }) {
   const goodMap = new Map(good.map((g) => [g.month, g]));
   return (
@@ -38,7 +41,7 @@ export function MonthCards({
           <>
             <span className="mc-head">
               <b>{month}월</b>
-              {g ? <em>{g.reason ?? "추천"}</em> : current === month ? <i>지금</i> : null}
+              {g ? <em>{g.reason ?? "추천"}</em> : current === month ? <i>지금</i> : shoulder?.includes(month) ? <i className="mc-sh">간절기</i> : null}
             </span>
             <span className="mc-temp">
               <span className="t-hi">{Math.round(m.hi)}°</span> / <span className="t-lo">{Math.round(m.lo)}°</span>

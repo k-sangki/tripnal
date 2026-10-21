@@ -235,12 +235,31 @@ a {
   gap: 12px;
   flex-shrink: 0;
 }
-.nav-overseas {
-  font-family: "Black Han Sans", var(--font);
-  font-size: 18px;
-  letter-spacing: -0.01em;
+/* 맨 위 "해외여행 보러가기" 띠 카드 (세로 좁고 가로로 꽉 차게) */
+.ov-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  height: 52px;
+  margin-bottom: 12px;
+  padding: 0 18px;
+  border-radius: var(--radius-sm);
+  background: var(--card);
+  box-shadow: var(--shadow);
   color: #1f6e62;
-  white-space: nowrap;
+  text-decoration: none;
+}
+.ov-banner b {
+  font-family: "Black Han Sans", var(--font);
+  font-weight: 400;
+  font-size: 24px;
+  letter-spacing: -0.01em;
+}
+.ov-banner span {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
 }
 /* 좁은 화면에서는 헤더 슬로건을 빼서 메뉴 두 개가 한 줄에 들어가게 (푸터·캡처에는 그대로) */
 @media (max-width: 389px) {

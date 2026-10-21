@@ -66,7 +66,7 @@ export default async function MonthPage({ params }: PageProps<"/overseas/[slug]/
 
   return (
     <div className="shell">
-      <SiteHeader />
+      <SiteHeader overseasBanner={false} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <section className="hero city-hero">

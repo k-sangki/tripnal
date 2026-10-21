@@ -21,14 +21,12 @@ jobs:
       - run: |
           set +e
           {
-            for u in /weekend /overseas/tokyo /overseas /weather /overseas/month/10 /overseas/tokyo/10; do
-              f=$(echo $u | tr / _).html
+            G=$(python3 -c "import urllib.parse;print(urllib.parse.quote('동남아시아'))")
+            for u in "/overseas/month/10" "/overseas/month/10?m=9,10,11&s=shoulder&g=$G" "/overseas/month/8?s=off" "/overseas/bangkok" "/"; do
+              f=$(echo "$u" | md5sum | cut -c1-8).html
               echo "$u $(curl -s -o $f -w '%{http_code} %{time_total} %{size_download}' "https://tripnalc.com$u")"
+              grep -o '<h1[^>]*>[^<]*' $f | head -1; grep -c 'tf-card' $f; grep -o 'mc-sh' $f | head -1
             done
-            grep -c 'wk-rank' _weekend.html; grep -o '주말 [^<]* 가기 좋은 곳' _weekend.html; grep -o '정리하는 중' _weekend.html
-            grep -o 'city-info.\{0,300\}' _overseas_tokyo.html | sed 's/<[^>]*>/ /g' | head -c 500; echo
-            grep -o '이번 주말 날씨 좋은 곳' _weather.html | head -1
-            grep -o '10월에 가기 좋은 다른 여행지' _overseas_tokyo_10.html | head -1
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com
           git add -A diag-out.txt; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026

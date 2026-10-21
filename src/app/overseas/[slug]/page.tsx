@@ -22,7 +22,7 @@ function title(d: Destination) {
 function description(d: Destination) {
   const good = monthRanges(goodMonths(d.slug).map((g) => g.month));
   const wd = wetDry(d);
-  const season = wd ? ` 우기는 ${monthRanges(wd.wet)}, 건기는 ${monthRanges(wd.dry)}예요.` : "";
+  const season = wd ? ` 우기는 ${monthRanges(wd.wet)}, 건기는 ${monthRanges(wd.dry)}.` : "";
   return `${d.name}(${d.country}) 여행하기 좋은 달은 ${good}.${season} 1~12월 평년 기온·강수량과 달별 옷차림·준비물·주의할 점, 실시간 16일 날씨까지 한 번에 보고 해외여행 일정을 계획하세요.`;
 }
 

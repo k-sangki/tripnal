@@ -13,6 +13,7 @@ import json
 import os
 import re
 import sys
+import time
 import urllib.parse
 import urllib.request
 
@@ -51,8 +52,15 @@ def forecast(p):
     if p["elevation"] is not None:
         q["elev"] = p["elevation"]
     req = urllib.request.Request(f"{SITE}/api/forecast?{urllib.parse.urlencode(q)}", headers={"User-Agent": "tripnalc-weekend"})
-    with urllib.request.urlopen(req, timeout=60) as r:
-        return json.load(r)
+    # 한꺼번에 많이 부르면 사이트가 가끔 503을 돌려주므로 잠시 쉬었다가 다시 부른다
+    for attempt in range(4):
+        try:
+            with urllib.request.urlopen(req, timeout=60) as r:
+                return json.load(r)
+        except Exception:
+            if attempt == 3:
+                raise
+            time.sleep(3 * (attempt + 1))
 
 
 def summary(p, dates):
@@ -86,7 +94,7 @@ def main():
     dates = [d.isoformat() for d in weekend(dt.datetime.now(KST).date())]
     result = {}
     failed = 0
-    with cf.ThreadPoolExecutor(8) as ex:
+    with cf.ThreadPoolExecutor(3) as ex:
         futs = {ex.submit(summary, p, dates): p for p in places()}
         for fut in cf.as_completed(futs):
             p = futs[fut]

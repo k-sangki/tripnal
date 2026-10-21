@@ -19,6 +19,7 @@ import {
   type SortBy,
   type TempPref,
 } from "@/lib/finder";
+import { matchScore } from "@/lib/fuzzy";
 import type { FinderRow, SeasonKind } from "@/lib/season";
 
 const PAGE = 40;
@@ -33,7 +34,7 @@ export function TripFinder({
 }: {
   rows: FinderRow[];
   groups: string[];
-  /** 페이지 주소의 달 (/overseas/month/{month}) */
+  /** 처음 골라 둘 달 (/overseas는 이번 달, /overseas/month/{month}는 그 달) */
   month: number;
   initial: FinderQuery;
   seoulHi: number[];
@@ -44,7 +45,17 @@ export function TripFinder({
   const [more, setMore] = useState(Boolean(initial.flight || initial.temp || initial.nearTz || initial.sort !== "weather"));
   const [shown, setShown] = useState(PAGE);
   const [copied, setCopied] = useState(false);
+  const [text, setText] = useState("");
   const results = useMemo(() => runFinder(rows, q), [rows, q]);
+  // 검색어가 있으면 필터와 상관없이 234곳 전체에서 이름으로 찾는다
+  const found = useMemo(() => {
+    if (!text.trim()) return null;
+    return rows
+      .map((r) => ({ r, s: matchScore(text, [r.name, r.en, r.country, ...(r.aliases ?? [])]) }))
+      .filter((x) => x.s != null)
+      .sort((a, b) => a.s! - b.s!)
+      .map((x) => x.r);
+  }, [text, rows]);
 
   const update = (next: FinderQuery) => {
     setQ(next);
@@ -74,10 +85,46 @@ export function TripFinder({
     <>
       <h1 style={{ fontSize: 24, letterSpacing: "-0.03em" }}>{finderTitle(q, results.length)}</h1>
       <p className="muted" style={{ margin: "4px 0 12px" }}>
-        여러 달을 고르면 더 많은 달이 맞는 곳이 위로 와요. 간절기·비수기는 날씨는 조금 아쉬워도 보통 항공권·숙소가 저렴한 시기예요.
+        해외 {rows.length}곳의 월별 날씨와 실시간 16일 날씨를 볼 수 있어요. 여러 달을 고르면 더 많은 달이 맞는 곳이 위로 오고, 간절기·비수기는 날씨는 조금 아쉬워도
+        보통 항공권·숙소가 저렴한 시기예요.
       </p>
 
-      <nav className="tf-presets" aria-label="빠른 선택">
+      <input
+        className="search-input ov-search"
+        type="search"
+        inputMode="search"
+        placeholder="도시·나라 검색 (예: 호치민, 푸켓, 파리)"
+        aria-label="해외 여행지 검색"
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && found?.[0]) router.push(`/overseas/${found[0].slug}`);
+        }}
+      />
+      {found && (
+        <section className="card" style={{ marginTop: 12 }}>
+          <h2 className="card-title">검색 결과 {found.length}곳</h2>
+          {found.length ? (
+            <nav className="ov-grid">
+              {found.map((r) => (
+                <Link key={r.slug} href={`/overseas/${r.slug}`} className="ov-card" title={`${r.name} 날씨`}>
+                  <span className="ov-name">
+                    <b>{r.name}</b>
+                    <i>{r.en}</i>
+                  </span>
+                  <span className="ov-country">{r.country}</span>
+                </Link>
+              ))}
+            </nav>
+          ) : (
+            <p className="muted" style={{ margin: 0 }}>
+              찾는 여행지가 없어요. 다른 이름으로 검색해 보세요.
+            </p>
+          )}
+        </section>
+      )}
+
+      <nav className="tf-presets" aria-label="빠른 선택" style={{ marginTop: 12 }}>
         {PRESETS.map((p) => (
           <button key={p.id} type="button" onClick={() => update(p.apply(q))}>
             {p.label}

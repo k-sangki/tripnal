@@ -251,6 +251,33 @@ a {
   color: var(--pine);
   text-decoration: none;
 }
+.ov-banner.main {
+  height: auto;
+  min-height: 52px;
+  padding: 10px 18px;
+}
+.ov-banner .ov-banner-text {
+  flex-shrink: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.ov-banner-text b {
+  color: var(--pine);
+  white-space: nowrap;
+}
+@media (max-width: 359px) {
+  .ov-banner.main b {
+    font-size: 20px;
+  }
+}
+.ov-banner-text small {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #2f6b5e;
+  letter-spacing: -0.02em;
+}
 .ov-banner-title {
   display: inline-flex;
   align-items: center;

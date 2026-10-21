@@ -2000,7 +2000,7 @@ th.dcol .pd {
   height: 14px;
   border-radius: 4px;
   background: var(--mint-soft);
-  border: 2px solid var(--mint);
+  border: 1px solid var(--line);
 }
 .month-grid {
   display: grid;
@@ -2025,7 +2025,6 @@ th.dcol .pd {
 }
 .month-card.good {
   background: var(--mint-soft);
-  border-color: var(--mint);
 }
 .month-card.on {
   outline: 2px solid var(--pine);

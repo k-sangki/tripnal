@@ -6,6 +6,7 @@ import { ClimateChart, ForecastButton, GuideCard } from "@/components/CityClimat
 import { SiteFooter, SiteHeader } from "@/components/SiteHeader";
 import { CLIMATE_SOURCE, getNormals, goodMonths, monthGuide } from "@/lib/climate";
 import { DESTINATIONS, getDestination, type Destination } from "@/lib/overseas";
+import { wetDry } from "@/lib/season";
 
 /** 평년값만 쓰므로 미리 만들어 두지 않고 요청 때 그린다 (234곳 × 12달) */
 export const dynamic = "force-dynamic";
@@ -17,13 +18,21 @@ function parse(slug: string, month: string) {
   return { d, m };
 }
 
+/** 열대 여행지의 그달이 우기인지 건기인지 */
+function wetOrDry(d: Destination, m: number): "우기" | "건기" | null {
+  const wd = wetDry(d);
+  return wd?.wet.includes(m) ? "우기" : wd?.dry.includes(m) ? "건기" : null;
+}
+
 function title(d: Destination, m: number) {
-  return `${d.name} ${m}월 날씨 · 기온·강수량·옷차림`;
+  const s = wetOrDry(d, m);
+  return `${d.name} ${m}월 날씨 · ${s ? `${s} ` : ""}기온·강수량·옷차림`;
 }
 
 function description(d: Destination, m: number) {
   const n = getNormals(d.slug)![m - 1];
-  return `${d.name}(${d.country}) ${m}월 평년 날씨는 낮 최고 ${Math.round(n.hi)}°C, 아침 최저 ${Math.round(n.lo)}°C, 강수량 ${n.rain}mm. ${m}월 여행 일정 계획에 필요한 옷차림과 준비물, 날씨 주의할 점을 알려드려요.`;
+  const s = wetOrDry(d, m);
+  return `${d.name}(${d.country}) ${m}월${s ? `은 ${s}이고` : ""} 평년 날씨는 낮 최고 ${Math.round(n.hi)}°C, 아침 최저 ${Math.round(n.lo)}°C, 강수량 ${n.rain}mm. ${m}월 여행 일정 계획에 필요한 옷차림과 준비물, 날씨 주의할 점을 알려드려요.`;
 }
 
 export async function generateMetadata({ params }: PageProps<"/overseas/[slug]/[month]">): Promise<Metadata> {
@@ -35,7 +44,12 @@ export async function generateMetadata({ params }: PageProps<"/overseas/[slug]/[
   return {
     title: title(p.d, p.m),
     description: description(p.d, p.m),
-    keywords: [p.d.name, ...(p.d.aliases ?? [])].flatMap((n) => [`${n} ${p.m}월 날씨`, `${n} ${p.m}월 옷차림`, `${n} ${p.m}월 여행`]),
+    keywords: [p.d.name, ...(p.d.aliases ?? [])].flatMap((n) => [
+      `${n} ${p.m}월 날씨`,
+      `${n} ${p.m}월 옷차림`,
+      `${n} ${p.m}월 여행`,
+      ...(wetOrDry(p.d, p.m) ? [`${n} ${p.m}월 ${wetOrDry(p.d, p.m)}`] : []),
+    ]),
     alternates: { canonical: url },
     openGraph: { title: title(p.d, p.m), description: description(p.d, p.m), url, images: [{ url: image, width: 1200, height: 630 }] },
     twitter: { card: "summary_large_image", title: title(p.d, p.m), description: description(p.d, p.m), images: [image] },

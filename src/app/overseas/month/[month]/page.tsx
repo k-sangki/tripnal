@@ -13,12 +13,12 @@ export async function generateMetadata({ params }: PageProps<"/overseas/month/[m
   const m = parse((await params).month);
   if (!m) return {};
   const title = `${m}월 해외여행 추천 · ${m}월에 가기 좋은 해외 여행지와 날씨`;
-  const description = `${m}월에 날씨가 좋은 해외 여행지를 지역별로 모았어요. ${bestNames(m).join("·")} 등 평년 기온·강수량과 옷차림을 보고 ${m}월 해외여행 일정을 계획하세요.`;
+  const description = `${m}월에 날씨가 좋은 해외 여행지를 지역별로 모았어요. ${bestNames(m).join("·")} 등 평년 기온·강수량과 옷차림, 우기·건기와 항공권이 저렴한 간절기·비수기 여행지까지 보고 ${m}월 해외여행 일정을 계획하세요.`;
   const url = `/overseas/month/${m}`;
   return {
     title,
     description,
-    keywords: [`${m}월 해외여행`, `${m}월 해외여행 추천`, `${m}월 여행지 추천`, `${m}월에 가기 좋은 나라`],
+    keywords: [`${m}월 해외여행`, `${m}월 해외여행 추천`, `${m}월 여행지 추천`, `${m}월에 가기 좋은 나라`, `${m}월 간절기 여행지`, `${m}월 비수기 해외여행`],
     alternates: { canonical: url },
     openGraph: { title, description, url },
   };

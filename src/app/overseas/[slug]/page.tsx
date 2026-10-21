@@ -7,19 +7,23 @@ import { CityIssues, CityMonths } from "@/components/CityMonths";
 import { SiteFooter, SiteHeader } from "@/components/SiteHeader";
 import { CLIMATE_SOURCE, climateSummary, getIntro, getNormals, goodMonths, localMonth, monthGuide, monthRanges, travelPrep } from "@/lib/climate";
 import { travelFacts } from "@/lib/countryInfo";
-import { seasons } from "@/lib/season";
+import { seasons, wetDry } from "@/lib/season";
 import { DESTINATIONS, destinationOffset, getDestination, type Destination } from "@/lib/overseas";
 
 /** 요청마다 그린다 (현지 달이 바뀌므로). 16일 예보는 브라우저에서 따로 받아 페이지가 기다리지 않는다 */
 export const dynamic = "force-dynamic";
 
 function title(d: Destination) {
+  // 열대 여행지는 "다낭 우기", "발리 건기"로 많이 찾아서 제목에 넣는다
+  if (wetDry(d)) return `${d.name} 날씨 · 우기·건기 시기와 여행하기 좋은 달`;
   return `${d.name} 날씨 · 여행하기 좋은 달과 월별 옷차림`;
 }
 
 function description(d: Destination) {
   const good = monthRanges(goodMonths(d.slug).map((g) => g.month));
-  return `${d.name}(${d.country}) 여행하기 좋은 달은 ${good}. 1~12월 평년 기온·강수량과 달별 옷차림·준비물·주의할 점, 실시간 16일 날씨까지 한 번에 보고 해외여행 일정을 계획하세요.`;
+  const wd = wetDry(d);
+  const season = wd ? ` 우기는 ${monthRanges(wd.wet)}, 건기는 ${monthRanges(wd.dry)}예요.` : "";
+  return `${d.name}(${d.country}) 여행하기 좋은 달은 ${good}.${season} 1~12월 평년 기온·강수량과 달별 옷차림·준비물·주의할 점, 실시간 16일 날씨까지 한 번에 보고 해외여행 일정을 계획하세요.`;
 }
 
 export async function generateMetadata({ params }: PageProps<"/overseas/[slug]">): Promise<Metadata> {
@@ -30,7 +34,13 @@ export async function generateMetadata({ params }: PageProps<"/overseas/[slug]">
   return {
     title: title(d),
     description: description(d),
-    keywords: [d.name, ...(d.aliases ?? [])].flatMap((n) => [`${n} 날씨`, `${n} 여행 날씨`, `${n} 여행 시기`, `${n} 옷차림`]),
+    keywords: [d.name, ...(d.aliases ?? [])].flatMap((n) => [
+      `${n} 날씨`,
+      `${n} 여행 날씨`,
+      `${n} 여행 시기`,
+      `${n} 옷차림`,
+      ...(wetDry(d) ? [`${n} 우기`, `${n} 건기`, `${n} 우기 건기 시기`] : []),
+    ]),
     alternates: { canonical: url },
     openGraph: { title: title(d), description: description(d), url, images: [{ url: image, width: 1200, height: 630 }] },
     twitter: { card: "summary_large_image", title: title(d), description: description(d), images: [image] },

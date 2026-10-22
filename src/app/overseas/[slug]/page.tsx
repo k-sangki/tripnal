@@ -15,15 +15,15 @@ export const dynamic = "force-dynamic";
 
 function title(d: Destination) {
   // 열대 여행지는 "다낭 우기", "발리 건기"로 많이 찾아서 제목에 넣는다
-  if (wetDry(d)) return `${d.name} 날씨 · 우기·건기 시기와 여행하기 좋은 달`;
-  return `${d.name} 날씨 · 여행하기 좋은 달과 월별 옷차림`;
+  if (wetDry(d)) return `${d.name} 날씨 · 우기·건기 언제? 비 맞으러 가는 거 아니죠?`;
+  return `${d.name} 날씨 · 여행하기 좋은 달, 옷 잘못 싸면 고생합니다`;
 }
 
 function description(d: Destination) {
   const good = monthRanges(goodMonths(d.slug).map((g) => g.month));
   const wd = wetDry(d);
   const season = wd ? ` 우기는 ${monthRanges(wd.wet)}, 건기는 ${monthRanges(wd.dry)}.` : "";
-  return `${d.name}(${d.country}) 여행하기 좋은 달은 ${good}.${season} 1~12월 평년 기온·강수량과 달별 옷차림·준비물·주의할 점, 실시간 16일 날씨까지 한 번에 보고 해외여행 일정을 계획하세요.`;
+  return `${d.name}(${d.country}) 여행하기 좋은 달은 ${good}.${season} 1~12월 평년 기온·강수량과 달별 옷차림·준비물·주의할 점, 실시간 날씨까지 한 번에 보고 해외여행 일정을 계획하세요.`;
 }
 
 export async function generateMetadata({ params }: PageProps<"/overseas/[slug]">): Promise<Metadata> {

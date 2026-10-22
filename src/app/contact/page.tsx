@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { CONTACT_EMAIL, TextPage } from "@/components/TextPage";
 
 export const metadata: Metadata = {
-  title: "문의하기",
+  title: "트립날씨 문의하기",
   description: "tripnalc 서비스 문의, 오류 제보, 장소 추가 요청, 광고·제휴 문의 안내.",
   alternates: { canonical: "/contact" },
 };

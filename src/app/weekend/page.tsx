@@ -13,9 +13,9 @@ import { loadWeekend, rankWeekend, weekendFromForecast, type WeekendData } from 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "이번 주말 날씨 좋은 곳 · 주말 캠핑장·등산·여행지·바다낚시 추천",
+  title: "이번 주말 날씨 좋은 곳 · 집에만 있긴 아까운 캠핑장·산·바다 추천",
   description:
-    "이번 주말 비가 없고 바람이 약한 캠핑장, 100대 명산, 국내 여행지, 바다낚시 포인트를 16일 예보로 골라 순위로 보여드립니다. 주말 여행 일정을 날씨로 정하세요.",
+    "이번 주말 비가 없고 바람이 약한 캠핑장, 100대 명산, 국내 여행지, 바다낚시 포인트를 최신 예보로 골라 순위로 보여드립니다. 주말 여행 일정을 날씨로 정하세요.",
   alternates: { canonical: "/weekend" },
 };
 

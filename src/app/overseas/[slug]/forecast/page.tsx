@@ -12,11 +12,11 @@ import type { Forecast } from "@/lib/weather/types";
 export const dynamic = "force-dynamic";
 
 function title(d: Destination) {
-  return `${d.name} 실시간 날씨 · 이번주 ${d.country} 여행 날씨 16일`;
+  return `${d.name} 실시간 날씨 · 이번주 ${d.country} 여행, 우산이냐 선글라스냐`;
 }
 
 function description(d: Destination) {
-  return `${d.name}(${d.country}) 오늘부터 16일까지 3시간 간격 날씨를 현지 시간으로. 기온·체감온도·비·바람과 일출·일몰을 한눈에 보고 해외여행 일정과 옷차림을 정하세요.`;
+  return `${d.name}(${d.country}) 이번주·다음 주 날씨를 3시간 간격, 현지 시간으로. 기온·체감온도·비·바람과 일출·일몰을 한눈에 보고 해외여행 일정과 옷차림을 정하세요.`;
 }
 
 export async function generateMetadata({ params }: PageProps<"/overseas/[slug]/forecast">): Promise<Metadata> {
@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: PageProps<"/overseas/[slug]/f
   return {
     title: title(d),
     description: description(d),
-    keywords: [d.name, ...(d.aliases ?? [])].flatMap((n) => [`${n} 날씨`, `${n} 이번주 날씨`, `${n} 16일 날씨`]),
+    keywords: [d.name, ...(d.aliases ?? [])].flatMap((n) => [`${n} 날씨`, `${n} 이번주 날씨`]),
     alternates: { canonical: url },
     openGraph: { siteName: "트립날씨", locale: "ko_KR", title: title(d), description: description(d), url, images: [{ url: image, width: 1200, height: 630 }] },
     twitter: { card: "summary_large_image", title: title(d), description: description(d), images: [image] },
@@ -57,7 +57,7 @@ export default async function DestinationForecastPage({ params }: PageProps<"/ov
           { "@type": "ListItem", position: 1, name: "트립날씨", item: "https://tripnalc.com/" },
           { "@type": "ListItem", position: 2, name: "해외 날씨", item: "https://tripnalc.com/overseas" },
           { "@type": "ListItem", position: 3, name: `${d.name} 날씨`, item: `https://tripnalc.com/overseas/${d.slug}` },
-          { "@type": "ListItem", position: 4, name: `${d.name} 16일 날씨`, item: `https://tripnalc.com/overseas/${d.slug}/forecast` },
+          { "@type": "ListItem", position: 4, name: `${d.name} 실시간 날씨`, item: `https://tripnalc.com/overseas/${d.slug}/forecast` },
         ],
       },
     ],

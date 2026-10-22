@@ -26,7 +26,7 @@ function wetOrDry(d: Destination, m: number): "우기" | "건기" | null {
 
 function title(d: Destination, m: number) {
   const s = wetOrDry(d, m);
-  return `${d.name} ${m}월 날씨 · ${s ? `${s} ` : ""}기온·강수량·옷차림`;
+  return `${d.name} ${m}월 날씨 · ${s ? `${s} ` : ""}기온·옷차림, 캐리어 싸기 전 필독`;
 }
 
 function description(d: Destination, m: number) {

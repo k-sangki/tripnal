@@ -22,9 +22,8 @@ jobs:
           set +e
           {
             curl -s -m 60 -o isd.csv https://www.ncei.noaa.gov/pub/data/noaa/isd-history.csv
-            head -2 isd.csv
-            grep '^"47[0-9][0-9][0-9]' isd.csv | grep -v '"999999"' | head -3
-            grep '"KS"' isd.csv | grep '"2026' | cut -d, -f1,3,4,7,8,9,10,11
+            grep '"KS"' isd.csv | grep '^"47[12]' | cut -d, -f1,3,7,8,9,11 > ks.txt
+            cat ks.txt
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com
           git add -A diag-out.txt; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026

@@ -206,8 +206,9 @@ jobs:
         run: python collector/weekend.py
 
   # 예보 정확도 보정용 기록: 관측소 위치의 모델별·사이트 예보와 관측값 (화면에는 안 씀)
+  # 주말 날씨 잡과 같이 돌면 사이트 호출이 겹쳐 실패하므로 그 뒤에 돈다
   verify:
-    needs: [ecmwf, gfs, icon, gefs]
+    needs: [ecmwf, gfs, icon, gefs, weekend]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 30
@@ -221,7 +222,6 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install boto3
-      - run: sleep 360
       - name: 예보 기록
         run: python collector/verify.py forecast
       - name: 관측값 기록 (기상청 종관관측)

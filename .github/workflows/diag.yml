@@ -26,8 +26,11 @@ jobs:
           import sys, json; sys.path.insert(0, "collector")
           from upload import client
           s3 = client()
-          print(s3.get_object(Bucket="tripnal-data", Key="weekend/latest.json")["Body"].read().decode())
+          for k in ["weekend/latest.json","weekend/days.json"]:
+              b = s3.get_object(Bucket="tripnal-data", Key=k)
+              open(k.replace("/","_"),"wb").write(b["Body"].read())
+              print(k, b["LastModified"])
           PY
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com
-          git add -A diag-out.txt; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026
+          git add -A diag-out.txt weekend_latest.json weekend_days.json; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026

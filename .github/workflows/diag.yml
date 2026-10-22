@@ -21,10 +21,15 @@ jobs:
       - run: |
           set +e
           {
-            u="/overseas?m=1,2,12&s=peak,shoulder&t=hot"
-            echo "$u $(curl -s -o p.html -w '%{http_code}' "https://tripnalc.com$u")"
-            grep -o '<h1[^>]*>[^<]*' p.html | head -1
-            grep -o 'aria-pressed="true"[^>]*>[^<]*' p.html | head -3
+            curl -s -m 60 -o isd.csv https://www.ncei.noaa.gov/pub/data/noaa/isd-history.csv
+            echo "isd lines $(wc -l < isd.csv)"
+            grep '"KS"' isd.csv | grep '^"47' | awk -F'","' '$11 >= "20260901"' | cut -d, -f1,3,7,8,9,10,11
+            echo ===ASOS
+            k=$(python3 -c "import urllib.parse,os;print(urllib.parse.quote(os.environ['KHOA_API_KEY'],safe=''))")
+            curl -s -m 60 "https://apis.data.go.kr/1360000/AsosHourlyInfoService/getWthrDataList?serviceKey=$k&pageNo=1&numOfRows=3&dataType=JSON&dataCd=ASOS&dateCd=HR&startDt=20261020&startHh=00&endDt=20261020&endHh=02&stnIds=108" | head -c 3000
+            echo
+            echo ===ASOS-http
+            curl -s -m 60 "http://apis.data.go.kr/1360000/AsosHourlyInfoService/getWthrDataList?serviceKey=$k&pageNo=1&numOfRows=3&dataType=JSON&dataCd=ASOS&dateCd=HR&startDt=20261020&startHh=00&endDt=20261020&endHh=02&stnIds=108" | head -c 1500
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com
           git add -A diag-out.txt; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026

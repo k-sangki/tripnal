@@ -21,21 +21,12 @@ jobs:
       - run: |
           set +e
           {
-            python3 - <<'PY'
-          import json, os, urllib.parse, urllib.request, concurrent.futures as cf
-          k = urllib.parse.quote(os.environ["KHOA_API_KEY"], safe="")
-          def one(i):
-              u = f"https://apis.data.go.kr/1360000/AsosHourlyInfoService/getWthrDataList?serviceKey={k}&pageNo=1&numOfRows=1&dataType=JSON&dataCd=ASOS&dateCd=HR&startDt=20261020&startHh=00&endDt=20261020&endHh=00&stnIds={i}"
-              try:
-                  d = json.load(urllib.request.urlopen(u, timeout=30))
-                  it = d["response"]["body"]["items"]["item"][0]
-                  return f'{i},{it["stnNm"]},{it["ta"]}'
-              except Exception as e:
-                  return None
-          with cf.ThreadPoolExecutor(8) as ex:
-              for r in ex.map(one, range(90, 300)):
-                  if r: print(r)
-          PY
+            curl -s -m 60 -X POST 'https://data.kma.go.kr/tmeta/stn/selectStnList.do' -d 'pgmNo=123&stnGroupSns=&selectType=1&mddlClssCd=SFC01&dataSetNo=&stnIds=' | head -c 1500; echo
+            echo ===2
+            curl -s -m 60 'https://data.kma.go.kr/tmeta/stn/selectStnList.do?pgmNo=123' | head -c 800; echo
+            echo ===3
+            curl -s -m 60 -o w.html -w '%{http_code}\n' 'https://ko.wikipedia.org/wiki/%EB%8C%80%ED%95%9C%EB%AF%BC%EA%B5%AD%EC%9D%98_%EA%B8%B0%EC%83%81%EA%B4%80%EC%B8%A1%EC%86%8C_%EB%AA%A9%EB%A1%9D'
+            grep -c '대관령' w.html
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com
           git add -A diag-out.txt; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026

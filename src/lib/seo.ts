@@ -29,7 +29,7 @@ export function placeTitle(p: Place): string {
     case "ski":
       return `${p.name} 날씨 · 스키장 이번주 눈·기온 16일`;
     case "travel":
-      return `${p.name} 날씨 · 이번주·주말 여행 날씨 16일`;
+      return `${p.name} 날씨 · 이번주·주말, 세차해도 될까요?`;
     default:
       return `${p.name} 날씨 · 이번주 ${getLeisure(p.leisure).label} 날씨 16일`;
   }

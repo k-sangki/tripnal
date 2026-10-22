@@ -21,9 +21,21 @@ jobs:
       - run: |
           set +e
           {
-            curl -s -m 60 -o isd.csv https://www.ncei.noaa.gov/pub/data/noaa/isd-history.csv
-            grep '"KS"' isd.csv | grep '^"47[12]' | cut -d, -f1,3,7,8,9,11 > ks.txt
-            cat ks.txt
+            python3 - <<'PY'
+          import json, os, urllib.parse, urllib.request, concurrent.futures as cf
+          k = urllib.parse.quote(os.environ["KHOA_API_KEY"], safe="")
+          def one(i):
+              u = f"https://apis.data.go.kr/1360000/AsosHourlyInfoService/getWthrDataList?serviceKey={k}&pageNo=1&numOfRows=1&dataType=JSON&dataCd=ASOS&dateCd=HR&startDt=20261020&startHh=00&endDt=20261020&endHh=00&stnIds={i}"
+              try:
+                  d = json.load(urllib.request.urlopen(u, timeout=30))
+                  it = d["response"]["body"]["items"]["item"][0]
+                  return f'{i},{it["stnNm"]},{it["ta"]}'
+              except Exception as e:
+                  return None
+          with cf.ThreadPoolExecutor(8) as ex:
+              for r in ex.map(one, range(90, 300)):
+                  if r: print(r)
+          PY
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com
           git add -A diag-out.txt; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026

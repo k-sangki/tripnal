@@ -42,7 +42,7 @@ export async function generateMetadata({ params, searchParams }: PageProps<"/wea
       ...(place.aliases ?? []).map((a) => `${a} 날씨`),
     ],
     alternates: { canonical: url },
-    openGraph: { title, description, url, images: [{ url: image, width: 1200, height: 630 }] },
+    openGraph: { siteName: "트립날씨", locale: "ko_KR", title, description, url, images: [{ url: image, width: 1200, height: 630 }] },
     twitter: { card: "summary_large_image", title, description, images: [image] },
   };
 }

@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: PageProps<"/overseas/[slug]/f
     description: description(d),
     keywords: [d.name, ...(d.aliases ?? [])].flatMap((n) => [`${n} 날씨`, `${n} 이번주 날씨`, `${n} 16일 날씨`]),
     alternates: { canonical: url },
-    openGraph: { title: title(d), description: description(d), url, images: [{ url: image, width: 1200, height: 630 }] },
+    openGraph: { siteName: "트립날씨", locale: "ko_KR", title: title(d), description: description(d), url, images: [{ url: image, width: 1200, height: 630 }] },
     twitter: { card: "summary_large_image", title: title(d), description: description(d), images: [image] },
   };
 }

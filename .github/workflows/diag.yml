@@ -21,12 +21,11 @@ jobs:
       - run: |
           set +e
           {
-            curl -s -m 60 -X POST 'https://data.kma.go.kr/tmeta/stn/selectStnList.do' -d 'pgmNo=123&stnGroupSns=&selectType=1&mddlClssCd=SFC01&dataSetNo=&stnIds=' | head -c 1500; echo
-            echo ===2
-            curl -s -m 60 'https://data.kma.go.kr/tmeta/stn/selectStnList.do?pgmNo=123' | head -c 800; echo
-            echo ===3
-            curl -s -m 60 -o w.html -w '%{http_code}\n' 'https://ko.wikipedia.org/wiki/%EB%8C%80%ED%95%9C%EB%AF%BC%EA%B5%AD%EC%9D%98_%EA%B8%B0%EC%83%81%EA%B4%80%EC%B8%A1%EC%86%8C_%EB%AA%A9%EB%A1%9D'
-            grep -c '대관령' w.html
+            curl -s -m 60 -o k.html 'https://data.kma.go.kr/tmeta/stn/selectStnList.do?pgmNo=123'
+            wc -c k.html
+            grep -n -i 'ajax\|url\s*:\|\.do' k.html | grep -v 'css\|href="/' | head -40
+            grep -n '대관령' k.html | head -5
+            grep -n -A3 '37\.67\|128\.71' k.html | head -20
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com
           git add -A diag-out.txt; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026

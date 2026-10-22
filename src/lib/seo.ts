@@ -23,7 +23,7 @@ export function placeTitle(p: Place): string {
     case "fishing":
       return `${p.name} 물때표·바다 날씨 · 이번주 바람·파고 16일`;
     case "hiking":
-      return `${p.name} 날씨 · 등산 정상 기온·바람 16일${p.elevation ? ` (해발 ${p.elevation.toLocaleString()}m)` : ""}`;
+      return `${p.name} 날씨 · 등산 전 꼭 확인! 정상은 지금 몇 도?${p.elevation ? ` (해발 ${p.elevation.toLocaleString()}m)` : ""}`;
     case "cycling":
       return `${p.name} 날씨 · 자전거 라이딩 바람 예보 16일`;
     case "ski":

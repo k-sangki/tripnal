@@ -30,7 +30,8 @@ export async function generateMetadata({ params, searchParams }: PageProps<"/wea
   const url = `/weather/${place.slug}`;
   const image = ogImage(place.slug, await searchParams);
   return {
-    title,
+    // 구글 결과 위에 사이트 이름(트립날씨)이 따로 나오니 뒤에 "| 트립날씨"를 붙이지 않는다
+    title: { absolute: title },
     description,
     keywords: [
       `${place.name} 날씨`,

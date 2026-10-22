@@ -21,6 +21,7 @@ jobs:
       - run: |
           set +e
           {
+            pip install -q boto3 >/dev/null 2>&1
             python3 - <<'PY'
           import sys, json; sys.path.insert(0, "collector")
           from upload import client

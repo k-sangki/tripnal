@@ -191,9 +191,19 @@ const MORE_KEY = "tripnal:more";
  * 선택한 기간 전체를 한 카드 안의 표 하나로 보여주고 좌우로 넘겨 본다.
  * 날짜 사이에는 구분선, 시각 칸은 낮·밤 색, 지금 칸은 밑줄로 표시한다.
  */
+/** 더 많은 날씨 정보를 펼쳐 두었는지 */
+function readMore(): boolean {
+  try {
+    return window.localStorage.getItem(MORE_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
 export function ForecastTable({ days, leisure, interval, today, nowHour, capture }: Props) {
   const scroller = useRef<HTMLDivElement>(null);
-  const [open, setOpen] = useState(false);
+  // 캡처는 화면 밖에서 한 번 재고 그리므로, 펼침 여부를 처음부터 알아야 아래가 잘리지 않는다
+  const [open, setOpen] = useState(() => (capture ? readMore() : false));
   const [edges, setEdges] = useState({ prev: false, next: false });
   const daily = interval === "day";
   const step = stepHours(interval);
@@ -206,7 +216,7 @@ export function ForecastTable({ days, leisure, interval, today, nowHour, capture
     try {
       // 더 많은 날씨 정보를 펼쳤는지 기억한다
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setOpen(window.localStorage.getItem(MORE_KEY) === "1");
+      setOpen(readMore());
     } catch {}
   }, []);
 

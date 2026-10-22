@@ -33,10 +33,12 @@ const SOURCE_NAMES: Record<string, string> = {
 };
 /** 날짜가 적을 때 너무 크게 키우지 않는다 */
 const MAX_ZOOM = 1.8;
+/** 표가 좁아도 머리(장소·기간)가 답답하지 않게 이미지 폭은 화면의 이만큼은 남긴다 */
+const MIN_WIDTH = 0.7;
 
 /**
- * 캡처 이미지 크기: 지금 기기의 화면 한 장.
- * 모바일은 휴대폰 화면 비율, PC는 모니터 해상도(1280~2560px 폭)에 맞춘다.
+ * 캡처 이미지 폭과 기준 높이: 지금 기기의 화면 한 장.
+ * 모바일은 휴대폰 화면 비율, PC는 모니터 해상도(1280~2560px 폭)에 맞춘다. 표를 넣은 뒤 남는 빈 곳은 잘라낸다.
  */
 function frameSize() {
   const sw = window.screen?.width || window.innerWidth;
@@ -48,7 +50,7 @@ function frameSize() {
 /**
  * 캡처 전용 화면. 화면 밖에 그려서 이미지로 만든다.
  * 화면에서 보는 표와 같은 모양(날짜는 가로, 항목은 세로)으로 선택한 날을 모두 넣되,
- * 화면 한 장 크기를 넘지 않도록 날짜를 몇 줄로 나눠 위아래로 쌓고 크기를 맞춘다.
+ * 화면 한 장 크기를 넘지 않도록 날짜를 몇 줄로 나눠 위아래로 쌓고 크기를 맞춘 뒤, 이미지를 표에 딱 맞게 자른다.
  */
 export function CaptureFrame({ frameRef, ...p }: Props) {
   const [size] = useState(frameSize);
@@ -60,6 +62,11 @@ export function CaptureFrame({ frameRef, ...p }: Props) {
     const body = bodyRef.current;
     const fit = fitRef.current;
     if (!body || !fit) return;
+    const frame = body.parentElement;
+    if (!frame) return;
+    // 화면 한 장 크기에서 재고, 마지막에 표에 딱 맞게 줄인다
+    frame.style.width = `${size.w}px`;
+    frame.style.height = `${size.h}px`;
     fit.style.transform = "none";
     const aw = body.clientWidth;
     const ah = body.clientHeight;
@@ -86,11 +93,16 @@ export function CaptureFrame({ frameRef, ...p }: Props) {
         return;
       }
     }
+    // 화면 한 장 안에 들어가게 키운 뒤, 남는 위아래(와 양옆) 빈 곳을 잘라 이미지를 표에 딱 맞춘다
     const z = Math.min(MAX_ZOOM, aw / w, ah / h);
+    const fw = Math.max(Math.round(size.w * MIN_WIDTH), Math.ceil(frame.offsetWidth - aw + w * z));
+    frame.style.width = `${Math.min(size.w, fw)}px`;
+    // 폭이 줄면 머리 줄이 늘어날 수 있으니 다시 재서 높이를 정한다
+    frame.style.height = `${Math.ceil(frame.offsetHeight - body.clientHeight + h * z)}px`;
     fit.style.transform = `scale(${z})`;
-    fit.style.left = `${Math.max(0, (aw - w * z) / 2)}px`;
-    fit.style.top = `${Math.max(0, (ah - h * z) / 2)}px`;
-  }, [rows, p.days.length]);
+    fit.style.left = `${Math.max(0, (body.clientWidth - w * z) / 2)}px`;
+    fit.style.top = "0px";
+  }, [rows, p.days.length, size.w, size.h]);
 
   const n = rows ?? 1;
   const per = Math.ceil(p.days.length / n);
@@ -99,7 +111,7 @@ export function CaptureFrame({ frameRef, ...p }: Props) {
 
   return (
     <div className="cf-host" aria-hidden>
-      <div ref={frameRef} className={`cf${narrow ? " narrow" : ""}`} style={{ width: size.w, height: size.h }}>
+      <div ref={frameRef} className={`cf${narrow ? " narrow" : ""}`} style={{ width: size.w }}>
         <header className="cf-head">
           <Logo dark size={narrow ? 22 : 28} />
           <div className="cf-title">

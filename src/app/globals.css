@@ -1104,6 +1104,7 @@ a {
   font-size: 12px;
 }
 .cf-src {
+  min-width: 0;
   font-size: 13px;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.9);
@@ -1113,6 +1114,10 @@ a {
 }
 .cf-src-item {
   white-space: nowrap;
+}
+.cf-src.wrap .cf-src-item {
+  white-space: normal;
+  word-break: keep-all;
 }
 .cf-src-sub {
   font-weight: 500;

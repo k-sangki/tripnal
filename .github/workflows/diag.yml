@@ -21,7 +21,7 @@ jobs:
       - run: |
           set +e
           {
-            curl -s -m 90 -o k.html -X POST 'https://data.kma.go.kr/tmeta/stn/selectStnList.do' -d 'pgmNo=123&pageIndex=1&schListCnt=1000&serviceSe=F00101&mddlClssCd=SFC01'
+            curl -s -m 150 --retry 3 -o k.html -X POST 'https://data.kma.go.kr/tmeta/stn/selectStnList.do' -d 'pgmNo=123&pageIndex=1&schListCnt=1000&serviceSe=F00101&mddlClssCd=SFC01'
             python3 - <<'PY'
           import re, html
           t = open("k.html", encoding="utf-8", errors="ignore").read()

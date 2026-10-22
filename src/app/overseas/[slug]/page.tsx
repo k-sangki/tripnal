@@ -15,8 +15,8 @@ export const dynamic = "force-dynamic";
 
 function title(d: Destination) {
   // 열대 여행지는 "다낭 우기", "발리 건기"로 많이 찾아서 제목에 넣는다
-  if (wetDry(d)) return `${d.name} 날씨 · 우기·건기 언제? 비 맞으러 가는 거 아니죠?`;
-  return `${d.name} 날씨 · 여행하기 좋은 달, 옷 잘못 싸면 고생합니다`;
+  if (wetDry(d)) return `${d.name} 실시간·월별 날씨 · 우기·건기 언제? 비 맞으러 가는 거 아니죠?`;
+  return `${d.name} 실시간·월별 날씨 · 여행하기 좋은 달, 옷 잘못 싸면 고생합니다`;
 }
 
 function description(d: Destination) {

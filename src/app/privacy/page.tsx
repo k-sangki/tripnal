@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { CONTACT_EMAIL, TextPage } from "@/components/TextPage";
 
 export const metadata: Metadata = {
-  title: "개인정보처리방침",
+  title: "트립날씨 개인정보처리방침",
   description: "tripnalc 개인정보처리방침",
   alternates: { canonical: "/privacy" },
 };

@@ -12,26 +12,33 @@ export function topic(word: string): string {
   return (c - 0xac00) % 28 ? `${word}은` : `${word}는`;
 }
 
+/** 사는 곳보다 놀러 가는 곳으로 찾는 도시 */
+const TOURIST_CITY = new Set(["gyeongju", "jeonju-hanok-village", "jeju", "gangneung"]);
+
 /**
- * 장소 페이지 제목. "{장소} 날씨"를 맨 앞에 두고, 많이 찾는 검색어(이번주·주말 날씨, 물때표, 16일)를 레저별로 붙인다.
+ * 장소 페이지 제목. "{장소} 날씨"를 맨 앞에 두고, 많이 찾는 검색어(이번주·주말 날씨, 물때표)와 훅을 레저별로 붙인다.
+ * "16일"은 쓰지 않는다 (16일자 날씨로 읽힐 수 있어서). 모든 검색 제목은 필수 검색어 + 훅(B급 유머) (SK 2026-10-22).
  * (네이버·구글 자동완성 기준 2026-10-20: "○○ 이번주 날씨", "○○ 주말 날씨", "○○ 물때표", "○○ 해수욕장 날씨", "○○ 스키장 날씨")
  */
 export function placeTitle(p: Place): string {
   switch (p.leisure) {
     case "camping":
-      return `${p.name} 날씨 · 이번주·주말 캠핑 날씨 16일`;
+      return `${p.name} 날씨 · 이번주·주말 캠핑, 텐트 날아갈 일 없을까?`;
     case "fishing":
-      return `${p.name} 물때표 · 오늘 몇 물? 만조·간조 시간과 바다 날씨 16일`;
+      return `${p.name} 물때표 · 오늘 몇 물? 만조·간조 시간과 바다 날씨`;
     case "hiking":
       return `${p.name} 날씨 · 등산 전 꼭 확인! 정상 체감온도·칼바람은?${p.elevation ? ` (해발 ${p.elevation.toLocaleString()}m)` : ""}`;
     case "cycling":
-      return `${p.name} 날씨 · 자전거 라이딩 바람 예보 16일`;
+      return `${p.name} 날씨 · 라이딩 전 확인! 맞바람에 울 일 있을까?`;
     case "ski":
-      return `${p.name} 날씨 · 스키장 이번주 눈·기온 16일`;
+      return `${p.name} 날씨 · 이번주 스키장 눈 소식, 연차 쓸 각?`;
     case "travel":
-      return `${p.name} 날씨 · 이번주·주말 여행 날씨 16일`;
+      // 같은 "여행"이라도 찾는 목적이 다르다: 바다는 물놀이·사진, 관광지는 여행 동선, 사는 도시는 생활(세차·빨래)
+      if (/해수욕장|해변/.test(p.name)) return `${p.name} 날씨 · 이번주 바다 가면 인생샷? 산발샷?`;
+      if (TOURIST_CITY.has(p.slug)) return `${p.name} 날씨 · 이번주·주말 여행, 우산 들고 다닐 각?`;
+      return `${p.name} 날씨 · 이번주·주말, 세차해도 될까요?`;
     default:
-      return `${p.name} 날씨 · 이번주 ${getLeisure(p.leisure).label} 날씨 16일`;
+      return `${p.name} 날씨 · 이번주 ${getLeisure(p.leisure).label}, 하늘이 허락할까?`;
   }
 }
 
@@ -43,7 +50,7 @@ export function placeDescription(p: Place): string {
       : p.leisure === "fishing"
         ? "물때표(만조·간조), 파고, 풍속·풍향과 돌풍을"
         : "기온·체감온도·비·돌풍과 일몰 시간을";
-  return `${p.name}(${p.region}) 오늘부터 16일까지 3시간 간격 날씨. ${extra} ${l.label}에 맞게 한눈에 보여드리고, 이번주·주말 날씨로 여행 일정을 계획할 수 있습니다.`;
+  return `${p.name}(${p.region}) 이번주·주말 날씨를 3시간 간격으로. ${extra} ${l.label}에 맞게 한눈에 보여드리고, 여행 일정을 날씨로 계획할 수 있습니다.`;
 }
 
 /**

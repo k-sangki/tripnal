@@ -5,8 +5,8 @@ import { LEISURES } from "@/lib/leisure";
 import { PLACES } from "@/lib/places";
 
 export const metadata: Metadata = {
-  title: "장소별 날씨 - 캠핑장·100대 명산·바다 물때표·해수욕장·스키장 이번주 날씨",
-  description: "캠핑장 날씨, 100대 명산 등산 날씨, 바다 물때표, 해수욕장·스키장·자전거길 인증센터 날씨를 이번주부터 16일까지 3시간 간격으로 확인하세요.",
+  title: "장소별 날씨 · 캠핑장·명산·물때표·해수욕장·스키장, 갈 곳은 날씨가 정해 줌",
+  description: "캠핑장 날씨, 100대 명산 등산 날씨, 바다 물때표, 해수욕장·스키장·자전거길 인증센터 이번주·주말 날씨를 3시간 간격으로 확인하세요.",
   alternates: { canonical: "/weather" },
 };
 

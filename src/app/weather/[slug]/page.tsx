@@ -37,7 +37,6 @@ export async function generateMetadata({ params, searchParams }: PageProps<"/wea
       `${place.name} 날씨`,
       `${place.name} 이번주 날씨`,
       `${place.name} 주말 날씨`,
-      `${place.name} 16일 날씨`,
       ...(place.leisure === "fishing" ? [`${place.name} 물때표`, `${place.name} 바다 날씨`] : []),
       `${place.name} ${getLeisure(place.leisure).label} 날씨`,
       ...(place.aliases ?? []).map((a) => `${a} 날씨`),

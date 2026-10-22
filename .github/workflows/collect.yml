@@ -1,7 +1,7 @@
 name: Collect
 
 # ECMWF·GFS·ICON 공개 예보, GFS-Wave 파고, GEFS 강수 확률, CAMS 미세먼지, 국립해양조사원 만조·간조를 한국 영역만 R2(tripnal-data)에 올리고,
-# 끝나면 저장한 여행의 날씨 변화 알림을 보낸다.
+# 끝나면 저장한 여행의 날씨 변화 알림을 보내고, 예보·관측 비교용 기록(verify/)을 남긴다.
 # 00·12 UTC run의 360시간 자료가 다 올라오는 시각(약 8시간 뒤)에 맞춰 돈다.
 # 필요한 값: CLOUDFLARE_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, KHOA_API_KEY, ADS_API_KEY (Settings > Secrets and variables > Actions)
 on:
@@ -190,3 +190,19 @@ jobs:
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
           R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
         run: python collector/weekend.py
+      # 예보 정확도 보정용 기록: 관측소 위치의 모델별·사이트 예보와 관측값 (화면에는 안 씀)
+      - name: 예보 기록 (관측 비교용)
+        if: always()
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+        run: python collector/verify.py forecast
+      - name: 관측값 기록 (기상청 종관관측)
+        if: always()
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          KHOA_API_KEY: ${{ secrets.KHOA_API_KEY }}
+        run: python collector/verify.py obs

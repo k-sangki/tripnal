@@ -17,7 +17,7 @@ const SITE_LD = {
   "@context": "https://schema.org",
   "@type": "WebSite",
   name: "트립날씨",
-  alternateName: ["tripnalc", "트립날씨 tripnalc"],
+  alternateName: ["tripnalc", "tripnalc.com", "트립날씨 tripnalc"],
   url: "https://tripnalc.com/",
 };
 
@@ -48,7 +48,7 @@ export async function generateMetadata({ searchParams }: PageProps<"/">): Promis
     description,
     // 같은 장소라도 기간마다 다른 화면이라 검색에는 기본 주소만 남긴다
     alternates: { canonical: "/" },
-    openGraph: { title, description, images: [{ url: image, width: 1200, height: 630 }] },
+    openGraph: { siteName: "트립날씨", locale: "ko_KR", title, description, images: [{ url: image, width: 1200, height: 630 }] },
     twitter: { card: "summary_large_image", title, description, images: [image] },
   };
 }

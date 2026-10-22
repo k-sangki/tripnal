@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   description: DESCRIPTION,
   applicationName: "트립날씨",
   keywords: ["트립날씨", "tripnalc", "캠핑날씨", "캠핑 날씨", "여행날씨", "이번주 날씨", "주말 날씨", "16일 날씨", "등산 날씨", "낚시 날씨", "물때표", "바다 날씨"],
-  openGraph: { type: "website", siteName: "트립날씨 tripnalc", locale: "ko_KR", description: DESCRIPTION },
+  openGraph: { type: "website", siteName: "트립날씨", locale: "ko_KR", description: DESCRIPTION },
   formatDetection: { telephone: false },
   // 사이트 소유 확인용 (애드센스, 네이버 서치어드바이저)
   other: {

@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: PageProps<"/overseas/[slug]">
       ...(wetDry(d) ? [`${n} 우기`, `${n} 건기`, `${n} 우기 건기 시기`] : []),
     ]),
     alternates: { canonical: url },
-    openGraph: { title: title(d), description: description(d), url, images: [{ url: image, width: 1200, height: 630 }] },
+    openGraph: { siteName: "트립날씨", locale: "ko_KR", title: title(d), description: description(d), url, images: [{ url: image, width: 1200, height: 630 }] },
     twitter: { card: "summary_large_image", title: title(d), description: description(d), images: [image] },
   };
 }

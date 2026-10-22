@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: PageProps<"/overseas/month/[m
     description,
     keywords: [`${m}월 해외여행`, `${m}월 해외여행 추천`, `${m}월 여행지 추천`, `${m}월에 가기 좋은 나라`, `${m}월 간절기 여행지`, `${m}월 비수기 해외여행`],
     alternates: { canonical: url },
-    openGraph: { title, description, url },
+    openGraph: { siteName: "트립날씨", locale: "ko_KR", title, description, url },
   };
 }
 

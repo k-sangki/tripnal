@@ -51,7 +51,7 @@ export async function generateMetadata({ params }: PageProps<"/overseas/[slug]/[
       ...(wetOrDry(p.d, p.m) ? [`${n} ${p.m}월 ${wetOrDry(p.d, p.m)}`] : []),
     ]),
     alternates: { canonical: url },
-    openGraph: { title: title(p.d, p.m), description: description(p.d, p.m), url, images: [{ url: image, width: 1200, height: 630 }] },
+    openGraph: { siteName: "트립날씨", locale: "ko_KR", title: title(p.d, p.m), description: description(p.d, p.m), url, images: [{ url: image, width: 1200, height: 630 }] },
     twitter: { card: "summary_large_image", title: title(p.d, p.m), description: description(p.d, p.m), images: [image] },
   };
 }

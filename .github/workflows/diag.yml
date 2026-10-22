@@ -22,12 +22,7 @@ jobs:
           set +e
           {
             pip install -q boto3 >/dev/null 2>&1
-            python3 - <<'PY'
-          import sys, json; sys.path.insert(0, "collector")
-          from upload import client
-          s3 = client()
-          print(s3.get_object(Bucket="tripnal-data", Key="weekend/latest.json")["Body"].read().decode())
-          PY
+            python collector/verify.py forecast 2>&1 | tail -40
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com
           git add -A diag-out.txt; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026

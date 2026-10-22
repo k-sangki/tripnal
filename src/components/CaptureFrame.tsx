@@ -97,6 +97,23 @@ export function CaptureFrame({ frameRef, ...p }: Props) {
     const z = Math.min(MAX_ZOOM, aw / w, ah / h);
     const fw = Math.max(Math.round(size.w * MIN_WIDTH), Math.ceil(frame.offsetWidth - aw + w * z));
     frame.style.width = `${Math.min(size.w, fw)}px`;
+    // 폭이 줄어 예보 제공 글자가 로고를 밀어내면 들어갈 때까지 글자를 줄인다
+    const src = frame.querySelector<HTMLElement>(".cf-src");
+    if (src) {
+      src.style.fontSize = "";
+      let fs = parseFloat(getComputedStyle(src).fontSize);
+      const over = () => {
+        const right = src.getBoundingClientRect().right;
+        return Array.from(src.querySelectorAll(".cf-src-item")).some((el) => el.getBoundingClientRect().right > right + 0.5);
+      };
+      src.classList.remove("wrap");
+      while (over() && fs > 10) {
+        fs -= 1;
+        src.style.fontSize = `${fs}px`;
+      }
+      // 그래도 안 들어가면 기관 이름 괄호 안에서 줄을 바꾼다
+      if (over()) src.classList.add("wrap");
+    }
     // 폭이 줄면 머리 줄이 늘어날 수 있으니 다시 재서 높이를 정한다
     frame.style.height = `${Math.ceil(frame.offsetHeight - body.clientHeight + h * z)}px`;
     fit.style.transform = `scale(${z})`;

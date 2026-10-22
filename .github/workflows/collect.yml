@@ -183,26 +183,49 @@ jobs:
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
           R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
         run: python collector/alerts.py
-      - name: 이번 주말 날씨 좋은 곳 (/weekend)
-        if: always()
+
+  # 이번 주말 날씨 좋은 곳(/weekend): 장소 300여 곳 예보를 사이트에서 받아 오느라 오래 걸려 따로 돈다
+  weekend:
+    needs: [ecmwf, gfs, icon, gefs]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install boto3
+      # 사이트가 최신 run 정보를 5분 동안 기억하므로 새 예보를 읽도록 조금 기다린다
+      - run: sleep 360
+      - name: 주말 예보 모으기
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
           R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
         run: python collector/weekend.py
-      # 예보 정확도 보정용 기록: 관측소 위치의 모델별·사이트 예보와 관측값 (화면에는 안 씀)
-      - name: 예보 기록 (관측 비교용)
-        if: always()
-        env:
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
-          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+
+  # 예보 정확도 보정용 기록: 관측소 위치의 모델별·사이트 예보와 관측값 (화면에는 안 씀)
+  verify:
+    needs: [ecmwf, gfs, icon, gefs]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+      R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install boto3
+      - run: sleep 360
+      - name: 예보 기록
         run: python collector/verify.py forecast
       - name: 관측값 기록 (기상청 종관관측)
         if: always()
         env:
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
-          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           KHOA_API_KEY: ${{ secrets.KHOA_API_KEY }}
         run: python collector/verify.py obs

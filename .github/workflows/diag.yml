@@ -30,7 +30,7 @@ jobs:
           for r in rows:
               cells = [html.unescape(re.sub(r"<[^>]+>", "", c)).strip() for c in re.findall(r"<t[dh][^>]*>(.*?)</t[dh]>", r, re.S)]
               if len(cells) >= 4:
-                  print("|".join(cells[:7]))
+                  print("|".join(cells[:10]))
           PY
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com

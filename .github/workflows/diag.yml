@@ -21,10 +21,17 @@ jobs:
       - run: |
           set +e
           {
-            curl -s -m 60 -o k.html 'https://data.kma.go.kr/tmeta/stn/selectStnList.do?pgmNo=123'
-            grep -o '<input[^>]*name="[^"]*"[^>]*>' k.html | head -30
-            grep -o 'fn_[a-zA-Z]*([^)]*)' k.html | sort | uniq | head -20
-            grep -n -B2 -A12 'function fn_search\|function goPage\|function fn_link' k.html | head -60
+            curl -s -m 90 -o k.html -X POST 'https://data.kma.go.kr/tmeta/stn/selectStnList.do' -d 'pgmNo=123&pageIndex=1&schListCnt=1000&serviceSe=F00101&mddlClssCd=SFC01'
+            python3 - <<'PY'
+          import re, html
+          t = open("k.html", encoding="utf-8", errors="ignore").read()
+          rows = re.findall(r"<tr[^>]*>(.*?)</tr>", t, re.S)
+          print("rows", len(rows))
+          for r in rows:
+              cells = [html.unescape(re.sub(r"<[^>]+>", "", c)).strip() for c in re.findall(r"<t[dh][^>]*>(.*?)</t[dh]>", r, re.S)]
+              if len(cells) >= 4:
+                  print("|".join(cells[:7]))
+          PY
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com
           git add -A diag-out.txt; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026

@@ -21,16 +21,23 @@ jobs:
       - run: |
           set +e
           {
-            curl -s -m 150 --retry 3 -o k.html -X POST 'https://data.kma.go.kr/tmeta/stn/selectStnList.do' -d 'pgmNo=123&pageIndex=1&schListCnt=1000&serviceSe=F00101&mddlClssCd=SFC01'
+            pip install -q boto3
+            time python collector/verify.py forecast
+            time python collector/verify.py obs
             python3 - <<'PY'
-          import re, html
-          t = open("k.html", encoding="utf-8", errors="ignore").read()
-          rows = re.findall(r"<tr[^>]*>(.*?)</tr>", t, re.S)
-          print("rows", len(rows))
-          for r in rows:
-              cells = [html.unescape(re.sub(r"<[^>]+>", "", c)).strip() for c in re.findall(r"<t[dh][^>]*>(.*?)</t[dh]>", r, re.S)]
-              if len(cells) >= 4:
-                  print("|".join(cells[:10]))
+          import sys; sys.path.insert(0, "collector")
+          from upload import client
+          import json
+          s3 = client()
+          for p in s3.list_objects_v2(Bucket="tripnal-data", Prefix="verify/").get("Contents", []):
+              print(p["Key"], p["Size"])
+          d = json.loads(s3.get_object(Bucket="tripnal-data", Key=[p["Key"] for p in s3.list_objects_v2(Bucket="tripnal-data", Prefix="verify/fc/ecmwf/")["Contents"]][0])["Body"].read())
+          st = d["stations"]["100"]
+          print("ecmwf 대관령", d["run"], d["step"][:4], {k: (v[:4] if isinstance(v, list) else v) for k, v in st.items()})
+          o = s3.list_objects_v2(Bucket="tripnal-data", Prefix="verify/obs/").get("Contents", [])
+          if o:
+              d = json.loads(s3.get_object(Bucket="tripnal-data", Key=o[-1]["Key"])["Body"].read())
+              print("obs", d["date"], len(d["stations"]), {h: d["stations"]["100"][h] for h in list(d["stations"]["100"])[:3]})
           PY
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com

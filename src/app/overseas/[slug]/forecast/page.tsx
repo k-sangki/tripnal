@@ -12,7 +12,7 @@ import type { Forecast } from "@/lib/weather/types";
 export const dynamic = "force-dynamic";
 
 function title(d: Destination) {
-  return `${d.name} 실시간 날씨 · 이번주 ${d.country} 여행, 우산이냐 선글라스냐`;
+  return `${d.name} 실시간·월별 날씨 · 이번주 ${d.country} 여행, 우산이냐 선글라스냐`;
 }
 
 function description(d: Destination) {

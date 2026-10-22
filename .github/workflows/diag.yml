@@ -21,23 +21,11 @@ jobs:
       - run: |
           set +e
           {
-            pip install -q boto3
-            time python collector/verify.py forecast
-            time python collector/verify.py obs
             python3 - <<'PY'
-          import sys; sys.path.insert(0, "collector")
+          import sys, json; sys.path.insert(0, "collector")
           from upload import client
-          import json
           s3 = client()
-          for p in s3.list_objects_v2(Bucket="tripnal-data", Prefix="verify/").get("Contents", []):
-              print(p["Key"], p["Size"])
-          d = json.loads(s3.get_object(Bucket="tripnal-data", Key=[p["Key"] for p in s3.list_objects_v2(Bucket="tripnal-data", Prefix="verify/fc/ecmwf/")["Contents"]][0])["Body"].read())
-          st = d["stations"]["100"]
-          print("ecmwf 대관령", d["run"], d["step"][:4], {k: (v[:4] if isinstance(v, list) else v) for k, v in st.items()})
-          o = s3.list_objects_v2(Bucket="tripnal-data", Prefix="verify/obs/").get("Contents", [])
-          if o:
-              d = json.loads(s3.get_object(Bucket="tripnal-data", Key=o[-1]["Key"])["Body"].read())
-              print("obs", d["date"], len(d["stations"]), {h: d["stations"]["100"][h] for h in list(d["stations"]["100"])[:3]})
+          print(s3.get_object(Bucket="tripnal-data", Key="weekend/latest.json")["Body"].read().decode())
           PY
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com

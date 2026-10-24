@@ -122,14 +122,39 @@ interface ModelHourly {
  * 순간값(기온 등)은 앞뒤 step 사이를 직선으로 잇고, 구간값(강수·돌풍)은 그 시각이 속한 구간 값을 쓴다
  * (강수는 구간 길이로 나눠 시간당 값으로).
  */
-/** run 기준 시간(step)의 순간값을 시각별로 직선 보간 */
-export function linearSteps(run: string, step: number[], vals: Num[], keys: string[], off = KST_OFFSET_MIN): Num[] {
+/** keys의 시각(epoch ms). 같은 keys 배열을 변수·격자점마다 수십 번 쓰므로 기억해 둔다 */
+const keyTimeMemo = new WeakMap<string[], Map<number, number[]>>();
+function keyTimes(keys: string[], off: number): number[] {
+  let byOff = keyTimeMemo.get(keys);
+  if (!byOff) keyTimeMemo.set(keys, (byOff = new Map()));
+  let t = byOff.get(off);
+  if (!t) byOff.set(off, (t = keys.map((k) => kstKeyTime(k, off))));
+  return t;
+}
+
+/** 각 시각(run 기준 시간 h)마다 step[i] >= h 인 첫 i (없으면 -1). 시각이 오름차순이면 한 번만 훑는다 */
+function stepIndex(step: number[], hours: number[]): number[] {
+  const out: number[] = new Array(hours.length);
+  let i = 0;
+  for (let k = 0; k < hours.length; k++) {
+    const h = hours[k];
+    if (k > 0 && h < hours[k - 1]) i = 0;
+    while (i < step.length && step[i] < h) i++;
+    out[k] = i < step.length ? i : -1;
+  }
+  return out;
+}
+
+function runHours(run: string, keys: string[], off: number): number[] {
   const t0 = runTime(run);
+  return keyTimes(keys, off).map((t) => (t - t0) / 3600e3);
+}
+
+function interpolate(step: number[], vals: Num[], hours: number[], idx: number[]): Num[] {
   const last = step[step.length - 1];
-  return keys.map((k) => {
-    const h = (kstKeyTime(k, off) - t0) / 3600e3;
+  return hours.map((h, k) => {
     if (h < 0 || h > last) return null;
-    const i = step.findIndex((s) => s >= h);
+    const i = idx[k];
     if (step[i] === h) return vals[i];
     const a = vals[i - 1];
     const b = vals[i];
@@ -138,16 +163,22 @@ export function linearSteps(run: string, step: number[], vals: Num[], keys: stri
   });
 }
 
+/** run 기준 시간(step)의 순간값을 시각별로 직선 보간 */
+export function linearSteps(run: string, step: number[], vals: Num[], keys: string[], off = KST_OFFSET_MIN): Num[] {
+  const hours = runHours(run, keys, off);
+  return interpolate(step, vals, hours, stepIndex(step, hours));
+}
+
 export function expand(p: PointFile, keys: string[], off = KST_OFFSET_MIN): Omit<ModelHourly, "elevation"> {
-  const t0 = runTime(p.run);
-  const hours = keys.map((k) => (kstKeyTime(k, off) - t0) / 3600e3);
+  const hours = runHours(p.run, keys, off);
+  const idx = stepIndex(p.step, hours);
   const last = p.step[p.step.length - 1];
-  const linear = (vals: Num[]) => linearSteps(p.run, p.step, vals, keys, off);
+  const linear = (vals: Num[]) => interpolate(p.step, vals, hours, idx);
   const interval = (vals: Num[], perHour: boolean) =>
-    hours.map((h) => {
+    hours.map((h, k) => {
       // h시 값 = (h-1, h] 구간. step 0 이전·마지막 이후는 없음
       if (h <= 0 || h > last) return null;
-      const i = p.step.findIndex((s) => s >= h);
+      const i = idx[k];
       const x = vals[i];
       if (x == null) return null;
       return perHour ? x / (p.step[i] - p.step[i - 1]) : x;
@@ -522,9 +553,8 @@ export async function loadProbability(b: DataBucket, cs: ReturnType<typeof corne
       return cached(key, () => b.get(key).then((o) => (o ? o.json<ProbPointFile>() : null)));
     }),
   );
-  const t0 = runTime(run);
-  return keys.map((k) => {
-    const h = (kstKeyTime(k, off) - t0) / 3600e3;
+  const hours = runHours(run, keys, off);
+  return hours.map((h) => {
     let s = 0;
     let ws = 0;
     files.forEach((f, i) => {
@@ -714,5 +744,11 @@ export const collectedProvider: WeatherProvider = {
   name: "collected",
   async fetchHourly(lat, lon, elevation, utcOffset) {
     return loadCollected(await bucket(), lat, lon, elevation, new Date(), utcOffset);
+  },
+  async version() {
+    const b = await bucket();
+    const runs = await Promise.all((["ecmwf", "gfs", "icon", "wave", "gefs", "cams"] as const).map((m) => latestRun(b, m)));
+    // 주 모델이 하나도 없으면 보관하지 않는다
+    return runs.slice(0, 3).some(Boolean) ? runs.map((r) => r ?? "-").join(".") : null;
   },
 };

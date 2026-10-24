@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "main": ".open-next/worker.js",
+  "main": "worker.ts",
   "name": "tripnal",
   "compatibility_date": "2026-10-01",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
@@ -14,6 +14,8 @@
       "service": "tripnal"
     }
   ],
+  // 배포 버전: 엣지 캐시 키에 넣어 배포 뒤 예전 페이지를 쓰지 않게 한다 (worker.ts)
+  "version_metadata": { "binding": "CF_VERSION_METADATA" },
   // 직접 수집한 예보 (collector/ → .github/workflows/collect.yml)
   "r2_buckets": [{ "binding": "DATA", "bucket_name": "tripnal-data" }],
   "routes": [

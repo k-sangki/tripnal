@@ -1,3 +1,5 @@
+import { cachedJson } from "@/lib/cache";
+import { KST_OFFSET_MIN, kstDate } from "@/lib/time";
 import { aggregate } from "./aggregate";
 import { collectedProvider } from "./collected";
 import { mockProvider } from "./mock";
@@ -29,10 +31,36 @@ export function snapCoord(v: number): number {
   return Math.round(v * 100) / 100;
 }
 
-/** utcOffset: 해외 여행지의 현지 시간대(분). 없으면 한국 시간 */
+/** 배포 버전 (응답 모양이 바뀐 배포 뒤에는 예전 계산 결과를 쓰지 않는다) */
+async function deployId(): Promise<string> {
+  try {
+    const { getCloudflareContext } = await import("@opennextjs/cloudflare");
+    const env = (await getCloudflareContext({ async: true })).env as unknown as { CF_VERSION_METADATA?: { id: string } };
+    return env.CF_VERSION_METADATA?.id ?? "dev";
+  } catch {
+    return "dev";
+  }
+}
+
+/** 계산한 예보를 보관하는 시간. 원자료 판(run)·날짜가 바뀌면 키가 바뀌므로 길게 둔다 */
+const FORECAST_TTL = 6 * 3600;
+
+/**
+ * utcOffset: 해외 여행지의 현지 시간대(분). 없으면 한국 시간
+ *
+ * 예보 계산(격자점 수십 개 보간·모델 중간값)은 요청 하나에 수십 ms가 들어 무료 플랜 CPU 한도(10ms)를 넘으므로,
+ * 같은 지점·날짜·원자료 판이면 엣지 캐시에 둔 결과를 쓴다 (페이지·/api/forecast·미리보기 이미지가 같이 씀).
+ */
 export async function getForecast(lat: number, lon: number, elevation?: number, provider?: string, utcOffset?: number): Promise<Forecast> {
-  const raw = await getProvider(provider).fetchHourly(snapCoord(lat), snapCoord(lon), elevation, utcOffset);
-  return aggregate(raw);
+  const p = getProvider(provider);
+  const la = snapCoord(lat);
+  const lo = snapCoord(lon);
+  const compute = async () => aggregate(await p.fetchHourly(la, lo, elevation, utcOffset));
+  const version = await p.version?.().catch(() => null);
+  if (!version) return compute();
+  const day = kstDate(new Date(), utcOffset ?? KST_OFFSET_MIN);
+  const key = ["forecast", await deployId(), p.name, `${la}_${lo}`, elevation ?? "", utcOffset ?? "", day, version].join("/");
+  return cachedJson(key, FORECAST_TTL, compute);
 }
 
 export type { Forecast, DayForecast, Slot } from "./types";

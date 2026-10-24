@@ -32,3 +32,21 @@ export async function fetchJsonCached<T>(url: string, ttlSeconds: number, init?:
   }
   return JSON.parse(body) as T;
 }
+
+/**
+ * 계산 결과(JSON)를 엣지 캐시에 key로 보관한다. 같은 key면 계산하지 않고 꺼내 쓴다.
+ * 계산이 실패하면 보관하지 않는다. Cache API가 없으면 그냥 계산한다.
+ */
+export async function cachedJson<T>(key: string, ttlSeconds: number, load: () => Promise<T>): Promise<T> {
+  const cache = edgeCache();
+  if (!cache) return load();
+  const req = new Request(`https://tripnalc.com/__calc/${encodeURIComponent(key)}`);
+  const hit = await cache.match(req);
+  if (hit) return (await hit.json()) as T;
+  const value = await load();
+  await cache.put(
+    req,
+    new Response(JSON.stringify(value), { headers: { "Content-Type": "application/json", "Cache-Control": `public, max-age=${ttlSeconds}` } }),
+  );
+  return value;
+}

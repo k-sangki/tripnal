@@ -76,6 +76,8 @@ export interface WeatherProvider {
   /** elevation: 산 정상 등 기온 보정에 쓸 고도(m). 없으면 지형 자료 값 */
   /** utcOffset: 해외 장소의 현지 시간대(분). 없으면 한국 시간 */
   fetchHourly(lat: number, lon: number, elevation?: number, utcOffset?: number): Promise<RawForecast>;
+  /** 원자료 판(최신 run 등). 바뀌면 계산해 둔 예보를 다시 계산한다. 없으면 계산 결과를 보관하지 않는다 */
+  version?(): Promise<string | null>;
 }
 
 /** 3시간 묶음 한 칸 */

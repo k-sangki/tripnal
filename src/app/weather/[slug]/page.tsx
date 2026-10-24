@@ -9,7 +9,7 @@ import { placeDescription, placeSchemaType, placeSummary, placeTitle } from "@/l
 import { getForecast } from "@/lib/weather";
 import type { Forecast } from "@/lib/weather/types";
 
-/** 요청마다 그린다. 예보 자체는 엣지 캐시에 30분 보관된다(src/lib/cache.ts). */
+/** 요청마다 그린다. 그린 페이지는 worker.ts가 엣지 캐시에 15분, 계산한 예보는 원자료 판이 바뀔 때까지 보관한다. */
 export const dynamic = "force-dynamic";
 
 /** 미리보기 이미지 주소. 공유 링크에 붙은 레저·기간을 그대로 넘긴다 */

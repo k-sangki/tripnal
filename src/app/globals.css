@@ -57,6 +57,17 @@ body {
   -webkit-text-size-adjust: 100%;
   word-break: keep-all;
 }
+/* 일본어는 띄어쓰기가 없어 keep-all이면 줄이 안 바뀌고 넘친다: 글자 단위로 바꾸되 금칙(、。 앞 줄바꿈 금지)은 지킨다 */
+html:lang(ja) {
+  /* 한자·가나는 일본 글꼴로 (한국 글꼴로 그리면 한자 모양이 어색하다) */
+  --font: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, "Noto Sans JP", sans-serif;
+}
+html:lang(ja),
+html:lang(ja) * {
+  word-break: normal;
+  line-break: strict;
+}
+
 /* 상태바·노치 자리만큼 띄운다 (viewport-fit=cover) */
 body {
   padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) 0 env(safe-area-inset-left, 0px);
@@ -843,6 +854,12 @@ a {
 .foot a {
   color: var(--pine);
   text-decoration: underline;
+}
+.foot-lang {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
 }
 .foot-links {
   display: flex;
@@ -2815,4 +2832,57 @@ button.cc-col.on {
   font-size: 13.5px;
   line-height: 1.6;
   color: var(--ink-2);
+}
+
+/* ---------- 국내 도시 월별 평년 날씨 (KoreaMonthPage) ---------- */
+.km-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.km-stats > div {
+  background: var(--chip);
+  border-radius: 12px;
+  padding: 10px 8px;
+  text-align: center;
+}
+.km-stats small {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+}
+.km-stats b {
+  font-size: 15px;
+}
+@media (max-width: 480px) {
+  .km-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+.km-cta {
+  font-weight: 700;
+  color: var(--brand, #0e3b36);
+}
+.km-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  text-align: center;
+}
+.km-table th,
+.km-table td {
+  padding: 6px 4px;
+  border-bottom: 1px solid var(--line, #eef0f3);
+}
+.km-table th {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 600;
+}
+.km-table tr.on td {
+  background: var(--chip);
+  font-weight: 700;
+}
+.km-table a {
+  text-decoration: underline;
 }

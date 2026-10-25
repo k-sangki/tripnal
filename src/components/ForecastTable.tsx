@@ -5,10 +5,12 @@ import { METRIC_LABEL, type Leisure, type MetricKey } from "@/lib/leisure";
 import { changeText } from "@/lib/change";
 import { muldae } from "@/lib/muldae";
 import { daySummary, isPast, regroup, slotHead, slotHours, type Interval, stepHours } from "@/lib/interval";
-import { weekday, weekdayKo } from "@/lib/time";
-import { codeIcon, codeInfo } from "@/lib/weather/codes";
+import { weekday, weekdayName } from "@/lib/time";
+import { tempDiffIn, type Units } from "@/lib/units";
+import { codeIcon, codeLabel } from "@/lib/weather/codes";
 import type { DayForecast, Slot } from "@/lib/weather/types";
-import { Cell, UNIT, bandStyle, fmt } from "./cells";
+import { Cell, bandStyle, fmtTemp, unitOf } from "./cells";
+import { useLocale, useT } from "./LocaleContext";
 
 interface Props {
   days: DayForecast[];
@@ -35,22 +37,25 @@ interface Col {
 
 /** 예측 가능성: 80% 이상 초록, 60~70% 노랑, 그 아래 주황 */
 function Predict({ p, label }: { p?: number | null; label?: boolean }) {
+  const t = useT();
   if (p == null) return null;
   const lv = p >= 80 ? "hi" : p >= 60 ? "mid" : "lo";
   return (
-    <span className={`pd pd-${lv}`} title="예측 가능성: 여러 예보가 이날 날씨를 얼마나 비슷하게 내다보는지">
+    <span className={`pd pd-${lv}`} title={t("예측 가능성: 여러 예보가 이날 날씨를 얼마나 비슷하게 내다보는지")}>
       <span className="pd-v">{p}%</span>
-      {label && <span className="pd-l">예측 가능성</span>}
+      {label && <span className="pd-l">{t("예측 가능성")}</span>}
     </span>
   );
 }
 
 /** 지난 예보 대비 가장 큰 변화 한 가지 */
 function Change({ d, prefix }: { d: DayForecast; prefix?: string }) {
-  const c = changeText(d.change);
+  const { locale, units } = useLocale();
+  const t = useT();
+  const c = changeText(d.change, locale, units);
   if (!c) return null;
   return (
-    <span className={`chg ${c.cls}`} title="약 하루 전 예보와 비교한 변화">
+    <span className={`chg ${c.cls}`} title={t("약 하루 전 예보와 비교한 변화")}>
       {prefix}
       {c.text}
     </span>
@@ -134,8 +139,10 @@ function buildCols(days: DayForecast[], step: number, today: string, nowHour: nu
 type RowKey = MetricKey | "sunrise" | "sunset";
 
 function RowHead({ k, em }: { k: RowKey; em?: boolean }) {
-  const label = k === "sunrise" ? "일출" : k === "sunset" ? "일몰" : METRIC_LABEL[k];
-  const unit = k === "sunrise" || k === "sunset" ? "" : UNIT[k];
+  const { locale, units } = useLocale();
+  const t = useT();
+  const label = t(k === "sunrise" ? "일출" : k === "sunset" ? "일몰" : METRIC_LABEL[k]);
+  const unit = k === "sunrise" || k === "sunset" ? "" : unitOf(k, locale, units);
   return (
     <th scope="row" className={`lbl${em ? " em" : ""}`}>
       <span>{label}</span>
@@ -162,8 +169,8 @@ function hasData(k: MetricKey, slots: Slot[], days: DayForecast[]) {
   return !f || slots.some((s) => s[f] != null);
 }
 
-function rangeText(d: DayForecast) {
-  return d.tMax != null && d.tMin != null ? `${Math.round(d.tMax - d.tMin)}°` : "-";
+function rangeText(d: DayForecast, u: Units) {
+  return d.tMax != null && d.tMin != null ? `${Math.round(tempDiffIn(d.tMax - d.tMin, u))}°` : "-";
 }
 
 function rangeClass(d: DayForecast) {
@@ -173,12 +180,13 @@ function rangeClass(d: DayForecast) {
 
 /** 물때와 만조(빨강)·간조(파랑) 시각 */
 function TideText({ d }: { d: DayForecast }) {
+  const t = useT();
   return (
     <>
       <span className="tide-md">{muldae(d.date)}</span>
-      {d.tides.map((t) => (
-        <span key={t.time} className={t.type === "high" ? "tide-h" : "tide-l"}>
-          {t.type === "high" ? "만조" : "간조"} {t.time}
+      {d.tides.map((x) => (
+        <span key={x.time} className={x.type === "high" ? "tide-h" : "tide-l"}>
+          {t(x.type === "high" ? "만조" : "간조")} {x.time}
         </span>
       ))}
     </>
@@ -201,6 +209,8 @@ function readMore(): boolean {
 }
 
 export function ForecastTable({ days, leisure, interval, today, nowHour, capture }: Props) {
+  const { locale, units } = useLocale();
+  const t = useT();
   const scroller = useRef<HTMLDivElement>(null);
   // 캡처는 화면 밖에서 한 번 재고 그리므로, 펼침 여부를 처음부터 알아야 아래가 잘리지 않는다
   const [open, setOpen] = useState(() => (capture ? readMore() : false));
@@ -277,10 +287,10 @@ export function ForecastTable({ days, leisure, interval, today, nowHour, capture
       {!capture && (
         <div className="ft-bar">
           <button className="ft-nav" disabled={!edges.prev} onClick={() => go(-1)}>
-            ‹ 이전 날
+            ‹ {t("이전 날")}
           </button>
           <button className="ft-nav" disabled={!edges.next} onClick={() => go(1)}>
-            다음 날 ›
+            {t("다음 날")} ›
           </button>
         </div>
       )}
@@ -297,13 +307,13 @@ export function ForecastTable({ days, leisure, interval, today, nowHour, capture
                     <th key={d.date} colSpan={slotHours(step).length} className="dh">
                       <div className="dh-in">
                         <div className="dh-l1">
-                          {d.date === today && <span className="today">오늘</span>}
+                          {d.date === today && <span className="today">{t("오늘")}</span>}
                           <b className={wdClass(d.date)}>
                             {dateText(d.date)}
-                            <small>({weekdayKo(d.date)})</small>
+                            <small>({weekdayName(d.date, locale)})</small>
                           </b>
                           <span className="hl">
-                            <span className="v-hi">{fmt(d.tMax, "°")}</span>/<span className="v-lo">{fmt(d.tMin, "°")}</span>
+                            <span className="v-hi">{fmtTemp(d.tMax, units)}</span>/<span className="v-lo">{fmtTemp(d.tMin, units)}</span>
                           </span>
                           <Predict p={d.predictability} label />
                         </div>
@@ -313,7 +323,7 @@ export function ForecastTable({ days, leisure, interval, today, nowHour, capture
                         </div>
                         {d.change && (
                           <div className="dh-l2">
-                            <Change d={d} prefix="지난 예보보다 " />
+                            <Change d={d} prefix={t("지난 예보보다 ")} />
                           </div>
                         )}
                         {showTides && (
@@ -327,7 +337,7 @@ export function ForecastTable({ days, leisure, interval, today, nowHour, capture
                 </tr>
                 <tr className="ft-time">
                   <th className="lbl">
-                    <span>시각</span>
+                    <span>{t("시각")}</span>
                   </th>
                   {cols.map((c) => (
                     <th
@@ -335,7 +345,7 @@ export function ForecastTable({ days, leisure, interval, today, nowHour, capture
                       className={[c.sky.dark ? "night" : "day", c.first && "ds", c.now && "now"].filter(Boolean).join(" ")}
                       style={{ background: c.sky.bg }}
                     >
-                      {c.now ? "지금" : slotHead(c.hour, step)}
+                      {c.now ? t("지금") : slotHead(c.hour, step, locale)}
                     </th>
                   ))}
                 </tr>
@@ -343,10 +353,10 @@ export function ForecastTable({ days, leisure, interval, today, nowHour, capture
               <tbody>
                 <tr className="r-icon">
                   <th scope="row" className="lbl">
-                    <span>날씨</span>
+                    <span>{t("날씨")}</span>
                   </th>
                   {cols.map((c) => (
-                    <td key={c.key} className={c.first ? "ds" : undefined} title={c.slot ? codeInfo(c.slot.code).label : undefined}>
+                    <td key={c.key} className={c.first ? "ds" : undefined} title={c.slot ? codeLabel(c.slot.code, locale) : undefined}>
                       {c.slot ? codeIcon(c.slot.code, c.slot.isDay) : ""}
                     </td>
                   ))}
@@ -368,7 +378,7 @@ export function ForecastTable({ days, leisure, interval, today, nowHour, capture
       </div>
       {more.length > 0 && !capture && (
         <button className="ft-toggle" aria-expanded={open} onClick={toggle}>
-          {open ? "접기" : "더 많은 날씨 정보 보기"}
+          {t(open ? "접기" : "더 많은 날씨 정보 보기")}
           <span aria-hidden>{open ? "▴" : "▾"}</span>
         </button>
       )}
@@ -377,6 +387,7 @@ export function ForecastTable({ days, leisure, interval, today, nowHour, capture
 }
 
 function SlotRow({ k, cols, days, step, em }: { k: MetricKey; cols: Col[]; days: DayForecast[]; step: number; em: boolean }) {
+  const { units } = useLocale();
   // 일교차는 하루에 하나라 날짜 칸을 합쳐서 보여준다
   if (k === "range") {
     return (
@@ -385,9 +396,9 @@ function SlotRow({ k, cols, days, step, em }: { k: MetricKey; cols: Col[]; days:
         {days.map((d) => (
           <td key={d.date} colSpan={slotHours(step).length} className={["ds", rangeClass(d)].filter(Boolean).join(" ")}>
             <span className="span-in">
-              {rangeText(d)}
+              {rangeText(d, units)}
               <small>
-                {fmt(d.tMin, "°")} → {fmt(d.tMax, "°")}
+                {fmtTemp(d.tMin, units)} → {fmtTemp(d.tMax, units)}
               </small>
             </span>
           </td>
@@ -435,6 +446,8 @@ function DailyTable({
   em: (k: MetricKey) => boolean;
   sunEm: (k: "sunrise" | "sunset") => boolean;
 }) {
+  const { locale, units } = useLocale();
+  const t = useT();
   const cols = days.map((d) => ({ d, s: daySummary(d) }));
   const sunRow = (k: "sunrise" | "sunset") => (
     <tr key={k} className="r-sun">
@@ -454,9 +467,9 @@ function DailyTable({
           <RowHead k="temp" em={isEm} />
           {cols.map(({ d }) => (
             <td key={d.date} className="ds t-hilo">
-              <span className="v-hi">{fmt(d.tMax, "°")}</span>
+              <span className="v-hi">{fmtTemp(d.tMax, units)}</span>
               <span className="t-sep">/</span>
-              <span className="v-lo">{fmt(d.tMin, "°")}</span>
+              <span className="v-lo">{fmtTemp(d.tMin, units)}</span>
             </td>
           ))}
         </tr>,
@@ -468,7 +481,7 @@ function DailyTable({
           <RowHead k={k} em={isEm} />
           {cols.map(({ d }) => (
             <td key={d.date} className={["ds", k === "range" ? rangeClass(d) : "tide-cell"].filter(Boolean).join(" ")}>
-              {k === "range" ? rangeText(d) : <TideText d={d} />}
+              {k === "range" ? rangeText(d, units) : <TideText d={d} />}
             </td>
           ))}
         </tr>,
@@ -491,13 +504,13 @@ function DailyTable({
       <thead>
         <tr className="ft-time">
           <th className="lbl">
-            <span>날짜</span>
-            {days.some((d) => d.predictability != null) && <small className="pd-head">예측</small>}
+            <span>{t("날짜")}</span>
+            {days.some((d) => d.predictability != null) && <small className="pd-head">{t("예측")}</small>}
           </th>
           {cols.map(({ d }) => (
             <th key={d.date} className={`dcol ds${d.date === today ? " now" : ""}`}>
-              <b className={d.date === today ? undefined : wdClass(d.date)}>{d.date === today ? "오늘" : dateText(d.date)}</b>
-              <small>{weekdayKo(d.date)}</small>
+              <b className={d.date === today ? undefined : wdClass(d.date)}>{d.date === today ? t("오늘") : dateText(d.date)}</b>
+              <small>{weekdayName(d.date, locale)}</small>
               <Predict p={d.predictability} />
             </th>
           ))}
@@ -506,10 +519,10 @@ function DailyTable({
       <tbody>
         <tr className="r-icon">
           <th scope="row" className="lbl">
-            <span>날씨</span>
+            <span>{t("날씨")}</span>
           </th>
           {cols.map(({ d }) => (
-            <td key={d.date} className="ds" title={codeInfo(d.code).label}>
+            <td key={d.date} className="ds" title={codeLabel(d.code, locale)}>
               {codeIcon(d.code)}
             </td>
           ))}
@@ -519,8 +532,8 @@ function DailyTable({
         {days.some((d) => d.change) && (
           <tr className="r-chg">
             <th scope="row" className="lbl">
-              <span>예보 변화</span>
-              <small>어제 대비</small>
+              <span>{t("예보 변화")}</span>
+              <small>{t("어제 대비")}</small>
             </th>
             {cols.map(({ d }) => (
               <td key={d.date} className="ds">

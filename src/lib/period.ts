@@ -1,4 +1,5 @@
-import { addDays, diffDays, shortDateKo, weekday } from "@/lib/time";
+import type { Locale } from "@/lib/i18n";
+import { addDays, diffDays, shortDate, weekday } from "@/lib/time";
 
 export const MAX_DAYS = 16;
 
@@ -66,9 +67,11 @@ export function periodNights(p: Period) {
   return { days, nights: days - 1 };
 }
 
-/** "10/24(토) ~ 10/26(월) · 2박 3일" */
-export function periodLabel(p: Period) {
+/** "10/24(토) ~ 10/26(월) · 2박 3일" (영어 "Sat, Oct 24 – Mon, Oct 26 · 3 days", 일본어 "10/24(土)〜10/26(月)・2泊3日") */
+export function periodLabel(p: Period, l: Locale = "ko") {
   const { days, nights } = periodNights(p);
-  if (days === 1) return shortDateKo(p.from);
-  return `${shortDateKo(p.from)} ~ ${shortDateKo(p.to)} · ${nights}박 ${days}일`;
+  if (days === 1) return shortDate(p.from, l);
+  if (l === "en") return `${shortDate(p.from, l)} – ${shortDate(p.to, l)} · ${days} days`;
+  if (l === "ja") return `${shortDate(p.from, l)}〜${shortDate(p.to, l)}・${nights}泊${days}日`;
+  return `${shortDate(p.from)} ~ ${shortDate(p.to)} · ${nights}박 ${days}일`;
 }

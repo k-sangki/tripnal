@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
+import { languageAlternates } from "@/lib/i18n";
 import { CONTACT_EMAIL, TextPage } from "@/components/TextPage";
 
 export const metadata: Metadata = {
   title: "트립날씨 개인정보처리방침",
   description: "tripnalc 개인정보처리방침",
-  alternates: { canonical: "/privacy" },
+  alternates: { canonical: "/privacy", languages: languageAlternates("/privacy") },
 };
 
 export default function Privacy() {

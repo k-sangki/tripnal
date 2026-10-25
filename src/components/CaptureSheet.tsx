@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { domToBlob } from "modern-screenshot";
 import { Logo } from "./Logo";
+import { useLocale, useT } from "./LocaleContext";
 
 interface Props {
   target: () => HTMLElement | null;
@@ -243,6 +244,8 @@ export async function captureElement(el: HTMLElement): Promise<Blob> {
 }
 
 export function CaptureSheet({ target, fileName, shareTitle, shareUrl, onClose }: Props) {
+  const t = useT();
+  const { locale } = useLocale();
   const [blob, setBlob] = useState<Blob | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [error, setError] = useState(false);
@@ -291,7 +294,7 @@ export function CaptureSheet({ target, fileName, shareTitle, shareUrl, onClose }
     a.href = preview;
     a.download = fileName;
     a.click();
-    setToast(/Android/.test(navigator.userAgent) ? "갤러리에 저장했어요" : "이미지를 저장했어요");
+    setToast(t(/Android/.test(navigator.userAgent) ? "갤러리에 저장했어요" : "이미지를 저장했어요"));
   };
 
   const shareImage = async () => {
@@ -318,9 +321,9 @@ export function CaptureSheet({ target, fileName, shareTitle, shareUrl, onClose }
   const copyLink = async () => {
     try {
       await navigator.clipboard.writeText(shareUrl);
-      setToast("링크를 복사했어요");
+      setToast(t("링크를 복사했어요"));
     } catch {
-      setToast("복사하지 못했어요");
+      setToast(t("복사하지 못했어요"));
     }
   };
 
@@ -330,44 +333,47 @@ export function CaptureSheet({ target, fileName, shareTitle, shareUrl, onClose }
   };
 
   return (
-    <div className="sheet-bg" onClick={onClose} role="dialog" aria-modal="true" aria-label="캡처 공유">
+    <div className="sheet-bg" onClick={onClose} role="dialog" aria-modal="true" aria-label={t("캡처 공유")}>
       <div className="sheet" onClick={(e) => e.stopPropagation()}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
           <Logo size={18} />
-          <button onClick={onClose} aria-label="닫기" style={{ fontSize: 22, width: 36, height: 36 }}>
+          <button onClick={onClose} aria-label={t("닫기")} style={{ fontSize: 22, width: 36, height: 36 }}>
             ✕
           </button>
         </div>
         {error ? (
-          <div className="error">캡처하지 못했습니다. 다시 시도해 주세요.</div>
+          <div className="error">{t("캡처하지 못했습니다. 다시 시도해 주세요.")}</div>
         ) : preview ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img className="sheet-preview" src={preview} alt="날씨 캡처 미리보기" />
+          <img className="sheet-preview" src={preview} alt={t("날씨 캡처 미리보기")} />
         ) : (
           <div className="skeleton" />
         )}
         <div className="share-grid">
           <button className="share-btn primary" onClick={save} disabled={!blob}>
-            이미지 저장
+            {t("이미지 저장")}
           </button>
           {canShareFile && (
             <button className="share-btn" onClick={shareImage} disabled={!blob}>
-              이미지 공유하기 (카톡·인스타·카페·블로그)
+              {t("이미지 공유하기 (카톡·인스타·카페·블로그)")}
             </button>
           )}
           <button className="share-btn" onClick={shareLink}>
-            링크 공유
+            {t("링크 공유")}
           </button>
-          <button className="share-btn naver" onClick={naver}>
-            네이버 블로그·카페
-          </button>
+          {/* 네이버는 한국 사이트라 외국어 화면에서는 뺀다 */}
+          {locale === "ko" && (
+            <button className="share-btn naver" onClick={naver}>
+              네이버 블로그·카페
+            </button>
+          )}
           <button className="share-btn" onClick={copyLink}>
-            링크 복사
+            {t("링크 복사")}
           </button>
         </div>
-        {ios && <p className="muted save-tip">저장 메뉴가 열리면 &quot;이미지 저장&quot;을 누르세요. 미리보기를 길게 눌러도 저장할 수 있어요.</p>}
+        {ios && <p className="muted save-tip">{t("저장 메뉴가 열리면 \"이미지 저장\"을 누르세요. 미리보기를 길게 눌러도 저장할 수 있어요.")}</p>}
         <p className="muted" style={{ marginTop: 12 }}>
-          블로그·카페 글에는 저장한 이미지를 올리고 링크를 함께 붙여 보세요.
+          {t("블로그·카페 글에는 저장한 이미지를 올리고 링크를 함께 붙여 보세요.")}
         </p>
       </div>
       {toast && <div className="toast">{toast}</div>}

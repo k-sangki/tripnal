@@ -250,6 +250,30 @@ export function CaptureSheet({ target, fileName, shareTitle, shareUrl, onClose }
   const [preview, setPreview] = useState<string | null>(null);
   const [error, setError] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  // 카톡 등에 긴 퍼센트 인코딩 주소가 그대로 가지 않게 미리 짧은 주소를 받아 둔다
+  // (공유 메뉴는 누른 직후에 열어야 해서 누른 뒤에 받으면 늦다)
+  const [shortUrl, setShortUrl] = useState<string | null>(null);
+  const link = shortUrl ?? shareUrl;
+
+  useEffect(() => {
+    let off = false;
+    let u: URL;
+    try {
+      u = new URL(shareUrl);
+    } catch {
+      return;
+    }
+    if (u.origin !== window.location.origin || `${u.pathname}${u.search}`.length < 40) return;
+    fetch("/api/short", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ u: `${u.pathname}${u.search}` }) })
+      .then((r) => (r.ok ? (r.json() as Promise<{ url?: string }>) : null))
+      .then((j) => {
+        if (!off && j?.url) setShortUrl(j.url);
+      })
+      .catch(() => {});
+    return () => {
+      off = true;
+    };
+  }, [shareUrl]);
 
   useEffect(() => {
     const el = target();
@@ -300,7 +324,9 @@ export function CaptureSheet({ target, fileName, shareTitle, shareUrl, onClose }
   const shareImage = async () => {
     if (!file) return;
     try {
-      await navigator.share({ files: [file], title: shareTitle, text: `${shareTitle}\n${shareUrl}` });
+      // 이미지만 보낸다. 글·주소를 같이 넣으면 카톡에서 이미지·글·링크 미리보기 세 덩어리로 갈라진다
+      // (이미지 아래에 tripnalc.com이 찍혀 있고, 링크는 "링크 공유"로 따로 보낼 수 있다)
+      await navigator.share({ files: [file] });
     } catch {
       // 사용자가 취소한 경우
     }
@@ -309,7 +335,7 @@ export function CaptureSheet({ target, fileName, shareTitle, shareUrl, onClose }
   const shareLink = async () => {
     if (navigator.share) {
       try {
-        await navigator.share({ title: shareTitle, url: shareUrl });
+        await navigator.share({ title: shareTitle, url: link });
         return;
       } catch {
         return;
@@ -320,7 +346,7 @@ export function CaptureSheet({ target, fileName, shareTitle, shareUrl, onClose }
 
   const copyLink = async () => {
     try {
-      await navigator.clipboard.writeText(shareUrl);
+      await navigator.clipboard.writeText(link);
       setToast(t("링크를 복사했어요"));
     } catch {
       setToast(t("복사하지 못했어요"));
@@ -328,7 +354,7 @@ export function CaptureSheet({ target, fileName, shareTitle, shareUrl, onClose }
   };
 
   const naver = () => {
-    const u = `https://share.naver.com/web/shareView?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(shareTitle)}`;
+    const u = `https://share.naver.com/web/shareView?url=${encodeURIComponent(link)}&title=${encodeURIComponent(shareTitle)}`;
     window.open(u, "_blank", "noopener,noreferrer,width=600,height=700");
   };
 

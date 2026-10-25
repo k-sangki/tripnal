@@ -17,9 +17,20 @@ export default function PlacesIndex() {
       <h1 style={{ fontSize: 24, letterSpacing: "-0.03em" }}>장소별 이번주·16일 날씨</h1>
       <StripBanner href="/weekend" title="이번 주말 날씨 좋은 곳" cta="보기 →" />
       {LEISURES.map((l) => {
-        // 골프장은 수가 많아 전국 골프장 날씨(/golf)에서 따로 보여준다
-        const list = l.id === "golf" ? [] : PLACES.filter((p) => p.leisure === l.id);
+        const list = PLACES.filter((p) => p.leisure === l.id);
         if (!list.length) return null;
+        // 골프장은 수가 많아 전국 골프장 날씨(/golf)로 보낸다
+        if (l.id === "golf")
+          return (
+            <section key={l.id} className="card" style={{ marginTop: 12 }}>
+              <h2 className="card-title">
+                {l.emoji} {l.label}
+              </h2>
+              <nav className="place-links">
+                <Link href="/golf">전국 골프장 날씨 ({list.length}곳) →</Link>
+              </nav>
+            </section>
+          );
         return (
           <section key={l.id} className="card" style={{ marginTop: 12 }}>
             <h2 className="card-title">

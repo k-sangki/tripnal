@@ -103,7 +103,7 @@ export function slotHead(hour: number, step: number, l: Locale = "ko"): string {
     const h12 = (h: number) => `${h % 12 || 12}${h % 24 < 12 ? "am" : "pm"}`;
     return step === 6 ? `${h12(hour)}–${h12(hour + 6)}` : h12(hour);
   }
-  const unit = l === "ja" ? "時" : "시";
+  const unit = l === "ja" || l === "zh" ? "時" : "시";
   if (step === 6) return `${hour}~${hour + 6}${unit}`;
   return `${hour}${unit}`;
 }

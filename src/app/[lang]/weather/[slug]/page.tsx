@@ -15,14 +15,15 @@ import type { Forecast } from "@/lib/weather/types";
 /** 한국어 장소 페이지와 같이 요청마다 그리고, worker.ts가 엣지 캐시에 15분 둔다 */
 export const dynamic = "force-dynamic";
 
-const H1_SUFFIX = { en: "weather", ja: "天気" } as const;
-const SUMMARY_TITLE = { en: "Weather summary", ja: "天気のまとめ" } as const;
-const BY_MONTH = { en: "{c} weather by month", ja: "{c}の月ごとの天気と服装" } as const;
-const RELATED = { en: "More places in Korea", ja: "韓国のほかの場所" } as const;
-const LOADING = { en: "Loading the forecast…", ja: "予報を読み込んでいます…" } as const;
+const H1_SUFFIX = { en: "weather", ja: "天気", zh: "天氣" } as const;
+const SUMMARY_TITLE = { en: "Weather summary", ja: "天気のまとめ", zh: "天氣重點" } as const;
+const BY_MONTH = { en: "{c} weather by month", ja: "{c}の月ごとの天気と服装", zh: "{c}每月天氣與穿搭" } as const;
+const RELATED = { en: "More places in Korea", ja: "韓国のほかの場所", zh: "韓國其他地點" } as const;
+const LOADING = { en: "Loading the forecast…", ja: "予報を読み込んでいます…", zh: "正在載入預報…" } as const;
 const HOW = {
   en: "Choose your travel dates above to see only those days, switch between daily and 3-hour views, and save the table as an image to share with your group.",
   ja: "上で旅行の日付を選ぶとその日だけを表示でき、1日ごと・3時間ごとの切り替えや、表を画像で保存して同行者と共有することもできます。",
+  zh: "在上方選擇旅遊日期，就能只看那幾天；也可以切換每日或每3小時顯示，並把表格存成圖片和旅伴分享。",
 } as const;
 
 function lookup(lang: string, slug: string) {

@@ -51,6 +51,7 @@ const WEEKDAY: Record<Locale, string[]> = {
   ko: WEEKDAY_KO,
   en: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
   ja: ["日", "月", "火", "水", "木", "金", "土"],
+  zh: ["日", "一", "二", "三", "四", "五", "六"],
 };
 const MONTH_EN = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -68,7 +69,7 @@ export function shortDateKo(date: string): string {
   return shortDate(date);
 }
 
-/** "10/19(일)", "Sun, Oct 19", "10/19(日)" */
+/** "10/19(일)", "Sun, Oct 19", "10/19(日)", "10/19(日)" (중국어는 일·一·二…) */
 export function shortDate(date: string, l: Locale = "ko"): string {
   const [, m, d] = date.split("-").map(Number);
   if (l === "en") return `${weekdayName(date, l)}, ${MONTH_EN[m - 1]} ${d}`;

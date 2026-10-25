@@ -58,6 +58,7 @@ export function isWet(code: number | null): boolean {
 const DIRS = ["북", "북북동", "북동", "동북동", "동", "동남동", "남동", "남남동", "남", "남남서", "남서", "서남서", "서", "서북서", "북서", "북북서"];
 
 const DIRS_EN = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
+const DIRS_ZH = ["北", "北北東", "東北", "東北東", "東", "東南東", "東南", "南南東", "南", "南南西", "西南", "西南西", "西", "西北西", "西北", "北北西"];
 const DIRS_JA = ["北", "北北東", "北東", "東北東", "東", "東南東", "南東", "南南東", "南", "南南西", "南西", "西南西", "西", "西北西", "北西", "北北西"];
 
 /** 풍향(불어오는 방향, 도) → "북서" 등 */
@@ -68,13 +69,13 @@ export function windDirKo(deg: number | null): string {
 export function windDir(deg: number | null, l: Locale = "ko"): string {
   if (deg == null) return "-";
   const i = Math.round(((deg % 360) + 360) % 360 / 22.5) % 16;
-  return (l === "en" ? DIRS_EN : l === "ja" ? DIRS_JA : DIRS)[i];
+  return (l === "en" ? DIRS_EN : l === "ja" ? DIRS_JA : l === "zh" ? DIRS_ZH : DIRS)[i];
 }
 
 /** 풍향 설명 ("북서풍", "NW wind", "北西の風") */
 export function windDirLabel(deg: number | null, l: Locale = "ko"): string {
   const d = windDir(deg, l);
-  return l === "en" ? `${d} wind` : l === "ja" ? `${d}の風` : `${d}풍`;
+  return l === "en" ? `${d} wind` : l === "ja" ? `${d}の風` : l === "zh" ? `${d}風` : `${d}풍`;
 }
 
 /** 날씨 설명을 그 언어로 */

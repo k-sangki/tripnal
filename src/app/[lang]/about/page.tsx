@@ -4,7 +4,7 @@ import { ForeignFooter, ForeignHeader } from "@/components/ForeignHeader";
 import { CONTACT_EMAIL } from "@/components/TextPage";
 import { SITE_NAME, isForeignLocale, languageAlternates, localePath, type ForeignLocale } from "@/lib/i18n";
 
-/** 영어·일본어 소개 */
+/** 영어·일본어·중국어 소개 */
 const DOC: Record<ForeignLocale, { title: string; paras: string[]; contact: string }> = {
   en: {
     title: "About TripNalc Weather",
@@ -25,6 +25,16 @@ const DOC: Record<ForeignLocale, { title: string; paras: string[]; contact: stri
       "予報は実際の天気と異なることがあります。登山や海に出る前は、韓国気象庁の注意報・警報もご確認ください。",
     ],
     contact: "お問い合わせ",
+  },
+  zh: {
+    title: "關於旅遊天氣",
+    paras: [
+      "旅遊天氣（TripNalc）是在韓國製作、專為韓國旅遊設計的天氣網站。針對旅客常去的地點，以韓國時間提供最長16天、每3小時的預報，降雨機率、風與陣風、體感溫度、PM2.5、日出日落等旅途中需要的資訊一目了然。",
+      "預報取全球三個數值預報模式逐時的中間值：ECMWF（歐洲中期天氣預報中心）、GFS（美國NOAA/NCEP）與ICON（德國氣象局DWD）。取三者的中間值，就算其中一個模式大幅失準也不容易被誤導。山頂氣溫會依山頂海拔修正。",
+      "每月天氣頁面使用韓國氣象廳觀測站1991～2020年資料的平均值。",
+      "預報可能與實際天氣不同。登山或出海前，也請確認韓國氣象廳發布的特報。",
+    ],
+    contact: "聯絡我們",
   },
 };
 

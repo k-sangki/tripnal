@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { PLACE_TEXT } from "@/data/places-i18n";
 import { localePath, type Locale } from "@/lib/i18n";
-import { KOREA_MONTH_CITIES, clothes, degrees, krNormals, krStation, krYears, monthName, monthNotes, vsTokyo } from "@/lib/korea-month";
+import { KOREA_MONTH_CITIES, clothes, degrees, krNormals, krStation, krYears, monthName, monthNotes, vsHome } from "@/lib/korea-month";
 import { getPlace } from "@/lib/places";
 import { shortName } from "@/lib/seo-foreign";
 import { AD_SLOTS, AdSlot } from "./AdSlot";
@@ -9,25 +9,28 @@ import { AD_SLOTS, AdSlot } from "./AdSlot";
 type Text = Record<Locale, string>;
 
 const T = {
-  h1: { ko: "{c} {m} 날씨", en: "{c} weather in {m}", ja: "{c} {m}の天気と服装" },
-  high: { ko: "낮 최고", en: "Avg high", ja: "平均最高" },
-  low: { ko: "아침 최저", en: "Avg low", ja: "平均最低" },
-  rain: { ko: "강수량", en: "Rainfall", ja: "降水量" },
-  hum: { ko: "습도", en: "Humidity", ja: "湿度" },
-  wear: { ko: "옷차림", en: "What to wear", ja: "服装の目安" },
-  day: { ko: "낮", en: "Daytime", ja: "日中" },
-  night: { ko: "아침·저녁", en: "Morning & night", ja: "朝晩" },
-  notes: { ko: "{m}에 알아 둘 것", en: "Good to know in {m}", ja: "{m}に知っておきたいこと" },
-  year: { ko: "월별 평년 날씨", en: "Month by month", ja: "月ごとの平年値" },
-  month: { ko: "달", en: "Month", ja: "月" },
-  forecast: { ko: "{c} 지금 날씨 · 이번주·주말 예보 보기 →", en: "See the live 16-day forecast for {c} →", ja: "{c}の最新2週間予報を見る →" },
-  others: { ko: "다른 도시 {m} 날씨", en: "Other cities in {m}", ja: "ほかの都市の{m}" },
+  h1: { ko: "{c} {m} 날씨", en: "{c} weather in {m}", ja: "{c} {m}の天気と服装", zh: "{c}{m}天氣與穿搭" },
+  high: { ko: "낮 최고", en: "Avg high", ja: "平均最高", zh: "平均最高" },
+  low: { ko: "아침 최저", en: "Avg low", ja: "平均最低", zh: "平均最低" },
+  rain: { ko: "강수량", en: "Rainfall", ja: "降水量", zh: "雨量" },
+  hum: { ko: "습도", en: "Humidity", ja: "湿度", zh: "濕度" },
+  wear: { ko: "옷차림", en: "What to wear", ja: "服装の目安", zh: "穿搭建議" },
+  day: { ko: "낮", en: "Daytime", ja: "日中", zh: "白天" },
+  night: { ko: "아침·저녁", en: "Morning & night", ja: "朝晩", zh: "早晚" },
+  notes: { ko: "{m}에 알아 둘 것", en: "Good to know in {m}", ja: "{m}に知っておきたいこと", zh: "{m}旅遊小提醒" },
+  year: { ko: "월별 평년 날씨", en: "Month by month", ja: "月ごとの平年値", zh: "每月平均天氣" },
+  month: { ko: "달", en: "Month", ja: "月", zh: "月份" },
+  forecast: { ko: "{c} 지금 날씨 · 이번주·주말 예보 보기 →", en: "See the live 16-day forecast for {c} →", ja: "{c}の最新2週間予報を見る →", zh: "看{c}最新16天預報 →" },
+  others: { ko: "다른 도시 {m} 날씨", en: "Other cities in {m}", ja: "ほかの都市の{m}", zh: "其他城市的{m}" },
   source: {
     ko: "평년값: 기상청 {s}번 관측소 시간별 관측 {y} 평균 (기상청 공식 평년값과는 조금 다를 수 있어요)",
     en: "Climate averages from KMA weather station {s} hourly observations, {y}. They may differ slightly from official KMA normals.",
     ja: "平年値：韓国気象庁 観測所{s}の毎時観測（{y}）の平均。公式の平年値とは少し異なる場合があります。",
+    zh: "平均值：韓國氣象廳{s}號觀測站逐時觀測（{y}）的平均，可能與官方氣候平均值略有不同。",
   },
-  tokyo: { ko: "", en: "", ja: "東京（{t}℃）と比べて{d}" },
+  home: { ko: "", en: "", ja: "東京（{t}℃）と比べて平均気温が約{d}℃{w}です。", zh: "和台北（{t}℃）相比，平均氣溫{w}約{d}℃。" },
+  colder: { ko: "", en: "", ja: "低い", zh: "低" },
+  warmer: { ko: "", en: "", ja: "高い", zh: "高" },
 } satisfies Record<string, Text>;
 
 function fill(s: string, v: Record<string, string | number>) {
@@ -47,8 +50,8 @@ export function KoreaMonthPage({ slug, month: m, locale: l }: { slug: string; mo
   const c = cityName(slug, l);
   const mn = monthName(m, l);
   const years = krYears(slug);
-  const d = l === "ja" ? vsTokyo(n, m) : null;
-  const tokyoAvg = d == null ? null : Math.round(((n.hi + n.lo) / 2 - d) * 10) / 10;
+  const d = vsHome(n, m, l);
+  const homeAvg = d == null ? null : Math.round(((n.hi + n.lo) / 2 - d) * 10) / 10;
 
   return (
     <>
@@ -72,8 +75,8 @@ export function KoreaMonthPage({ slug, month: m, locale: l }: { slug: string; mo
             <b>{n.hum}%</b>
           </div>
         </div>
-        {d != null && tokyoAvg != null && Math.abs(d) >= 0.5 && (
-          <p>{fill(T.tokyo.ja, { t: tokyoAvg, d: `平均気温が約${Math.abs(Math.round(d))}℃${d < 0 ? "低い" : "高い"}です。` })}</p>
+        {d != null && homeAvg != null && Math.abs(d) >= 0.5 && (
+          <p>{fill(T.home[l], { t: homeAvg, d: Math.abs(Math.round(d)), w: d < 0 ? T.colder[l] : T.warmer[l] })}</p>
         )}
       </section>
 

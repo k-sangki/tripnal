@@ -73,5 +73,6 @@ export function periodLabel(p: Period, l: Locale = "ko") {
   if (days === 1) return shortDate(p.from, l);
   if (l === "en") return `${shortDate(p.from, l)} – ${shortDate(p.to, l)} · ${days} days`;
   if (l === "ja") return `${shortDate(p.from, l)}〜${shortDate(p.to, l)}・${nights}泊${days}日`;
+  if (l === "zh") return `${shortDate(p.from, l)}～${shortDate(p.to, l)}・${days}天${nights}夜`;
   return `${shortDate(p.from)} ~ ${shortDate(p.to)} · ${nights}박 ${days}일`;
 }

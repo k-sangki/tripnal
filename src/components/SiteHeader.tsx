@@ -59,6 +59,10 @@ export function SiteFooter({ langPath }: { langPath?: string } = {}) {
           <Link href={`/ja${langPath}`} hrefLang="ja" lang="ja">
             日本語
           </Link>
+          <span aria-hidden>·</span>
+          <Link href={`/zh${langPath}`} hrefLang="zh-Hant" lang="zh-Hant">
+            繁體中文
+          </Link>
         </nav>
       )}
       <p>

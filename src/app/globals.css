@@ -63,9 +63,15 @@ html:lang(ja) {
   --font: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, "Noto Sans JP", sans-serif;
 }
 html:lang(ja),
-html:lang(ja) * {
+html:lang(ja) *,
+html:lang(zh),
+html:lang(zh) * {
   word-break: normal;
   line-break: strict;
+}
+/* 번체 중국어(대만·홍콩)도 같은 까닭으로 띄어쓰기 규칙을 풀고, 한자는 번체 글꼴로 */
+html:lang(zh) {
+  --font: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", sans-serif;
 }
 
 /* 상태바·노치 자리만큼 띄운다 (viewport-fit=cover) */
@@ -2885,4 +2891,10 @@ button.cc-col.on {
 }
 .km-table a {
   text-decoration: underline;
+}
+/* 외국어 머리는 언어 링크가 셋이라, 휴대폰에서는 슬로건을 빼서 로고와 링크가 겹치지 않게 (푸터·캡처에는 그대로) */
+@media (max-width: 559px) {
+  .topbar-foreign .slogan {
+    display: none;
+  }
 }

@@ -45,9 +45,22 @@ export function SiteHeader({
   );
 }
 
-export function SiteFooter() {
+/** langPath: 영어·일본어판이 있는 페이지면 그 경로 (예: "/weather/seoul") → 바닥글에 언어 링크 */
+export function SiteFooter({ langPath }: { langPath?: string } = {}) {
   return (
     <footer className="foot">
+      {langPath && (
+        <nav className="foot-lang" aria-label="Language">
+          <span aria-hidden>🌐</span>
+          <Link href={`/en${langPath}`} hrefLang="en" lang="en">
+            English
+          </Link>
+          <span aria-hidden>·</span>
+          <Link href={`/ja${langPath}`} hrefLang="ja" lang="ja">
+            日本語
+          </Link>
+        </nav>
+      )}
       <p>
         트립날씨(tripnalc)는 캠핑날씨·여행날씨·등산·낚시 물때표처럼 대한민국
         레저 활동을 위한 이번주·주말 16일 날씨 서비스입니다. 예보는 수치예보모델

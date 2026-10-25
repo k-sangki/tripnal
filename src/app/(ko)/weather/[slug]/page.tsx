@@ -117,7 +117,7 @@ export default async function PlacePage({ params }: PageProps<"/weather/[slug]">
           </nav>
         </section>
       )}
-      <SiteFooter />
+      <SiteFooter langPath={hasForeignPage(place.slug) ? `/weather/${place.slug}` : undefined} />
     </div>
   );
 }

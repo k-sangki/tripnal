@@ -37,7 +37,7 @@ export default async function Page({ params }: PageProps<"/weather/[slug]/[month
     <div className="shell">
       <SiteHeader />
       <KoreaMonthPage slug={slug} month={p.m} locale="ko" />
-      <SiteFooter />
+      <SiteFooter langPath={`/weather/${slug}/${p.m}`} />
     </div>
   );
 }

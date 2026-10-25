@@ -855,6 +855,12 @@ a {
   color: var(--pine);
   text-decoration: underline;
 }
+.foot-lang {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
 .foot-links {
   display: flex;
   flex-wrap: wrap;

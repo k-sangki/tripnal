@@ -23,9 +23,9 @@ const T = {
   forecast: { ko: "{c} 지금 날씨 · 이번주·주말 예보 보기 →", en: "See the live 16-day forecast for {c} →", ja: "{c}の最新2週間予報を見る →" },
   others: { ko: "다른 도시 {m} 날씨", en: "Other cities in {m}", ja: "ほかの都市の{m}" },
   source: {
-    ko: "평년값: 기상청 {s}번 관측소 일자료 {y} 평균 (기상청 공식 평년값과는 조금 다를 수 있어요)",
-    en: "Climate averages from KMA weather station {s} daily records, {y}. They may differ slightly from official KMA normals.",
-    ja: "平年値：韓国気象庁 観測所{s}の日別データ（{y}）の平均。公式の平年値とは少し異なる場合があります。",
+    ko: "평년값: 기상청 {s}번 관측소 시간별 관측 {y} 평균 (기상청 공식 평년값과는 조금 다를 수 있어요)",
+    en: "Climate averages from KMA weather station {s} hourly observations, {y}. They may differ slightly from official KMA normals.",
+    ja: "平年値：韓国気象庁 観測所{s}の毎時観測（{y}）の平均。公式の平年値とは少し異なる場合があります。",
   },
   tokyo: { ko: "", en: "", ja: "東京（{t}℃）と比べて{d}" },
 } satisfies Record<string, Text>;

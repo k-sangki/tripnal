@@ -57,6 +57,17 @@ body {
   -webkit-text-size-adjust: 100%;
   word-break: keep-all;
 }
+/* 일본어는 띄어쓰기가 없어 keep-all이면 줄이 안 바뀌고 넘친다: 글자 단위로 바꾸되 금칙(、。 앞 줄바꿈 금지)은 지킨다 */
+html:lang(ja) {
+  /* 한자·가나는 일본 글꼴로 (한국 글꼴로 그리면 한자 모양이 어색하다) */
+  --font: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, "Noto Sans JP", sans-serif;
+}
+html:lang(ja),
+html:lang(ja) * {
+  word-break: normal;
+  line-break: strict;
+}
+
 /* 상태바·노치 자리만큼 띄운다 (viewport-fit=cover) */
 body {
   padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) 0 env(safe-area-inset-left, 0px);

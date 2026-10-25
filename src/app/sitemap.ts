@@ -1,13 +1,20 @@
 import type { MetadataRoute } from "next";
 import { DESTINATIONS } from "@/lib/overseas";
+import { PLACE_TEXT } from "@/data/places-i18n";
+import { FOREIGN_LOCALES, languageAlternates, localePath } from "@/lib/i18n";
 import { PLACES } from "@/lib/places";
+
+/** 번역된 페이지는 각 언어판 주소를 함께 적는다 (hreflang) */
+function languages(path: string) {
+  return Object.fromEntries(Object.entries(languageAlternates(path)).map(([l, p]) => [l, `${BASE}${p}`]));
+}
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://tripnalc.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
   return [
-    { url: `${BASE}/`, lastModified: now, changeFrequency: "hourly", priority: 1 },
+    { url: `${BASE}/`, lastModified: now, changeFrequency: "hourly", priority: 1, alternates: { languages: languages("/") } },
     { url: `${BASE}/weather`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE}/overseas`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE}/weekend`, lastModified: now, changeFrequency: "daily", priority: 0.8 },
@@ -23,7 +30,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: "hourly" as const,
       priority: 0.9,
+      ...(p.slug in PLACE_TEXT ? { alternates: { languages: languages(`/weather/${p.slug}`) } } : {}),
     })),
+    // 영어·일본어 홈과 장소 페이지
+    ...FOREIGN_LOCALES.flatMap((l) => [
+      { url: `${BASE}${localePath(l, "/")}`, lastModified: now, changeFrequency: "daily" as const, priority: 0.9, alternates: { languages: languages("/") } },
+      ...Object.keys(PLACE_TEXT).map((slug) => ({
+        url: `${BASE}${localePath(l, `/weather/${slug}`)}`,
+        lastModified: now,
+        changeFrequency: "hourly" as const,
+        priority: 0.9,
+        alternates: { languages: languages(`/weather/${slug}`) },
+      })),
+    ]),
     ...DESTINATIONS.flatMap((d) => [
       { url: `${BASE}/overseas/${d.slug}`, lastModified: now, changeFrequency: "daily" as const, priority: 0.8 },
       { url: `${BASE}/overseas/${d.slug}/forecast`, lastModified: now, changeFrequency: "hourly" as const, priority: 0.7 },

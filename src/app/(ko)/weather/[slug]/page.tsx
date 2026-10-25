@@ -3,6 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SiteFooter, SiteHeader } from "@/components/SiteHeader";
 import { WeatherApp } from "@/components/WeatherApp";
+import { hasForeignPage } from "@/data/places-i18n";
+import { languageAlternates } from "@/lib/i18n";
 import { getLeisure } from "@/lib/leisure";
 import { PLACES, getPlace } from "@/lib/places";
 import { placeDescription, placeSchemaType, placeSummary, placeTitle } from "@/lib/seo";
@@ -41,7 +43,8 @@ export async function generateMetadata({ params, searchParams }: PageProps<"/wea
       `${place.name} ${getLeisure(place.leisure).label} 날씨`,
       ...(place.aliases ?? []).map((a) => `${a} 날씨`),
     ],
-    alternates: { canonical: url },
+    // 영어·일본어판이 있는 장소는 서로 가리킨다 (hreflang)
+    alternates: { canonical: url, ...(hasForeignPage(place.slug) ? { languages: languageAlternates(url) } : {}) },
     openGraph: { siteName: "트립날씨", locale: "ko_KR", title, description, url, images: [{ url: image, width: 1200, height: 630 }] },
     twitter: { card: "summary_large_image", title, description, images: [image] },
   };

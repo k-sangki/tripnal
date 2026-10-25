@@ -15,6 +15,7 @@ import json
 import os
 import sys
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
 from collections import defaultdict
@@ -106,12 +107,19 @@ def asos_days(stn, key):
     rows = []
     for y in range(KR_START, KR_END + 1):
         q = urllib.parse.urlencode(
-            {"serviceKey": key, "dataType": "JSON", "dataCd": "ASOS", "dateCd": "DAY", "startDt": f"{y}0101", "endDt": f"{y}1231", "stnIds": stn, "numOfRows": 400, "pageNo": 1}
+            {"dataType": "JSON", "dataCd": "ASOS", "dateCd": "DAY", "startDt": f"{y}0101", "endDt": f"{y}1231", "stnIds": stn, "numOfRows": 400, "pageNo": 1}
         )
         for attempt in range(3):
             try:
-                with urllib.request.urlopen(f"{ASOS_DAY}?{q}", timeout=60) as r:
+                # 키는 이미 인코딩된 값이라 그대로 붙인다 (verify.py와 같음)
+                with urllib.request.urlopen(f"{ASOS_DAY}?serviceKey={key}&{q}", timeout=60) as r:
                     raw = r.read().decode("utf-8", "replace")
+            except urllib.error.HTTPError as e:
+                if e.code in (401, 403):  # 키·승인 문제는 다시 해도 같다
+                    raise RuntimeError(f"ASOS 일자료 {e.code}: 이 키가 '기상청_지상(종관, ASOS) 일자료 조회서비스'에 승인됐는지 확인") from e
+                print("  retry", stn, y, e, flush=True)
+                time.sleep(3)
+                continue
             except Exception as e:  # noqa: BLE001 - 네트워크 오류는 잠시 뒤 다시
                 print("  retry", stn, y, e, flush=True)
                 time.sleep(3)

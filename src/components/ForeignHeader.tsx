@@ -1,24 +1,24 @@
 import Link from "next/link";
 import { SLOGAN_FOREIGN } from "@/lib/brand";
-import { LOCALE_NAME, localePath, type ForeignLocale, type Locale } from "@/lib/i18n";
+import { LANG_TAG, LOCALE_NAME, localePath, type ForeignLocale, type Locale } from "@/lib/i18n";
 import { Logo } from "./Logo";
 import { CONTACT_EMAIL } from "./TextPage";
 
 /**
- * 영어·일본어 페이지 머리. 로고 옆 슬로건과 언어 전환(지금 보는 페이지의 다른 언어판)만 둔다.
+ * 영어·일본어·중국어 페이지 머리. 로고 옆 슬로건과 언어 전환(지금 보는 페이지의 다른 언어판)만 둔다.
  * path: 한국어 기준 경로 ("/weather/seoul")
  */
 export function ForeignHeader({ locale, path }: { locale: ForeignLocale; path: string }) {
-  const others: Locale[] = (["en", "ja", "ko"] as const).filter((l) => l !== locale);
+  const others: Locale[] = (["en", "ja", "zh", "ko"] as const).filter((l) => l !== locale);
   return (
-    <header className="topbar">
+    <header className="topbar topbar-foreign">
       <Link href={localePath(locale, "/")} aria-label={`TripNalc ${LOCALE_NAME[locale]}`} className="brand">
         <Logo />
         <span className="slogan">{SLOGAN_FOREIGN[locale]}</span>
       </Link>
       <nav className="top-nav lang-nav" aria-label="Language">
         {others.map((l) => (
-          <Link key={l} href={localePath(l, path)} hrefLang={l} lang={l} className="tagline">
+          <Link key={l} href={localePath(l, path)} hrefLang={LANG_TAG[l]} lang={LANG_TAG[l]} className="tagline">
             {LOCALE_NAME[l]}
           </Link>
         ))}
@@ -43,6 +43,14 @@ const FOOT: Record<ForeignLocale, { text: string; places: string; ko: string; ab
     about: "サイトについて",
     privacy: "プライバシーポリシー",
     contact: "お問い合わせ",
+  },
+  zh: {
+    text: "旅遊天氣（TripNalc）提供韓國旅遊用的最長16天、每3小時天氣預報，採用全球三個預報模式（ECMWF、GFS、ICON）的中間值。預報可能與實際天氣不同；登山或出海前，也請確認韓國氣象廳發布的特報。",
+    places: "地點一覽",
+    ko: "한국어",
+    about: "關於本站",
+    privacy: "隱私權政策",
+    contact: "聯絡我們",
   },
 };
 

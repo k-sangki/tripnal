@@ -4,7 +4,7 @@ import { ForeignFooter, ForeignHeader } from "@/components/ForeignHeader";
 import { CONTACT_EMAIL } from "@/components/TextPage";
 import { isForeignLocale, languageAlternates, localePath, type ForeignLocale } from "@/lib/i18n";
 
-/** 영어·일본어 개인정보처리방침 (한국어 /privacy와 같은 내용) */
+/** 영어·일본어·중국어 개인정보처리방침 (한국어 /privacy와 같은 내용) */
 const A = (href: string, text: string) => (
   <a href={href} target="_blank" rel="noopener noreferrer">
     {text}
@@ -73,6 +73,38 @@ const DOC: Record<ForeignLocale, { title: string; body: React.ReactNode }> = {
         </p>
         <h2>5. 変更</h2>
         <p>このポリシーを変更する場合は、施行日とともにこのページでお知らせします。</p>
+      </>
+    ),
+  },
+  zh: {
+    title: "隱私權政策",
+    body: (
+      <>
+        <p>生效日期：2026年10月20日</p>
+        <p>旅遊天氣（tripnalc.com）不需註冊即可使用，不會蒐集姓名、電話或電子郵件等個人資料。使用本服務時處理的資訊如下。</p>
+        <h2>1. 儲存在瀏覽器的資訊</h2>
+        <p>顯示相關設定只會儲存在您的瀏覽器（本機儲存空間），不會傳送到我們的伺服器。清除瀏覽器的網站資料即可刪除。</p>
+        <h2>2. 第三方服務</h2>
+        <ul>
+          <li>天氣預報：我們事先蒐集公開的數值預報資料來產生預報，因此不會把您查看的地點傳給外部預報提供者。</li>
+          <li>主機服務：Cloudflare可能為了安全與營運而處理存取紀錄（IP位址、瀏覽器資訊等）。</li>
+        </ul>
+        <h2>3. 廣告與Cookie</h2>
+        <p>
+          本服務刊登Google AdSense廣告。包括Google在內的第三方廠商會使用Cookie，根據您過去造訪本網站及其他網站的紀錄放送廣告。您可以在
+          {A("https://adssettings.google.com", "Google廣告設定")}關閉個人化廣告，也可以在{A("https://www.aboutads.info/choices", "aboutads.info")}停用第三方廠商的Cookie。詳情請參閱
+          {A("https://policies.google.com/technologies/partner-sites", "Google如何使用合作網站的資訊")}。
+        </p>
+        <p>
+          造訪次數以Cloudflare Web Analytics（不使用Cookie）與Google Analytics統計。Google Analytics會用Cookie區分造訪，但我們只看瀏覽量、來源與裝置類型等總數。您可以用
+          {A("https://tools.google.com/dlpage/gaoptout", "Google Analytics停用外掛程式")}停止蒐集。
+        </p>
+        <h2>4. 聯絡方式</h2>
+        <p>
+          個人資料相關問題：<a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+        </p>
+        <h2>5. 變更</h2>
+        <p>本政策如有變更，將在此頁面公告並註明新的生效日期。</p>
       </>
     ),
   },

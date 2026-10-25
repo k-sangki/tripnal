@@ -24,6 +24,7 @@ describe("국내 도시 월별 날씨", () => {
     expect(monthTitle("서울", 11, n, "ko")).toMatch(/^서울 11월 날씨 · /);
     expect(monthTitle("Seoul", 11, n, "en")).toMatch(/^Seoul Weather in November · What to Wear/);
     expect(monthTitle("ソウル", 11, n, "ja")).toMatch(/^ソウル 11月の天気と服装・/);
+    expect(monthTitle("首爾", 1, krNormals("seoul")![0], "zh")).toBe("首爾1月天氣與穿搭・比台北冷18℃？");
     for (const l of ["ko", "ja"] as const) {
       expect(monthTitle("서울", 11, n, l) + monthDescription("서울", 11, n, l)).not.toMatch(/16일|16日/);
     }

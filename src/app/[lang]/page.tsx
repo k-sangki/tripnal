@@ -30,10 +30,21 @@ const HOME: Record<ForeignLocale, { title: string; description: string; h1: stri
     ],
     groups: { city: "都市", travel: "ビーチ・観光地", hiking: "山", ski: "スキー場" },
   },
+  zh: {
+    title: "韓國天氣預報｜首爾・釜山・濟州16天天氣，帶不帶傘一秒決定",
+    description:
+      "去韓國玩之前先看！首爾、釜山、濟州島、慶州、登山與滑雪場最長16天、每3小時天氣，以韓國時間顯示。下雨、風和體感溫度一目了然，穿搭也不怕踩雷。",
+    h1: "韓國旅遊天氣",
+    lead: [
+      "旅客常去的韓國景點天氣，以韓國時間（比台灣快1小時）顯示，最長可看16天、每3小時一格。",
+      "預報取全球三個模式（ECMWF、GFS、ICON）的中間值，就算其中一個失準，行程也不容易被打亂。",
+    ],
+    groups: { city: "城市", travel: "海灘・景點", hiking: "登山", ski: "滑雪場" },
+  },
 };
 
 /** 도시는 따로 묶는다 (나머지 여행지는 해변·명소) */
-const CITIES = new Set(["seoul", "busan", "jeju", "incheon", "gyeongju", "gangneung", "sokcho", "jeonju", "daegu", "yeosu"]);
+const CITIES = new Set(["seoul", "busan", "jeju", "incheon", "gyeongju", "gangneung", "sokcho", "jeonju", "daegu", "yeosu", "chuncheon", "suncheon", "tongyeong"]);
 
 export async function generateMetadata({ params }: PageProps<"/[lang]">): Promise<Metadata> {
   const { lang } = await params;

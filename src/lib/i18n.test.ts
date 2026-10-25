@@ -23,6 +23,11 @@ describe("i18n", () => {
     expect(tr("ko", "맑음")).toBe("맑음");
     expect(tr("en", "맑음")).toBe("Clear");
     expect(tr("ja", "없는 말")).toBe("없는 말");
+    expect(tr("zh", "맑음")).toBe("晴");
+  });
+
+  it("사전의 모든 말에 영어·일본어·중국어가 있다", () => {
+    for (const [k, v] of Object.entries(WORDS)) expect(v.en && v.ja && v.zh, k).toBeTruthy();
   });
 
   it("화면에서 t(\"…\")로 부르는 글자는 모두 사전에 있다", () => {
@@ -50,6 +55,8 @@ describe("i18n", () => {
     expect(slotHead(0, 6, "en")).toBe("12am–6am");
     expect(slotHead(15, 3, "ja")).toBe("15時");
     expect(slotHead(15, 3)).toBe("15시");
+    expect(shortDate("2026-10-31", "zh")).toBe("10/31(六)");
+    expect(periodLabel({ from: "2026-10-31", to: "2026-11-01" }, "zh")).toBe("10/31(六)～11/1(日)・2天1夜");
   });
 
   it("hreflang 주소", () => {
@@ -59,6 +66,7 @@ describe("i18n", () => {
       ko: "/weather/seoul",
       en: "/en/weather/seoul",
       ja: "/ja/weather/seoul",
+      "zh-Hant": "/zh/weather/seoul",
       "x-default": "/en/weather/seoul",
     });
   });
@@ -71,6 +79,9 @@ describe("i18n", () => {
       const ja = foreignTitle(p!, t.ja, "ja");
       expect(ja).toMatch(/天気/);
       expect(ja).not.toMatch(/16日/);
+      expect(foreignTitle(p!, t.zh, "zh")).toMatch(/天氣/);
+      // 번체 중국어에 간체·일본식 글자가 섞이지 않게
+      expect(`${t.zh.name}${t.zh.region}${t.zh.about}`, slug).not.toMatch(/[国气湾岛乐园东韩庆罗庆尔丽济]/);
     }
   });
 });

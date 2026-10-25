@@ -16,7 +16,7 @@ import { shortName } from "@/lib/seo-foreign";
 /**
  * 카카오톡·네이버 등에 링크를 붙였을 때 보이는 미리보기 이미지 (1200×630).
  * 장소·기간의 날짜별 날씨를 요약해 그린다. 주소: /api/og?lat&lon&name&from&to&act 또는 /api/og?slug&from&to&act
- * lang=en|ja 를 붙이면 영어·일본어 그림 (영어는 바람 km/h)
+ * lang=en|ja|zh 를 붙이면 영어·일본어·중국어 그림 (영어는 바람 km/h)
  */
 
 const W = 1200;
@@ -42,6 +42,7 @@ const TEXT: Record<Locale, { empty: string; source: string; wind: (v: number) =>
   ko: { empty: "캠핑·낚시·등산 16일 날씨, 3시간 간격으로", source: "ECMWF·GFS·ICON 예보 종합", wind: (v) => `바람 ${Math.round(v)}m/s` },
   en: { empty: "Korea weather, 16 days ahead, every 3 hours", source: "Blend of ECMWF·GFS·ICON", wind: (v) => `Wind ${Math.round(v * 3.6)}km/h` },
   ja: { empty: "韓国の天気、2週間先まで3時間ごと", source: "ECMWF・GFS・ICONの予報を総合", wind: (v) => `風 ${Math.round(v)}m/s` },
+  zh: { empty: "韓國天氣，最長16天、每3小時", source: "綜合ECMWF・GFS・ICON預報", wind: (v) => `風 ${Math.round(v)}m/s` },
 };
 const DARK = "#0E3B36";
 
@@ -65,7 +66,7 @@ function DayCol({ d, narrow, l }: { d: DayForecast; narrow: boolean; l: Locale }
       }}
     >
       <div style={{ fontSize: narrow ? 26 : 30, fontWeight: 700, color }}>{d.date.slice(5).replace("-", "/").replace(/(^|\/)0/g, "$1")}</div>
-      <div style={{ fontSize: 24, color }}>{l === "ko" ? `${weekdayKo(d.date)}요일` : weekdayName(d.date, l)}</div>
+      <div style={{ fontSize: 24, color }}>{l === "ko" ? `${weekdayKo(d.date)}요일` : l === "zh" ? `週${weekdayName(d.date, l)}` : weekdayName(d.date, l)}</div>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={icon} width={size} height={size} style={{ margin: "14px 0 10px" }} alt="" />
       <div style={{ display: "flex", fontSize: narrow ? 32 : 38, fontWeight: 700 }}>
@@ -108,10 +109,16 @@ export async function GET(request: Request) {
   }
   const foreignName = l !== "ko" && slugPlace ? placeText(slugPlace.slug, l)?.name : undefined;
   const title =
-    l === "en" ? `${foreignName ? shortName(foreignName) : name} weather` : l === "ja" ? `${foreignName ? shortName(foreignName) : name}の天気` : `${name} ${leisure.label} 날씨`;
+    l === "en"
+      ? `${foreignName ? shortName(foreignName) : name} weather`
+      : l === "ja"
+        ? `${foreignName ? shortName(foreignName) : name}の天気`
+        : l === "zh"
+          ? `${foreignName ? shortName(foreignName) : name}天氣`
+          : `${name} ${leisure.label} 날씨`;
   const sub = periodLabel(period, l);
   const slogan = l === "ko" ? SLOGAN : SLOGAN_FOREIGN[l];
-  const family = l === "ja" ? "Noto Sans JP" : "Noto Sans KR";
+  const family = l === "ja" ? "Noto Sans JP" : l === "zh" ? "Noto Sans TC" : "Noto Sans KR";
   const narrow = days.length > 5;
 
   const element = (
@@ -141,7 +148,7 @@ export async function GET(request: Request) {
 
   // 그림에 들어가는 글자만 담아 폰트를 받는다 (숫자·기호는 미리 넣어 둔다)
   const t = TEXT[l];
-  const weekdays = l === "ko" ? "일월화수목금토요" : l === "ja" ? "日月火水木金土" : "SunMonTueWedThuFriSat";
+  const weekdays = l === "ko" ? "일월화수목금토요" : l === "ja" ? "日月火水木金土" : l === "zh" ? "週日一二三四五六" : "SunMonTueWedThuFriSat";
   const glyphs = [title, sub, slogan, t.empty, t.source, t.wind(10), "tripnalc.com", "0123456789/°-%mms", weekdays].join("");
   try {
     const [regular, bold] = await Promise.all([loadFont(glyphs, 400, family), loadFont(glyphs, 700, family)]);

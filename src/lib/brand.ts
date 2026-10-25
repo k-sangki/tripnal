@@ -6,4 +6,5 @@ export const SLOGAN_C = "놀러 갈 땐, 트립날C";
 export const SLOGAN_FOREIGN = {
   en: "Before you go, TripNalc",
   ja: "おでかけ前に、トリップ天気",
+  zh: "出門玩之前，先看旅遊天氣",
 } as const;

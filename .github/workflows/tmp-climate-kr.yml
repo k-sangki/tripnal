@@ -14,3 +14,6 @@ jobs:
         with:
           python-version: "3.12"
       - run: python collector/climate.py --korea
+        env:
+          KHOA_API_KEY: ${{ secrets.KHOA_API_KEY }}
+# rerun 2

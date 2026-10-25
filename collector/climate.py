@@ -7,7 +7,7 @@ src/data/climate.json에 저장한다. 한 번 만들어 두면 되는 자료라
 - 격자(약 0.5°) 고도와 여행지 고도가 다르면 기온을 0.0065°C/m로 보정한다.
 
 사용: python collector/climate.py [--only osaka,tokyo]
-     python collector/climate.py --korea   # 국내 도시 → src/data/climate-kr.json (외국인용 월별 날씨 페이지)
+     KHOA_API_KEY=… python collector/climate.py --korea   # 국내 도시(기상청 ASOS 일자료) → src/data/climate-kr.json
 """
 
 import argparse
@@ -15,6 +15,7 @@ import json
 import os
 import sys
 import time
+import urllib.parse
 import urllib.request
 from collections import defaultdict
 
@@ -80,30 +81,96 @@ def monthly(j, elevation):
     return out, grid_elev
 
 
-# 국내 도시 (slug는 src/lib/places.ts, 고도는 도심 기상관측소 높이에 가까운 값 m)
+# 국내 도시: (slug는 src/lib/places.ts, 기상청 ASOS 관측소 번호)
+# NASA POWER 격자(약 0.5°)는 부산·제주·강릉처럼 바닷가 도시에서 바다 칸이 섞여 기온이 크게 어긋나서,
+# 국내는 기상청 관측 일자료(1991~2020, 기상청 평년값과 같은 기간)로 계산한다.
 KOREA = [
-    ("seoul", 37.5665, 126.978, 86),
-    ("busan", 35.18, 129.075, 70),
-    ("jeju", 33.499, 126.531, 20),
-    ("incheon", 37.4563, 126.7052, 71),
-    ("gyeongju", 35.856, 129.225, 38),
-    ("gangneung", 37.752, 128.876, 27),
-    ("sokcho", 38.207, 128.592, 18),
-    ("jeonju", 35.8242, 127.148, 61),
-    ("daegu", 35.8714, 128.6014, 54),
-    ("yeosu", 34.76, 127.662, 64),
+    ("seoul", 108),
+    ("busan", 159),
+    ("jeju", 184),
+    ("incheon", 112),
+    ("gyeongju", 283),
+    ("gangneung", 105),
+    ("sokcho", 90),
+    ("jeonju", 146),
+    ("daegu", 143),
+    ("yeosu", 168),
 ]
+KR_START, KR_END = 1991, 2020
+ASOS_DAY = "https://apis.data.go.kr/1360000/AsosDalyInfoService/getWthrDataList"
 OUT_KR = os.path.join(ROOT, "src", "data", "climate-kr.json")
 
 
+def asos_days(stn, key):
+    """관측소의 KR_START~KR_END 일자료 (해마다 나눠 받는다)"""
+    rows = []
+    for y in range(KR_START, KR_END + 1):
+        q = urllib.parse.urlencode(
+            {"serviceKey": key, "dataType": "JSON", "dataCd": "ASOS", "dateCd": "DAY", "startDt": f"{y}0101", "endDt": f"{y}1231", "stnIds": stn, "numOfRows": 400, "pageNo": 1}
+        )
+        for attempt in range(5):
+            try:
+                with urllib.request.urlopen(f"{ASOS_DAY}?{q}", timeout=60) as r:
+                    j = json.load(r)
+                items = j["response"]["body"]["items"]
+                rows += items["item"] if items else []
+                break
+            except Exception as e:  # noqa: BLE001 - 관측이 없는 해(관측소 신설 전)는 비어 있다
+                if attempt == 4:
+                    print("  skip", stn, y, e, flush=True)
+                else:
+                    time.sleep(3 * (attempt + 1))
+    return rows
+
+
+def num(v):
+    try:
+        return float(v)
+    except (TypeError, ValueError):
+        return None
+
+
+def korea_monthly(rows):
+    hi, lo, hum = defaultdict(list), defaultdict(list), defaultdict(list)
+    rain = defaultdict(float)
+    rain_days = defaultdict(int)
+    months_seen = defaultdict(set)
+    for r in rows:
+        y, m = int(r["tm"][:4]), int(r["tm"][5:7])
+        months_seen[m].add(y)
+        if num(r.get("maxTa")) is not None:
+            hi[m].append(num(r["maxTa"]))
+        if num(r.get("minTa")) is not None:
+            lo[m].append(num(r["minTa"]))
+        rv = num(r.get("sumRn")) or 0.0  # 비가 안 온 날은 빈 값
+        rain[m] += rv
+        rain_days[m] += rv >= 1.0
+        if num(r.get("avgRhm")) is not None:
+            hum[m].append(num(r["avgRhm"]))
+    out = []
+    for m in range(1, 13):
+        n = len(months_seen[m]) or 1
+        out.append(
+            {
+                "hi": round(sum(hi[m]) / len(hi[m]), 1),
+                "lo": round(sum(lo[m]) / len(lo[m]), 1),
+                "rain": round(rain[m] / n),
+                "rainDays": round(rain_days[m] / n, 1),
+                "hum": round(sum(hum[m]) / len(hum[m])),
+            }
+        )
+    years = sorted({int(r["tm"][:4]) for r in rows})
+    return out, [years[0], years[-1]] if years else None
+
+
 def korea():
+    key = os.environ["KHOA_API_KEY"]
     result = {}
-    for slug, lat, lon, elev in KOREA:
-        print(slug, flush=True)
-        months, grid_elev = monthly(fetch(lat, lon), elev)
-        result[slug] = {"months": months, "gridElevation": grid_elev}
-        time.sleep(1)
-    text = json.dumps({"source": "NASA POWER", "years": [START, END], "places": result}, ensure_ascii=False, separators=(",", ":"))
+    for slug, stn in KOREA:
+        print(slug, stn, flush=True)
+        months, years = korea_monthly(asos_days(stn, key))
+        result[slug] = {"months": months, "station": stn, "years": years}
+    text = json.dumps({"source": "기상청 ASOS", "years": [KR_START, KR_END], "places": result}, ensure_ascii=False, separators=(",", ":"))
     with open(OUT_KR, "w", encoding="utf-8") as fp:
         fp.write(text)
     # Actions 로그에서 그대로 옮겨 쓸 수 있게 한 줄로도 찍는다

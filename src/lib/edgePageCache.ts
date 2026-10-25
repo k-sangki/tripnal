@@ -17,6 +17,9 @@ export function cacheTtl(pathname: string): number | null {
   // 해외 16일 예보는 예보가 들어 있고, 나머지 해외 페이지는 평년값이라 거의 그대로다
   if (/^\/overseas\/[^/]+\/forecast$/.test(pathname)) return 15 * MIN;
   if (pathname === "/overseas" || pathname.startsWith("/overseas/")) return HOUR;
+  // 골프장 목록은 그대로, 시·도 페이지는 요약 문장에 예보가 들어 있다
+  if (pathname === "/golf") return 6 * HOUR;
+  if (pathname.startsWith("/golf/")) return HOUR;
   if (pathname === "/api/forecast") return 15 * MIN;
   if (pathname === "/api/og") return 3 * HOUR;
   if (pathname === "/api/warnings") return 5 * MIN;

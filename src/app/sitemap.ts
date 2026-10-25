@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { activeGolfRegions } from "@/lib/golf";
 import { DESTINATIONS } from "@/lib/overseas";
 import { PLACES } from "@/lib/places";
 
@@ -11,6 +12,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/weather`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE}/overseas`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE}/weekend`, lastModified: now, changeFrequency: "daily", priority: 0.8 },
+    { url: `${BASE}/golf`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
+    ...activeGolfRegions().map((r) => ({ url: `${BASE}/golf/${r.slug}`, lastModified: now, changeFrequency: "daily" as const, priority: 0.8 })),
     ...Array.from({ length: 12 }, (_, i) => ({
       url: `${BASE}/overseas/month/${i + 1}`,
       lastModified: now,

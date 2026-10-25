@@ -5,6 +5,7 @@ import { ForeignFooter, ForeignHeader } from "@/components/ForeignHeader";
 import { WeatherApp } from "@/components/WeatherApp";
 import { PLACE_TEXT, placeText } from "@/data/places-i18n";
 import { OG_LOCALE, SITE_NAME, isForeignLocale, languageAlternates, localePath } from "@/lib/i18n";
+import { MONTH_EN, krNormals } from "@/lib/korea-month";
 import { getPlace } from "@/lib/places";
 import { placeSchemaType } from "@/lib/seo";
 import { foreignDescription, foreignKeywords, foreignLeisure, foreignSummary, foreignTitle, shortName } from "@/lib/seo-foreign";
@@ -16,6 +17,7 @@ export const dynamic = "force-dynamic";
 
 const H1_SUFFIX = { en: "weather", ja: "天気" } as const;
 const SUMMARY_TITLE = { en: "Weather summary", ja: "天気のまとめ" } as const;
+const BY_MONTH = { en: "{c} weather by month", ja: "{c}の月ごとの天気と服装" } as const;
 const RELATED = { en: "More places in Korea", ja: "韓国のほかの場所" } as const;
 const LOADING = { en: "Loading the forecast…", ja: "予報を読み込んでいます…" } as const;
 const HOW = {
@@ -104,6 +106,19 @@ export default async function ForeignPlacePage({ params }: PageProps<"/[lang]/we
         <p>{text.about}</p>
         <p>{HOW[l]}</p>
       </section>
+
+      {krNormals(slug) && (
+        <section className="card" style={{ marginTop: 12 }}>
+          <h2 className="card-title">{BY_MONTH[l].replace("{c}", shortName(text.name))}</h2>
+          <nav className="place-links">
+            {Array.from({ length: 12 }, (_, i) => (
+              <Link key={i} href={localePath(l, `/weather/${slug}/${i + 1}`)}>
+                {l === "en" ? MONTH_EN[i] : `${i + 1}月`}
+              </Link>
+            ))}
+          </nav>
+        </section>
+      )}
 
       <section className="card" style={{ marginTop: 12 }}>
         <h2 className="card-title">{RELATED[l]}</h2>

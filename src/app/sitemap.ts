@@ -1,7 +1,8 @@
 import type { MetadataRoute } from "next";
 import { DESTINATIONS } from "@/lib/overseas";
 import { PLACE_TEXT } from "@/data/places-i18n";
-import { FOREIGN_LOCALES, languageAlternates, localePath } from "@/lib/i18n";
+import { FOREIGN_LOCALES, languageAlternates, localePath, type Locale } from "@/lib/i18n";
+import { KOREA_MONTH_CITIES } from "@/lib/korea-month";
 import { PLACES } from "@/lib/places";
 
 /** 번역된 페이지는 각 언어판 주소를 함께 적는다 (hreflang) */
@@ -32,6 +33,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
       ...(p.slug in PLACE_TEXT ? { alternates: { languages: languages(`/weather/${p.slug}`) } } : {}),
     })),
+    // 국내 도시 월별 평년 날씨 (한국어·영어·일본어)
+    ...(["ko", ...FOREIGN_LOCALES] as Locale[]).flatMap((l) =>
+      KOREA_MONTH_CITIES.flatMap((slug) =>
+        Array.from({ length: 12 }, (_, i) => ({
+          url: `${BASE}${localePath(l, `/weather/${slug}/${i + 1}`)}`,
+          lastModified: now,
+          changeFrequency: "monthly" as const,
+          priority: 0.7,
+          alternates: { languages: languages(`/weather/${slug}/${i + 1}`) },
+        })),
+      ),
+    ),
     // 영어·일본어 홈과 장소 페이지
     ...FOREIGN_LOCALES.flatMap((l) => [
       { url: `${BASE}${localePath(l, "/")}`, lastModified: now, changeFrequency: "daily" as const, priority: 0.9, alternates: { languages: languages("/") } },

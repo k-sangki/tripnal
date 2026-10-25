@@ -7,7 +7,7 @@ on:
 jobs:
   run:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -16,4 +16,4 @@ jobs:
       - run: python collector/climate.py --korea
         env:
           KHOA_API_KEY: ${{ secrets.KHOA_API_KEY }}
-# rerun 4
+# rerun 5

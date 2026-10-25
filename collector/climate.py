@@ -7,7 +7,7 @@ src/data/climate.json에 저장한다. 한 번 만들어 두면 되는 자료라
 - 격자(약 0.5°) 고도와 여행지 고도가 다르면 기온을 0.0065°C/m로 보정한다.
 
 사용: python collector/climate.py [--only osaka,tokyo]
-     KHOA_API_KEY=… python collector/climate.py --korea   # 국내 도시(기상청 ASOS 일자료) → src/data/climate-kr.json
+     KHOA_API_KEY=… python collector/climate.py --korea   # 국내 도시(기상청 ASOS 시간자료) → src/data/climate-kr.json
 """
 
 import argparse
@@ -98,43 +98,87 @@ KOREA = [
     ("yeosu", 168),
 ]
 KR_START, KR_END = 1991, 2020
-ASOS_DAY = "https://apis.data.go.kr/1360000/AsosDalyInfoService/getWthrDataList"
+# 일자료 서비스는 이 키에 승인돼 있지 않아(403), verify.py가 쓰는 시간자료를 받아 하루 단위로 묶는다
+ASOS_HR = "https://apis.data.go.kr/1360000/AsosHourlyInfoService/getWthrDataList"
 OUT_KR = os.path.join(ROOT, "src", "data", "climate-kr.json")
+HR_DAYS = 41  # 한 번에 41일 × 24시간 = 984줄 (한 쪽 최대 999줄)
+
+
+def asos_hours(stn, key, start, end):
+    """start~end(date) 시간자료"""
+    q = urllib.parse.urlencode(
+        {
+            "pageNo": 1,
+            "numOfRows": 999,
+            "dataType": "JSON",
+            "dataCd": "ASOS",
+            "dateCd": "HR",
+            "startDt": start.strftime("%Y%m%d"),
+            "startHh": "00",
+            "endDt": end.strftime("%Y%m%d"),
+            "endHh": "23",
+            "stnIds": stn,
+        }
+    )
+    for attempt in range(5):
+        try:
+            # 키는 이미 인코딩된 값이라 그대로 붙인다 (verify.py와 같음)
+            with urllib.request.urlopen(f"{ASOS_HR}?serviceKey={key}&{q}", timeout=60) as r:
+                raw = r.read().decode("utf-8", "replace")
+        except urllib.error.HTTPError as e:
+            if e.code in (401, 403):  # 키·승인 문제는 다시 해도 같다
+                raise RuntimeError(f"ASOS 시간자료 {e.code}") from e
+            print("  retry", stn, start, e, flush=True)
+            time.sleep(3 * (attempt + 1))
+            continue
+        except Exception as e:  # noqa: BLE001 - 네트워크 오류는 잠시 뒤 다시
+            print("  retry", stn, start, e, flush=True)
+            time.sleep(3 * (attempt + 1))
+            continue
+        try:
+            j = json.loads(raw)
+        except ValueError:
+            print("  retry", stn, start, raw[:200], flush=True)
+            time.sleep(3 * (attempt + 1))
+            continue
+        head = j["response"]["header"]
+        if head.get("resultCode") == "03":  # 자료 없음
+            return []
+        if head.get("resultCode") != "00":
+            print("  retry", stn, start, head, flush=True)
+            time.sleep(3 * (attempt + 1))
+            continue
+        return ((j["response"]["body"].get("items") or {}).get("item")) or []
+    raise RuntimeError(f"ASOS 시간자료 {stn} {start} 실패")
 
 
 def asos_days(stn, key):
-    """관측소의 KR_START~KR_END 일자료 (해마다 나눠 받는다)"""
+    """관측소의 KR_START~KR_END 시간자료를 하루 단위(최고·최저·강수 합·평균 습도)로 묶는다"""
+    import datetime as dt
+
+    hours = []
+    d, last = dt.date(KR_START, 1, 1), dt.date(KR_END, 12, 31)
+    while d <= last:
+        e = min(d + dt.timedelta(days=HR_DAYS - 1), last)
+        hours += asos_hours(stn, key, d, e)
+        d = e + dt.timedelta(days=1)
+    by_day = defaultdict(list)
+    for h in hours:
+        by_day[h["tm"][:10]].append(h)
     rows = []
-    for y in range(KR_START, KR_END + 1):
-        q = urllib.parse.urlencode(
-            {"dataType": "JSON", "dataCd": "ASOS", "dateCd": "DAY", "startDt": f"{y}0101", "endDt": f"{y}1231", "stnIds": stn, "numOfRows": 400, "pageNo": 1}
+    for day, hs in by_day.items():
+        ta = [v for v in (num(h.get("ta")) for h in hs) if v is not None]
+        hm = [v for v in (num(h.get("hm")) for h in hs) if v is not None]
+        ok = len(ta) >= 20  # 빠진 시간이 많은 날은 최고·최저를 쓰지 않는다
+        rows.append(
+            {
+                "tm": day,
+                "maxTa": max(ta) if ok else None,
+                "minTa": min(ta) if ok else None,
+                "sumRn": sum(num(h.get("rn")) or 0.0 for h in hs),
+                "avgRhm": sum(hm) / len(hm) if hm else None,
+            }
         )
-        for attempt in range(3):
-            try:
-                # 키는 이미 인코딩된 값이라 그대로 붙인다 (verify.py와 같음)
-                with urllib.request.urlopen(f"{ASOS_DAY}?serviceKey={key}&{q}", timeout=60) as r:
-                    raw = r.read().decode("utf-8", "replace")
-            except urllib.error.HTTPError as e:
-                if e.code in (401, 403):  # 키·승인 문제는 다시 해도 같다
-                    raise RuntimeError(f"ASOS 일자료 {e.code}: 이 키가 '기상청_지상(종관, ASOS) 일자료 조회서비스'에 승인됐는지 확인") from e
-                print("  retry", stn, y, e, flush=True)
-                time.sleep(3)
-                continue
-            except Exception as e:  # noqa: BLE001 - 네트워크 오류는 잠시 뒤 다시
-                print("  retry", stn, y, e, flush=True)
-                time.sleep(3)
-                continue
-            try:
-                j = json.loads(raw)
-            except ValueError:
-                # 키가 이 서비스에 승인되지 않았으면 XML 오류가 온다: 바로 멈춘다
-                raise RuntimeError(f"ASOS 응답 오류 {stn} {y}: {raw[:300]}")
-            head = j["response"]["header"]
-            if head.get("resultCode") not in ("00", "03"):  # 03 = 자료 없음 (관측소 신설 전)
-                raise RuntimeError(f"ASOS {stn} {y}: {head}")
-            items = j["response"]["body"].get("items") if head.get("resultCode") == "00" else None
-            rows += (items or {}).get("item", []) if items else []
-            break
     print(" ", stn, len(rows), "days", flush=True)
     return rows
 
@@ -182,11 +226,15 @@ def korea_monthly(rows):
 def korea():
     key = os.environ["KHOA_API_KEY"]
     result = {}
-    for slug, stn in KOREA:
-        print(slug, stn, flush=True)
-        months, years = korea_monthly(asos_days(stn, key))
+    from concurrent.futures import ThreadPoolExecutor
+
+    # 관측소마다 요청이 ~270번이라 동시에 받는다
+    with ThreadPoolExecutor(len(KOREA)) as ex:
+        days = list(ex.map(lambda x: asos_days(x[1], key), KOREA))
+    for (slug, stn), rows in zip(KOREA, days):
+        months, years = korea_monthly(rows)
         result[slug] = {"months": months, "station": stn, "years": years}
-    text = json.dumps({"source": "기상청 ASOS", "years": [KR_START, KR_END], "places": result}, ensure_ascii=False, separators=(",", ":"))
+    text = json.dumps({"source": "기상청 ASOS 시간자료", "years": [KR_START, KR_END], "places": result}, ensure_ascii=False, separators=(",", ":"))
     with open(OUT_KR, "w", encoding="utf-8") as fp:
         fp.write(text)
     # Actions 로그에서 그대로 옮겨 쓸 수 있게 한 줄로도 찍는다

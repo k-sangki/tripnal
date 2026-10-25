@@ -108,18 +108,26 @@ def asos_days(stn, key):
         q = urllib.parse.urlencode(
             {"serviceKey": key, "dataType": "JSON", "dataCd": "ASOS", "dateCd": "DAY", "startDt": f"{y}0101", "endDt": f"{y}1231", "stnIds": stn, "numOfRows": 400, "pageNo": 1}
         )
-        for attempt in range(5):
+        for attempt in range(3):
             try:
                 with urllib.request.urlopen(f"{ASOS_DAY}?{q}", timeout=60) as r:
-                    j = json.load(r)
-                items = j["response"]["body"]["items"]
-                rows += items["item"] if items else []
-                break
-            except Exception as e:  # noqa: BLE001 - 관측이 없는 해(관측소 신설 전)는 비어 있다
-                if attempt == 4:
-                    print("  skip", stn, y, e, flush=True)
-                else:
-                    time.sleep(3 * (attempt + 1))
+                    raw = r.read().decode("utf-8", "replace")
+            except Exception as e:  # noqa: BLE001 - 네트워크 오류는 잠시 뒤 다시
+                print("  retry", stn, y, e, flush=True)
+                time.sleep(3)
+                continue
+            try:
+                j = json.loads(raw)
+            except ValueError:
+                # 키가 이 서비스에 승인되지 않았으면 XML 오류가 온다: 바로 멈춘다
+                raise RuntimeError(f"ASOS 응답 오류 {stn} {y}: {raw[:300]}")
+            head = j["response"]["header"]
+            if head.get("resultCode") not in ("00", "03"):  # 03 = 자료 없음 (관측소 신설 전)
+                raise RuntimeError(f"ASOS {stn} {y}: {head}")
+            items = j["response"]["body"].get("items") if head.get("resultCode") == "00" else None
+            rows += (items or {}).get("item", []) if items else []
+            break
+    print(" ", stn, len(rows), "days", flush=True)
     return rows
 
 

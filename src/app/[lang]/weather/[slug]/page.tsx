@@ -40,13 +40,14 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/weather/[s
   const description = foreignDescription(x.place, x.text, x.lang);
   const path = `/weather/${slug}`;
   const url = localePath(x.lang, path);
+  const image = `/api/og?${new URLSearchParams({ slug, lang: x.lang })}`;
   return {
     title: { absolute: title },
     description,
     keywords: foreignKeywords(x.text, x.lang),
     alternates: { canonical: url, languages: languageAlternates(path) },
-    openGraph: { siteName: SITE_NAME[x.lang], locale: OG_LOCALE[x.lang], title, description, url },
-    twitter: { card: "summary", title, description },
+    openGraph: { siteName: SITE_NAME[x.lang], locale: OG_LOCALE[x.lang], title, description, url, images: [{ url: image, width: 1200, height: 630 }] },
+    twitter: { card: "summary_large_image", title, description, images: [image] },
   };
 }
 

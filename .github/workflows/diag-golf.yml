@@ -3,7 +3,7 @@ name: diag-golf
 on:
   push:
     branches: [claude/project-thread-6cef8b]
-    paths: [.github/workflows/diag-golf.yml, diag/golf_osm.py]
+    paths: [.github/workflows/diag-golf.yml, diag/golf_geo.py]
 permissions:
   contents: write
 jobs:
@@ -12,10 +12,10 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
-      - run: python diag/golf_osm.py
+      - run: python diag/golf_geo.py
       - run: |
           git config user.name github-actions
           git config user.email github-actions@users.noreply.github.com
-          git add diag/golf-osm.json
-          git commit -m "diag: OSM 골프장 목록"
+          git add diag/golf-geo.json
+          git commit -m "diag: 골프장 역지오코딩"
           git push

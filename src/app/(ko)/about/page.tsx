@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
+import { languageAlternates } from "@/lib/i18n";
 import Link from "next/link";
 import { CONTACT_EMAIL, TextPage } from "@/components/TextPage";
 
 export const metadata: Metadata = {
   title: "트립날씨 소개",
   description: "tripnalc는 캠핑·낚시·등산·자전거·여행을 위한 대한민국 레저 날씨 서비스입니다.",
-  alternates: { canonical: "/about" },
+  alternates: { canonical: "/about", languages: languageAlternates("/about") },
 };
 
 export default function About() {

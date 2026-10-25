@@ -26,6 +26,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     })),
     ...["/about", "/privacy", "/contact"].map((path) => ({ url: `${BASE}${path}`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.3 })),
+    ...FOREIGN_LOCALES.flatMap((l) =>
+      ["/about", "/privacy"].map((path) => ({ url: `${BASE}${localePath(l, path)}`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.3 })),
+    ),
     ...PLACES.map((p) => ({
       url: `${BASE}/weather/${p.slug}`,
       lastModified: now,

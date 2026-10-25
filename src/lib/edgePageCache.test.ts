@@ -38,7 +38,8 @@ describe("엣지 캐시", () => {
 
   it("예전 주소는 바로 이동", () => {
     expect(canonicalRedirect(new Request("https://tripnal.com/weather/seoul?x=1"))!.headers.get("location")).toBe("https://tripnalc.com/weather/seoul?x=1");
-    expect(canonicalRedirect(new Request("https://www.tripnalc.com/"))!.status).toBe(308);
+    expect(canonicalRedirect(new Request("https://www.tripnalc.com/"))!.status).toBe(301);
+    expect(canonicalRedirect(new Request("http://tripnalc.com/weekend"))!.headers.get("location")).toBe("https://tripnalc.com/weekend");
     expect(canonicalRedirect(new Request("https://tripnalc.com/"))).toBeNull();
   });
 

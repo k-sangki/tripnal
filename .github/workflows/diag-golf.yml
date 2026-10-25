@@ -1,0 +1,21 @@
+# 임시: 골프장 좌표 수집 (끝나면 삭제)
+name: diag-golf
+on:
+  push:
+    branches: [claude/project-thread-6cef8b]
+    paths: [.github/workflows/diag-golf.yml, diag/golf_osm.py]
+permissions:
+  contents: write
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - run: python diag/golf_osm.py
+      - run: |
+          git config user.name github-actions
+          git config user.email github-actions@users.noreply.github.com
+          git add diag/golf-osm.json
+          git commit -m "diag: OSM 골프장 목록"
+          git push

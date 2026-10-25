@@ -1,0 +1,6194 @@
+{
+"way/53736029": {
+"hamlet": "석실",
+"town": "와부읍",
+"city": "남양주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12207",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/67971651": {
+"village": "성기리",
+"county": "합천군",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/68913380": {
+"quarter": "덕명동",
+"suburb": "학하동",
+"borough": "유성구",
+"city": "대전광역시",
+"ISO3166-2-lvl4": "KR-30",
+"postcode": "34158",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/95038747": {
+"village": "옥봉리",
+"city": "군산시",
+"province": "전북특별자치도",
+"ISO3166-2-lvl4": "KR-45",
+"postcode": "54170",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/95469920": {
+"village": "화곡리",
+"city": "서산시",
+"province": "충청남도",
+"ISO3166-2-lvl4": "KR-44",
+"postcode": "31904",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/108303388": {
+"village": "지장리",
+"county": "임실군",
+"province": "전북특별자치도",
+"ISO3166-2-lvl4": "KR-45",
+"postcode": "55902",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/109055511": {
+"hamlet": "송천",
+"town": "웅포면",
+"city": "익산시",
+"province": "전북특별자치도",
+"ISO3166-2-lvl4": "KR-45",
+"postcode": "54502",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/115813323": {
+"village": "내리리",
+"city": "경산시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "38454",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/120410414": {
+"village": "대촌리",
+"city": "논산시",
+"province": "충청남도",
+"ISO3166-2-lvl4": "KR-44",
+"postcode": "32904",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/122741297": {
+"village": "용산리",
+"town": "대관령면",
+"county": "평창군",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "25352",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/123661749": {
+"hamlet": "금옥",
+"village": "상정리",
+"city": "김제시",
+"province": "전북특별자치도",
+"ISO3166-2-lvl4": "KR-45",
+"postcode": "54322",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/126591210": {
+"village": "고요리",
+"city": "문경시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "36912",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/130172399": {
+"quarter": "도학동",
+"village": "공산동",
+"suburb": "동구",
+"city": "대구광역시",
+"ISO3166-2-lvl4": "KR-27",
+"postcode": "41007",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/130539444": {
+"village": "묵방리",
+"city": "김해시",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "50805",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/132579213": {
+"village": "신대리",
+"city": "경주시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "44222",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/142488507": {
+"quarter": "봉계동",
+"city": "여수시",
+"state": "전남광주통합특별시",
+"postcode": "59632",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/170402248": {
+"quarter": "하갈동",
+"borough": "기흥구",
+"city": "용인시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "17098",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/170485245": {
+"quarter": "하갈동",
+"borough": "기흥구",
+"city": "용인시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "17098",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/170608708": {
+"village": "신계리",
+"city": "천안시",
+"province": "충청남도",
+"ISO3166-2-lvl4": "KR-44",
+"postcode": "31233",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/173465417": {
+"city_district": "봉개동",
+"city": "제주시",
+"province": "제주특별자치도",
+"ISO3166-2-lvl4": "KR-49",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/181563710": {
+"village": "대남리",
+"county": "함양군",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "50001",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/205148563": {
+"village": "수암리",
+"city": "원주시",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "26308",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/242463823": {
+"quarter": "색달동",
+"city_district": "예래동",
+"city": "서귀포시",
+"province": "제주특별자치도",
+"ISO3166-2-lvl4": "KR-49",
+"postcode": "63534",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/243599380": {
+"village": "병산리",
+"city": "부산광역시",
+"ISO3166-2-lvl4": "KR-26",
+"postcode": "50540",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/248407166": {
+"quarter": "감이동",
+"city_district": "감일동",
+"city": "하남시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "13004",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/250709266": {
+"city_district": "예래동",
+"city": "서귀포시",
+"province": "제주특별자치도",
+"ISO3166-2-lvl4": "KR-49",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/251716882": {
+"quarter": "부곡동",
+"borough": "상록구",
+"city": "안산시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "15309",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/252253845": {
+"village": "황제리",
+"city": "경산시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "38487",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/252899900": {
+"village": "부기리",
+"city": "경산시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "38436",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/253055978": {
+"village": "우천리",
+"city": "영천시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "38872",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/253274446": {
+"village": "외량리",
+"city": "대구광역시",
+"ISO3166-2-lvl4": "KR-27",
+"postcode": "39014",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/253456063": {
+"village": "학리",
+"city": "영천시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "38901",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/278901214": {
+"quarter": "목현동",
+"city_district": "탄벌동",
+"city": "광주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12765",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/278939419": {
+"quarter": "중대동",
+"city_district": "광남1동",
+"city": "광주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12768",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/278939421": {
+"quarter": "중대동",
+"city_district": "광남1동",
+"city": "광주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12768",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/278939439": {
+"quarter": "탄벌동",
+"city_district": "탄벌동",
+"city": "광주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12747",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/278939470": {
+"hamlet": "허산동",
+"city_district": "오포1동",
+"city": "광주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12790",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/286211236": {
+"city_district": "아라동",
+"city": "제주시",
+"province": "제주특별자치도",
+"ISO3166-2-lvl4": "KR-49",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/288996325": {
+"village": "평창리",
+"city": "용인시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "17163",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/289411211": {
+"village": "매곡리",
+"town": "호법면",
+"city": "이천시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/289411212": {
+"village": "두미리",
+"town": "모가면",
+"city": "이천시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/295407270": {
+"village": "대리",
+"city": "양산시",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "50500",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/298748379": {
+"city_district": "하안4동",
+"city": "광명시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/299708233": {
+"quarter": "월송동",
+"village": "오계리",
+"city": "여주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12645",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/299801383": {
+"village": "안금리",
+"city": "여주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12646",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/301054807": {
+"quarter": "월곶동",
+"city_district": "월곶동",
+"city": "시흥시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "15005",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/305670809": {
+"quarter": "노포동",
+"suburb": "청룡노포동",
+"borough": "금정구",
+"city": "부산광역시",
+"ISO3166-2-lvl4": "KR-26",
+"postcode": "46218",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/306090506": {
+"hamlet": "초산마을",
+"town": "하북면",
+"city": "양산시",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "50503",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/310012981": {
+"village": "낙성리",
+"city": "김제시",
+"province": "전북특별자치도",
+"ISO3166-2-lvl4": "KR-45",
+"postcode": "54334",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/310195481": {
+"village": "봉월리",
+"city": "김제시",
+"province": "전북특별자치도",
+"ISO3166-2-lvl4": "KR-45",
+"postcode": "54353",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/310852063": {
+"suburb": "송도4동",
+"borough": "연수구",
+"city": "인천광역시",
+"ISO3166-2-lvl4": "KR-28",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/313327913": {
+"village": "유산리",
+"city": "창원시",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "51778",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/314596921": {
+"suburb": "송도3동",
+"borough": "연수구",
+"city": "인천광역시",
+"ISO3166-2-lvl4": "KR-28",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/324443108": {
+"quarter": "영덕동",
+"borough": "기흥구",
+"city": "용인시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "16950",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/339506188": {
+"village": "운곡리",
+"county": "함안군",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "51106",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/343833473": {
+"quarter": "범어동",
+"suburb": "범어2동",
+"borough": "수성구",
+"city": "대구광역시",
+"ISO3166-2-lvl4": "KR-27",
+"postcode": "42029",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/351744677": {
+"quarter": "호동",
+"borough": "처인구",
+"city": "용인시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "17135",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/351744682": {
+"village": "남곡리",
+"city": "용인시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "17161",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/356275835": {
+"village": "장등리",
+"city": "평택시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "18007",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/356858752": {
+"quarter": "황계동",
+"city_district": "병점구",
+"city": "화성시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "18357",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/358722360": {
+"village": "송진포리",
+"city": "거제시",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "53204",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/359363977": {
+"quarter": "하소동",
+"city": "제천시",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "27160",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/362323468": {
+"quarter": "단월동",
+"city": "충주시",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "27478",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/366335418": {
+"village": "야촌리",
+"town": "죽왕면",
+"county": "고성군",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "24749",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/366618957": {
+"suburb": "남천2동",
+"borough": "수영구",
+"city": "부산광역시",
+"ISO3166-2-lvl4": "KR-26",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/367208835": {
+"quarter": "미룡동",
+"village": "옥정리",
+"city": "군산시",
+"province": "전북특별자치도",
+"ISO3166-2-lvl4": "KR-45",
+"postcode": "54150",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/368180872": {
+"village": "송전리",
+"city": "천안시",
+"province": "충청남도",
+"ISO3166-2-lvl4": "KR-44",
+"postcode": "31064",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/368959915": {
+"village": "위미리",
+"town": "남원읍",
+"city": "서귀포시",
+"province": "제주특별자치도",
+"ISO3166-2-lvl4": "KR-49",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/368960232": {
+"village": "수망리",
+"town": "남원읍",
+"city": "서귀포시",
+"province": "제주특별자치도",
+"ISO3166-2-lvl4": "KR-49",
+"postcode": "63615",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/368960374": {
+"farm": "제주마방목지",
+"city_district": "봉개동",
+"city": "제주시",
+"province": "제주특별자치도",
+"ISO3166-2-lvl4": "KR-49",
+"postcode": "63312",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/368960896": {
+"city_district": "아라동",
+"city": "제주시",
+"province": "제주특별자치도",
+"ISO3166-2-lvl4": "KR-49",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/368961391": {
+"village": "어음리",
+"town": "애월읍",
+"city": "제주시",
+"province": "제주특별자치도",
+"ISO3166-2-lvl4": "KR-49",
+"postcode": "63038",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/368961571": {
+"village": "광평리",
+"town": "안덕면",
+"city": "서귀포시",
+"province": "제주특별자치도",
+"ISO3166-2-lvl4": "KR-49",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/368961733": {
+"village": "금악리",
+"town": "한림읍",
+"city": "제주시",
+"province": "제주특별자치도",
+"ISO3166-2-lvl4": "KR-49",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/368961932": {
+"village": "봉성리",
+"town": "애월읍",
+"city": "제주시",
+"province": "제주특별자치도",
+"ISO3166-2-lvl4": "KR-49",
+"postcode": "63039",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/368962149": {
+"village": "광평리",
+"town": "안덕면",
+"city": "서귀포시",
+"province": "제주특별자치도",
+"ISO3166-2-lvl4": "KR-49",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/368962525": {
+"quarter": "상효동",
+"city_district": "영천동",
+"city": "서귀포시",
+"province": "제주특별자치도",
+"ISO3166-2-lvl4": "KR-49",
+"postcode": "63602",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/368963041": {
+"village": "성읍리",
+"town": "표선면",
+"city": "서귀포시",
+"province": "제주특별자치도",
+"ISO3166-2-lvl4": "KR-49",
+"postcode": "63624",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/368963116": {
+"village": "북촌리",
+"town": "조천읍",
+"city": "제주시",
+"province": "제주특별자치도",
+"ISO3166-2-lvl4": "KR-49",
+"postcode": "63339",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/368963715": {
+"city_district": "오라동",
+"city": "제주시",
+"province": "제주특별자치도",
+"ISO3166-2-lvl4": "KR-49",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/368963929": {
+"village": "저지리",
+"town": "한경면",
+"city": "제주시",
+"province": "제주특별자치도",
+"ISO3166-2-lvl4": "KR-49",
+"postcode": "63005",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/368964057": {
+"village": "금악리",
+"town": "한림읍",
+"city": "제주시",
+"province": "제주특별자치도",
+"ISO3166-2-lvl4": "KR-49",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/368965738": {
+"village": "가시리",
+"town": "표선면",
+"city": "서귀포시",
+"province": "제주특별자치도",
+"ISO3166-2-lvl4": "KR-49",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/368966190": {
+"village": "대흘리",
+"town": "조천읍",
+"city": "제주시",
+"province": "제주특별자치도",
+"ISO3166-2-lvl4": "KR-49",
+"postcode": "63343",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/369786684": {
+"village": "서광리",
+"town": "안덕면",
+"city": "서귀포시",
+"province": "제주특별자치도",
+"ISO3166-2-lvl4": "KR-49",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/369959208": {
+"village": "김녕리",
+"town": "구좌읍",
+"city": "제주시",
+"province": "제주특별자치도",
+"ISO3166-2-lvl4": "KR-49",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/370131616": {
+"city_district": "아라동",
+"city": "제주시",
+"province": "제주특별자치도",
+"ISO3166-2-lvl4": "KR-49",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/370281786": {
+"village": "길평리",
+"city": "사천시",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "52510",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/370305870": {
+"quarter": "황상동",
+"city": "구미시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "39434",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/371272459": {
+"village": "가시리",
+"town": "표선면",
+"city": "서귀포시",
+"province": "제주특별자치도",
+"ISO3166-2-lvl4": "KR-49",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/371732050": {
+"village": "와흘리",
+"town": "조천읍",
+"city": "제주시",
+"province": "제주특별자치도",
+"ISO3166-2-lvl4": "KR-49",
+"postcode": "63344",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/375194479": {
+"village": "협재리",
+"town": "한림읍",
+"city": "제주시",
+"province": "제주특별자치도",
+"ISO3166-2-lvl4": "KR-49",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/376628275": {
+"hamlet": "소우리",
+"town": "모현읍",
+"borough": "처인구",
+"city": "용인시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "16886",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/376925267": {
+"quarter": "상갈동",
+"borough": "기흥구",
+"city": "용인시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "17068",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/376925496": {
+"quarter": "동탄2신도시",
+"suburb": "동탄신도시",
+"city": "화성시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "18477",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/377649840": {
+"borough": "연수구",
+"city": "인천광역시",
+"ISO3166-2-lvl4": "KR-28",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/377650725": {
+"borough": "연수구",
+"city": "인천광역시",
+"ISO3166-2-lvl4": "KR-28",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/377809092": {
+"village": "궁촌리",
+"city": "원주시",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "26496",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/377924549": {
+"village": "영덕리",
+"city": "충주시",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "27316",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/378017665": {
+"village": "유천리",
+"city": "세종특별자치시",
+"ISO3166-2-lvl4": "KR-50",
+"postcode": "30005",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/378019386": {
+"village": "성대리",
+"county": "진천군",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "27821",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/378020836": {
+"village": "신계리",
+"county": "진천군",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "27812",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/378021752": {
+"village": "삼흥리",
+"town": "금광면",
+"city": "안성시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "17534",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/378023817": {
+"village": "목신리",
+"city": "용인시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "17170",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/378024810": {
+"village": "장계리",
+"town": "죽산면",
+"city": "안성시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "17522",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/378026237": {
+"village": "건업리",
+"city": "광주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12720",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/378093773": {
+"village": "조동리",
+"town": "신동읍",
+"county": "정선군",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "26141",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/378243002": {
+"village": "비룡리",
+"city": "청주시",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "28184",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/378243177": {
+"village": "지암리",
+"county": "진천군",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "27827",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/378243761": {
+"village": "화산리",
+"city": "용인시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "17135",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/378243930": {
+"village": "북리",
+"city": "용인시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "17118",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/378243995": {
+"village": "봉무리",
+"city": "용인시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "17119",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/378252137": {
+"quarter": "고매동",
+"borough": "기흥구",
+"city": "용인시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "17086",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/378414559": {
+"quarter": "언남동",
+"borough": "기흥구",
+"city": "용인시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "16916",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/378528287": {
+"village": "행정리",
+"county": "금산군",
+"province": "충청남도",
+"ISO3166-2-lvl4": "KR-44",
+"postcode": "32704",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/378723983": {
+"village": "상정리",
+"city": "청주시",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "28156",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/378748953": {
+"village": "장성리",
+"city": "충주시",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "27472",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/378748955": {
+"village": "만정리",
+"city": "충주시",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "27471",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/378963440": {
+"village": "원포리",
+"city": "충주시",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "27445",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/379036299": {
+"village": "신성리",
+"city": "아산시",
+"province": "충청남도",
+"ISO3166-2-lvl4": "KR-44",
+"postcode": "31550",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/379620543": {
+"village": "월송리",
+"city": "원주시",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "26357",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/379966131": {
+"village": "대덕리",
+"city": "충주시",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "27450",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/379967883": {
+"village": "문성리",
+"city": "충주시",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "27452",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/380023077": {
+"village": "대평리",
+"county": "양평군",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12542",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/380269266": {
+"village": "상구리",
+"city": "여주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/380274941": {
+"quarter": "하거동",
+"city": "여주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12659",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/380275460": {
+"village": "양귀리",
+"city": "여주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12656",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/380276785": {
+"village": "연대리",
+"city": "여주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "17414",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/380278946": {
+"village": "월포리",
+"town": "율면",
+"city": "이천시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "17423",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/380404841": {
+"village": "도곡리",
+"city": "여주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12602",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/384166030": {
+"quarter": "송도동",
+"suburb": "송도1동",
+"borough": "연수구",
+"city": "인천광역시",
+"ISO3166-2-lvl4": "KR-28",
+"postcode": "22000",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/386241143": {
+"village": "봉산리",
+"city": "구미시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "39459",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/387274002": {
+"village": "계성리",
+"county": "창녕군",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "50340",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/387941564": {
+"village": "상장리",
+"county": "보은군",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "28912",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/388119096": {
+"village": "고당리",
+"county": "완주군",
+"province": "전북특별자치도",
+"ISO3166-2-lvl4": "KR-45",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/388129428": {
+"village": "양정리",
+"county": "영동군",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "29152",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/388325966": {
+"quarter": "내척동",
+"village": "옥율리",
+"city": "남원시",
+"province": "전북특별자치도",
+"ISO3166-2-lvl4": "KR-45",
+"postcode": "55728",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/388343732": {
+"village": "석계리",
+"city": "계룡시",
+"province": "충청남도",
+"ISO3166-2-lvl4": "KR-44",
+"postcode": "32801",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/388347014": {
+"village": "소룡리",
+"county": "곡성군",
+"state": "전남광주통합특별시",
+"postcode": "57513",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/388347017": {
+"village": "광암리",
+"county": "곡성군",
+"state": "전남광주통합특별시",
+"postcode": "56054",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/388594622": {
+"village": "사양리",
+"county": "진천군",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "27863",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/388594939": {
+"village": "갈월리",
+"county": "진천군",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "27824",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/388753113": {
+"village": "대사리",
+"county": "음성군",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "27645",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/388760235": {
+"village": "양지리",
+"city": "청주시",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "28129",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/388772671": {
+"village": "백현리",
+"city": "청주시",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "28106",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/389250034": {
+"quarter": "산울동",
+"city_district": "산울동",
+"city": "세종특별자치시",
+"ISO3166-2-lvl4": "KR-50",
+"postcode": "30091",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/389263469": {
+"village": "오촌리",
+"town": "서운면",
+"city": "안성시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/389268691": {
+"village": "창리",
+"city": "용인시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "17121",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/389268855": {
+"village": "가유리",
+"town": "고삼면",
+"city": "안성시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "17505",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/389268856": {
+"village": "장서리",
+"town": "양성면",
+"city": "안성시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/389269619": {
+"village": "산정리",
+"town": "양성면",
+"city": "안성시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/389269620": {
+"village": "동항리",
+"town": "양성면",
+"city": "안성시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "17502",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/389269621": {
+"quarter": "역북동",
+"borough": "처인구",
+"city": "용인시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "17055",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/389269626": {
+"village": "정수리",
+"city": "용인시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "17158",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/389269714": {
+"isolated_dwelling": "은화삼샤인빌",
+"borough": "처인구",
+"city": "용인시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "17140",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/389309257": {
+"village": "속창리",
+"city": "천안시",
+"province": "충청남도",
+"ISO3166-2-lvl4": "KR-44",
+"postcode": "31251",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/389322763": {
+"village": "매성리",
+"city": "천안시",
+"province": "충청남도",
+"ISO3166-2-lvl4": "KR-44",
+"postcode": "31254",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/389394676": {
+"quarter": "직동",
+"city_district": "광남1동",
+"city": "광주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12767",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/389399840": {
+"quarter": "목현동",
+"city_district": "탄벌동",
+"city": "광주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12765",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/389426876": {
+"village": "곤지암리",
+"city": "광주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12812",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/389428315": {
+"village": "도웅리",
+"city": "광주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12809",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/389445363": {
+"village": "송학리",
+"city": "나주시",
+"state": "전남광주통합특별시",
+"postcode": "58232",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/389445893": {
+"village": "우산리",
+"city": "나주시",
+"state": "전남광주통합특별시",
+"postcode": "58231",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/389457955": {
+"village": "외추리",
+"county": "담양군",
+"state": "전남광주통합특별시",
+"postcode": "57351",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/389488559": {
+"village": "도대리",
+"town": "청계면",
+"county": "무안군",
+"state": "전남광주통합특별시",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/389490246": {
+"village": "곡창리",
+"town": "학교면",
+"county": "함평군",
+"state": "전남광주통합특별시",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/389491611": {
+"village": "상방리",
+"city": "나주시",
+"state": "전남광주통합특별시",
+"postcode": "58290",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/389493321": {
+"village": "내리",
+"county": "화순군",
+"state": "전남광주통합특별시",
+"postcode": "58153",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/389493322": {
+"village": "양곡리",
+"county": "화순군",
+"state": "전남광주통합특별시",
+"postcode": "58158",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/389493323": {
+"village": "월곡리",
+"county": "화순군",
+"state": "전남광주통합특별시",
+"postcode": "58154",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/389580686": {
+"village": "구룡리",
+"county": "장성군",
+"state": "전남광주통합특별시",
+"postcode": "62202",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/389595992": {
+"village": "학성리",
+"county": "장성군",
+"state": "전남광주통합특별시",
+"postcode": "57255",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/389621419": {
+"village": "고전리",
+"county": "고창군",
+"province": "전북특별자치도",
+"ISO3166-2-lvl4": "KR-45",
+"postcode": "56400",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/389774082": {
+"village": "나령리",
+"county": "부여군",
+"province": "충청남도",
+"ISO3166-2-lvl4": "KR-44",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/389927508": {
+"village": "대곡리",
+"county": "보성군",
+"state": "전남광주통합특별시",
+"postcode": "59440",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/389977446": {
+"village": "동백리",
+"city": "부산광역시",
+"ISO3166-2-lvl4": "KR-26",
+"postcode": "46041",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/390545752": {
+"village": "인지리",
+"county": "해남군",
+"state": "전남광주통합특별시",
+"postcode": "59002",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/391045338": {
+"village": "정죽리",
+"county": "태안군",
+"province": "충청남도",
+"ISO3166-2-lvl4": "KR-44",
+"postcode": "32131",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/391307049": {
+"village": "군탄리",
+"town": "갈말읍",
+"county": "철원군",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "24032",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/391440049": {
+"village": "산정리",
+"city": "포천시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "11103",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/391445387": {
+"village": "고일리",
+"city": "포천시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "11136",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/391489343": {
+"quarter": "하봉암동",
+"city": "동두천시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "11023",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/391489398": {
+"quarter": "만송동",
+"city": "양주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "11494",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/391489687": {
+"village": "기산리",
+"city": "파주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "10953",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/391489688": {
+"village": "비암리",
+"city": "양주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "11517",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/391490624": {
+"village": "삼방리",
+"city": "파주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "10826",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/391816707": {
+"village": "분수리",
+"city": "파주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "10955",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/391816718": {
+"quarter": "고양동",
+"suburb": "고양동",
+"borough": "덕양구",
+"city": "고양시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "10273",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/391816720": {
+"village": "용미리",
+"city": "파주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "10955",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/391816723": {
+"quarter": "원당동",
+"suburb": "원신동",
+"borough": "덕양구",
+"city": "고양시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "10290",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/391816726": {
+"quarter": "신원동",
+"suburb": "원신동",
+"borough": "덕양구",
+"city": "고양시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "10566",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/392661654": {
+"village": "공진리",
+"town": "안성면",
+"county": "무주군",
+"province": "전북특별자치도",
+"ISO3166-2-lvl4": "KR-45",
+"postcode": "55540",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/392700177": {
+"village": "순화리",
+"town": "순창읍",
+"county": "순창군",
+"province": "전북특별자치도",
+"ISO3166-2-lvl4": "KR-45",
+"postcode": "56033",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/392800292": {
+"village": "송학리",
+"city": "순천시",
+"state": "전남광주통합특별시",
+"postcode": "58033",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/392813130": {
+"village": "죽산리",
+"city": "순천시",
+"state": "전남광주통합특별시",
+"postcode": "58033",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/393274884": {
+"hamlet": "덕남마을",
+"borough": "남구",
+"city": "광주",
+"state": "전남광주통합특별시",
+"postcode": "61743",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/393889907": {
+"quarter": "저동",
+"city_district": "경포동",
+"city": "강릉시",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "25461",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/393920831": {
+"village": "정족리",
+"city": "춘천시",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "24412",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/395473853": {
+"village": "고례리",
+"town": "금과면",
+"county": "순창군",
+"province": "전북특별자치도",
+"ISO3166-2-lvl4": "KR-45",
+"postcode": "56053",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/396057263": {
+"quarter": "산황동",
+"suburb": "풍산동",
+"borough": "일산동구",
+"city": "고양시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "10300",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/396059627": {
+"village": "장곡리",
+"city": "파주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "10263",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/398942362": {
+"village": "이선리",
+"city": "광주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12721",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/399572222": {
+"village": "오강리",
+"county": "담양군",
+"state": "전남광주통합특별시",
+"postcode": "57389",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/399702305": {
+"village": "생리",
+"county": "음성군",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "27617",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/399702828": {
+"village": "문락리",
+"city": "충주시",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "27455",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/399703511": {
+"suburb": "충주기업도시",
+"village": "화곡리",
+"city": "충주시",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "27465",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/399718416": {
+"village": "신효리",
+"city": "충주시",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "27453",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/400849249": {
+"village": "내삼리",
+"city": "김해시",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "50877",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/400852434": {
+"village": "송현리",
+"city": "김해시",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "50875",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/401023766": {
+"village": "거문리",
+"county": "창녕군",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "50365",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/404548547": {
+"quarter": "학암동",
+"city_district": "위례동",
+"city": "하남시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "13008",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/414371718": {
+"suburb": "반포3동",
+"borough": "서초구",
+"city": "서울특별시",
+"ISO3166-2-lvl4": "KR-11",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/427795535": {
+"village": "월문리",
+"city": "화성시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "18577",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/446830468": {
+"village": "석계리",
+"city": "경주시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "38206",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/447703438": {
+"quarter": "운서동",
+"suburb": "공항신도시",
+"city_district": "영종구",
+"city": "인천광역시",
+"ISO3166-2-lvl4": "KR-28",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/447703445": {
+"suburb": "공항신도시",
+"city_district": "영종구",
+"city": "인천광역시",
+"ISO3166-2-lvl4": "KR-28",
+"postcode": "22371",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/448498119": {
+"quarter": "사천동",
+"suburb": "율량·사천동",
+"borough": "청원구",
+"city": "청주시",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "28340",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/448593970": {
+"quarter": "주성동",
+"borough": "청원구",
+"city": "청주시",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "28317",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/464897831": {
+"hamlet": "동막골",
+"city": "광주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12820",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/466141930": {
+"village": "도계리",
+"city": "삼척시",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "25948",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/466206110": {
+"village": "하맹방리",
+"city": "삼척시",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "25932",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/468464919": {
+"village": "다락리",
+"city": "청주시",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "28173",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/468589803": {
+"village": "신대리",
+"city": "순천시",
+"state": "전남광주통합특별시",
+"postcode": "58011",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/468993689": {
+"village": "사강리",
+"city": "화성시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "18549",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/468996815": {
+"quarter": "반곡동",
+"suburb": "강원원주혁신도시",
+"city": "원주시",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "26460",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/469029834": {
+"quarter": "전민동",
+"suburb": "전민동",
+"borough": "유성구",
+"city": "대전광역시",
+"ISO3166-2-lvl4": "KR-30",
+"postcode": "34047",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/469052979": {
+"quarter": "청파동3가",
+"suburb": "청파동",
+"borough": "용산구",
+"city": "서울특별시",
+"ISO3166-2-lvl4": "KR-11",
+"postcode": "04314",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/469169946": {
+"village": "행정리",
+"city": "화성시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "18600",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/469316887": {
+"city_district": "후평1동",
+"city": "춘천시",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/469387581": {
+"quarter": "부곡동",
+"city": "구미시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "39213",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/469641392": {
+"village": "서창리",
+"city": "세종특별자치시",
+"ISO3166-2-lvl4": "KR-50",
+"postcode": "30018",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/469645912": {
+"suburb": "독산2동",
+"borough": "금천구",
+"city": "서울특별시",
+"ISO3166-2-lvl4": "KR-11",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/470018504": {
+"quarter": "대화동",
+"borough": "일산서구",
+"city": "고양시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/470181910": {
+"quarter": "가장동",
+"city": "상주시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "37218",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/470448809": {
+"quarter": "신정동",
+"suburb": "신정3동",
+"borough": "양천구",
+"city": "서울특별시",
+"ISO3166-2-lvl4": "KR-11",
+"postcode": "08076",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/470457591": {
+"quarter": "기산동",
+"suburb": "진안동",
+"city_district": "병점구",
+"city": "화성시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "18394",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/470665698": {
+"village": "하시동리",
+"city": "강릉시",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "25620",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/470672205": {
+"quarter": "증산동",
+"suburb": "증산동",
+"borough": "은평구",
+"city": "서울특별시",
+"ISO3166-2-lvl4": "KR-11",
+"postcode": "03500",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/470882416": {
+"quarter": "반송동",
+"suburb": "반송1동",
+"borough": "해운대구",
+"city": "부산광역시",
+"ISO3166-2-lvl4": "KR-26",
+"postcode": "48015",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/471104236": {
+"village": "초가팔리",
+"city": "포천시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "11182",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/471304660": {
+"village": "용천리",
+"city": "용인시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "17181",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/471309620": {
+"village": "서리",
+"city": "용인시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "17126",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/471332991": {
+"quarter": "도룡동",
+"suburb": "신성동",
+"borough": "유성구",
+"city": "대전광역시",
+"ISO3166-2-lvl4": "KR-30",
+"postcode": "34126",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/471416314": {
+"quarter": "사리현동",
+"suburb": "고봉동",
+"borough": "일산동구",
+"city": "고양시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "10260",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/471480535": {
+"village": "금당리",
+"city": "화성시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "18543",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/471497105": {
+"quarter": "동춘동",
+"suburb": "동춘1동",
+"borough": "연수구",
+"city": "인천광역시",
+"ISO3166-2-lvl4": "KR-28",
+"postcode": "21971",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/471702746": {
+"quarter": "모산동",
+"village": "도화리",
+"city": "제천시",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "27137",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/471801588": {
+"quarter": "남통동",
+"city": "구미시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "39309",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/471868467": {
+"quarter": "남외동",
+"borough": "중구",
+"city": "울산광역시",
+"ISO3166-2-lvl4": "KR-31",
+"postcode": "44494",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/471870266": {
+"village": "광천리",
+"city": "포항시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "37511",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/471913617": {
+"village": "상송리",
+"city": "포항시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "37515",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/471998659": {
+"village": "송림리",
+"city": "화성시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "18262",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/472074437": {
+"quarter": "인의동",
+"city": "구미시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "39434",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/472306184": {
+"borough": "동구",
+"city": "울산광역시",
+"ISO3166-2-lvl4": "KR-31",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/472460342": {
+"quarter": "세교동",
+"city": "오산시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "18106",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/472865169": {
+"hamlet": "태재",
+"city": "광주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12771",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/474721111": {
+"hamlet": "동원촌",
+"suburb": "첨단1동",
+"borough": "광산구",
+"city": "광주",
+"state": "전남광주통합특별시",
+"postcode": "62240",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/474721113": {
+"hamlet": "동원촌",
+"suburb": "첨단1동",
+"borough": "광산구",
+"city": "광주",
+"state": "전남광주통합특별시",
+"postcode": "62240",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/474845773": {
+"suburb": "황금1동",
+"borough": "수성구",
+"city": "대구광역시",
+"ISO3166-2-lvl4": "KR-27",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/474855108": {
+"village": "선정리",
+"county": "장흥군",
+"state": "전남광주통합특별시",
+"postcode": "59306",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/475320930": {
+"quarter": "구갈동",
+"borough": "기흥구",
+"city": "용인시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "17066",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/475978865": {
+"village": "도이리",
+"city": "화성시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "18589",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/476197136": {
+"quarter": "덕포동",
+"city_district": "옥포2동",
+"city": "거제시",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "53224",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/476287205": {
+"quarter": "점촌동",
+"city_district": "동부동",
+"city": "경산시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "38606",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/476678385": {
+"quarter": "두산동",
+"borough": "수성구",
+"city": "대구광역시",
+"ISO3166-2-lvl4": "KR-27",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/477932052": {
+"village": "무이리",
+"town": "봉평면",
+"county": "평창군",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "25305",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/477983957": {
+"village": "무이리",
+"town": "봉평면",
+"county": "평창군",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "25305",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/478218021": {
+"village": "정족리",
+"city": "춘천시",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "24412",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/478431396": {
+"quarter": "선원동",
+"city": "여수시",
+"state": "전남광주통합특별시",
+"postcode": "59677",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/479978915": {
+"quarter": "사농동",
+"city_district": "신사우동",
+"city": "춘천시",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "24219",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/480776928": {
+"city_district": "하안4동",
+"city": "광명시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/480777824": {
+"quarter": "사농동",
+"city_district": "신사우동",
+"city": "춘천시",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "24219",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/481206240": {
+"quarter": "도량동",
+"village": "문성리",
+"city": "구미시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "39197",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/481300626": {
+"quarter": "중산동",
+"suburb": "영종1동",
+"city_district": "영종구",
+"city": "인천광역시",
+"ISO3166-2-lvl4": "KR-28",
+"postcode": "22390",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/481491217": {
+"quarter": "조례동",
+"village": "상삼리",
+"city": "순천시",
+"state": "전남광주통합특별시",
+"postcode": "57947",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/484096107": {
+"village": "상양혈리",
+"town": "손양면",
+"county": "양양군",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "25045",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/484098140": {
+"quarter": "장사동",
+"city": "속초시",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "24802",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/486047902": {
+"quarter": "운서동",
+"suburb": "공항신도시",
+"city_district": "영종구",
+"city": "인천광역시",
+"ISO3166-2-lvl4": "KR-28",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/487667372": {
+"quarter": "하산운동",
+"hamlet": "남서울파크힐",
+"borough": "분당구",
+"city": "성남시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "13540",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/488216910": {
+"quarter": "매월동",
+"suburb": "서창동",
+"borough": "서구",
+"city": "광주",
+"state": "전남광주통합특별시",
+"postcode": "62070",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/490452692": {
+"village": "소토리",
+"city": "양산시",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "50566",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/493177214": {
+"village": "남악리",
+"town": "남악신도시",
+"county": "무안군",
+"state": "전남광주통합특별시",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/503157516": {
+"quarter": "형곡동",
+"city": "구미시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "39319",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/504576928": {
+"hamlet": "동원촌",
+"suburb": "첨단1동",
+"borough": "광산구",
+"city": "광주",
+"state": "전남광주통합특별시",
+"postcode": "62240",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/505961222": {
+"village": "학현리",
+"city": "평택시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "17932",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/513380428": {
+"village": "대신리",
+"city": "청주시",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/514081203": {
+"village": "호정리",
+"city": "청주시",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "28193",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/514085723": {
+"village": "호음리",
+"city": "상주시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "29110",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/521310826": {
+"village": "상림리",
+"city": "구미시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "39160",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/523105765": {
+"village": "대전리",
+"town": "이서면",
+"county": "청도군",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "38309",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/523450328": {
+"village": "구수리",
+"town": "백수읍",
+"county": "영광군",
+"state": "전남광주통합특별시",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/523557134": {
+"village": "만흥리",
+"town": "함평읍",
+"county": "함평군",
+"state": "전남광주통합특별시",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/523812158": {
+"quarter": "천군동",
+"city_district": "보덕동",
+"city": "경주시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "38118",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/524204553": {
+"village": "이선리",
+"city": "광주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12721",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/524436181": {
+"village": "운촌리",
+"city": "여주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12614",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/524449266": {
+"village": "상동리",
+"town": "상면",
+"county": "가평군",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12443",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/524450806": {
+"village": "지현리",
+"city": "포천시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "11139",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/524450807": {
+"village": "유동리",
+"city": "포천시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "11117",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/524450808": {
+"village": "운악리",
+"town": "조종면",
+"county": "가평군",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12432",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/524471443": {
+"village": "방일리",
+"town": "설악면",
+"county": "가평군",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12474",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/524541809": {
+"village": "이천리",
+"town": "설악면",
+"county": "가평군",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12468",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/524541821": {
+"village": "녹촌리",
+"city": "남양주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12187",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/524687818": {
+"village": "중전리",
+"city": "충주시",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "27300",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/524730161": {
+"village": "상품리",
+"city": "여주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12603",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/525071803": {
+"village": "효동리",
+"city": "경주시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/525072359": {
+"hamlet": "고라섬",
+"town": "감포읍",
+"city": "경주시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "38125",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/525432823": {
+"quarter": "연라동",
+"village": "오계리",
+"city": "여주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12646",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/525662303": {
+"village": "금곡리",
+"city": "울산광역시",
+"ISO3166-2-lvl4": "KR-31",
+"postcode": "44956",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/525665891": {
+"hamlet": "와지",
+"county": "울주군",
+"city": "울산광역시",
+"ISO3166-2-lvl4": "KR-31",
+"postcode": "50527",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/527092703": {
+"village": "송죽리",
+"city": "김천시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "39685",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/527549990": {
+"quarter": "외동",
+"town": "주촌면",
+"city": "김해시",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "50952",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/527588732": {
+"village": "효리",
+"city": "영천시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "38820",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/527791261": {
+"quarter": "삼계동",
+"city": "김해시",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "50901",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/530133278": {
+"quarter": "매곡동",
+"town": "웅상",
+"city": "양산시",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "50540",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/530449176": {
+"village": "묵방리",
+"city": "김해시",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "50805",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/532724676": {
+"quarter": "외동",
+"town": "주촌면",
+"city": "김해시",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "50952",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/536796898": {
+"city_district": "삼수동",
+"city": "태백시",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/537301493": {
+"village": "신월리",
+"county": "보성군",
+"state": "전남광주통합특별시",
+"postcode": "59440",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/537908770": {
+"village": "가산리",
+"county": "담양군",
+"state": "전남광주통합특별시",
+"postcode": "57312",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/540940807": {
+"quarter": "광영동",
+"village": "신금리",
+"city": "광양시",
+"state": "전남광주통합특별시",
+"postcode": "57720",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/541600442": {
+"village": "가실리",
+"city": "용인시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "17023",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/541710723": {
+"village": "오남리",
+"city": "남양주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12041",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/541806050": {
+"village": "덕리",
+"city": "화성시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "18336",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/541810105": {
+"village": "괘랑리",
+"city": "화성시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "18518",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/543365571": {
+"village": "오향리",
+"city": "광주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12718",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/545288525": {
+"village": "고양리",
+"county": "단양군",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "27002",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/545370453": {
+"village": "문길리",
+"city": "순천시",
+"state": "전남광주통합특별시",
+"postcode": "57910",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/545744182": {
+"village": "하대리",
+"town": "우천면",
+"county": "횡성군",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "25246",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/545767312": {
+"village": "갈마리",
+"city": "순천시",
+"state": "전남광주통합특별시",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/545967310": {
+"village": "대곡리",
+"town": "서면",
+"county": "홍천군",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "25103",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/545967328": {
+"village": "두미리",
+"town": "서면",
+"county": "홍천군",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "25101",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/546212848": {
+"village": "덕산리",
+"city": "여주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12614",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/546212852": {
+"village": "부평리",
+"city": "여주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12617",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/546212853": {
+"village": "부평리",
+"city": "여주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12617",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/546372758": {
+"village": "간매리",
+"city": "여주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12616",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/547145443": {
+"village": "납안리",
+"city": "천안시",
+"province": "충청남도",
+"ISO3166-2-lvl4": "KR-44",
+"postcode": "31238",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/548033344": {
+"quarter": "연산동",
+"borough": "광산구",
+"city": "광주",
+"state": "전남광주통합특별시",
+"postcode": "62420",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/548252089": {
+"village": "신평리",
+"county": "의성군",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "37363",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/548423879": {
+"village": "어담리",
+"city": "안동시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/550896014": {
+"suburb": "삼송2동",
+"borough": "덕양구",
+"city": "고양시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/551025577": {
+"quarter": "도내동",
+"suburb": "흥도동",
+"borough": "덕양구",
+"city": "고양시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "10551",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/551202442": {
+"quarter": "동산동",
+"suburb": "창릉동",
+"borough": "덕양구",
+"city": "고양시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "10596",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/552850192": {
+"quarter": "동금동",
+"city_district": "동서금동",
+"city": "사천시",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "52566",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/553345524": {
+"quarter": "왕길동",
+"suburb": "오류왕길동",
+"city_district": "검단구",
+"city": "인천광역시",
+"ISO3166-2-lvl4": "KR-28",
+"postcode": "22689",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/553735679": {
+"quarter": "방어동",
+"borough": "동구",
+"city": "울산광역시",
+"ISO3166-2-lvl4": "KR-31",
+"postcode": "44109",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/553993961": {
+"quarter": "청라동",
+"suburb": "청라3동",
+"borough": "서해구",
+"city": "인천광역시",
+"ISO3166-2-lvl4": "KR-28",
+"postcode": "22758",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/554036364": {
+"quarter": "경서동",
+"suburb": "검암경서동",
+"borough": "서해구",
+"city": "인천광역시",
+"ISO3166-2-lvl4": "KR-28",
+"postcode": "22689",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/557827368": {
+"village": "노곡리",
+"town": "양성면",
+"city": "안성시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "17500",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/557830756": {
+"village": "시미리",
+"city": "용인시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "17135",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/557916805": {
+"village": "문성리",
+"city": "구미시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "39146",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/558004291": {
+"quarter": "산본2동",
+"city_district": "산본2동",
+"city": "군포시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "15803",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/558442586": {
+"village": "반곡리",
+"county": "태안군",
+"province": "충청남도",
+"ISO3166-2-lvl4": "KR-44",
+"postcode": "32147",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/563375183": {
+"village": "송암리",
+"county": "태안군",
+"province": "충청남도",
+"ISO3166-2-lvl4": "KR-44",
+"postcode": "32153",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/564192771": {
+"village": "삼사리",
+"town": "강구면",
+"county": "영덕군",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "36460",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/566861473": {
+"village": "팔야리",
+"city": "남양주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12017",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/570504654": {
+"quarter": "도천동",
+"suburb": "비아동",
+"borough": "광산구",
+"city": "광주",
+"state": "전남광주통합특별시",
+"postcode": "62243",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/570568042": {
+"quarter": "명곡동",
+"city_district": "중앙동",
+"city": "양산시",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "50644",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/572072541": {
+"village": "월평리",
+"county": "고성군",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "52946",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/572746672": {
+"village": "어신리",
+"county": "고성군",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "51797",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/573971671": {
+"village": "좌삼리",
+"city": "양산시",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "50558",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/574761837": {
+"quarter": "수도동",
+"borough": "진해구",
+"city": "창원시",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "51621",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/582796107": {
+"village": "수망리",
+"town": "남원읍",
+"city": "서귀포시",
+"province": "제주특별자치도",
+"ISO3166-2-lvl4": "KR-49",
+"postcode": "63615",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/583675669": {
+"village": "군자리",
+"city": "춘천시",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "24409",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/583675671": {
+"village": "군자리",
+"city": "춘천시",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "24409",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/584240708": {
+"quarter": "호계동",
+"suburb": "평촌",
+"borough": "동안구",
+"city": "안양시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "14114",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/584454936": {
+"village": "명덕리",
+"city": "포천시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12440",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/584913350": {
+"village": "오곡리",
+"county": "함안군",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "52029",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/586153130": {
+"village": "이천리",
+"town": "설악면",
+"county": "가평군",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12468",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/589103855": {
+"village": "운악리",
+"town": "조종면",
+"county": "가평군",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12432",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/589103856": {
+"village": "명산리",
+"city": "포천시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "11155",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/589103898": {
+"village": "금남리",
+"city": "남양주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12193",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/589107484": {
+"village": "동막리",
+"town": "서면",
+"county": "홍천군",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "25100",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/589107941": {
+"village": "모곡리",
+"town": "서면",
+"county": "홍천군",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "25100",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/589108539": {
+"village": "후동리",
+"city": "춘천시",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "24468",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/589300004": {
+"city_district": "파평면",
+"city": "파주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/589692489": {
+"village": "동음리",
+"county": "음성군",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "27686",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/590033753": {
+"quarter": "송선동",
+"village": "청룡리",
+"city": "공주시",
+"province": "충청남도",
+"ISO3166-2-lvl4": "KR-44",
+"postcode": "32590",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/590033754": {
+"quarter": "송선동",
+"village": "청룡리",
+"city": "공주시",
+"province": "충청남도",
+"ISO3166-2-lvl4": "KR-44",
+"postcode": "32590",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/593260890": {
+"village": "어음리",
+"town": "애월읍",
+"city": "제주시",
+"province": "제주특별자치도",
+"ISO3166-2-lvl4": "KR-49",
+"postcode": "63038",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/601810069": {
+"village": "방기리",
+"city": "울산광역시",
+"ISO3166-2-lvl4": "KR-31",
+"postcode": "50501",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/604152593": {
+"village": "가천리",
+"city": "울산광역시",
+"ISO3166-2-lvl4": "KR-31",
+"postcode": "44952",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/604485252": {
+"quarter": "하남동",
+"suburb": "하남동",
+"borough": "광산구",
+"city": "광주",
+"state": "전남광주통합특별시",
+"postcode": "62336",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/615388581": {
+"village": "삼승리",
+"city": "여주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12667",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/615389285": {
+"village": "삼승리",
+"city": "여주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12667",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/615390835": {
+"village": "당진리",
+"city": "여주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12668",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/616126833": {
+"village": "대사리",
+"county": "음성군",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "27645",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/616129406": {
+"village": "장능리",
+"town": "죽산면",
+"city": "안성시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "17521",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/617106042": {
+"village": "인풍리",
+"city": "공주시",
+"province": "충청남도",
+"ISO3166-2-lvl4": "KR-44",
+"postcode": "32512",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/617691985": {
+"village": "숭진리",
+"city": "밀양시",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "50463",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/619064335": {
+"village": "학하리",
+"town": "가산면",
+"county": "칠곡군",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "39457",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/619259611": {
+"quarter": "선동",
+"suburb": "선두구동",
+"borough": "금정구",
+"city": "부산광역시",
+"ISO3166-2-lvl4": "KR-26",
+"postcode": "46213",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/620414034": {
+"village": "월막리",
+"town": "쌍림면",
+"county": "고령군",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "40163",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/621523752": {
+"village": "성산리",
+"city": "나주시",
+"state": "전남광주통합특별시",
+"postcode": "58318",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/621557551": {
+"village": "풍촌리",
+"city": "남원시",
+"province": "전북특별자치도",
+"ISO3166-2-lvl4": "KR-45",
+"postcode": "55779",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/625107919": {
+"village": "상성북리",
+"city": "포천시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "11152",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/625109492": {
+"quarter": "설운동",
+"city_district": "선단동",
+"city": "포천시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "11160",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/625485429": {
+"village": "능치리",
+"city": "김천시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "29120",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/625580437": {
+"village": "매원리",
+"town": "왜관읍",
+"county": "칠곡군",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "39877",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/625850268": {
+"quarter": "목동",
+"city": "화성시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "18484",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/625850269": {
+"quarter": "신동",
+"city": "화성시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "18484",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/627593170": {
+"quarter": "매곡동",
+"town": "웅상",
+"city": "양산시",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "50540",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/627610784": {
+"village": "연화리",
+"city": "부산광역시",
+"ISO3166-2-lvl4": "KR-26",
+"postcode": "46079",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/628481060": {
+"village": "송천리",
+"city": "영천시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "38869",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/630681048": {
+"village": "대동리",
+"city": "경주시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "38031",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/631051035": {
+"village": "고안리",
+"city": "용인시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "17180",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/631054660": {
+"village": "소고리",
+"town": "모가면",
+"city": "이천시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/631057875": {
+"village": "북가현리",
+"town": "보개면",
+"city": "안성시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/631059498": {
+"quarter": "하거동",
+"city": "여주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12659",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/631060921": {
+"village": "심석리",
+"city": "여주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12661",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/631125417": {
+"village": "석화리",
+"town": "서원면",
+"county": "횡성군",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "25202",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/632238706": {
+"village": "고양리",
+"city": "김포시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "10024",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/632581895": {
+"village": "화심리",
+"county": "완주군",
+"province": "전북특별자치도",
+"ISO3166-2-lvl4": "KR-45",
+"postcode": "55356",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/633130195": {
+"village": "도흥리",
+"city": "아산시",
+"province": "충청남도",
+"ISO3166-2-lvl4": "KR-44",
+"postcode": "31542",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/633497271": {
+"village": "도성리",
+"city": "당진시",
+"province": "충청남도",
+"ISO3166-2-lvl4": "KR-44",
+"postcode": "31741",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/634048706": {
+"village": "고천리",
+"city": "정읍시",
+"province": "전북특별자치도",
+"ISO3166-2-lvl4": "KR-45",
+"postcode": "56118",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/634957667": {
+"village": "합정리",
+"county": "부여군",
+"province": "충청남도",
+"ISO3166-2-lvl4": "KR-44",
+"postcode": "33115",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/635470186": {
+"village": "창상리",
+"city": "영천시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "38817",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/636992707": {
+"isolated_dwelling": "행복타운주택",
+"city": "안동시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "36727",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/641444650": {
+"village": "송계리",
+"town": "설성면",
+"city": "이천시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/641656095": {
+"village": "삼옥리",
+"town": "영월읍",
+"county": "영월군",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "26223",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/641786577": {
+"village": "송촌리",
+"city": "아산시",
+"province": "충청남도",
+"ISO3166-2-lvl4": "KR-44",
+"postcode": "31443",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/641786578": {
+"village": "동천리",
+"city": "아산시",
+"province": "충청남도",
+"ISO3166-2-lvl4": "KR-44",
+"postcode": "31443",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/642697850": {
+"village": "원천리",
+"city": "화성시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "18258",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/642736074": {
+"village": "차산리",
+"city": "남양주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12200",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/642775311": {
+"village": "소동리",
+"city": "포항시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "37531",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/642986592": {
+"village": "병동리",
+"city": "김해시",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "50875",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/643204152": {
+"village": "신월리",
+"county": "장성군",
+"state": "전남광주통합특별시",
+"postcode": "57201",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/643232453": {
+"village": "석정리",
+"county": "고창군",
+"province": "전북특별자치도",
+"ISO3166-2-lvl4": "KR-45",
+"postcode": "56450",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/643235183": {
+"village": "은교리",
+"city": "김제시",
+"province": "전북특별자치도",
+"ISO3166-2-lvl4": "KR-45",
+"postcode": "55366",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/643237642": {
+"village": "신동리",
+"city": "익산시",
+"province": "전북특별자치도",
+"ISO3166-2-lvl4": "KR-45",
+"postcode": "54582",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/643263272": {
+"village": "호암리",
+"county": "부여군",
+"province": "충청남도",
+"ISO3166-2-lvl4": "KR-44",
+"postcode": "33115",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/643550314": {
+"village": "서태리",
+"county": "화순군",
+"state": "전남광주통합특별시",
+"postcode": "58110",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/645101379": {
+"village": "대산리",
+"county": "의령군",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "52152",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/645101383": {
+"village": "소포리",
+"county": "함안군",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "52065",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/645357358": {
+"village": "중초리",
+"county": "보은군",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "28933",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/645512668": {
+"quarter": "거모동",
+"city_district": "군자동",
+"city": "시흥시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "15004",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/645514829": {
+"village": "발랑리",
+"city": "파주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "10953",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/645702323": {
+"quarter": "용산동",
+"city_district": "상교동",
+"city": "정읍시",
+"province": "전북특별자치도",
+"ISO3166-2-lvl4": "KR-45",
+"postcode": "56196",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/646492764": {
+"village": "신평리",
+"county": "의성군",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "37363",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/646980680": {
+"quarter": "명천동",
+"village": "창동리",
+"city": "보령시",
+"province": "충청남도",
+"ISO3166-2-lvl4": "KR-44",
+"postcode": "33475",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/647858666": {
+"village": "용산리",
+"town": "매전면",
+"county": "청도군",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "38354",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/647934159": {
+"village": "내곡리",
+"town": "대가야읍",
+"county": "고령군",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "40136",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/647973514": {
+"village": "봉계리",
+"town": "왜관읍",
+"county": "칠곡군",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "39848",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/648932087": {
+"village": "원봉리",
+"county": "보성군",
+"state": "전남광주통합특별시",
+"postcode": "59458",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/650395851": {
+"quarter": "어곡동",
+"city_district": "강서동",
+"city": "양산시",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "50590",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/650704486": {
+"village": "옥산리",
+"city": "경주시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "38000",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/652088377": {
+"village": "심곡리",
+"town": "설천면",
+"county": "무주군",
+"province": "전북특별자치도",
+"ISO3166-2-lvl4": "KR-45",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/653860298": {
+"village": "괘석리",
+"town": "두촌면",
+"county": "홍천군",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "25160",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/655049393": {
+"village": "고한리",
+"town": "고한읍",
+"county": "정선군",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "26155",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/656039779": {
+"village": "궁양리",
+"county": "장수군",
+"province": "전북특별자치도",
+"ISO3166-2-lvl4": "KR-45",
+"postcode": "55623",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/658618285": {
+"village": "죽암리",
+"city": "청주시",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "28185",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/659406991": {
+"quarter": "경호동",
+"city": "여수시",
+"state": "전남광주통합특별시",
+"postcode": "59762",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/663708126": {
+"village": "석산리",
+"city": "양산시",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "50636",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/666019989": {
+"quarter": "북부동",
+"city_district": "중앙동",
+"city": "양산시",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "50619",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/666417293": {
+"quarter": "금곡동",
+"borough": "북구",
+"city": "부산광역시",
+"ISO3166-2-lvl4": "KR-26",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/666566985": {
+"hamlet": "화곡마을",
+"village": "도리",
+"county": "거창군",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "50118",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/669427797": {
+"quarter": "원창동",
+"suburb": "신현원창동",
+"borough": "서해구",
+"city": "인천광역시",
+"ISO3166-2-lvl4": "KR-28",
+"postcode": "22766",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/669452632": {
+"village": "산남리",
+"county": "의령군",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "52134",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/671760849": {
+"village": "혈동리",
+"city": "춘천시",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "24411",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/671763353": {
+"village": "혈동리",
+"city": "춘천시",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "24411",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/671763964": {
+"village": "수동리",
+"city": "춘천시",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "24465",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/672052302": {
+"village": "차산리",
+"city": "남양주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12200",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/672052303": {
+"village": "차산리",
+"city": "남양주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12200",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/681868088": {
+"quarter": "장지동",
+"city": "화성시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "18510",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/686201114": {
+"town": "남면",
+"county": "홍천군",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/686445790": {
+"village": "학현리",
+"city": "평택시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "17932",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/689019071": {
+"village": "천곡리",
+"city": "진주시",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "52621",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/690618087": {
+"village": "용대리",
+"county": "음성군",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "27647",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/691337321": {
+"quarter": "삼가동",
+"borough": "처인구",
+"city": "용인시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "17091",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/691343112": {
+"village": "군자리",
+"city": "춘천시",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "24409",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/693438891": {
+"suburb": "원주기업도시",
+"city_district": "지정면",
+"city": "원주시",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "26352",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/693455670": {
+"village": "사곡리",
+"city": "여주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12666",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/694530109": {
+"village": "위곡리",
+"town": "설악면",
+"county": "가평군",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12464",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/706562585": {
+"quarter": "호평동",
+"city": "남양주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12147",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/708683097": {
+"quarter": "용산동",
+"suburb": "관평동",
+"borough": "유성구",
+"city": "대전광역시",
+"ISO3166-2-lvl4": "KR-30",
+"postcode": "34028",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/724845635": {
+"village": "수남리",
+"town": "신둔면",
+"city": "이천시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "17307",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/734525779": {
+"quarter": "동천동",
+"borough": "신봉동",
+"city": "용인시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "16822",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/735355770": {
+"village": "전사포리",
+"city": "밀양시",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "50440",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/741979192": {
+"quarter": "오금동",
+"village": "당우리",
+"city": "여주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12635",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/749978950": {
+"hamlet": "태재",
+"city": "광주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12771",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/752038372": {
+"village": "태봉리",
+"town": "청계면",
+"county": "무안군",
+"state": "전남광주통합특별시",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/756749258": {
+"village": "용천리",
+"city": "부산광역시",
+"ISO3166-2-lvl4": "KR-26",
+"postcode": "46046",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/777731476": {
+"village": "서창리",
+"city": "세종특별자치시",
+"ISO3166-2-lvl4": "KR-50",
+"postcode": "30018",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/778314555": {
+"village": "침산리",
+"city": "세종특별자치시",
+"ISO3166-2-lvl4": "KR-50",
+"postcode": "30020",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/778930978": {
+"village": "서리",
+"city": "용인시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "17126",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/780189830": {
+"suburb": "비산1동",
+"borough": "동안구",
+"city": "안양시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/790984665": {
+"village": "제암리",
+"city": "화성시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "18595",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/798494231": {
+"suburb": "잠실본동",
+"borough": "송파구",
+"city": "서울특별시",
+"ISO3166-2-lvl4": "KR-11",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/804479296": {
+"hamlet": "원정2리",
+"village": "도곡리",
+"city": "평택시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "17955",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/807005959": {
+"quarter": "성당동",
+"borough": "달서구",
+"city": "대구광역시",
+"ISO3166-2-lvl4": "KR-27",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/813446691": {
+"hamlet": "아제마을",
+"village": "서외리",
+"town": "부안읍",
+"county": "부안군",
+"province": "전북특별자치도",
+"ISO3166-2-lvl4": "KR-45",
+"postcode": "56310",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/816568812": {
+"village": "휴대리",
+"city": "아산시",
+"province": "충청남도",
+"ISO3166-2-lvl4": "KR-44",
+"postcode": "31474",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/820150089": {
+"quarter": "하갈동",
+"borough": "기흥구",
+"city": "용인시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "17098",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/820150096": {
+"quarter": "고매동",
+"borough": "기흥구",
+"city": "용인시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "17086",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/838418930": {
+"quarter": "청학동",
+"city": "오산시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "18119",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/839535223": {
+"village": "애산리",
+"town": "정선읍",
+"county": "정선군",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "26122",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/839915866": {
+"hamlet": "송학마을",
+"village": "봉덕리",
+"town": "부안읍",
+"county": "부안군",
+"province": "전북특별자치도",
+"ISO3166-2-lvl4": "KR-45",
+"postcode": "56308",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/840188957": {
+"hamlet": "봉덕마을",
+"village": "봉덕리",
+"town": "부안읍",
+"county": "부안군",
+"province": "전북특별자치도",
+"ISO3166-2-lvl4": "KR-45",
+"postcode": "56308",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/841031394": {
+"hamlet": "삼산마을",
+"village": "역리",
+"town": "행안면",
+"county": "부안군",
+"province": "전북특별자치도",
+"ISO3166-2-lvl4": "KR-45",
+"postcode": "56310",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/844180374": {
+"quarter": "안양동",
+"borough": "만안구",
+"city": "안양시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "13997",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/844587894": {
+"quarter": "효가동",
+"suburb": "북삼동",
+"city_district": "북삼동",
+"city": "동해시",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "25801",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/863476294": {
+"village": "대로리",
+"city": "서산시",
+"province": "충청남도",
+"ISO3166-2-lvl4": "KR-44",
+"postcode": "31903",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/864851575": {
+"hamlet": "학당마을",
+"village": "연곡리",
+"town": "부안읍",
+"county": "부안군",
+"province": "전북특별자치도",
+"ISO3166-2-lvl4": "KR-45",
+"postcode": "56309",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/864931567": {
+"quarter": "상일동",
+"suburb": "상일1동",
+"borough": "강동구",
+"city": "서울특별시",
+"ISO3166-2-lvl4": "KR-11",
+"postcode": "05282",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/877556250": {
+"village": "당거리",
+"city": "평택시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "17927",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/891449743": {
+"village": "굴화리",
+"city": "울산광역시",
+"ISO3166-2-lvl4": "KR-31",
+"postcode": "44931",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/891507261": {
+"village": "하송리",
+"town": "영월읍",
+"county": "영월군",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "26238",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/891864689": {
+"village": "이천리",
+"city": "부산광역시",
+"ISO3166-2-lvl4": "KR-26",
+"postcode": "46044",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/893204638": {
+"quarter": "용두동",
+"borough": "북구",
+"city": "광주",
+"state": "전남광주통합특별시",
+"postcode": "61015",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/893914230": {
+"village": "난전리",
+"county": "영암군",
+"state": "전남광주통합특별시",
+"postcode": "58463",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/893914231": {
+"village": "난전리",
+"county": "영암군",
+"state": "전남광주통합특별시",
+"postcode": "58463",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/901814256": {
+"quarter": "대촌동",
+"borough": "북구",
+"city": "광주",
+"state": "전남광주통합특별시",
+"postcode": "61006",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/903227157": {
+"village": "연촌리",
+"town": "도안면",
+"county": "증평군",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "27903",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/912759766": {
+"quarter": "풍덕천동",
+"borough": "신봉동",
+"city": "용인시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "16837",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/912759767": {
+"quarter": "풍덕천동",
+"borough": "신봉동",
+"city": "용인시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "16837",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/914934947": {
+"quarter": "단월동",
+"city": "충주시",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "27478",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/922330293": {
+"quarter": "고척동",
+"suburb": "고척1동",
+"borough": "구로구",
+"city": "서울특별시",
+"ISO3166-2-lvl4": "KR-11",
+"postcode": "08228",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/922840150": {
+"village": "단주리",
+"town": "영광읍",
+"county": "영광군",
+"state": "전남광주통합특별시",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/924827162": {
+"quarter": "구로동",
+"suburb": "구로2동",
+"borough": "구로구",
+"city": "서울특별시",
+"ISO3166-2-lvl4": "KR-11",
+"postcode": "08285",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/925782668": {
+"village": "도수리",
+"city": "광주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12713",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/936202270": {
+"quarter": "두산동",
+"borough": "수성구",
+"city": "대구광역시",
+"ISO3166-2-lvl4": "KR-27",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/938012605": {
+"village": "조현리",
+"county": "양평군",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12511",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/964966373": {
+"village": "천리",
+"city": "용인시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "17128",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/972255795": {
+"village": "단천리",
+"town": "호법면",
+"city": "이천시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/985521512": {
+"village": "지문리",
+"town": "원곡면",
+"city": "안성시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/998904386": {
+"quarter": "지곡동",
+"suburb": "효곡동",
+"borough": "남구",
+"city": "포항시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "37670",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/998904390": {
+"quarter": "대잠동",
+"suburb": "대이동",
+"borough": "남구",
+"city": "포항시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "37684",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/998912588": {
+"quarter": "이동",
+"suburb": "대이동",
+"borough": "남구",
+"city": "포항시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "37674",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/999070410": {
+"quarter": "이동",
+"suburb": "대이동",
+"borough": "남구",
+"city": "포항시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "37674",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1004627308": {
+"village": "미산리",
+"town": "양성면",
+"city": "안성시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1009205888": {
+"quarter": "북군동",
+"city_district": "보덕동",
+"city": "경주시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "38116",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1009206725": {
+"quarter": "북군동",
+"city_district": "보덕동",
+"city": "경주시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "38116",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1012928004": {
+"quarter": "대잠동",
+"suburb": "대이동",
+"borough": "남구",
+"city": "포항시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "37684",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1013429685": {
+"village": "대련리",
+"city": "포항시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "37653",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1018282137": {
+"quarter": "장성동",
+"suburb": "장량동",
+"borough": "북구",
+"city": "포항시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "37578",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1023089653": {
+"quarter": "상남동",
+"borough": "성산구",
+"city": "창원시",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "51498",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1025058636": {
+"village": "매음리",
+"city": "인천광역시",
+"ISO3166-2-lvl4": "KR-28",
+"postcode": "23007",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1029215407": {
+"village": "진동리",
+"town": "창선면",
+"county": "남해군",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "52455",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1050656715": {
+"quarter": "시미동",
+"city": "구미시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "39395",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1056137199": {
+"village": "양항리",
+"city": "보령시",
+"province": "충청남도",
+"ISO3166-2-lvl4": "KR-44",
+"postcode": "33488",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1060267546": {
+"village": "직두리",
+"city": "포천시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "11155",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1075278597": {
+"quarter": "도남동",
+"city": "통영시",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "53074",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1092517598": {
+"quarter": "나주혁신도시",
+"village": "동악리",
+"city": "나주시",
+"state": "전남광주통합특별시",
+"postcode": "58325",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1123267235": {
+"quarter": "용전동",
+"borough": "동구",
+"city": "대전광역시",
+"ISO3166-2-lvl4": "KR-30",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1135090255": {
+"village": "화산리",
+"city": "경주시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "38035",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1154052574": {
+"quarter": "오류동",
+"borough": "중구",
+"city": "대전광역시",
+"ISO3166-2-lvl4": "KR-30",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1158490022": {
+"quarter": "천곡동",
+"suburb": "농소3동",
+"borough": "북구",
+"city": "울산광역시",
+"ISO3166-2-lvl4": "KR-31",
+"postcode": "44200",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1160178277": {
+"village": "판대리",
+"city": "원주시",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "26357",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1160892889": {
+"quarter": "목행동",
+"village": "용교리",
+"city": "충주시",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "27435",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1167546304": {
+"village": "갈산리",
+"city": "김포시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "10024",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1170047707": {
+"village": "용수리",
+"county": "담양군",
+"state": "전남광주통합특별시",
+"postcode": "57389",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1173212376": {
+"quarter": "풍암동",
+"suburb": "풍암동",
+"borough": "서구",
+"city": "광주",
+"state": "전남광주통합특별시",
+"postcode": "62063",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1174508305": {
+"village": "광덕리",
+"county": "담양군",
+"state": "전남광주통합특별시",
+"postcode": "57389",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1187985758": {
+"quarter": "둔전동",
+"borough": "수정구",
+"city": "성남시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "13446",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1188529885": {
+"village": "달전리",
+"city": "세종특별자치시",
+"ISO3166-2-lvl4": "KR-50",
+"postcode": "30007",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1190943403": {
+"village": "관정리",
+"city": "청주시",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "28199",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1192397793": {
+"village": "동평리",
+"town": "보개면",
+"city": "안성시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1194743326": {
+"village": "율생리",
+"town": "대곶면",
+"city": "김포시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1196810234": {
+"village": "갈지리",
+"town": "금천면",
+"county": "청도군",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "38367",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1200585166": {
+"village": "고송리",
+"county": "양평군",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12533",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1203006849": {
+"village": "경반리",
+"town": "가평읍",
+"county": "가평군",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12408",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1204054191": {
+"village": "송정리",
+"county": "거창군",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "50131",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1205147519": {
+"village": "유현리",
+"town": "서원면",
+"county": "횡성군",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "25200",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1205705685": {
+"village": "장계리",
+"town": "죽산면",
+"city": "안성시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "17522",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1211589684": {
+"quarter": "연라동",
+"village": "오계리",
+"city": "여주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12646",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1213004518": {
+"village": "문촌리",
+"county": "음성군",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "27606",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1213004519": {
+"village": "본평리",
+"city": "충주시",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "27304",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1213008164": {
+"village": "두미리",
+"town": "모가면",
+"city": "이천시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1215270537": {
+"quarter": "풍무동",
+"city": "김포시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "10114",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1218255249": {
+"village": "장현리",
+"city": "남양주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12007",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1226640775": {
+"village": "후정리",
+"town": "죽변면",
+"county": "울진군",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "36315",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1229671121": {
+"village": "육령리",
+"county": "음성군",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "27626",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1229876537": {
+"village": "연화리",
+"county": "곡성군",
+"state": "전남광주통합특별시",
+"postcode": "57518",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1233233750": {
+"village": "고내리",
+"city": "논산시",
+"province": "충청남도",
+"ISO3166-2-lvl4": "KR-44",
+"postcode": "54520",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1239271302": {
+"village": "덕신리",
+"town": "매화면",
+"county": "울진군",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "36339",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1240165042": {
+"village": "안법리",
+"city": "밀양시",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "50417",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1253891933": {
+"village": "이도리",
+"county": "임실군",
+"province": "전북특별자치도",
+"ISO3166-2-lvl4": "KR-45",
+"postcode": "55926",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1257715137": {
+"village": "송정리",
+"town": "지천면",
+"county": "칠곡군",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "39864",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1264970482": {
+"village": "덕평리",
+"county": "양평군",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12547",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1276214102": {
+"village": "사촌리",
+"city": "진주시",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "52639",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1288569573": {
+"quarter": "목행동",
+"village": "용교리",
+"city": "충주시",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "27435",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1298027798": {
+"village": "중암리",
+"city": "여주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12614",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1298240650": {
+"village": "매천리",
+"county": "영동군",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "29144",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1303176514": {
+"village": "정죽리",
+"county": "태안군",
+"province": "충청남도",
+"ISO3166-2-lvl4": "KR-44",
+"postcode": "32131",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1303272662": {
+"village": "월송리",
+"city": "원주시",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "26357",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1304933682": {
+"quarter": "고암동",
+"hamlet": "둔전골",
+"town": "송학면",
+"city": "제천시",
+"province": "충청북도",
+"ISO3166-2-lvl4": "KR-43",
+"postcode": "27139",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1309202985": {
+"town": "내면",
+"county": "홍천군",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1318032562": {
+"village": "덕산리",
+"county": "거창군",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "50154",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1318033274": {
+"quarter": "각화동",
+"borough": "북구",
+"city": "광주",
+"state": "전남광주통합특별시",
+"postcode": "61139",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1324318107": {
+"quarter": "덕진동2가",
+"borough": "덕진구",
+"city": "전주시",
+"province": "전북특별자치도",
+"ISO3166-2-lvl4": "KR-45",
+"postcode": "54888",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1331956429": {
+"village": "봉암리",
+"county": "진안군",
+"province": "전북특별자치도",
+"ISO3166-2-lvl4": "KR-45",
+"postcode": "55416",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1333548764": {
+"quarter": "덕이동",
+"borough": "일산서구",
+"city": "고양시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1337853322": {
+"village": "대흥리",
+"city": "대구광역시",
+"ISO3166-2-lvl4": "KR-27",
+"postcode": "37363",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1347241956": {
+"quarter": "학용동",
+"city": "여수시",
+"state": "전남광주통합특별시",
+"postcode": "59683",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1349210439": {
+"village": "용흥리",
+"county": "강진군",
+"state": "전남광주통합특별시",
+"postcode": "59250",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1353300449": {
+"quarter": "선원동",
+"city": "여수시",
+"state": "전남광주통합특별시",
+"postcode": "59677",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1353300450": {
+"quarter": "선원동",
+"city": "여수시",
+"state": "전남광주통합특별시",
+"postcode": "59677",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1353300467": {
+"quarter": "선원동",
+"city": "여수시",
+"state": "전남광주통합특별시",
+"postcode": "59677",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1354385660": {
+"quarter": "양호동",
+"village": "다식리",
+"city": "구미시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "39193",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1358464950": {
+"village": "화기리",
+"city": "영주시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "36145",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1362542268": {
+"quarter": "미평동",
+"city": "여수시",
+"state": "전남광주통합특별시",
+"postcode": "59697",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1363020396": {
+"quarter": "둔덕동",
+"city": "여수시",
+"state": "전남광주통합특별시",
+"postcode": "59632",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1365304735": {
+"village": "황구지리",
+"city": "평택시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "18015",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1376473793": {
+"quarter": "해산동",
+"village": "덕양리",
+"city": "여수시",
+"state": "전남광주통합특별시",
+"postcode": "59649",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1381838124": {
+"quarter": "신현동",
+"borough": "북구",
+"city": "울산광역시",
+"ISO3166-2-lvl4": "KR-31",
+"postcode": "44234",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1382224157": {
+"quarter": "경호동",
+"city": "여수시",
+"state": "전남광주통합특별시",
+"postcode": "59762",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1382932390": {
+"quarter": "외답동",
+"city": "상주시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "37235",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1387036266": {
+"quarter": "조남동",
+"city_district": "목감동",
+"city": "시흥시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "14987",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1396173849": {
+"quarter": "갈산동",
+"village": "일람리",
+"city": "서산시",
+"province": "충청남도",
+"ISO3166-2-lvl4": "KR-44",
+"postcode": "31963",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1396251053": {
+"village": "백호리",
+"town": "대동면",
+"county": "함평군",
+"state": "전남광주통합특별시",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1410516116": {
+"village": "월송리",
+"city": "원주시",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "26357",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1410516120": {
+"town": "지정면",
+"city": "원주시",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "26359",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1414211474": {
+"quarter": "연산동",
+"city": "목포시",
+"state": "전남광주통합특별시",
+"postcode": "58632",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1414211475": {
+"quarter": "연산동",
+"city": "목포시",
+"state": "전남광주통합특별시",
+"postcode": "58632",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1414211476": {
+"quarter": "연산동",
+"city": "목포시",
+"state": "전남광주통합특별시",
+"postcode": "58632",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1423538665": {
+"village": "풍암리",
+"county": "화순군",
+"state": "전남광주통합특별시",
+"postcode": "58157",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1425238993": {
+"hamlet": "청솔마을",
+"town": "영흥면",
+"county": "옹진군",
+"city": "인천광역시",
+"ISO3166-2-lvl4": "KR-28",
+"postcode": "23119",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1427295511": {
+"quarter": "세종동",
+"city_district": "나성동",
+"city": "세종특별자치시",
+"ISO3166-2-lvl4": "KR-50",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1446179327": {
+"village": "내구리",
+"city": "사천시",
+"county": "하동군",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "52543",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1446853665": {
+"village": "안포리",
+"city": "여수시",
+"state": "전남광주통합특별시",
+"postcode": "59780",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1447563632": {
+"village": "벌지리",
+"town": "다산면",
+"county": "고령군",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "40113",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1449512742": {
+"village": "노석리",
+"town": "기산면",
+"county": "칠곡군",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "39914",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1454675365": {
+"village": "왕신리",
+"county": "예천군",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "36830",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1456013376": {
+"village": "산법리",
+"city": "대구광역시",
+"ISO3166-2-lvl4": "KR-27",
+"postcode": "39002",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1460436387": {
+"village": "미촌리",
+"city": "밀양시",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "50411",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1463269431": {
+"village": "고산리",
+"city": "울산광역시",
+"ISO3166-2-lvl4": "KR-31",
+"postcode": "44974",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1469334192": {
+"village": "학운리",
+"city": "김포시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "10048",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1484566237": {
+"suburb": "영종동",
+"city_district": "영종구",
+"city": "인천광역시",
+"ISO3166-2-lvl4": "KR-28",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1486208015": {
+"quarter": "대부동동",
+"suburb": "대부동",
+"borough": "단원구",
+"city": "안산시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "15643",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1487217350": {
+"village": "남악리",
+"town": "남악신도시",
+"county": "무안군",
+"state": "전남광주통합특별시",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1489389475": {
+"quarter": "연제동",
+"borough": "북구",
+"city": "광주",
+"state": "전남광주통합특별시",
+"postcode": "61091",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1507510294": {
+"quarter": "덕계동",
+"town": "웅상",
+"city": "양산시",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "50553",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1529306833": {
+"quarter": "장성동",
+"suburb": "장량동",
+"borough": "북구",
+"city": "포항시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "37578",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1537442199": {
+"quarter": "덕이동",
+"borough": "일산서구",
+"city": "고양시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1542868409": {
+"village": "연안리",
+"city": "경주시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "38211",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1547600786": {
+"quarter": "시흥동",
+"borough": "수정구",
+"city": "성남시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "13445",
+"country": "대한민국",
+"country_code": "kr"
+},
+"way/1560647691": {
+"village": "광석리",
+"city": "진주시",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "52607",
+"country": "대한민국",
+"country_code": "kr"
+},
+"relation/5760711": {
+"village": "가화리",
+"city": "사천시",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "52506",
+"country": "대한민국",
+"country_code": "kr"
+},
+"relation/5828216": {
+"village": "용계리",
+"county": "고창군",
+"province": "전북특별자치도",
+"ISO3166-2-lvl4": "KR-45",
+"postcode": "56453",
+"country": "대한민국",
+"country_code": "kr"
+},
+"relation/6955198": {
+"village": "수하리",
+"town": "대관령면",
+"county": "평창군",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "25353",
+"country": "대한민국",
+"country_code": "kr"
+},
+"relation/6955371": {
+"village": "수하리",
+"town": "대관령면",
+"county": "평창군",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "25353",
+"country": "대한민국",
+"country_code": "kr"
+},
+"relation/6958482": {
+"village": "용산리",
+"town": "대관령면",
+"county": "평창군",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "25352",
+"country": "대한민국",
+"country_code": "kr"
+},
+"relation/6959924": {
+"quarter": "부곡동",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"country": "대한민국",
+"country_code": "kr"
+},
+"relation/7129189": {
+"quarter": "운수동",
+"borough": "광산구",
+"city": "광주",
+"state": "전남광주통합특별시",
+"postcode": "62397",
+"country": "대한민국",
+"country_code": "kr"
+},
+"relation/7171753": {
+"village": "옥산리",
+"city": "거제시",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "53262",
+"country": "대한민국",
+"country_code": "kr"
+},
+"relation/8048333": {
+"village": "국곡리",
+"city": "안동시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"country": "대한민국",
+"country_code": "kr"
+},
+"relation/8101794": {
+"village": "덕월리",
+"town": "남면",
+"county": "남해군",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "52433",
+"country": "대한민국",
+"country_code": "kr"
+},
+"relation/8251157": {
+"village": "봉포리",
+"town": "토성면",
+"county": "고성군",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "24764",
+"country": "대한민국",
+"country_code": "kr"
+},
+"relation/8624399": {
+"village": "세류리",
+"county": "영암군",
+"state": "전남광주통합특별시",
+"postcode": "58405",
+"country": "대한민국",
+"country_code": "kr"
+},
+"relation/8956630": {
+"village": "내구리",
+"city": "사천시",
+"county": "하동군",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "52543",
+"country": "대한민국",
+"country_code": "kr"
+},
+"relation/8971877": {
+"village": "발랑리",
+"city": "파주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "10953",
+"country": "대한민국",
+"country_code": "kr"
+},
+"relation/9043468": {
+"quarter": "손곡동",
+"city_district": "보덕동",
+"city": "경주시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "38116",
+"country": "대한민국",
+"country_code": "kr"
+},
+"relation/9279333": {
+"village": "상천리",
+"town": "안덕면",
+"city": "서귀포시",
+"province": "제주특별자치도",
+"ISO3166-2-lvl4": "KR-49",
+"postcode": "63525",
+"country": "대한민국",
+"country_code": "kr"
+},
+"relation/10358231": {
+"village": "지산리",
+"city": "상주시",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "37275",
+"country": "대한민국",
+"country_code": "kr"
+},
+"relation/10359018": {
+"village": "창촌리",
+"town": "단성면",
+"county": "산청군",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "52251",
+"country": "대한민국",
+"country_code": "kr"
+},
+"relation/10413469": {
+"village": "지산리",
+"town": "대가야읍",
+"county": "고령군",
+"province": "경상북도",
+"ISO3166-2-lvl4": "KR-47",
+"postcode": "40136",
+"country": "대한민국",
+"country_code": "kr"
+},
+"relation/10414592": {
+"village": "만화리",
+"city": "부산광역시",
+"ISO3166-2-lvl4": "KR-26",
+"postcode": "46054",
+"country": "대한민국",
+"country_code": "kr"
+},
+"relation/10749546": {
+"quarter": "권선동",
+"borough": "권선구",
+"city": "수원시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "16558",
+"country": "대한민국",
+"country_code": "kr"
+},
+"relation/11527738": {
+"isolated_dwelling": "솔레뉴타운하우스",
+"quarter": "보정동",
+"borough": "기흥구",
+"city": "용인시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "16900",
+"country": "대한민국",
+"country_code": "kr"
+},
+"relation/12546111": {
+"quarter": "오쇠동",
+"suburb": "공항동",
+"borough": "강서구",
+"city": "서울특별시",
+"ISO3166-2-lvl4": "KR-11",
+"postcode": "14401",
+"country": "대한민국",
+"country_code": "kr"
+},
+"relation/15486603": {
+"quarter": "봉림동",
+"borough": "의창구",
+"city": "창원시",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "51157",
+"country": "대한민국",
+"country_code": "kr"
+},
+"relation/15635605": {
+"village": "우용리",
+"town": "둔내면",
+"county": "횡성군",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "25263",
+"country": "대한민국",
+"country_code": "kr"
+},
+"relation/16421981": {
+"village": "심석리",
+"city": "여주시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "12661",
+"country": "대한민국",
+"country_code": "kr"
+},
+"relation/16422325": {
+"village": "어농리",
+"town": "모가면",
+"city": "이천시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"country": "대한민국",
+"country_code": "kr"
+},
+"relation/17728999": {
+"village": "기산리",
+"city": "포천시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "11117",
+"country": "대한민국",
+"country_code": "kr"
+},
+"relation/17867611": {
+"village": "월송리",
+"city": "원주시",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "26357",
+"country": "대한민국",
+"country_code": "kr"
+},
+"relation/18219519": {
+"village": "수하리",
+"town": "대관령면",
+"county": "평창군",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "25353",
+"country": "대한민국",
+"country_code": "kr"
+},
+"relation/18635732": {
+"village": "수동리",
+"city": "춘천시",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "24465",
+"country": "대한민국",
+"country_code": "kr"
+},
+"relation/18635753": {
+"village": "삼마치리",
+"town": "홍천읍",
+"county": "홍천군",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "25119",
+"country": "대한민국",
+"country_code": "kr"
+},
+"relation/18641197": {
+"village": "운산리",
+"city": "대구광역시",
+"ISO3166-2-lvl4": "KR-27",
+"postcode": "43158",
+"country": "대한민국",
+"country_code": "kr"
+},
+"relation/19163834": {
+"village": "탑리",
+"city": "사천시",
+"province": "경상남도",
+"ISO3166-2-lvl4": "KR-48",
+"postcode": "52510",
+"country": "대한민국",
+"country_code": "kr"
+},
+"relation/19993832": {
+"quarter": "대부남동",
+"suburb": "대부동",
+"borough": "단원구",
+"city": "안산시",
+"province": "경기도",
+"ISO3166-2-lvl4": "KR-41",
+"postcode": "15645",
+"country": "대한민국",
+"country_code": "kr"
+},
+"relation/20257052": {
+"village": "원암리",
+"town": "토성면",
+"county": "고성군",
+"province": "강원특별자치도",
+"ISO3166-2-lvl4": "KR-42",
+"postcode": "24768",
+"country": "대한민국",
+"country_code": "kr"
+}
+}

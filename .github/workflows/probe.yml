@@ -1,0 +1,22 @@
+name: probe
+on:
+  push:
+    branches: [claude/project-thread-rxgxk0]
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Yeti로 주소 확인
+        run: |
+          YETI="Mozilla/5.0 (compatible; Yeti/1.1; +https://naver.me/spd)"
+          for u in https://tripnalc.com/ https://tripnalc.com/robots.txt https://tripnalc.com/sitemap.xml https://tripnalc.com/weather https://tripnalc.com/weekend https://tripnalc.com/overseas https://tripnalc.com/weather/seoraksan https://tripnalc.com/ads.txt https://tripnalc.com/favicon.ico https://www.tripnalc.com/ https://tripnal.com/ https://www.tripnal.com/ http://tripnalc.com/ http://tripnal.com/ https://tripnalc.com/nonexistent-xyz; do
+            for m in GET HEAD; do
+              echo "== $m $u"
+              curl -sS -o /tmp/b -D /tmp/h -X $m --max-time 30 -A "$YETI" -w "code=%{http_code} redirect=%{redirect_url} time=%{time_total}s size=%{size_download}\n" "$u" $( [ $m = HEAD ] && echo -I ) || echo "curl fail $?"
+              grep -iE "^(server|cf-ray|cf-mitigated|x-edge-cache|content-type|location|cache-control|x-robots-tag):" /tmp/h || true
+            done
+          done
+          echo "== 사이트맵 앞부분"; curl -sS -A "$YETI" https://tripnalc.com/sitemap.xml | head -c 600; echo
+          echo "== robots"; curl -sS -A "$YETI" https://tripnalc.com/robots.txt
+          echo "== 홈 meta"; curl -sS -A "$YETI" https://tripnalc.com/ | grep -oE '<meta name="(robots|naver-site-verification)[^>]*>|<link rel="canonical"[^>]*>' | head
+          echo "== 연속 20번"; for i in $(seq 20); do curl -sS -o /dev/null -A "$YETI" -w "%{http_code} %{time_total}\n" "https://tripnalc.com/weather/seoraksan?x=$i"; done

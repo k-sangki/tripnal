@@ -7,6 +7,7 @@ src/data/climate.json에 저장한다. 한 번 만들어 두면 되는 자료라
 - 격자(약 0.5°) 고도와 여행지 고도가 다르면 기온을 0.0065°C/m로 보정한다.
 
 사용: python collector/climate.py [--only osaka,tokyo]
+     python collector/climate.py --korea   # 국내 도시 → src/data/climate-kr.json (외국인용 월별 날씨 페이지)
 """
 
 import argparse
@@ -79,10 +80,44 @@ def monthly(j, elevation):
     return out, grid_elev
 
 
+# 국내 도시 (slug는 src/lib/places.ts, 고도는 도심 기상관측소 높이에 가까운 값 m)
+KOREA = [
+    ("seoul", 37.5665, 126.978, 86),
+    ("busan", 35.18, 129.075, 70),
+    ("jeju", 33.499, 126.531, 20),
+    ("incheon", 37.4563, 126.7052, 71),
+    ("gyeongju", 35.856, 129.225, 38),
+    ("gangneung", 37.752, 128.876, 27),
+    ("sokcho", 38.207, 128.592, 18),
+    ("jeonju", 35.8242, 127.148, 61),
+    ("daegu", 35.8714, 128.6014, 54),
+    ("yeosu", 34.76, 127.662, 64),
+]
+OUT_KR = os.path.join(ROOT, "src", "data", "climate-kr.json")
+
+
+def korea():
+    result = {}
+    for slug, lat, lon, elev in KOREA:
+        print(slug, flush=True)
+        months, grid_elev = monthly(fetch(lat, lon), elev)
+        result[slug] = {"months": months, "gridElevation": grid_elev}
+        time.sleep(1)
+    text = json.dumps({"source": "NASA POWER", "years": [START, END], "places": result}, ensure_ascii=False, separators=(",", ":"))
+    with open(OUT_KR, "w", encoding="utf-8") as fp:
+        fp.write(text)
+    # Actions 로그에서 그대로 옮겨 쓸 수 있게 한 줄로도 찍는다
+    print("CLIMATE_KR_JSON " + text, flush=True)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--only", default="")
+    ap.add_argument("--korea", action="store_true")
     a = ap.parse_args()
+    if a.korea:
+        korea()
+        return
     with open(SRC, encoding="utf-8") as fp:
         places = json.load(fp)
     old = {}

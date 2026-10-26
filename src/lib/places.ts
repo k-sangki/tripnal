@@ -260,6 +260,16 @@ export const PLACES: Place[] = [
   { slug: "wonju", name: "원주", region: "강원 원주시", lat: 37.342, lon: 127.9201, leisure: "travel" },
   { slug: "andong", name: "안동", region: "경북 안동시", lat: 36.5684, lon: 128.7294, leisure: "travel" },
   { slug: "suncheon", name: "순천", region: "전남 순천시", lat: 34.9507, lon: 127.4872, leisure: "travel" },
+  // 방한 외국인이 많이 가는 곳 (2026-10-25, 영어·일본어·중국어 페이지와 함께)
+  { slug: "nami-island", name: "남이섬", region: "강원 춘천시", lat: 37.7913, lon: 127.5256, leisure: "travel" },
+  { slug: "udo", name: "우도", region: "제주 제주시 우도면", lat: 33.5045, lon: 126.9535, leisure: "travel" },
+  { slug: "everland", name: "에버랜드", region: "경기 용인시", lat: 37.2939, lon: 127.2019, leisure: "travel" },
+  { slug: "imjingak", name: "임진각", region: "경기 파주시", lat: 37.8894, lon: 126.7406, leisure: "travel", aliases: ["파주 임진각", "DMZ"] },
+  { slug: "aewol", name: "애월", region: "제주 제주시 애월읍", lat: 33.463, lon: 126.311, leisure: "travel", aliases: ["애월 카페거리"] },
+  { slug: "danyang", name: "단양", region: "충북 단양군", lat: 36.9846, lon: 128.3656, leisure: "travel" },
+  { slug: "boseong-green-tea", name: "보성 녹차밭", region: "전남 보성군", lat: 34.7151, lon: 127.0817, leisure: "travel", aliases: ["대한다원"] },
+  { slug: "damyang-juknokwon", name: "담양 죽녹원", region: "전남 담양군", lat: 35.3268, lon: 126.9858, leisure: "travel" },
+  { slug: "yangyang-jukdo-beach", name: "양양 죽도해변", region: "강원 양양군", lat: 38.0276, lon: 128.7176, leisure: "travel", aliases: ["양양 서핑", "죽도해수욕장"] },
   { slug: "yongpyong", name: "용평리조트", region: "강원 평창군", lat: 37.6272, lon: 128.6771, leisure: "ski" },
   { slug: "alpensia", name: "알펜시아 스키장", region: "강원 평창군", lat: 37.6528, lon: 128.6743, leisure: "ski" },
   { slug: "phoenix-pyeongchang", name: "휘닉스 평창", region: "강원 평창군", lat: 37.5782, lon: 128.3178, leisure: "ski" },
@@ -341,4 +351,20 @@ export const PLACES: Place[] = [
 
 export function getPlace(slug: string): Place | undefined {
   return PLACES.find((p) => p.slug === slug);
+}
+
+/** 두 지점 사이 거리(km) */
+export function distanceKm(a: Pick<Place, "lat" | "lon">, b: Pick<Place, "lat" | "lon">): number {
+  const r = Math.PI / 180;
+  const x = (b.lon - a.lon) * r * Math.cos(((a.lat + b.lat) / 2) * r);
+  const y = (b.lat - a.lat) * r;
+  return Math.sqrt(x * x + y * y) * 6371;
+}
+
+/** 같은 레저의 가까운 장소 (가까운 순) */
+export function nearbyPlaces(p: Place, n: number): { place: Place; km: number }[] {
+  return PLACES.filter((q) => q.slug !== p.slug && q.leisure === p.leisure)
+    .map((q) => ({ place: q, km: distanceKm(p, q) }))
+    .sort((a, b) => a.km - b.km)
+    .slice(0, n);
 }

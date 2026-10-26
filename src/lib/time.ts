@@ -1,3 +1,5 @@
+import type { Locale } from "./i18n";
+
 /** 한국 표준시(UTC+9, 서머타임 없음) 기준 날짜 유틸. 서버·브라우저 시간대와 무관하게 동작한다.
  * 해외 장소는 UTC와의 차이(분)를 넘겨 현지 시간으로 쓴다. */
 export const KST_OFFSET_MIN = 540;
@@ -45,15 +47,33 @@ export function weekday(date: string): number {
 }
 
 const WEEKDAY_KO = ["일", "월", "화", "수", "목", "금", "토"];
+const WEEKDAY: Record<Locale, string[]> = {
+  ko: WEEKDAY_KO,
+  en: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+  ja: ["日", "月", "火", "水", "木", "金", "土"],
+  zh: ["日", "一", "二", "三", "四", "五", "六"],
+};
+const MONTH_EN = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 export function weekdayKo(date: string): string {
   return WEEKDAY_KO[weekday(date)];
 }
 
+/** 요일 짧은 이름 (일 / Sun / 日) */
+export function weekdayName(date: string, l: Locale = "ko"): string {
+  return WEEKDAY[l][weekday(date)];
+}
+
 /** "10/19(일)" */
 export function shortDateKo(date: string): string {
+  return shortDate(date);
+}
+
+/** "10/19(일)", "Sun, Oct 19", "10/19(日)", "10/19(日)" (중국어는 일·一·二…) */
+export function shortDate(date: string, l: Locale = "ko"): string {
   const [, m, d] = date.split("-").map(Number);
-  return `${m}/${d}(${weekdayKo(date)})`;
+  if (l === "en") return `${weekdayName(date, l)}, ${MONTH_EN[m - 1]} ${d}`;
+  return `${m}/${d}(${weekdayName(date, l)})`;
 }
 
 /** "10월 19일 일요일" */

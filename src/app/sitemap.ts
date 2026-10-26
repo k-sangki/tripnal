@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { activeGolfRegions } from "@/lib/golf";
 import { DESTINATIONS } from "@/lib/overseas";
 import { PLACE_TEXT } from "@/data/places-i18n";
 import { FOREIGN_LOCALES, languageAlternates, localePath, type Locale } from "@/lib/i18n";
@@ -19,6 +20,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/weather`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE}/overseas`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE}/weekend`, lastModified: now, changeFrequency: "daily", priority: 0.8 },
+    { url: `${BASE}/golf`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
+    ...activeGolfRegions().map((r) => ({ url: `${BASE}/golf/${r.slug}`, lastModified: now, changeFrequency: "daily" as const, priority: 0.8 })),
     ...Array.from({ length: 12 }, (_, i) => ({
       url: `${BASE}/overseas/month/${i + 1}`,
       lastModified: now,

@@ -1,3 +1,4 @@
+import golf from "@/data/golf.json";
 import type { LeisureId } from "@/lib/leisure";
 
 export interface Place {
@@ -347,6 +348,10 @@ export const PLACES: Place[] = [
   { slug: "taebaek-camp", name: "태백고원 자연휴양림 캠핑장", region: "강원 태백시", lat: 37.1299, lon: 129.0691, leisure: "camping" },
   { slug: "naewonsa-camp", name: "지리산 내원사 자동차야영장", region: "경남 산청군", lat: 35.2968, lon: 127.8127, leisure: "camping" },
   { slug: "naksan-pine-camp", name: "낙산해변 송림 야영장", region: "강원 양양군", lat: 38.1129, lon: 128.6375, leisure: "camping" },
+
+  // 2026-10-25 전국 골프장: OpenStreetMap leisure=golf_course(© OpenStreetMap contributors, ODbL), 시·군은 Nominatim 역지오코딩.
+  // 수가 많아 src/data/golf.json에 따로 둔다 (주말 수집 collector/weekend.py는 이 파일의 줄만 읽으므로 골프장은 빠진다)
+  ...(golf as Omit<Place, "leisure">[]).map((g) => ({ ...g, leisure: "golf" as const })),
 ];
 
 export function getPlace(slug: string): Place | undefined {

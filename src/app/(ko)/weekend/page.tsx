@@ -27,7 +27,7 @@ async function devData(): Promise<WeekendData> {
   const dates = w.from === w.to ? [w.from] : [w.from, w.to];
   const places: WeekendData["places"] = {};
   await Promise.all(
-    PLACES.map(async (p) => {
+    PLACES.filter((p) => ORDER.includes(p.leisure)).map(async (p) => {
       const s = weekendFromForecast(await getForecast(p.lat, p.lon, p.elevation), dates);
       if (s) places[p.slug] = s;
     }),

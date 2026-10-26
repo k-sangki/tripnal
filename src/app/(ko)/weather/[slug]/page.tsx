@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SiteFooter, SiteHeader } from "@/components/SiteHeader";
 import { WeatherApp } from "@/components/WeatherApp";
+import { golfRegionOf } from "@/lib/golf";
 import { hasForeignPage } from "@/data/places-i18n";
 import { languageAlternates } from "@/lib/i18n";
 import { getLeisure } from "@/lib/leisure";
@@ -42,6 +43,7 @@ export async function generateMetadata({ params, searchParams }: PageProps<"/wea
       `${place.name} 이번주 날씨`,
       `${place.name} 주말 날씨`,
       ...(place.leisure === "fishing" ? [`${place.name} 물때표`, `${place.name} 바다 날씨`] : []),
+      ...(place.leisure === "golf" ? [`${place.name} 골프장 날씨`, `${place.name} 라운딩 날씨`, "골프장 날씨"] : []),
       `${place.name} ${getLeisure(place.leisure).label} 날씨`,
       ...(place.aliases ?? []).map((a) => `${a} 날씨`),
     ],
@@ -66,6 +68,14 @@ export default async function PlacePage({ params }: PageProps<"/weather/[slug]">
   const leisure = getLeisure(place.leisure);
   // 같은 레저 중 가까운 곳 (같은 날 갈 만한 대안, 내부 링크)
   const related = nearbyPlaces(place, 8);
+  const golf = place.leisure === "golf";
+  const golfRegion = golf ? golfRegionOf(place) : undefined;
+  const crumbs = golf
+    ? [
+        { name: "전국 골프장 날씨", item: "https://tripnalc.com/golf" },
+        ...(golfRegion ? [{ name: `${golfRegion.name} 골프장 날씨`, item: `https://tripnalc.com/golf/${golfRegion.slug}` }] : []),
+      ]
+    : [{ name: "장소별 날씨", item: "https://tripnalc.com/weather" }];
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -79,8 +89,8 @@ export default async function PlacePage({ params }: PageProps<"/weather/[slug]">
         "@type": "BreadcrumbList",
         itemListElement: [
           { "@type": "ListItem", position: 1, name: "트립날씨", item: "https://tripnalc.com/" },
-          { "@type": "ListItem", position: 2, name: "장소별 날씨", item: "https://tripnalc.com/weather" },
-          { "@type": "ListItem", position: 3, name: `${place.name} 날씨`, item: `https://tripnalc.com/weather/${place.slug}` },
+          ...crumbs.map((c, i) => ({ "@type": "ListItem", position: i + 2, ...c })),
+          { "@type": "ListItem", position: crumbs.length + 2, name: `${place.name} 날씨`, item: `https://tripnalc.com/weather/${place.slug}` },
         ],
       },
     ],
@@ -130,6 +140,9 @@ export default async function PlacePage({ params }: PageProps<"/weather/[slug]">
                 {p.name} 날씨 · {Math.round(km)}km
               </Link>
             ))}
+            {golf && (
+              <Link href={golfRegion ? `/golf/${golfRegion.slug}` : "/golf"}>{golfRegion ? `${golfRegion.name} 골프장 날씨 전체` : "전국 골프장 날씨"}</Link>
+            )}
           </nav>
         </section>
       )}

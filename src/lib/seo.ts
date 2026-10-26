@@ -32,6 +32,9 @@ export function placeTitle(p: Place): string {
       return `${p.name} 날씨 · 라이딩 전 확인! 맞바람에 울 일 있을까?`;
     case "ski":
       return `${p.name} 날씨 · 이번주 스키장 눈 소식, 연차 쓸 각?`;
+    case "golf":
+      // "○○CC 날씨", "○○ 골프장 날씨"로 찾는다. 라운딩 전날·당일에 비·바람을 본다
+      return `${p.name} 날씨 · 이번주·주말 라운딩, 오늘 OB는 바람 탓 가능?`;
     case "travel":
       // 같은 "여행"이라도 찾는 목적이 다르다: 바다는 물놀이·사진, 관광지는 여행 동선, 사는 도시는 생활(세차·빨래)
       if (/해수욕장|해변/.test(p.name)) return `${p.name} 날씨 · 이번주 바다 가면 인생샷? 산발샷?`;
@@ -50,6 +53,8 @@ export function placeDescription(p: Place): string {
       : p.leisure === "fishing"
         ? "물때표(만조·간조), 파고, 풍속·풍향과 돌풍을"
         : "기온·체감온도·비·돌풍과 일몰 시간을";
+  if (p.leisure === "golf")
+    return `${p.name}(${p.region}) 골프장 날씨를 3시간 간격으로. 티오프 시간대 비·낙뢰·바람(돌풍)·체감온도와 일출·일몰까지, 라운딩을 미룰지 우비를 챙길지 미리 정하세요.`;
   return `${p.name}(${p.region}) 이번주·주말 날씨를 3시간 간격으로. ${extra} ${l.label}에 맞게 한눈에 보여드리고, 여행 일정을 날씨로 계획할 수 있습니다.`;
 }
 
@@ -97,7 +102,7 @@ export function placeLiveDescription(p: Place, f: Forecast | null, now = new Dat
  * (화면에는 보이지 않는다)
  */
 export function placeSchemaType(p: Pick<Place, "name" | "slug" | "leisure">): string {
-  if (/해수욕장|해변/.test(p.name)) return "Beach";
+  if (p.leisure !== "golf" && /해수욕장|해변/.test(p.name)) return "Beach";
   switch (p.leisure) {
     case "camping":
       return "Campground";
@@ -105,6 +110,8 @@ export function placeSchemaType(p: Pick<Place, "name" | "slug" | "leisure">): st
       return "SkiResort";
     case "hiking":
       return "Mountain";
+    case "golf":
+      return "GolfCourse";
     default:
       return "TouristDestination";
   }

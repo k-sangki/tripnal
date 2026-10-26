@@ -19,6 +19,18 @@ export default function PlacesIndex() {
       {LEISURES.map((l) => {
         const list = PLACES.filter((p) => p.leisure === l.id);
         if (!list.length) return null;
+        // 골프장은 수가 많아 전국 골프장 날씨(/golf)로 보낸다
+        if (l.id === "golf")
+          return (
+            <section key={l.id} className="card" style={{ marginTop: 12 }}>
+              <h2 className="card-title">
+                {l.emoji} {l.label}
+              </h2>
+              <nav className="place-links">
+                <Link href="/golf">전국 골프장 날씨 ({list.length}곳) →</Link>
+              </nav>
+            </section>
+          );
         return (
           <section key={l.id} className="card" style={{ marginTop: 12 }}>
             <h2 className="card-title">

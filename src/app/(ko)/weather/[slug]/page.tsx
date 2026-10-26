@@ -7,7 +7,7 @@ import { hasForeignPage } from "@/data/places-i18n";
 import { languageAlternates } from "@/lib/i18n";
 import { getLeisure } from "@/lib/leisure";
 import { getPlace, nearbyPlaces } from "@/lib/places";
-import { placeLiveDescription, placeSchemaType, placeSummary, placeTitle } from "@/lib/seo";
+import { placeLiveDescription, placeSchemaType, placeSummaryRows, placeTitle } from "@/lib/seo";
 import { getForecast } from "@/lib/weather";
 import type { Forecast } from "@/lib/weather/types";
 
@@ -101,8 +101,21 @@ export default async function PlacePage({ params }: PageProps<"/weather/[slug]">
         <h2>
           {place.name} {leisure.label} 날씨 요약
         </h2>
-        {forecast ? placeSummary(place, forecast).map((line) => <p key={line}>{line}</p>) : <p>예보를 불러오는 중입니다.</p>}
-        <p>
+        {forecast ? (
+          <dl className="sum-rows">
+            {placeSummaryRows(place, forecast).map((r) => (
+              <div key={r.label}>
+                <dt>
+                  <span aria-hidden>{r.icon}</span> {r.label}
+                </dt>
+                <dd>{r.parts.map((x, i) => (typeof x === "string" ? x : <b key={i}>{x.b}</b>))}</dd>
+              </div>
+            ))}
+          </dl>
+        ) : (
+          <p>예보를 불러오는 중입니다.</p>
+        )}
+        <p className="sum-note">
           {place.name}({place.region})의 날씨를 오늘부터 최대 16일까지 3시간 간격으로 보여드립니다. 기간을 직접 고르면 1박 2일, 2박 3일처럼 원하는
           날짜만 볼 수 있고, 캡처 버튼으로 이미지를 저장해 일행과 공유할 수 있습니다.
         </p>

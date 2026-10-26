@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { SiteFooter, SiteHeader } from "@/components/SiteHeader";
 import { WeatherApp, type AppPlace } from "@/components/WeatherApp";
+import { languageAlternates } from "@/lib/i18n";
 import Link from "next/link";
 import { getLeisure } from "@/lib/leisure";
 import { getPlace } from "@/lib/places";
@@ -47,7 +48,8 @@ export async function generateMetadata({ searchParams }: PageProps<"/">): Promis
     title,
     description,
     // 같은 장소라도 기간마다 다른 화면이라 검색에는 기본 주소만 남긴다
-    alternates: { canonical: "/" },
+    // 영어·일본어 홈과 서로 가리킨다 (hreflang)
+    alternates: { canonical: "/", languages: languageAlternates("/") },
     openGraph: { siteName: "트립날씨", locale: "ko_KR", title, description, images: [{ url: image, width: 1200, height: 630 }] },
     twitter: { card: "summary_large_image", title, description, images: [image] },
   };

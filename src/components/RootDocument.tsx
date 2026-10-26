@@ -1,10 +1,9 @@
-import type { Metadata, Viewport } from "next";
+import type { Viewport } from "next";
+import type { ReactNode } from "react";
 import { PullToRefresh } from "@/components/PullToRefresh";
-import "./globals.css";
 
-export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://tripnalc.com";
 // 시크릿에 줄바꿈이 섞여 들어와도 ads.txt·스크립트 주소가 깨지지 않게 다듬는다
-const ADSENSE = process.env.NEXT_PUBLIC_ADSENSE_CLIENT?.trim();
+export const ADSENSE = process.env.NEXT_PUBLIC_ADSENSE_CLIENT?.trim();
 // Cloudflare Web Analytics (쿠키 없는 방문 통계)
 const CF_BEACON = process.env.NEXT_PUBLIC_CF_BEACON_TOKEN?.trim();
 
@@ -21,29 +20,8 @@ function gtagInit(id: string) {
   return `(function(){try{var q=new URLSearchParams(location.search).get("me");if(q==="1")localStorage.setItem("tripnal-me","1");if(q==="0")localStorage.removeItem("tripnal-me");if(localStorage.getItem("tripnal-me"))window["ga-disable-${id}"]=true}catch(e){}})();window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","${id}");`;
 }
 
-const DESCRIPTION = "놀러 갈 땐, 트립날씨. 캠핑날씨·여행날씨·등산·낚시 물때표까지, 이번주 날씨와 주말 날씨를 3시간 간격으로. 비·바람·돌풍을 한눈에 보고 캡처해 공유하세요.";
-
-export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
-  title: {
-    default: "트립날씨 · 캠핑·등산·낚시·여행 이번주 날씨, 놀러 가도 되는 날 3초 컷",
-    // 검색 결과 위에 사이트 이름(트립날씨)이 따로 나오니 제목 뒤에 붙이지 않는다
-    template: "%s",
-  },
-  // 검색 결과·공유 미리보기에 쓰인다. 네이버 권장 80자 이내
-  description: DESCRIPTION,
-  applicationName: "트립날씨",
-  keywords: ["트립날씨", "tripnalc", "캠핑날씨", "캠핑 날씨", "여행날씨", "이번주 날씨", "주말 날씨", "등산 날씨", "낚시 날씨", "물때표", "바다 날씨"],
-  openGraph: { type: "website", siteName: "트립날씨", locale: "ko_KR", description: DESCRIPTION },
-  formatDetection: { telephone: false },
-  // 사이트 소유 확인용 (애드센스, 네이버 서치어드바이저)
-  other: {
-    ...(ADSENSE ? { "google-adsense-account": ADSENSE } : {}),
-    "naver-site-verification": "336d370a97d1326e8a5a2fbb7cc0d3e0086580af",
-  },
-};
-
-export const viewport: Viewport = {
+/** 모든 언어 공통 */
+export const SITE_VIEWPORT: Viewport = {
   themeColor: "#0E3B36",
   width: "device-width",
   initialScale: 1,
@@ -51,9 +29,12 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+/** 한국어·외국어 루트 레이아웃이 같이 쓰는 html 뼈대 (글꼴·광고·통계) */
+export function RootDocument({ lang, children }: { lang: string; children: ReactNode }) {
   return (
-    <html lang="ko">
+    <html lang={lang}>
+      {/* 루트 레이아웃 두 곳이 같이 쓰는 뼈대라 <head>를 직접 쓴다 (App Router 루트 레이아웃과 같음) */}
+      {/* eslint-disable-next-line @next/next/no-head-element */}
       <head>
         <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="" />
         <link

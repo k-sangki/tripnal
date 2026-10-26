@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { GOLF_COURSES, activeGolfRegions, coursesIn, golfRegionOf, nearbyCourses } from "@/lib/golf";
+import { GOLF_COURSES, activeGolfRegions, coursesIn, golfRegionOf } from "@/lib/golf";
 import { PLACES } from "@/lib/places";
 import { placeSchemaType, placeTitle } from "@/lib/seo";
 
@@ -9,13 +9,6 @@ describe("golf", () => {
     expect(new Set(PLACES.map((p) => p.slug)).size).toBe(PLACES.length);
     const total = activeGolfRegions().reduce((a, r) => a + coursesIn(r).length, 0);
     expect(total).toBe(GOLF_COURSES.length);
-  });
-
-  it("근처 골프장은 자기 자신을 빼고 가까운 순", () => {
-    const p = GOLF_COURSES[0];
-    if (!p) return;
-    const near = nearbyCourses(p, 3);
-    expect(near.map((q) => q.slug)).not.toContain(p.slug);
   });
 
   it("제목·구조화 데이터", () => {

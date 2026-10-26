@@ -1,11 +1,19 @@
 import type { CSSProperties } from "react";
 import { iceRisk, pmLevel, roadState, thunderLevel, turbulence, uvLevel } from "@/lib/derived";
-import { windDirKo } from "@/lib/weather/codes";
+import { tr, type Locale } from "@/lib/i18n";
+import { windDir, windDirLabel } from "@/lib/weather/codes";
 import type { MetricKey } from "@/lib/leisure";
+import { METRIC, tempIn, tempUnit, windIn, windUnit, type Units } from "@/lib/units";
 import type { Slot } from "@/lib/weather/types";
+import { useLocale } from "./LocaleContext";
 
 export function fmt(v: number | null, unit = "") {
   return v == null ? "-" : `${Math.round(v)}${unit}`;
+}
+
+/** 기온 글자 (°F를 고르면 바꿔서) */
+export function fmtTemp(v: number | null, u: Units = METRIC, unit = "°") {
+  return fmt(v == null ? null : tempIn(v, u), unit);
 }
 
 export function rainText(mm: number) {
@@ -35,6 +43,13 @@ export const UNIT: Record<MetricKey, string> = {
   turbulence: "",
   range: "°C",
 };
+
+/** 그 언어·단위의 항목 단위 */
+export function unitOf(k: MetricKey, l: Locale = "ko", u: Units = METRIC): string {
+  if (k === "temp" || k === "feels" || k === "range") return tempUnit(u);
+  if (k === "wind" || k === "gust") return windUnit(u);
+  return tr(l, UNIT[k]);
+}
 
 /** 바람 세기 색 (m/s 기준점 사이를 자연스럽게 섞는다) */
 const WIND_STOPS: [number, string][] = [
@@ -88,8 +103,9 @@ export function rainLevel(v: number | null): number {
 }
 
 export function WindArrow({ dir }: { dir: number | null }) {
+  const { locale } = useLocale();
   return (
-    <span className="arrow" style={{ transform: `rotate(${dir ?? 0}deg)` }} aria-label={`${windDirKo(dir)}풍`}>
+    <span className="arrow" style={{ transform: `rotate(${dir ?? 0}deg)` }} aria-label={windDirLabel(dir, locale)}>
       ↓
     </span>
   );
@@ -108,13 +124,14 @@ export function rainClass(mm: number, prob: number | null | undefined): string {
 }
 
 /** 표에 들어갈 값 하나의 글자와 색 단계 */
-export function cellValue(slot: Slot, metric: MetricKey): { text: string; cls?: string } {
+export function cellValue(slot: Slot, metric: MetricKey, l: Locale = "ko", u: Units = METRIC): { text: string; cls?: string } {
   const none = { text: "-", cls: "v-none" };
+  const wind = (v: number | null) => fmt(v == null ? null : windIn(v, u));
   switch (metric) {
     case "temp":
-      return { text: fmt(slot.temp, "°") };
+      return { text: fmtTemp(slot.temp, u) };
     case "feels":
-      return { text: fmt(slot.feels, "°"), cls: slot.feels != null && slot.feels <= 0 ? "v-cold" : undefined };
+      return { text: fmtTemp(slot.feels, u), cls: slot.feels != null && slot.feels <= 0 ? "v-cold" : undefined };
     case "precip": {
       const p = slot.precip;
       if (p == null) return none;
@@ -130,9 +147,9 @@ export function cellValue(slot: Slot, metric: MetricKey): { text: string; cls?: 
     case "cloud":
       return { text: fmt(slot.cloud) };
     case "wind":
-      return { text: fmt(slot.wind) };
+      return { text: wind(slot.wind) };
     case "gust":
-      return { text: fmt(slot.gust) };
+      return { text: wind(slot.gust) };
     case "wave":
     case "windWave": {
       const v = metric === "wave" ? slot.wave : slot.windWave;
@@ -168,14 +185,14 @@ export function cellValue(slot: Slot, metric: MetricKey): { text: string; cls?: 
       return { text: String(Math.round(v)), cls: `pm${lv}` };
     }
     case "windDir":
-      return { text: windDirKo(slot.windDir) };
+      return { text: windDir(slot.windDir, l) };
     case "thunder":
     case "road":
     case "ice":
     case "turbulence": {
       const fn = { thunder: thunderLevel, road: roadState, ice: iceRisk, turbulence }[metric];
       const r = fn(slot);
-      return { text: r.text, cls: r.level ? `lv${r.level}` : "v-none" };
+      return { text: tr(l, r.text), cls: r.level ? `lv${r.level}` : "v-none" };
     }
     case "range":
       return none;
@@ -199,7 +216,8 @@ export function Cell({
   mark?: "max" | "min";
   style?: CSSProperties;
 }) {
-  const v = cellValue(slot, metric);
+  const { locale, units } = useLocale();
+  const v = cellValue(slot, metric, locale, units);
   const cls = [className, v.cls, metric === "temp" && mark ? `t-${mark}` : undefined].filter(Boolean).join(" ") || undefined;
   if (metric === "precip") {
     // 강수량 아래에 강수 확률을 작게 붙인다
@@ -213,7 +231,7 @@ export function Cell({
   }
   if (metric === "wind" || metric === "windDir") {
     return (
-      <td className={cls} style={style} title={`${windDirKo(slot.windDir)}풍`}>
+      <td className={cls} style={style} title={windDirLabel(slot.windDir, locale)}>
         <WindArrow dir={slot.windDir} />
         {v.text}
       </td>

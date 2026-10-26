@@ -1,3 +1,4 @@
+import { tr, type Locale } from "@/lib/i18n";
 import type { DayForecast, Slot } from "@/lib/weather/types";
 
 /** 예보 간격. "day"는 하루 한 칸 */
@@ -14,8 +15,8 @@ export function parseInterval(s: string | null | undefined): Interval {
   return INTERVALS.find((i) => i.id === s)?.id ?? "day";
 }
 
-export function intervalLong(i: Interval) {
-  return INTERVALS.find((x) => x.id === i)!.long;
+export function intervalLong(i: Interval, l: Locale = "ko") {
+  return tr(l, INTERVALS.find((x) => x.id === i)!.long);
 }
 
 /** 칸 하나가 몇 시간인지 (하루 단위는 24) */
@@ -95,10 +96,16 @@ export function slotHours(step: number): number[] {
   return Array.from({ length: 24 / step }, (_, i) => i * step);
 }
 
-export function slotHead(hour: number, step: number): string {
-  if (step === 12) return hour === 0 ? "오전" : "오후";
-  if (step === 6) return `${hour}~${hour + 6}시`;
-  return `${hour}시`;
+export function slotHead(hour: number, step: number, l: Locale = "ko"): string {
+  if (step === 12) return tr(l, hour === 0 ? "오전" : "오후");
+  if (l === "en") {
+    // 영어권은 12시간제: 0→12am, 15→3pm
+    const h12 = (h: number) => `${h % 12 || 12}${h % 24 < 12 ? "am" : "pm"}`;
+    return step === 6 ? `${h12(hour)}–${h12(hour + 6)}` : h12(hour);
+  }
+  const unit = l === "ja" || l === "zh" ? "時" : "시";
+  if (step === 6) return `${hour}~${hour + 6}${unit}`;
+  return `${hour}${unit}`;
 }
 
 /** 이미 지난 칸인지 (오늘만) */

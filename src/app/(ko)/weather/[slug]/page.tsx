@@ -3,10 +3,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SiteFooter, SiteHeader } from "@/components/SiteHeader";
 import { WeatherApp } from "@/components/WeatherApp";
-import { golfRegionOf, nearbyCourses } from "@/lib/golf";
+import { golfRegionOf } from "@/lib/golf";
+import { hasForeignPage } from "@/data/places-i18n";
+import { languageAlternates } from "@/lib/i18n";
 import { getLeisure } from "@/lib/leisure";
-import { PLACES, getPlace } from "@/lib/places";
-import { placeDescription, placeSchemaType, placeSummary, placeTitle } from "@/lib/seo";
+import { getPlace, nearbyPlaces } from "@/lib/places";
+import { placeLiveDescription, placeSchemaType, placeSummaryRows, placeTitle } from "@/lib/seo";
 import { getForecast } from "@/lib/weather";
 import type { Forecast } from "@/lib/weather/types";
 
@@ -27,7 +29,9 @@ export async function generateMetadata({ params, searchParams }: PageProps<"/wea
   const place = getPlace((await params).slug);
   if (!place) return {};
   const title = placeTitle(place);
-  const description = placeDescription(place);
+  // 본문과 같은 예보 (getForecast가 캐시하므로 두 번 계산하지 않는다)
+  const forecast = await getForecast(place.lat, place.lon, place.elevation).catch(() => null);
+  const description = placeLiveDescription(place, forecast);
   const url = `/weather/${place.slug}`;
   const image = ogImage(place.slug, await searchParams);
   return {
@@ -43,7 +47,8 @@ export async function generateMetadata({ params, searchParams }: PageProps<"/wea
       `${place.name} ${getLeisure(place.leisure).label} 날씨`,
       ...(place.aliases ?? []).map((a) => `${a} 날씨`),
     ],
-    alternates: { canonical: url },
+    // 영어·일본어판이 있는 장소는 서로 가리킨다 (hreflang)
+    alternates: { canonical: url, ...(hasForeignPage(place.slug) ? { languages: languageAlternates(url) } : {}) },
     openGraph: { siteName: "트립날씨", locale: "ko_KR", title, description, url, images: [{ url: image, width: 1200, height: 630 }] },
     twitter: { card: "summary_large_image", title, description, images: [image] },
   };
@@ -61,10 +66,10 @@ export default async function PlacePage({ params }: PageProps<"/weather/[slug]">
   }
 
   const leisure = getLeisure(place.leisure);
+  // 같은 레저 중 가까운 곳 (같은 날 갈 만한 대안, 내부 링크)
+  const related = nearbyPlaces(place, 8);
   const golf = place.leisure === "golf";
   const golfRegion = golf ? golfRegionOf(place) : undefined;
-  // 골프장은 가까운 곳끼리 묶어 보여준다 (같은 날 비교해서 고르니까)
-  const related = golf ? nearbyCourses(place) : PLACES.filter((p) => p.slug !== place.slug && p.leisure === place.leisure).slice(0, 8);
   const crumbs = golf
     ? [
         { name: "전국 골프장 날씨", item: "https://tripnalc.com/golf" },
@@ -83,7 +88,7 @@ export default async function PlacePage({ params }: PageProps<"/weather/[slug]">
       {
         "@type": "BreadcrumbList",
         itemListElement: [
-          { "@type": "ListItem", position: 1, name: "tripnalc", item: "https://tripnalc.com/" },
+          { "@type": "ListItem", position: 1, name: "트립날씨", item: "https://tripnalc.com/" },
           ...crumbs.map((c, i) => ({ "@type": "ListItem", position: i + 2, ...c })),
           { "@type": "ListItem", position: crumbs.length + 2, name: `${place.name} 날씨`, item: `https://tripnalc.com/weather/${place.slug}` },
         ],
@@ -106,8 +111,21 @@ export default async function PlacePage({ params }: PageProps<"/weather/[slug]">
         <h2>
           {place.name} {leisure.label} 날씨 요약
         </h2>
-        {forecast ? placeSummary(place, forecast).map((line) => <p key={line}>{line}</p>) : <p>예보를 불러오는 중입니다.</p>}
-        <p>
+        {forecast ? (
+          <dl className="sum-rows">
+            {placeSummaryRows(place, forecast).map((r) => (
+              <div key={r.label}>
+                <dt>
+                  <span aria-hidden>{r.icon}</span> {r.label}
+                </dt>
+                <dd>{r.parts.map((x, i) => (typeof x === "string" ? x : <b key={i}>{x.b}</b>))}</dd>
+              </div>
+            ))}
+          </dl>
+        ) : (
+          <p>예보를 불러오는 중입니다.</p>
+        )}
+        <p className="sum-note">
           {place.name}({place.region})의 날씨를 오늘부터 최대 16일까지 3시간 간격으로 보여드립니다. 기간을 직접 고르면 1박 2일, 2박 3일처럼 원하는
           날짜만 볼 수 있고, 캡처 버튼으로 이미지를 저장해 일행과 공유할 수 있습니다.
         </p>
@@ -115,11 +133,11 @@ export default async function PlacePage({ params }: PageProps<"/weather/[slug]">
 
       {related.length > 0 && (
         <section className="card" style={{ marginTop: 12 }}>
-          <h2 className="card-title">{golf ? "근처 골프장 날씨" : `다른 ${leisure.label} 장소 날씨`}</h2>
+          <h2 className="card-title">{place.name} 근처 {leisure.label} 날씨</h2>
           <nav className="place-links">
-            {related.map((p) => (
+            {related.map(({ place: p, km }) => (
               <Link key={p.slug} href={`/weather/${p.slug}`}>
-                {p.name} 날씨
+                {p.name} 날씨 · {Math.round(km)}km
               </Link>
             ))}
             {golf && (
@@ -128,7 +146,7 @@ export default async function PlacePage({ params }: PageProps<"/weather/[slug]">
           </nav>
         </section>
       )}
-      <SiteFooter />
+      <SiteFooter langPath={hasForeignPage(place.slug) ? `/weather/${place.slug}` : undefined} />
     </div>
   );
 }

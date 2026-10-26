@@ -16,6 +16,7 @@ import { ForecastTable } from "./ForecastTable";
 import { IntervalPicker } from "./IntervalPicker";
 import { KakaoMap } from "./KakaoMap";
 import { LeisureTabs } from "./LeisureTabs";
+import { useLocale, useT } from "./LocaleContext";
 import { PeriodPicker } from "./PeriodPicker";
 import { SearchBar } from "./SearchBar";
 import { WarningTicker } from "./WarningTicker";
@@ -59,7 +60,12 @@ function store(): Storage | null {
 
 export function WeatherApp({ initialPlace, initialForecast, initialLeisure, initialFrom, initialTo, initialInterval, headingSuffix, overseasOffset }: Props) {
   const router = useRouter();
+  const { locale, units, setUnits } = useLocale();
+  const t = useT();
   const overseas = overseasOffset != null;
+  /** 영어·일본어 장소 페이지: 해외 여행지처럼 검색·지도·특보·알림 없이 (시간은 한국 시간) */
+  const foreign = locale !== "ko";
+  const simple = overseas || foreign;
   const [today] = useState(() => kstDate(new Date(), overseasOffset));
   const [nowHour] = useState(() => Number(kstHourKey(new Date(), overseasOffset).slice(11, 13)));
   const [place, setPlace] = useState<AppPlace | null>(initialPlace);
@@ -80,7 +86,7 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
   const locate = useCallback(
     (silent = false) => {
       if (!navigator.geolocation) {
-        if (!silent) setError("이 브라우저는 위치 정보를 지원하지 않습니다.");
+        if (!silent) setError(t("이 브라우저는 위치 정보를 지원하지 않습니다."));
         return;
       }
       setLocating(true);
@@ -93,7 +99,7 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
         },
         () => {
           setLocating(false);
-          if (!silent) setError("위치 권한을 허용하면 현재 위치의 날씨를 볼 수 있습니다.");
+          if (!silent) setError(t("위치 권한을 허용하면 현재 위치의 날씨를 볼 수 있습니다."));
           else setPlace((p) => p ?? DEFAULT_PLACE);
         },
         { enableHighAccuracy: false, timeout: 8000, maximumAge: 10 * 60 * 1000 },
@@ -202,7 +208,11 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
   const days = useMemo(() => (forecast ? forecast.days.filter((d) => inPeriod(d.date, period)) : []), [forecast, period]);
 
   const shareUrl = typeof window === "undefined" ? "https://tripnalc.com" : window.location.href;
-  const shareTitle = place ? `${place.name} ${periodLabel(period)} ${leisure.label} 날씨` : "tripnalc 날씨";
+  const shareTitle = foreign
+    ? `${place?.name ?? ""} ${t("날씨")} · ${periodLabel(period, locale)}`
+    : place
+      ? `${place.name} ${periodLabel(period)} ${leisure.label} 날씨`
+      : "tripnalc 날씨";
   const fileName = `tripnalc_${place?.name ?? "weather"}_${period.from}_${period.to}_${interval}.png`.replace(/\s+/g, "_");
   const getTarget = useCallback(() => captureRef.current, []);
 
@@ -210,12 +220,12 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
     <div className="layout">
       {/* 모바일은 검색 → 지도 → 현재 위치 → 설정 → 예보 → 활동 순서, PC는 왼쪽(검색·지도·설정)과 오른쪽(위치·예보) 2단 */}
       <div className="a-side">
-        {!overseas && (
+        {!simple && (
           <div className="o-search">
             <SearchBar onSelect={(p) => choose(p)} onLocate={() => locate(false)} locating={locating} />
           </div>
         )}
-        {place && !overseas && (
+        {place && !simple && (
           <div className={`o-map card map-card${mapOpen ? " open" : ""}`}>
             <button className="map-toggle" aria-expanded={mapOpen} onClick={() => setMapOpen((o) => !o)}>
               <span>🗺️ 지도에서 찾기</span>
@@ -234,6 +244,15 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
           <PeriodPicker value={period} today={today} onChange={setPeriod} />
           <div style={{ height: 12 }} />
           <IntervalPicker value={interval} onChange={setIntervalChoice} />
+          {locale === "en" && (
+            <div className="seg unit-seg" role="group" aria-label="Temperature unit" style={{ marginTop: 12 }}>
+              {(["C", "F"] as const).map((u) => (
+                <button key={u} aria-pressed={units.temp === u} onClick={() => setUnits({ ...units, temp: u })}>
+                  °{u}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
         <div className="o-ad pc-only">
           <AdSlot slot={AD_SLOTS.side} />
@@ -242,24 +261,32 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
 
       <main className="a-main">
         <div className="o-hero">
-          {error && <div className="error">{error}</div>}
+          {/* 서버 오류 글은 한국어라 외국어 화면에서는 같은 뜻의 번역으로 */}
+          {error && <div className="error">{foreign ? t("날씨 정보를 가져오지 못했습니다.") : error}</div>}
           <section className="hero">
             <div className="hero-top">
               <span>
-                {leisure.emoji} {leisure.groupLabel} 날씨
+                {leisure.emoji} {foreign ? t(`${leisure.label} 날씨`) : `${leisure.groupLabel} 날씨`}
               </span>
-              <span>{intervalLong(interval)} · 최대 16일</span>
+              <span>
+                {intervalLong(interval, locale)} · {t("최대 16일")}
+              </span>
             </div>
             <h1 className="hero-name">
-              {place?.name ?? "위치 확인 중"}
+              {place?.name ?? t("위치 확인 중")}
               {headingSuffix && <span className="h1-suffix"> {headingSuffix}</span>}
             </h1>
             {place?.address && place.address !== place.name && <div className="hero-addr">{place.address}</div>}
             <div className="hero-meta">
-              <span className="pill mint">{periodLabel(period)}</span>
+              <span className="pill mint">{periodLabel(period, locale)}</span>
               {overseas && <span className="pill">🕒 현지 시간</span>}
-              {forecast?.elevation != null && <span className="pill">⛰️ 해발 {Math.round(forecast.elevation).toLocaleString()}m</span>}
-              {place && forecast && !overseas && <AlertButton
+              {foreign && <span className="pill">🕒 {t("한국 시간")}</span>}
+              {forecast?.elevation != null && (
+                <span className="pill">
+                  ⛰️ {t("해발")} {Math.round(forecast.elevation).toLocaleString()}m
+                </span>
+              )}
+              {place && forecast && !simple && <AlertButton
                   key={`${place.lat},${place.lon}`}
                   place={place}
                   act={leisureId}
@@ -273,33 +300,46 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
         </div>
 
         <div className="o-fc">
-          {!overseas && <WarningTicker address={place?.address} />}
+          {!simple && <WarningTicker address={place?.address} />}
           {loading && !forecast ? (
             <div className="skeleton" />
           ) : (
             forecast && (
               <div style={{ opacity: loading ? 0.5 : 1 }}>
                 <ForecastTable days={days} leisure={leisure} interval={interval} today={today} nowHour={nowHour} />
-                {forecast.source.includes("·") && (
-                  <section className="card model-note">
-                    <h2>세 예보 모델의 중간값이라 덜 빗나가요</h2>
-                    <p>
-                      트립날씨는 단일 모델만 기본으로 보여주는 일반 지도형 사이트와 달리, <b>유럽(ECMWF)·미국(GFS)·독일(ICON)</b> 3개 예보의 시간대별
-                      중간값을 사용합니다. 한 모델이 크게 빗나가도 나머지 둘이 잡아주어 기온·바람과 3일 이후 중기 예보의 오차가 적습니다.
-                    </p>
-                    <p className="muted">단, 좁은 지역의 소나기는 약하게 표시될 수 있으니 강수 확률과 예측 가능성(%)을 함께 참고하세요.</p>
-                  </section>
+                {forecast.source.includes("·") &&
+                  (foreign ? (
+                    <section className="card model-note">
+                      <h2>{t("세 예보 모델의 중간값이라 덜 빗나가요")}</h2>
+                      <p>{t("MODEL_NOTE_BODY")}</p>
+                      <p className="muted">{t("단, 좁은 지역의 소나기는 약하게 표시될 수 있으니 강수 확률과 예측 가능성(%)을 함께 참고하세요.")}</p>
+                    </section>
+                  ) : (
+                    <section className="card model-note">
+                      <h2>세 예보 모델의 중간값이라 덜 빗나가요</h2>
+                      <p>
+                        트립날씨는 단일 모델만 기본으로 보여주는 일반 지도형 사이트와 달리, <b>유럽(ECMWF)·미국(GFS)·독일(ICON)</b> 3개 예보의 시간대별
+                        중간값을 사용합니다. 한 모델이 크게 빗나가도 나머지 둘이 잡아주어 기온·바람과 3일 이후 중기 예보의 오차가 적습니다.
+                      </p>
+                      <p className="muted">단, 좁은 지역의 소나기는 약하게 표시될 수 있으니 강수 확률과 예측 가능성(%)을 함께 참고하세요.</p>
+                    </section>
+                  ))}
+                {/* 외국어 페이지는 장소에 맞는 활동 하나로 고정한다 (활동 목록은 한국 레저 위주라서) */}
+                {!foreign && (
+                  <div className="card act-card">
+                    <LeisureTabs value={leisureId} onChange={setLeisureId} />
+                  </div>
                 )}
-                <div className="card act-card">
-                  <LeisureTabs value={leisureId} onChange={setLeisureId} />
-                </div>
                 <p className="muted" style={{ marginTop: 12 }}>
-                  {(interval === "6h" || interval === "12h") && "기온·체감은 낮 칸은 최고, 밤 칸은 최저 값입니다. "}
+                  {(interval === "6h" || interval === "12h") && t("기온·체감은 낮 칸은 최고, 밤 칸은 최저 값입니다. ")}
                   {overseas && "날짜와 시각은 모두 현지 시간입니다. "}
-                  {"강수 0.1↓는 강수 확률은 30% 이상이지만 양은 0.1mm 미만으로 예상되는 칸입니다. "}
+                  {foreign && t("날짜와 시각은 모두 한국 시간(KST, UTC+9)입니다. ")}
+                  {t("강수 0.1↓는 강수 확률은 30% 이상이지만 양은 0.1mm 미만으로 예상되는 칸입니다. ")}
                   {forecast.elevation != null &&
-                    `기온은 해발 ${Math.round(forecast.elevation)}m 기준으로 보정된 값입니다. 바람은 고도 보정이 되지 않아 높은 산에서는 실제보다 약할 수 있습니다. `}
-                  예보 제공: {forecast.source}
+                    (foreign
+                      ? t("ELEVATION_NOTE").replace("{m}", Math.round(forecast.elevation).toLocaleString())
+                      : `기온은 해발 ${Math.round(forecast.elevation)}m 기준으로 보정된 값입니다. 바람은 고도 보정이 되지 않아 높은 산에서는 실제보다 약할 수 있습니다. `)}
+                  {t("예보 제공")}: {forecast.source}
                 </p>
                 <div style={{ height: 12 }} />
                 <AdSlot slot={AD_SLOTS.afterSummary} />
@@ -320,9 +360,9 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
       {forecast && !capturing && (
         // 오른손으로 누르기 쉽게 캡처를 오른쪽에 둔다
         <div className="fab-bar">
-          <InstallButton />
+          {!foreign && <InstallButton />}
           <button className="fab" onClick={() => setCapturing(true)}>
-            <i className="logo-dot" aria-hidden /> 캡처해서 공유
+            <i className="logo-dot" aria-hidden /> {t("캡처해서 공유")}
           </button>
         </div>
       )}
@@ -342,7 +382,7 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
         />
       )}
       {/* 해외 여행지는 알림이 없으므로 안내도 띄우지 않는다 */}
-      {!overseas && !capturing && <WelcomePopup />}
+      {!simple && !capturing && <WelcomePopup />}
       {capturing && <CaptureSheet target={getTarget} fileName={fileName} shareTitle={shareTitle} shareUrl={shareUrl} onClose={() => setCapturing(false)} />}
     </div>
   );

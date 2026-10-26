@@ -43,14 +43,6 @@ export function activeGolfRegions(): GolfRegion[] {
   return GOLF_REGIONS.filter((r) => coursesIn(r).length);
 }
 
-/** 가까운 골프장 (같은 페이지 아래 "근처 골프장 날씨" 링크) */
-export function nearbyCourses(p: Pick<Place, "slug" | "lat" | "lon">, limit = 8): Place[] {
-  const d = (q: Place) => (q.lat - p.lat) ** 2 + ((q.lon - p.lon) * Math.cos((p.lat * Math.PI) / 180)) ** 2;
-  return GOLF_COURSES.filter((q) => q.slug !== p.slug)
-    .sort((a, b) => d(a) - d(b))
-    .slice(0, limit);
-}
-
 /** 골프장들의 가운데 지점 (시·도 페이지 날씨 요약에 쓴다) */
 export function centerOf(list: Pick<Place, "lat" | "lon">[]): { lat: number; lon: number } {
   return {

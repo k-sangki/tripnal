@@ -58,6 +58,45 @@ export function placeDescription(p: Place): string {
   return `${p.name}(${p.region}) 이번주·주말 날씨를 3시간 간격으로. ${extra} ${l.label}에 맞게 한눈에 보여드리고, 여행 일정을 날씨로 계획할 수 있습니다.`;
 }
 
+/** 주말이 맑을 때·비 올 때·바람 셀 때 레저별 한마디 (검색 설명 끝에 붙는 훅) */
+const WEEKEND_HOOK: Record<string, { good: string; rain: string; wind: string }> = {
+  camping: { good: "불멍 각, 장작 넉넉히!", rain: "타프 없으면 우중 캠핑 체험판", wind: "팩 단단히, 텐트가 연 될 수도" },
+  fishing: { good: "물때만 맞추면 쿨러 채울 각", rain: "비 맞으며 손맛 볼 각오?", wind: "배 뜰지부터 확인 필수" },
+  hiking: { good: "정상 인증샷 각!", rain: "우비 없으면 물에 빠진 생쥐", wind: "능선 칼바람, 장갑 챙기세요" },
+  cycling: { good: "라이딩 각, 바람도 순할 듯", rain: "엉덩이 물벼락 주의", wind: "맞바람에 허벅지 터질 각" },
+  ski: { good: "설질 좋을 때 연차 쓸 각", rain: "슬로프에 비? 눈인지 확인부터", wind: "리프트 멈출 수도, 확인 필수" },
+  golf: { good: "OB 나면 순전히 실력 탓", rain: "우중 라운딩, 그립 미끄럼 주의", wind: "OB는 바람 탓 해도 됨" },
+  travel: { good: "나들이 가기 딱 좋은 날", rain: "우산 챙기거나 실내 코스로", wind: "모자 날아갈 각, 꽉 잡으세요" },
+};
+
+/**
+ * 검색 결과 설명. 늘 같은 소개 문장보다 실제 주말 예보 숫자가 보여야 누른다 (CTR 개선, 2026-10-26).
+ * 예보를 못 가져오면 기본 소개 문장(placeDescription).
+ */
+export function placeLiveDescription(p: Place, f: Forecast | null, now = new Date()): string {
+  if (!f) return placeDescription(p);
+  const today = kstDate(now, f.utcOffset);
+  const weekend = f.days.filter((d) => inPeriod(d.date, presetPeriod("weekend", today)));
+  if (!weekend.length) return placeDescription(p);
+  const md = (date: string) => shortDateKo(date).replace(/\(.*\)/, "");
+  const when = weekend.length > 1 ? `${md(weekend[0].date)}~${md(weekend[weekend.length - 1].date)}` : md(weekend[0].date);
+  const lo = Math.round(Math.min(...weekend.map((d) => d.tMin ?? 99)));
+  const hi = Math.round(Math.max(...weekend.map((d) => d.tMax ?? -99)));
+  const rain = Math.round(weekend.reduce((a, d) => a + d.precipSum, 0));
+  const gust = Math.round(Math.max(...weekend.map((d) => d.gustMax ?? 0)));
+  const sky = codeInfo(weekend[0].code).label;
+  const hook = WEEKEND_HOOK[p.leisure] ?? WEEKEND_HOOK.travel;
+  const pick = rain >= 5 ? hook.rain : gust >= 12 ? hook.wind : hook.good;
+  const line = /[!?]$/.test(pick) ? pick : `${pick}.`;
+  const extra =
+    p.leisure === "hiking"
+      ? "정상 고도 보정 기온·돌풍"
+      : p.leisure === "fishing"
+        ? "물때표·만조·간조·파고"
+        : "기온·비·바람";
+  return `${p.name} 이번 주말(${when}) ${sky}, ${lo}~${hi}°, 강수 ${rain}mm, 돌풍 ${gust}m/s. ${line} ${extra}, 3시간 간격으로 한눈에.`;
+}
+
 /**
  * 구조화 데이터의 장소 종류. 검색엔진·광고가 날씨 페이지가 아니라 여행지(캠핑장·스키장·해변·산) 페이지로 읽게 한다.
  * (화면에는 보이지 않는다)
@@ -104,4 +143,76 @@ export function placeSummary(p: Pick<Place, "name" | "leisure">, f: Forecast, no
   const first = f.days[0];
   if (first?.sunrise && first.sunset) lines.push(`오늘 일출은 ${first.sunrise}, 일몰은 ${first.sunset}입니다.`);
   return lines;
+}
+
+/** 요약 카드 한 줄: 굵게 보일 핵심 숫자는 { b } */
+export interface SummaryRow {
+  icon: string;
+  label: string;
+  parts: (string | { b: string })[];
+}
+
+/** 들머리 기온을 어림할 때 쓰는 고도 (대부분 명산 들머리가 해발 100~300m) */
+const TRAILHEAD_M = 200;
+
+/**
+ * 장소 페이지 요약 카드. 긴 문장 대신 항목별 한 줄로 (가독성, SK 2026-10-26).
+ * 등산은 등산객이 찾는 것(정상 체감온도로 본 옷차림, 능선 바람, 들머리와 기온 차, 하산 시각)을 더한다.
+ */
+export function placeSummaryRows(p: Pick<Place, "name" | "leisure" | "elevation">, f: Forecast, now = new Date()): SummaryRow[] {
+  const rows: SummaryRow[] = [];
+  const today = kstDate(now, f.utcOffset);
+  const weekend = f.days.filter((d) => inPeriod(d.date, presetPeriod("weekend", today)));
+  if (weekend.length) {
+    const lo = Math.round(Math.min(...weekend.map((d) => d.tMin ?? 99)));
+    const hi = Math.round(Math.max(...weekend.map((d) => d.tMax ?? -99)));
+    const rain = Math.round(weekend.reduce((a, d) => a + d.precipSum, 0) * 10) / 10;
+    const gust = Math.round(Math.max(...weekend.map((d) => d.gustMax ?? 0)));
+    rows.push({
+      icon: "🗓️",
+      label: "이번 주말",
+      parts: [
+        `${weekend.map((d) => shortDateKo(d.date)).join("~")} `,
+        { b: `${codeInfo(weekend[0].code).label} · ${lo}~${hi}°` },
+        ` · 강수 ${rain}mm · 돌풍 ${gust}m/s`,
+      ],
+    });
+  }
+  if (p.leisure === "hiking") rows.push(...hikingRows(p, weekend.length ? weekend : f.days.slice(0, 1)));
+  const dry = f.days.filter((d) => d.precipSum < 1).length;
+  rows.push({ icon: "☂️", label: "비 없는 날", parts: [`앞으로 ${f.days.length}일 중 `, { b: `${dry}일` }] });
+  const first = f.days[0];
+  if (first?.sunrise && first.sunset) rows.push({ icon: "🌅", label: "오늘", parts: [`일출 ${first.sunrise} · 일몰 ${first.sunset}`] });
+  return rows;
+}
+
+function hikingRows(p: Pick<Place, "elevation">, days: Forecast["days"]): SummaryRow[] {
+  const rows: SummaryRow[] = [];
+  const feels = days
+    .flatMap((d) => d.slots)
+    .filter((s) => s.isDay)
+    .map((s) => s.feels)
+    .filter((v): v is number => v != null);
+  const gust = Math.max(0, ...days.map((d) => d.gustMax ?? 0));
+  if (feels.length) {
+    const lo = Math.round(Math.min(...feels));
+    const wear = lo <= 0 ? "보온 자켓·장갑·넥워머" : lo <= 8 ? "바람막이 + 얇은 패딩" : "가벼운 바람막이";
+    const wind = gust >= 14 ? " · 능선 바람 강함" : gust >= 9 ? " · 능선 칼바람" : "";
+    rows.push({ icon: "🧥", label: "옷차림", parts: ["정상 체감 최저 ", { b: `${lo}°` }, ` → ${wear}${wind}`] });
+  }
+  if (p.elevation && p.elevation > TRAILHEAD_M + 200) {
+    const diff = Math.round((p.elevation - TRAILHEAD_M) * 0.0065);
+    rows.push({
+      icon: "⛰️",
+      label: "고도",
+      parts: [`정상 해발 ${p.elevation.toLocaleString()}m 기준 · 들머리(${TRAILHEAD_M}m)는 약 `, { b: `${diff}°` }, " 따뜻"],
+    });
+  }
+  const d = days[0];
+  if (d?.sunset) {
+    const [h, m] = d.sunset.split(":").map(Number);
+    const by = `${String(h - 1).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+    rows.push({ icon: "🌇", label: "하산", parts: [`${shortDateKo(d.date)} 일몰 ${d.sunset} → `, { b: `${by}까지` }, " 하산 권장"] });
+  }
+  return rows;
 }

@@ -6,7 +6,7 @@ import { WeatherApp } from "@/components/WeatherApp";
 import { hasForeignPage } from "@/data/places-i18n";
 import { languageAlternates } from "@/lib/i18n";
 import { getLeisure } from "@/lib/leisure";
-import { PLACES, getPlace } from "@/lib/places";
+import { getPlace, nearbyPlaces } from "@/lib/places";
 import { placeLiveDescription, placeSchemaType, placeSummary, placeTitle } from "@/lib/seo";
 import { getForecast } from "@/lib/weather";
 import type { Forecast } from "@/lib/weather/types";
@@ -64,7 +64,8 @@ export default async function PlacePage({ params }: PageProps<"/weather/[slug]">
   }
 
   const leisure = getLeisure(place.leisure);
-  const related = PLACES.filter((p) => p.slug !== place.slug && p.leisure === place.leisure).slice(0, 8);
+  // 같은 레저 중 가까운 곳 (같은 날 갈 만한 대안, 내부 링크)
+  const related = nearbyPlaces(place, 8);
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -109,11 +110,11 @@ export default async function PlacePage({ params }: PageProps<"/weather/[slug]">
 
       {related.length > 0 && (
         <section className="card" style={{ marginTop: 12 }}>
-          <h2 className="card-title">다른 {leisure.label} 장소 날씨</h2>
+          <h2 className="card-title">{place.name} 근처 {leisure.label} 날씨</h2>
           <nav className="place-links">
-            {related.map((p) => (
+            {related.map(({ place: p, km }) => (
               <Link key={p.slug} href={`/weather/${p.slug}`}>
-                {p.name} 날씨
+                {p.name} 날씨 · {Math.round(km)}km
               </Link>
             ))}
           </nav>

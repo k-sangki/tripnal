@@ -352,3 +352,19 @@ export const PLACES: Place[] = [
 export function getPlace(slug: string): Place | undefined {
   return PLACES.find((p) => p.slug === slug);
 }
+
+/** 두 지점 사이 거리(km) */
+export function distanceKm(a: Pick<Place, "lat" | "lon">, b: Pick<Place, "lat" | "lon">): number {
+  const r = Math.PI / 180;
+  const x = (b.lon - a.lon) * r * Math.cos(((a.lat + b.lat) / 2) * r);
+  const y = (b.lat - a.lat) * r;
+  return Math.sqrt(x * x + y * y) * 6371;
+}
+
+/** 같은 레저의 가까운 장소 (가까운 순) */
+export function nearbyPlaces(p: Place, n: number): { place: Place; km: number }[] {
+  return PLACES.filter((q) => q.slug !== p.slug && q.leisure === p.leisure)
+    .map((q) => ({ place: q, km: distanceKm(p, q) }))
+    .sort((a, b) => a.km - b.km)
+    .slice(0, n);
+}

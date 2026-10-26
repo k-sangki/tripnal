@@ -86,11 +86,16 @@ export function fromStored(res: Response): Response {
   return new Response(res.body, { status: res.status, headers });
 }
 
-/** 예전 주소(tripnal.com)와 www는 Next를 거치지 않고 바로 tripnalc.com으로 보낸다 (next.config.ts redirects와 같은 규칙) */
+/**
+ * 예전 주소(tripnal.com)·www·http는 Next를 거치지 않고 바로 https://tripnalc.com으로 보낸다 (next.config.ts redirects와 같은 규칙).
+ * 네이버 로봇(Yeti)이 확실히 따라가도록 308이 아닌 301을 쓴다.
+ */
 export function canonicalRedirect(request: Request): Response | null {
   const url = new URL(request.url);
-  if (!/^(www\.)?tripnal\.com$|^www\.tripnalc\.com$/.test(url.hostname)) return null;
-  return Response.redirect(`https://tripnalc.com${url.pathname}${url.search}`, 308);
+  const oldHost = /^(www\.)?tripnal\.com$|^www\.tripnalc\.com$/.test(url.hostname);
+  const plainHttp = url.hostname === "tripnalc.com" && url.protocol === "http:";
+  if (!oldHost && !plainHttp) return null;
+  return Response.redirect(`https://tripnalc.com${url.pathname}${url.search}`, 301);
 }
 
 interface Ctx {

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { GolfFinder } from "@/components/GolfFinder";
 import { SiteFooter, SiteHeader } from "@/components/SiteHeader";
 import { GOLF_COURSES, activeGolfRegions, coursesIn } from "@/lib/golf";
 
@@ -29,27 +29,12 @@ export default function GolfIndex() {
       <p className="sub" style={{ margin: "4px 0 12px" }}>
         {GOLF_COURSES.length}곳 · 골프장을 누르면 이번주·주말 날씨를 3시간 간격으로 볼 수 있어요
       </p>
-      <nav className="place-links" style={{ marginBottom: 4 }}>
-        {regions.map((r) => (
-          <a key={r.slug} href={`#${r.slug}`}>
-            {r.short} {coursesIn(r).length}
-          </a>
-        ))}
-      </nav>
-      {regions.map((r) => (
-        <section key={r.slug} id={r.slug} className="card" style={{ marginTop: 12 }}>
-          <h2 className="card-title">
-            <Link href={`/golf/${r.slug}`}>{r.name} 골프장 날씨</Link>
-          </h2>
-          <nav className="place-links">
-            {coursesIn(r).map((p) => (
-              <Link key={p.slug} href={`/weather/${p.slug}`}>
-                {p.name} 날씨
-              </Link>
-            ))}
-          </nav>
-        </section>
-      ))}
+      <GolfFinder
+        regions={regions.map((r) => ({
+          ...r,
+          courses: coursesIn(r).map(({ slug, name, region, aliases }) => ({ slug, name, region, aliases })),
+        }))}
+      />
       <section className="card seo-text" style={{ marginTop: 16 }}>
         <h2>골프장 날씨, 이렇게 보세요</h2>
         <p>

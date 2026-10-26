@@ -89,7 +89,7 @@ export function placeLiveDescription(p: Place, f: Forecast | null, now = new Dat
       : p.leisure === "fishing"
         ? "물때표·만조·간조·파고"
         : "기온·비·바람";
-  return `${p.name} 이번 주말(${when}) ${sky}, ${lo}~${hi}°, 비 ${rain}mm, 돌풍 ${gust}m/s. ${line} ${extra}, 3시간 간격으로 한눈에.`;
+  return `${p.name} 이번 주말(${when}) ${sky}, ${lo}~${hi}°, 강수 ${rain}mm, 돌풍 ${gust}m/s. ${line} ${extra}, 3시간 간격으로 한눈에.`;
 }
 
 /**

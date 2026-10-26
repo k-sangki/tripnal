@@ -13,7 +13,7 @@ describe("placeLiveDescription", () => {
   it("주말 예보 숫자와 맑은 날 훅", () => {
     const d = placeLiveDescription(place, fc([day("2026-10-31", 0, 6), day("2026-11-01", 0.3, 7)]), now);
     expect(d).toContain("난지캠핑장 이번 주말(10/31~11/1)");
-    expect(d).toContain("8~17°, 비 0mm, 돌풍 7m/s");
+    expect(d).toContain("8~17°, 강수 0mm, 돌풍 7m/s");
     expect(d).toContain("불멍");
   });
   it("비가 많으면 비 훅", () => {

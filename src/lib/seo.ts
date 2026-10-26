@@ -137,3 +137,75 @@ export function placeSummary(p: Pick<Place, "name" | "leisure">, f: Forecast, no
   if (first?.sunrise && first.sunset) lines.push(`오늘 일출은 ${first.sunrise}, 일몰은 ${first.sunset}입니다.`);
   return lines;
 }
+
+/** 요약 카드 한 줄: 굵게 보일 핵심 숫자는 { b } */
+export interface SummaryRow {
+  icon: string;
+  label: string;
+  parts: (string | { b: string })[];
+}
+
+/** 들머리 기온을 어림할 때 쓰는 고도 (대부분 명산 들머리가 해발 100~300m) */
+const TRAILHEAD_M = 200;
+
+/**
+ * 장소 페이지 요약 카드. 긴 문장 대신 항목별 한 줄로 (가독성, SK 2026-10-26).
+ * 등산은 등산객이 찾는 것(정상 체감온도로 본 옷차림, 능선 바람, 들머리와 기온 차, 하산 시각)을 더한다.
+ */
+export function placeSummaryRows(p: Pick<Place, "name" | "leisure" | "elevation">, f: Forecast, now = new Date()): SummaryRow[] {
+  const rows: SummaryRow[] = [];
+  const today = kstDate(now, f.utcOffset);
+  const weekend = f.days.filter((d) => inPeriod(d.date, presetPeriod("weekend", today)));
+  if (weekend.length) {
+    const lo = Math.round(Math.min(...weekend.map((d) => d.tMin ?? 99)));
+    const hi = Math.round(Math.max(...weekend.map((d) => d.tMax ?? -99)));
+    const rain = Math.round(weekend.reduce((a, d) => a + d.precipSum, 0) * 10) / 10;
+    const gust = Math.round(Math.max(...weekend.map((d) => d.gustMax ?? 0)));
+    rows.push({
+      icon: "🗓️",
+      label: "이번 주말",
+      parts: [
+        `${weekend.map((d) => shortDateKo(d.date)).join("~")} `,
+        { b: `${codeInfo(weekend[0].code).label} · ${lo}~${hi}°` },
+        ` · 강수 ${rain}mm · 돌풍 ${gust}m/s`,
+      ],
+    });
+  }
+  if (p.leisure === "hiking") rows.push(...hikingRows(p, weekend.length ? weekend : f.days.slice(0, 1)));
+  const dry = f.days.filter((d) => d.precipSum < 1).length;
+  rows.push({ icon: "☂️", label: "비 없는 날", parts: [`앞으로 ${f.days.length}일 중 `, { b: `${dry}일` }] });
+  const first = f.days[0];
+  if (first?.sunrise && first.sunset) rows.push({ icon: "🌅", label: "오늘", parts: [`일출 ${first.sunrise} · 일몰 ${first.sunset}`] });
+  return rows;
+}
+
+function hikingRows(p: Pick<Place, "elevation">, days: Forecast["days"]): SummaryRow[] {
+  const rows: SummaryRow[] = [];
+  const feels = days
+    .flatMap((d) => d.slots)
+    .filter((s) => s.isDay)
+    .map((s) => s.feels)
+    .filter((v): v is number => v != null);
+  const gust = Math.max(0, ...days.map((d) => d.gustMax ?? 0));
+  if (feels.length) {
+    const lo = Math.round(Math.min(...feels));
+    const wear = lo <= 0 ? "보온 자켓·장갑·넥워머" : lo <= 8 ? "바람막이 + 얇은 패딩" : "가벼운 바람막이";
+    const wind = gust >= 14 ? " · 능선 바람 강함" : gust >= 9 ? " · 능선 칼바람" : "";
+    rows.push({ icon: "🧥", label: "옷차림", parts: ["정상 체감 최저 ", { b: `${lo}°` }, ` → ${wear}${wind}`] });
+  }
+  if (p.elevation && p.elevation > TRAILHEAD_M + 200) {
+    const diff = Math.round((p.elevation - TRAILHEAD_M) * 0.0065);
+    rows.push({
+      icon: "⛰️",
+      label: "고도",
+      parts: [`정상 해발 ${p.elevation.toLocaleString()}m 기준 · 들머리(${TRAILHEAD_M}m)는 약 `, { b: `${diff}°` }, " 따뜻"],
+    });
+  }
+  const d = days[0];
+  if (d?.sunset) {
+    const [h, m] = d.sunset.split(":").map(Number);
+    const by = `${String(h - 1).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+    rows.push({ icon: "🌇", label: "하산", parts: [`${shortDateKo(d.date)} 일몰 ${d.sunset} → `, { b: `${by}까지` }, " 하산 권장"] });
+  }
+  return rows;
+}

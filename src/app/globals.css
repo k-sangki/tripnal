@@ -800,6 +800,35 @@ a {
   color: var(--ink);
   margin: 0 0 8px;
 }
+.sum-rows {
+  margin: 4px 0 0;
+}
+.sum-rows > div {
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  gap: 8px;
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+}
+.sum-rows > div:first-child {
+  border-top: 0;
+}
+.sum-rows dt {
+  font-weight: 700;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.sum-rows dd {
+  margin: 0;
+}
+.sum-rows b {
+  color: var(--ink);
+}
+.sum-note {
+  margin: 12px 0 0;
+  font-size: 13px;
+  color: var(--muted);
+}
 .place-links {
   display: flex;
   flex-wrap: wrap;

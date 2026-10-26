@@ -1,0 +1,30 @@
+name: diag
+on:
+  push:
+    branches: [claude/project-thread-6u9na9]
+jobs:
+  diag:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          UA="Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+          for u in \
+            http://tripnalc.com/overseas/sicily/1 \
+            https://tripnalc.com/overseas/sicily/1 \
+            https://tripnalc.com/overseas/granada/11 \
+            https://tripnalc.com/overseas/prague/forecast \
+            https://tripnalc.com/overseas/manchester \
+            https://tripnalc.com/overseas/dresden \
+            https://tripnalc.com/overseas/sapa/8 \
+            http://tripnalc.com/overseas/sapa/8 \
+            "https://tripnalc.com/weather/boryeong?from=2026-10-24&to=2026-10-25" \
+            "https://tripnalc.com/weather/boryeong?from=2026-10-27&to=2026-10-28" \
+            https://tripnalc.com/weather/boryeong \
+            https://www.tripnalc.com/ ; do
+            echo "== $u"
+            curl -s -o /tmp/b -D - -A "$UA" "$u" -w "time=%{time_total}\n" | grep -iE "^HTTP|^location|^x-edge|time=|^cache-control"
+            grep -o '<link rel="canonical"[^>]*>' /tmp/b | head -1
+          done
+          echo "== 5xx 반복 점검(콜드 포함): 해외 월별 30개"
+          for c in rome london munich zagreb istanbul jakarta el-nido saga phu-quoc hamburg; do for m in 2 5 12; do
+            curl -s -o /dev/null -A "$UA" -w "%{http_code} %{time_total} $c/$m\n" "https://tripnalc.com/overseas/$c/$m?nocache=$RANDOM"; done; done

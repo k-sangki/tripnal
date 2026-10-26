@@ -7,7 +7,7 @@ import { hasForeignPage } from "@/data/places-i18n";
 import { languageAlternates } from "@/lib/i18n";
 import { getLeisure } from "@/lib/leisure";
 import { PLACES, getPlace } from "@/lib/places";
-import { placeDescription, placeSchemaType, placeSummary, placeTitle } from "@/lib/seo";
+import { placeLiveDescription, placeSchemaType, placeSummary, placeTitle } from "@/lib/seo";
 import { getForecast } from "@/lib/weather";
 import type { Forecast } from "@/lib/weather/types";
 
@@ -28,7 +28,9 @@ export async function generateMetadata({ params, searchParams }: PageProps<"/wea
   const place = getPlace((await params).slug);
   if (!place) return {};
   const title = placeTitle(place);
-  const description = placeDescription(place);
+  // 본문과 같은 예보 (getForecast가 캐시하므로 두 번 계산하지 않는다)
+  const forecast = await getForecast(place.lat, place.lon, place.elevation).catch(() => null);
+  const description = placeLiveDescription(place, forecast);
   const url = `/weather/${place.slug}`;
   const image = ogImage(place.slug, await searchParams);
   return {
@@ -75,7 +77,7 @@ export default async function PlacePage({ params }: PageProps<"/weather/[slug]">
       {
         "@type": "BreadcrumbList",
         itemListElement: [
-          { "@type": "ListItem", position: 1, name: "tripnalc", item: "https://tripnalc.com/" },
+          { "@type": "ListItem", position: 1, name: "트립날씨", item: "https://tripnalc.com/" },
           { "@type": "ListItem", position: 2, name: "장소별 날씨", item: "https://tripnalc.com/weather" },
           { "@type": "ListItem", position: 3, name: `${place.name} 날씨`, item: `https://tripnalc.com/weather/${place.slug}` },
         ],

@@ -53,6 +53,45 @@ export function placeDescription(p: Place): string {
   return `${p.name}(${p.region}) 이번주·주말 날씨를 3시간 간격으로. ${extra} ${l.label}에 맞게 한눈에 보여드리고, 여행 일정을 날씨로 계획할 수 있습니다.`;
 }
 
+/** 주말이 맑을 때·비 올 때·바람 셀 때 레저별 한마디 (검색 설명 끝에 붙는 훅) */
+const WEEKEND_HOOK: Record<string, { good: string; rain: string; wind: string }> = {
+  camping: { good: "불멍 각, 장작 넉넉히!", rain: "타프 없으면 우중 캠핑 체험판", wind: "팩 단단히, 텐트가 연 될 수도" },
+  fishing: { good: "물때만 맞추면 쿨러 채울 각", rain: "비 맞으며 손맛 볼 각오?", wind: "배 뜰지부터 확인 필수" },
+  hiking: { good: "정상 인증샷 각!", rain: "우비 없으면 물에 빠진 생쥐", wind: "능선 칼바람, 장갑 챙기세요" },
+  cycling: { good: "라이딩 각, 바람도 순할 듯", rain: "엉덩이 물벼락 주의", wind: "맞바람에 허벅지 터질 각" },
+  ski: { good: "설질 좋을 때 연차 쓸 각", rain: "슬로프에 비? 눈인지 확인부터", wind: "리프트 멈출 수도, 확인 필수" },
+  golf: { good: "OB 나면 순전히 실력 탓", rain: "우중 라운딩, 그립 미끄럼 주의", wind: "OB는 바람 탓 해도 됨" },
+  travel: { good: "나들이 가기 딱 좋은 날", rain: "우산 챙기거나 실내 코스로", wind: "모자 날아갈 각, 꽉 잡으세요" },
+};
+
+/**
+ * 검색 결과 설명. 늘 같은 소개 문장보다 실제 주말 예보 숫자가 보여야 누른다 (CTR 개선, 2026-10-26).
+ * 예보를 못 가져오면 기본 소개 문장(placeDescription).
+ */
+export function placeLiveDescription(p: Place, f: Forecast | null, now = new Date()): string {
+  if (!f) return placeDescription(p);
+  const today = kstDate(now, f.utcOffset);
+  const weekend = f.days.filter((d) => inPeriod(d.date, presetPeriod("weekend", today)));
+  if (!weekend.length) return placeDescription(p);
+  const md = (date: string) => shortDateKo(date).replace(/\(.*\)/, "");
+  const when = weekend.length > 1 ? `${md(weekend[0].date)}~${md(weekend[weekend.length - 1].date)}` : md(weekend[0].date);
+  const lo = Math.round(Math.min(...weekend.map((d) => d.tMin ?? 99)));
+  const hi = Math.round(Math.max(...weekend.map((d) => d.tMax ?? -99)));
+  const rain = Math.round(weekend.reduce((a, d) => a + d.precipSum, 0));
+  const gust = Math.round(Math.max(...weekend.map((d) => d.gustMax ?? 0)));
+  const sky = codeInfo(weekend[0].code).label;
+  const hook = WEEKEND_HOOK[p.leisure] ?? WEEKEND_HOOK.travel;
+  const pick = rain >= 5 ? hook.rain : gust >= 12 ? hook.wind : hook.good;
+  const line = /[!?]$/.test(pick) ? pick : `${pick}.`;
+  const extra =
+    p.leisure === "hiking"
+      ? "정상 고도 보정 기온·돌풍"
+      : p.leisure === "fishing"
+        ? "물때표·만조·간조·파고"
+        : "기온·비·바람";
+  return `${p.name} 이번 주말(${when}) ${sky}, ${lo}~${hi}°, 강수 ${rain}mm, 돌풍 ${gust}m/s. ${line} ${extra}, 3시간 간격으로 한눈에.`;
+}
+
 /**
  * 구조화 데이터의 장소 종류. 검색엔진·광고가 날씨 페이지가 아니라 여행지(캠핑장·스키장·해변·산) 페이지로 읽게 한다.
  * (화면에는 보이지 않는다)

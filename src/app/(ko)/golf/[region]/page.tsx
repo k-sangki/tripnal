@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { GolfCards } from "@/components/GolfFinder";
 import { SiteFooter, SiteHeader } from "@/components/SiteHeader";
 import { activeGolfRegions, centerOf, coursesIn, getGolfRegion } from "@/lib/golf";
 import { placeSummary } from "@/lib/seo";
@@ -71,13 +72,7 @@ export default async function GolfRegionPage({ params }: PageProps<"/golf/[regio
         {list.length}곳 · 골프장을 누르면 이번주·주말 날씨를 3시간 간격으로 볼 수 있어요
       </p>
       <section className="card">
-        <nav className="place-links">
-          {list.map((p) => (
-            <Link key={p.slug} href={`/weather/${p.slug}`}>
-              {p.name} 날씨
-            </Link>
-          ))}
-        </nav>
+        <GolfCards courses={list} />
       </section>
       <section className="card seo-text" style={{ marginTop: 16 }}>
         <h2>{r.name} 골프장 날씨 요약</h2>

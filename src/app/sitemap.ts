@@ -5,6 +5,7 @@ import { PLACE_TEXT } from "@/data/places-i18n";
 import { FOREIGN_LOCALES, languageAlternates, localePath, type Locale } from "@/lib/i18n";
 import { KOREA_MONTH_CITIES } from "@/lib/korea-month";
 import { PLACES } from "@/lib/places";
+import { SEASON_PAGES } from "@/lib/seasonal";
 
 /** 번역된 페이지는 각 언어판 주소를 함께 적는다 (hreflang) */
 function languages(path: string) {
@@ -21,6 +22,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/overseas`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE}/weekend`, lastModified: now, changeFrequency: "daily", priority: 0.8 },
     { url: `${BASE}/golf`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
+    ...SEASON_PAGES.map((p) => ({ url: `${BASE}${p.href}`, lastModified: now, changeFrequency: "daily" as const, priority: 0.8 })),
     ...activeGolfRegions().map((r) => ({ url: `${BASE}/golf/${r.slug}`, lastModified: now, changeFrequency: "daily" as const, priority: 0.8 })),
     ...Array.from({ length: 12 }, (_, i) => ({
       url: `${BASE}/overseas/month/${i + 1}`,

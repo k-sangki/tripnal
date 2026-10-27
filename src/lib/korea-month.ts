@@ -2,6 +2,7 @@ import climateKr from "@/data/climate-kr.json";
 import climate from "@/data/climate.json";
 import type { Locale } from "@/lib/i18n";
 import { clothesFor, type MonthNormal } from "@/lib/climate";
+import { distanceKm, getPlace, type Place } from "@/lib/places";
 
 /**
  * 국내 도시의 월별 평년 날씨 페이지 (/weather/{slug}/{1-12}, /en/…, /ja/…, /zh/…).
@@ -22,6 +23,26 @@ const HOME_MEAN: Partial<Record<Locale, number[] | undefined>> = {
 };
 
 export const KOREA_MONTH_CITIES = Object.keys(KR);
+
+/** 이보다 먼 장소는 가까운 도시의 평년값으로 안내하지 않는다 */
+const NEAR_KM = 40;
+
+/**
+ * 장소 페이지에서 링크할 월별 날씨 도시. 도시 자신이면 km 0, 아니면 40km 안의 가장 가까운 도시.
+ * 산·스키장은 해발 고도 탓에 아래 도시 평년값과 많이 달라서 넣지 않는다.
+ */
+export function monthCityFor(place: Place): { slug: string; km: number } | null {
+  if (KR[place.slug]) return { slug: place.slug, km: 0 };
+  if (place.leisure === "hiking" || place.leisure === "ski") return null;
+  let best: { slug: string; km: number } | null = null;
+  for (const slug of KOREA_MONTH_CITIES) {
+    const c = getPlace(slug);
+    if (!c) continue;
+    const km = distanceKm(place, c);
+    if (km <= NEAR_KM && (!best || km < best.km)) best = { slug, km };
+  }
+  return best;
+}
 
 export function krNormals(slug: string): MonthNormal[] | undefined {
   return KR[slug]?.months;

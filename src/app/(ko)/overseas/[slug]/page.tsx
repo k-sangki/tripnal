@@ -20,10 +20,14 @@ function title(d: Destination) {
 }
 
 function description(d: Destination) {
+  // 지금 현지 달의 평년 기온·강수량을 맨 앞에 (검색 결과에서 바로 답이 보이게, CTR 개선 2026-10-27)
+  const m = localMonth(destinationOffset(d));
+  const n = getNormals(d.slug)?.[m - 1];
+  const now = n ? `${d.name} ${m}월은 보통 낮 ${Math.round(n.hi)}°·밤 ${Math.round(n.lo)}°. ` : "";
   const good = monthRanges(goodMonths(d.slug).map((g) => g.month));
   const wd = wetDry(d);
   const season = wd ? ` 우기는 ${monthRanges(wd.wet)}, 건기는 ${monthRanges(wd.dry)}.` : "";
-  return `${d.name}(${d.country}) 여행하기 좋은 달은 ${good}.${season} 1~12월 평년 기온·강수량과 달별 옷차림·준비물·주의할 점, 실시간 날씨까지 한 번에 보고 해외여행 일정을 계획하세요.`;
+  return `${now}${d.name}(${d.country}) 여행하기 좋은 달은 ${good}.${season} 1~12월 평년 기온·강수량과 달별 옷차림·준비물·주의할 점, 실시간 날씨까지 한 번에 보고 해외여행 일정을 계획하세요.`;
 }
 
 export async function generateMetadata({ params }: PageProps<"/overseas/[slug]">): Promise<Metadata> {

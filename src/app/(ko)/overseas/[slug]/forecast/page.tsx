@@ -15,6 +15,16 @@ function title(d: Destination) {
   return `${d.name} 실시간·월별 날씨 · 이번주 ${d.country} 여행, 우산이냐 선글라스냐`;
 }
 
+/** 앞으로 7일(현지 날짜) 낮 최고 범위와 비 오는 날 수. 예보가 없으면 기본 문장 (CTR 개선 2026-10-27) */
+function liveDescription(d: Destination, f: Forecast | null) {
+  const days = f?.days.slice(0, 7) ?? [];
+  const highs = days.map((x) => x.tMax).filter((v): v is number => v != null);
+  if (!highs.length) return description(d);
+  const wet = days.filter((x) => x.precipSum >= 1).length;
+  const hook = wet >= 4 ? "우산은 기본, 실내 코스도 챙기세요" : wet >= 1 ? "우산은 접이식으로 하나" : "선글라스 챙길 각";
+  return `${d.name} 앞으로 7일 낮 최고 ${Math.round(Math.min(...highs))}~${Math.round(Math.max(...highs))}°, 비 오는 날 ${wet}일. ${hook}! 현지 시간 3시간 간격 예보로 옷차림과 일정을 정하세요.`;
+}
+
 function description(d: Destination) {
   return `${d.name}(${d.country}) 이번주·다음 주 날씨를 3시간 간격, 현지 시간으로. 기온·체감온도·비·바람과 일출·일몰을 한눈에 보고 해외여행 일정과 옷차림을 정하세요.`;
 }
@@ -24,13 +34,16 @@ export async function generateMetadata({ params }: PageProps<"/overseas/[slug]/f
   if (!d) return {};
   const url = `/overseas/${d.slug}/forecast`;
   const image = `/api/og?slug=${d.slug}`;
+  // 본문과 같은 예보 (getForecast가 캐시하므로 두 번 계산하지 않는다)
+  const forecast = await getForecast(d.lat, d.lon, d.elevation, undefined, destinationOffset(d)).catch(() => null);
+  const desc = liveDescription(d, forecast);
   return {
     title: title(d),
-    description: description(d),
+    description: desc,
     keywords: [d.name, ...(d.aliases ?? [])].flatMap((n) => [`${n} 날씨`, `${n} 이번주 날씨`]),
     alternates: { canonical: url },
-    openGraph: { siteName: "트립날씨", locale: "ko_KR", title: title(d), description: description(d), url, images: [{ url: image, width: 1200, height: 630 }] },
-    twitter: { card: "summary_large_image", title: title(d), description: description(d), images: [image] },
+    openGraph: { siteName: "트립날씨", locale: "ko_KR", title: title(d), description: desc, url, images: [{ url: image, width: 1200, height: 630 }] },
+    twitter: { card: "summary_large_image", title: title(d), description: desc, images: [image] },
   };
 }
 

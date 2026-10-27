@@ -19,6 +19,7 @@ export function MonthCards({
   selected,
   onSelect,
   shoulder,
+  href = (month) => `/overseas/${slug}/${month}`,
 }: {
   slug: string;
   normals: MonthNormal[];
@@ -29,6 +30,8 @@ export function MonthCards({
   onSelect?: (month: number) => void;
   /** 간절기인 달 (작게 표시) */
   shoulder?: number[];
+  /** 달을 눌렀을 때 갈 주소 (기본은 해외 도시 월별 페이지) */
+  href?: (month: number) => string;
 }) {
   const goodMap = new Map(good.map((g) => [g.month, g]));
   return (
@@ -54,7 +57,7 @@ export function MonthCards({
             {inner}
           </button>
         ) : (
-          <Link key={month} href={`/overseas/${slug}/${month}`} className={cls} aria-current={selected === month ? "page" : undefined}>
+          <Link key={month} href={href(month)} className={cls} aria-current={selected === month ? "page" : undefined}>
             {inner}
           </Link>
         );

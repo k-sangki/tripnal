@@ -2,13 +2,17 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SiteFooter, SiteHeader } from "@/components/SiteHeader";
+import { MonthCards } from "@/components/CityClimate";
 import { WeatherApp } from "@/components/WeatherApp";
+import { localMonth } from "@/lib/climate";
 import { golfRegionOf } from "@/lib/golf";
 import { hasForeignPage } from "@/data/places-i18n";
 import { languageAlternates } from "@/lib/i18n";
+import { krNormals, krYears, monthCityFor } from "@/lib/korea-month";
 import { getLeisure } from "@/lib/leisure";
 import { getPlace, nearbyPlaces } from "@/lib/places";
 import { placeLiveDescription, placeSchemaType, placeSummaryRows, placeTitle } from "@/lib/seo";
+import { KST_OFFSET_MIN } from "@/lib/time";
 import { getForecast } from "@/lib/weather";
 import type { Forecast } from "@/lib/weather/types";
 
@@ -69,6 +73,11 @@ export default async function PlacePage({ params }: PageProps<"/weather/[slug]">
   // 같은 레저 중 가까운 곳 (같은 날 갈 만한 대안, 내부 링크)
   const related = nearbyPlaces(place, 8);
   const golf = place.leisure === "golf";
+  // 월별 평년 날씨 페이지 (도시 자신, 또는 40km 안의 가까운 도시)
+  const monthCity = monthCityFor(place);
+  const monthCityName = monthCity ? (getPlace(monthCity.slug)?.name ?? monthCity.slug) : "";
+  const monthYears = monthCity ? krYears(monthCity.slug) : null;
+  const nowMonth = localMonth(KST_OFFSET_MIN);
   const golfRegion = golf ? golfRegionOf(place) : undefined;
   const crumbs = golf
     ? [
@@ -130,6 +139,23 @@ export default async function PlacePage({ params }: PageProps<"/weather/[slug]">
           날짜만 볼 수 있고, 캡처 버튼으로 이미지를 저장해 일행과 공유할 수 있습니다.
         </p>
       </section>
+
+      {monthCity && (
+        <section className="card" style={{ marginTop: 12 }}>
+          <h2 className="card-title">📅 {monthCityName} 월별 날씨·옷차림</h2>
+          <p className="muted" style={{ margin: "0 0 10px" }}>
+            {monthCity.km > 0 ? `가까운 ${monthCityName}(${Math.round(monthCity.km)}km)의 ` : ""}기상청 평년값{monthYears ? `(${monthYears[0]}~${monthYears[1]})` : ""}
+            이에요. 달을 누르면 그달 옷차림을 볼 수 있어요.
+          </p>
+          <MonthCards
+            slug={monthCity.slug}
+            normals={krNormals(monthCity.slug)!}
+            good={[]}
+            current={nowMonth}
+            href={(m) => `/weather/${monthCity.slug}/${m}`}
+          />
+        </section>
+      )}
 
       {related.length > 0 && (
         <section className="card" style={{ marginTop: 12 }}>

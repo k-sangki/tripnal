@@ -22,6 +22,8 @@ export function cacheTtl(pathname: string): number | null {
   // 골프장 목록은 그대로, 시·도 페이지는 요약 문장에 예보가 들어 있다
   if (pathname === "/golf") return 6 * HOUR;
   if (pathname.startsWith("/golf/")) return HOUR;
+  // 계절 페이지 (첫눈·스키장·단풍·김장): 자료가 하루 두 번 바뀐다
+  if (["/first-snow", "/ski", "/autumn-foliage", "/kimjang"].includes(pathname)) return HOUR;
   if (pathname === "/api/forecast") return 15 * MIN;
   if (pathname === "/api/og") return 3 * HOUR;
   if (pathname === "/api/warnings") return 5 * MIN;

@@ -86,6 +86,29 @@ export function rankWeekend(data: WeekendData, leisure: LeisureId, limit = 8): W
     .slice(0, limit);
 }
 
+/** 검색 설명에 넣을 레저별 주말 날씨 1등 ("캠핑장 ○○·산 ○○·바다낚시 ○○") */
+const BEST_LABEL: [LeisureId, string][] = [
+  ["camping", "캠핑장"],
+  ["hiking", "산"],
+  ["fishing", "바다낚시"],
+];
+
+/**
+ * 이번 주말 1등 장소를 한 줄로. 지난 주말 자료면 null.
+ * 날짜 범위("10/31~11/1")와 함께 돌려준다.
+ */
+export function weekendBest(data: WeekendData | null, today: string): { range: string; best: string } | null {
+  if (!data || !data.dates.length || data.dates[data.dates.length - 1] < today) return null;
+  const best = BEST_LABEL.map(([id, label]) => {
+    const top = rankWeekend(data, id, 1)[0];
+    return top ? `${label} ${top.place.name}` : null;
+  }).filter(Boolean);
+  if (!best.length) return null;
+  const md = (d: string) => `${Number(d.slice(5, 7))}/${Number(d.slice(8, 10))}`;
+  const range = data.dates.length > 1 ? `${md(data.dates[0])}~${md(data.dates[data.dates.length - 1])}` : md(data.dates[0]);
+  return { range, best: best.join("·") };
+}
+
 /** 예보 하나에서 주말 요약 만들기 (개발용 대체 경로: R2가 없을 때) */
 export function weekendFromForecast(f: Forecast, dates: string[]): WeekendDay[] | null {
   const out: WeekendDay[] = [];

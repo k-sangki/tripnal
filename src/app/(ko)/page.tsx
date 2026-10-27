@@ -8,6 +8,7 @@ import { getPlace } from "@/lib/places";
 import { clampPeriod, periodLabel } from "@/lib/period";
 import { kstDate } from "@/lib/time";
 import { isInKorea } from "@/lib/weather";
+import { loadWeekend, weekendBest } from "@/lib/weekend";
 
 function one(v: string | string[] | undefined) {
   return Array.isArray(v) ? v[0] : v;
@@ -37,7 +38,13 @@ export async function generateMetadata({ searchParams }: PageProps<"/">): Promis
   const sp = await searchParams;
   const lat = Number(one(sp.lat));
   const lon = Number(one(sp.lon));
-  if (!one(sp.lat) || !Number.isFinite(lat) || !Number.isFinite(lon) || !isInKorea(lat, lon)) return {};
+  if (!one(sp.lat) || !Number.isFinite(lat) || !Number.isFinite(lon) || !isInKorea(lat, lon)) {
+    // 기본 홈: 설명에 이번 주말 1등 장소를 넣는다 (CTR 개선 2026-10-27). 자료가 없으면 layout 기본 설명
+    const w = weekendBest(await loadWeekend(), kstDate());
+    if (!w) return {};
+    const description = `놀러 갈 땐, 트립날씨. 이번 주말(${w.range}) 날씨 1등은 ${w.best}! 캠핑·등산·낚시·여행지 이번주 날씨를 3시간 간격으로 3초 만에.`;
+    return { description, openGraph: { siteName: "트립날씨", locale: "ko_KR", description } };
+  }
   const name = one(sp.name)?.slice(0, 40) || "선택한 위치";
   const leisure = getLeisure(one(sp.act));
   const period = clampPeriod(one(sp.from), one(sp.to), kstDate());

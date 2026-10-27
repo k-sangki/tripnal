@@ -7,17 +7,21 @@ import { PLACES } from "@/lib/places";
 import { kstDate, shortDateKo } from "@/lib/time";
 import { getForecast } from "@/lib/weather";
 import { codeInfo } from "@/lib/weather/codes";
-import { loadWeekend, rankWeekend, weekendFromForecast, type WeekendData } from "@/lib/weekend";
+import { loadWeekend, rankWeekend, weekendBest, weekendFromForecast, type WeekendData } from "@/lib/weekend";
 
 /** 수집 작업이 하루 두 번 올리는 R2 자료를 요청 때 읽는다 */
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "이번 주말 날씨 좋은 곳 · 집에만 있긴 아까운 캠핑장·산·바다 추천",
-  description:
-    "이번 주말 비가 없고 바람이 약한 캠핑장, 100대 명산, 국내 여행지, 바다낚시 포인트를 최신 예보로 골라 순위로 보여드립니다. 주말 여행 일정을 날씨로 정하세요.",
-  alternates: { canonical: "/weekend" },
-};
+const WEEKEND_TITLE = "이번 주말 날씨 좋은 곳 · 집에만 있긴 아까운 캠핑장·산·바다 추천";
+
+/** 설명에 이번 주말 1등 장소를 넣는다 (검색 결과에서 바로 답이 보이게, CTR 개선 2026-10-27) */
+export async function generateMetadata(): Promise<Metadata> {
+  const w = weekendBest(await loadWeekend(), kstDate());
+  const description = w
+    ? `이번 주말(${w.range}) 날씨 1등 ${w.best}! 비·바람·기온으로 매긴 캠핑장·명산·여행지·낚시 포인트 순위, 집에 있으면 손해입니다.`
+    : "이번 주말 비가 없고 바람이 약한 캠핑장, 100대 명산, 국내 여행지, 바다낚시 포인트를 최신 예보로 골라 순위로 보여드립니다. 주말 여행 일정을 날씨로 정하세요.";
+  return { title: WEEKEND_TITLE, description, alternates: { canonical: "/weekend" } };
+}
 
 const ORDER: LeisureId[] = ["camping", "hiking", "travel", "fishing", "cycling", "ski"];
 

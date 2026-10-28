@@ -25,7 +25,8 @@ export function placeTitle(p: Place): string {
     case "camping":
       return `${p.name} 날씨 · 이번주·주말 캠핑, 텐트 날아갈 일 없을까?`;
     case "fishing":
-      return `${p.name} 물때표 · 오늘 몇 물? 만조·간조 시간과 바다 날씨`;
+      // 네이버 검색량(2026-10-28 SK 키워드 도구): 물때표 10만·바다날씨 5만, 둘 다 붙여 쓴다
+      return `${p.name} 물때표·바다날씨 · 오늘 몇 물? 만조·간조, 배 뜰 바람인지`;
     case "hiking":
       return `${p.name} 날씨 · 등산 전 꼭 확인! 정상 체감온도·칼바람은?${p.elevation ? ` (해발 ${p.elevation.toLocaleString()}m)` : ""}`;
     case "cycling":
@@ -51,7 +52,7 @@ export function placeDescription(p: Place): string {
     p.leisure === "hiking"
       ? "정상 고도로 보정한 기온과 돌풍, 일출 시간을"
       : p.leisure === "fishing"
-        ? "물때표(만조·간조), 파고, 풍속·풍향과 돌풍을"
+        ? "물때표(만조·간조)와 바다날씨(파고, 풍속·풍향, 돌풍)를"
         : "기온·체감온도·비·돌풍과 일몰 시간을";
   if (p.leisure === "golf")
     return `${p.name}(${p.region}) 골프장 날씨를 3시간 간격으로. 티오프 시간대 비·낙뢰·바람(돌풍)·체감온도와 일출·일몰까지, 라운딩을 미룰지 우비를 챙길지 미리 정하세요.`;
@@ -92,7 +93,7 @@ export function placeLiveDescription(p: Place, f: Forecast | null, now = new Dat
     p.leisure === "hiking"
       ? "정상 고도 보정 기온·돌풍"
       : p.leisure === "fishing"
-        ? "물때표·만조·간조·파고"
+        ? "물때표·바다날씨·만조·간조·파고"
         : "기온·비·바람";
   return `${p.name} 이번 주말(${when}) ${sky}, ${lo}~${hi}°, 강수 ${rain}mm, 돌풍 ${gust}m/s. ${line} ${extra}, 3시간 간격으로 한눈에.`;
 }

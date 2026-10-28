@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
+import { trackShare } from "@/lib/track";
+import { stripUtm } from "@/lib/utm";
 import {
   FLIGHTS,
   PRESETS,
@@ -70,7 +72,8 @@ export function TripFinder({
   };
 
   const share = async () => {
-    const url = window.location.href;
+    const url = stripUtm(window.location.href);
+    trackShare("share" in navigator ? "link" : "copy", "trip_finder");
     try {
       if (navigator.share) await navigator.share({ title: finderTitle(q, results.length), url });
       else {

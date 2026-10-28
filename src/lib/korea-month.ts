@@ -212,7 +212,7 @@ export function monthTitle(name: string, m: number, n: MonthNormal, l: Locale): 
   if (l === "zh") {
     const d = vsHome(n, m, l);
     const tail = d == null || Math.abs(d) < 1 ? hook(n, l) : `比台北${d < 0 ? "冷" : "熱"}${Math.round(Math.abs(d))}℃？`;
-    return `${name}${m}月天氣與穿搭・${tail}`;
+    return `${name}${m}月天氣・氣溫與穿搭｜${tail}`;
   }
   return `${name} ${m}월 날씨 · 옷차림 뭐 입지? ${hook(n, l)}`;
 }
@@ -240,7 +240,7 @@ export function countryMonthTitle(m: number, l: Locale): string {
   }
   if (l === "zh") {
     const tail = d == null || Math.abs(d) < 1 ? hook(n, l) : `首爾比台北${d < 0 ? "冷" : "熱"}${Math.round(Math.abs(d))}℃？`;
-    return `韓國${m}月氣溫與穿搭・${tail}`;
+    return `韓國${m}月天氣・氣溫與穿搭｜${tail}`;
   }
   return `Korea Weather in ${MONTH_EN[m - 1]} · Temperatures & What to Wear (${hook(n, "en")})`;
 }
@@ -255,6 +255,6 @@ export function countryMonthDescription(m: number, l: Locale): string {
   const [jh, jl] = t("jeju");
   if (l === "ja")
     return `${m}月の韓国の気温は、ソウル最高${sh}℃・最低${sl}℃、釜山${bh}℃/${bl}℃、済州島${jh}℃/${jl}℃。${m}月の韓国旅行の服装と注意点を、10都市の平年値でまとめました。`;
-  if (l === "zh") return `${m}月韓國氣溫：首爾最高${sh}℃、最低${sl}℃，釜山${bh}℃/${bl}℃，濟州${jh}℃/${jl}℃。用10個城市的平均值整理${m}月去韓國怎麼穿、要注意什麼。`;
+  if (l === "zh") return `${m}月韓國天氣與氣溫：首爾最高${sh}℃、最低${sl}℃，釜山${bh}℃/${bl}℃，濟州${jh}℃/${jl}℃。用10個城市的平均值整理${m}月去韓國怎麼穿、要注意什麼。`;
   return `How warm is Korea in ${MONTH_EN[m - 1]}? Seoul averages ${sh}°C / ${sl}°C, Busan ${bh}°C / ${bl}°C, Jeju ${jh}°C / ${jl}°C. What to wear and seasonal tips, with averages for 10 cities.`;
 }

@@ -25,7 +25,7 @@ export const PLACE_TEXT: Record<string, Record<ForeignLocale, PlaceText>> = {
   jeju: {
     en: { name: "Jeju", region: "Jeju-si, Jeju Island", about: "Jeju's weather changes fast and the north and south of the island can differ. Check wind before planning a coastal drive or a ferry to Udo." },
     ja: { name: "済州島（チェジュ）", region: "韓国・済州島 済州市", about: "済州島は天気が変わりやすく、島の北と南で天気が違うことも。海沿いのドライブや牛島行きの船の前には風を確認しましょう。" },
-    zh: { name: "濟州", region: "韓國・濟州島 濟州市", about: "濟州島天氣變化快，島的南北兩邊天氣也可能不同。環島兜風或搭船去牛島前，先確認風況。" },
+    zh: { name: "濟州島", region: "韓國・濟州島 濟州市", about: "濟州島天氣變化快，島的南北兩邊天氣也可能不同。環島兜風或搭船去牛島前，先確認風況。" },
   },
   incheon: {
     en: { name: "Incheon", region: "Incheon, South Korea", about: "Home of Incheon Airport, Chinatown and Songdo. Useful for checking fog and wind on arrival and departure days." },

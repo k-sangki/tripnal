@@ -28,7 +28,7 @@ export const PLACES: Place[] = [
   // 바다·낚시
   { slug: "taean", name: "태안", region: "충남 태안군", lat: 36.745, lon: 126.298, leisure: "fishing", aliases: ["태안 바다낚시"] },
   { slug: "anmyeondo", name: "안면도", region: "충남 태안군", lat: 36.53, lon: 126.35, leisure: "fishing" },
-  { slug: "oido", name: "오이도", region: "경기 시흥시", lat: 37.345, lon: 126.688, leisure: "fishing" },
+  { slug: "oido", name: "오이도", region: "경기 시흥시", lat: 37.345, lon: 126.688, leisure: "fishing", aliases: ["오이도 물때표", "오이도 배낚시", "오이도 쭈꾸미낚시"] },
   { slug: "jumunjin-port", name: "주문진항", region: "강원 강릉시", lat: 37.892, lon: 128.83, leisure: "fishing" },
   { slug: "sokcho", name: "속초", region: "강원 속초시", lat: 38.207, lon: 128.592, leisure: "fishing" },
   { slug: "yeosu", name: "여수", region: "전남 여수시", lat: 34.76, lon: 127.662, leisure: "fishing" },
@@ -203,7 +203,7 @@ export const PLACES: Place[] = [
   { slug: "baengnyeongdo", name: "백령도", region: "인천 옹진군", lat: 37.9556, lon: 124.7361, leisure: "fishing", aliases: ["백령도 물때표", "백령도 바다 날씨"] },
   { slug: "deokjeokdo", name: "덕적도", region: "인천 옹진군", lat: 37.2278, lon: 126.1578, leisure: "fishing", aliases: ["덕적도 물때표", "덕적도 바다 날씨"] },
   { slug: "ganghwa-oepo", name: "강화 외포리", region: "인천 강화군", lat: 37.7008, lon: 126.3725, leisure: "fishing", aliases: ["강화 외포리 물때표", "강화 외포리 바다 날씨"] },
-  { slug: "incheon-port", name: "인천 연안부두", region: "인천 중구", lat: 37.4519, lon: 126.5922, leisure: "fishing", aliases: ["인천 연안부두 물때표", "인천 연안부두 바다 날씨"] },
+  { slug: "incheon-port", name: "인천 연안부두", region: "인천 중구", lat: 37.4519, lon: 126.5922, leisure: "fishing", aliases: ["인천 연안부두 물때표", "인천 연안부두 바다 날씨", "인천 물때표", "인천 바다날씨", "연안부두 배낚시", "연안부두 쭈꾸미낚시"] },
   { slug: "pyeongtaek-port", name: "평택항", region: "경기 평택시", lat: 36.9669, lon: 126.8228, leisure: "fishing", aliases: ["평택항 물때표", "평택항 바다 날씨"] },
   { slug: "hamdeok-beach", name: "함덕해수욕장", region: "제주 제주시", lat: 33.5429, lon: 126.6701, leisure: "travel" },
   { slug: "hyeopjae-beach", name: "협재해수욕장", region: "제주 제주시", lat: 33.3933, lon: 126.2389, leisure: "travel" },

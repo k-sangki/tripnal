@@ -24,7 +24,7 @@ describe("국내 도시 월별 날씨", () => {
     expect(monthTitle("서울", 11, n, "ko")).toMatch(/^서울 11월 날씨 · /);
     expect(monthTitle("Seoul", 11, n, "en")).toMatch(/^Seoul Weather in November · What to Wear/);
     expect(monthTitle("ソウル", 11, n, "ja")).toMatch(/^ソウル 11月の気温・天気と服装｜/);
-    expect(monthTitle("首爾", 1, krNormals("seoul")![0], "zh")).toBe("首爾1月天氣與穿搭・比台北冷18℃？");
+    expect(monthTitle("首爾", 1, krNormals("seoul")![0], "zh")).toBe("首爾1月天氣・氣溫與穿搭｜比台北冷18℃？");
     for (const l of ["ko", "ja"] as const) {
       expect(monthTitle("서울", 11, n, l) + monthDescription("서울", 11, n, l)).not.toMatch(/16일|16日/);
     }
@@ -38,7 +38,7 @@ describe("국내 도시 월별 날씨", () => {
 
   it("한국 전체 월별 제목", () => {
     expect(countryMonthTitle(11, "ja")).toMatch(/^韓国 11月の気温と服装・ソウルは東京より\d+℃寒い？$/);
-    expect(countryMonthTitle(1, "zh")).toMatch(/^韓國1月氣溫與穿搭・首爾比台北冷\d+℃？$/);
+    expect(countryMonthTitle(1, "zh")).toMatch(/^韓國1月天氣・氣溫與穿搭｜首爾比台北冷\d+℃？$/);
     expect(countryMonthTitle(8, "en")).toMatch(/^Korea Weather in August/);
     expect(countryMonthDescription(11, "ja")).toMatch(/ソウル/);
   });

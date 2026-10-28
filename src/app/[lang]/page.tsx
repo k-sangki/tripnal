@@ -34,7 +34,7 @@ const HOME: Record<ForeignLocale, { title: string; description: string; h1: stri
     groups: { city: "都市", travel: "ビーチ・観光地", hiking: "山", ski: "スキー場" },
   },
   zh: {
-    title: "韓國天氣預報｜首爾・釜山・濟州16天天氣，帶不帶傘一秒決定",
+    title: "韓國天氣預報・氣溫｜首爾・釜山・濟州島16天天氣，帶不帶傘一秒決定",
     description:
       "去韓國玩之前先看！首爾、釜山、濟州島、慶州、登山與滑雪場最長16天、每3小時天氣，以韓國時間顯示。下雨、風和體感溫度一目了然，穿搭也不怕踩雷。",
     h1: "韓國旅遊天氣",

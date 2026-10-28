@@ -39,8 +39,8 @@ export function foreignTitle(p: Place, t: PlaceText, l: ForeignLocale): string {
   if (l === "zh") {
     if (leisure === "hiking") return `${s}天氣・山頂體感溫度幾度？登山前看16天預報${p.elevation ? `（海拔${elev}公尺）` : ""}`;
     if (leisure === "ski") return `${s}天氣・滑雪場降雪預報｜粉雪日是哪天？`;
-    if (isBeach(t)) return `${t.name}天氣・16天預報｜海邊美照日是哪天？`;
-    return `${t.name}天氣預報・16天｜要帶傘嗎？穿搭一次看`;
+    if (isBeach(t)) return `${t.name}天氣預報・氣溫｜16天，海邊美照日是哪天？`;
+    return `${t.name}天氣預報・氣溫｜16天每3小時，要帶傘嗎？穿搭一次看`;
   }
   if (leisure === "hiking") return `${s}の天気・山頂の体感温度は？登山前に2週間予報${elev ? `（標高${elev}m）` : ""}`;
   if (leisure === "ski") return `${s}の天気・スキー場の雪予報｜パウダーの日はいつ？`;
@@ -65,7 +65,7 @@ export function foreignDescription(p: Place, t: PlaceText, l: ForeignLocale): st
 /** 검색 키워드 (외국인이 실제로 치는 꼴) */
 export function foreignKeywords(t: PlaceText, l: ForeignLocale): string[] {
   const s = shortName(t.name);
-  if (l === "zh") return [`${s}天氣`, `${s}天氣預報`, `${s} 10天天氣`, `${s}穿搭`, `${s}週末天氣`];
+  if (l === "zh") return [`${s}天氣`, `${s}天氣預報`, `${s}氣溫`, `${s}天氣預報15天`, `${s}穿搭`];
   return l === "en"
     ? [`${s} weather`, `${s} weather forecast`, `${s} 14 day weather`, `${s} weather this weekend`, `what to wear in ${s}`]
     : [`${s} 天気`, `${s} 天気 2週間`, `${s} 天気 10日間`, `${s} 服装`, `${s} 週末 天気`];

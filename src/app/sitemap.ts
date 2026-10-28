@@ -8,8 +8,8 @@ import { PLACES } from "@/lib/places";
 import { SEASON_PAGES } from "@/lib/seasonal";
 
 /** 번역된 페이지는 각 언어판 주소를 함께 적는다 (hreflang) */
-function languages(path: string) {
-  return Object.fromEntries(Object.entries(languageAlternates(path)).map(([l, p]) => [l, `${BASE}${p}`]));
+function languages(path: string, locales?: readonly Locale[]) {
+  return Object.fromEntries(Object.entries(languageAlternates(path, locales)).map(([l, p]) => [l, `${BASE}${p}`]));
 }
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://tripnalc.com";
@@ -53,6 +53,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
           alternates: { languages: languages(`/weather/${slug}/${i + 1}`) },
         })),
       ),
+    ),
+    // 한국 전체 월별 평년 날씨 (외국어만)
+    ...FOREIGN_LOCALES.flatMap((l) =>
+      Array.from({ length: 12 }, (_, i) => ({
+        url: `${BASE}${localePath(l, `/korea/${i + 1}`)}`,
+        lastModified: now,
+        changeFrequency: "monthly" as const,
+        priority: 0.8,
+        alternates: { languages: languages(`/korea/${i + 1}`, FOREIGN_LOCALES) },
+      })),
     ),
     // 영어·일본어 홈과 장소 페이지
     ...FOREIGN_LOCALES.flatMap((l) => [

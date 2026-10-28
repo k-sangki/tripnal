@@ -44,8 +44,8 @@ export function foreignTitle(p: Place, t: PlaceText, l: ForeignLocale): string {
   }
   if (leisure === "hiking") return `${s}の天気・山頂の体感温度は？登山前に2週間予報${elev ? `（標高${elev}m）` : ""}`;
   if (leisure === "ski") return `${s}の天気・スキー場の雪予報｜パウダーの日はいつ？`;
-  if (isBeach(t)) return `${t.name}の天気・2週間予報｜映える海の日はいつ？`;
-  return `${t.name}の天気・2週間予報｜傘はいる？服装の目安も`;
+  if (isBeach(t)) return `${t.name}の天気・気温｜2週間予報、映える海の日はいつ？`;
+  return `${t.name}の天気・気温｜2週間予報、傘はいる？服装の目安も`;
 }
 
 export function foreignDescription(p: Place, t: PlaceText, l: ForeignLocale): string {

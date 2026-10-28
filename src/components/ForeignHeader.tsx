@@ -6,9 +6,9 @@ import { CONTACT_EMAIL } from "./TextPage";
 
 /**
  * 영어·일본어·중국어 페이지 머리. 로고 옆 슬로건과 언어 전환(지금 보는 페이지의 다른 언어판)만 둔다.
- * path: 한국어 기준 경로 ("/weather/seoul")
+ * path: 한국어 기준 경로 ("/weather/seoul"), koPath: 한국어판이 없는 페이지는 한국어 링크를 따로 준다
  */
-export function ForeignHeader({ locale, path }: { locale: ForeignLocale; path: string }) {
+export function ForeignHeader({ locale, path, koPath = path }: { locale: ForeignLocale; path: string; koPath?: string }) {
   const others: Locale[] = (["en", "ja", "zh", "ko"] as const).filter((l) => l !== locale);
   return (
     <header className="topbar topbar-foreign">
@@ -18,7 +18,7 @@ export function ForeignHeader({ locale, path }: { locale: ForeignLocale; path: s
       </Link>
       <nav className="top-nav lang-nav" aria-label="Language">
         {others.map((l) => (
-          <Link key={l} href={localePath(l, path)} hrefLang={LANG_TAG[l]} lang={LANG_TAG[l]} className="tagline">
+          <Link key={l} href={l === "ko" ? koPath : localePath(l, path)} hrefLang={LANG_TAG[l]} lang={LANG_TAG[l]} className="tagline">
             {LOCALE_NAME[l]}
           </Link>
         ))}

@@ -4,10 +4,11 @@ import { notFound } from "next/navigation";
 import { ForeignFooter, ForeignHeader } from "@/components/ForeignHeader";
 import { PLACE_TEXT } from "@/data/places-i18n";
 import { OG_LOCALE, SITE_NAME, isForeignLocale, languageAlternates, localePath, type ForeignLocale } from "@/lib/i18n";
+import { monthName } from "@/lib/korea-month";
 import { getPlace } from "@/lib/places";
 import { foreignLeisure } from "@/lib/seo-foreign";
 
-const HOME: Record<ForeignLocale, { title: string; description: string; h1: string; lead: string[]; groups: Record<string, string> }> = {
+const HOME: Record<ForeignLocale, { title: string; description: string; h1: string; lead: string[]; months: string; groups: Record<string, string> }> = {
   en: {
     title: "Korea Weather Forecast for Travelers · 16-Day, Korea Time (Seoul, Busan, Jeju)",
     description:
@@ -17,10 +18,11 @@ const HOME: Record<ForeignLocale, { title: string; description: string; h1: stri
       "Hour-by-hour forecasts for the places travelers actually go in South Korea, in Korea time (KST, UTC+9), up to 16 days ahead.",
       "Each forecast is the middle value of three global models (ECMWF, GFS and ICON), so one bad model run doesn't ruin your plans.",
     ],
+    months: "Korea weather by month",
     groups: { city: "Cities", travel: "Beaches & sights", hiking: "Mountains", ski: "Ski resorts" },
   },
   ja: {
-    title: "韓国の天気・2週間予報｜ソウル・釜山・済州、旅行の傘と服装の目安",
+    title: "韓国の天気・気温｜2週間予報、ソウル・釜山・済州島の傘と服装の目安",
     description:
       "韓国旅行の前にチェック。ソウル・釜山・済州・慶州、山やスキー場の最大2週間・3時間ごとの天気を韓国時間で。雨・風・体感温度をひと目で。",
     h1: "韓国旅行の天気",
@@ -28,6 +30,7 @@ const HOME: Record<ForeignLocale, { title: string; description: string; h1: stri
       "韓国で旅行者がよく訪れる場所の天気を、韓国時間（日本と時差なし）で最大2週間先まで3時間ごとにお届けします。",
       "予報は世界の3つのモデル（ECMWF・GFS・ICON）の中間値なので、1つのモデルが外れても予定が狂いにくくなっています。",
     ],
+    months: "月別 韓国の気温と服装",
     groups: { city: "都市", travel: "ビーチ・観光地", hiking: "山", ski: "スキー場" },
   },
   zh: {
@@ -39,6 +42,7 @@ const HOME: Record<ForeignLocale, { title: string; description: string; h1: stri
       "旅客常去的韓國景點天氣，以韓國時間（比台灣快1小時）顯示，最長可看16天、每3小時一格。",
       "預報取全球三個模式（ECMWF、GFS、ICON）的中間值，就算其中一個失準，行程也不容易被打亂。",
     ],
+    months: "韓國各月份氣溫與穿搭",
     groups: { city: "城市", travel: "海灘・景點", hiking: "登山", ski: "滑雪場" },
   },
 };
@@ -78,6 +82,16 @@ export default async function ForeignHome({ params }: PageProps<"/[lang]">) {
         {h.lead.map((x) => (
           <p key={x}>{x}</p>
         ))}
+      </section>
+      <section className="card" style={{ marginTop: 12 }}>
+        <h2 className="card-title">{h.months}</h2>
+        <nav className="place-links">
+          {Array.from({ length: 12 }, (_, i) => (
+            <Link key={i} href={localePath(lang, `/korea/${i + 1}`)}>
+              {monthName(i + 1, lang)}
+            </Link>
+          ))}
+        </nav>
       </section>
       {Object.entries(groups).map(([g, list]) =>
         list.length ? (

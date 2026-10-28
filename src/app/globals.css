@@ -755,6 +755,10 @@ a {
   background: #03c75a;
   color: #fff;
 }
+.share-btn.kakao {
+  background: #fee500;
+  color: rgba(0, 0, 0, 0.85);
+}
 .toast {
   position: fixed;
   z-index: 50;

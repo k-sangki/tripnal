@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import { domToBlob } from "modern-screenshot";
 import { Logo } from "./Logo";
 import { useLocale, useT } from "./LocaleContext";
+import { loadKakaoShare, sendKakao } from "@/lib/kakaoShare";
+import { trackShare, type ShareMethod } from "@/lib/track";
+import { stripUtm, withUtm } from "@/lib/utm";
 
 interface Props {
   target: () => HTMLElement | null;
@@ -243,7 +246,7 @@ export async function captureElement(el: HTMLElement): Promise<Blob> {
   }
 }
 
-export function CaptureSheet({ target, fileName, shareTitle, shareUrl, onClose }: Props) {
+export function CaptureSheet({ target, fileName, shareTitle, shareUrl: rawUrl, onClose }: Props) {
   const t = useT();
   const { locale } = useLocale();
   const [blob, setBlob] = useState<Blob | null>(null);
@@ -253,7 +256,22 @@ export function CaptureSheet({ target, fileName, shareTitle, shareUrl, onClose }
   // 카톡 등에 긴 퍼센트 인코딩 주소가 그대로 가지 않게 미리 짧은 주소를 받아 둔다
   // (공유 메뉴는 누른 직후에 열어야 해서 누른 뒤에 받으면 늦다)
   const [shortUrl, setShortUrl] = useState<string | null>(null);
+  const shareUrl = stripUtm(rawUrl);
   const link = shortUrl ?? shareUrl;
+  // 카톡 공유 SDK는 시트가 열릴 때 미리 받아 둔다 (누른 뒤에 받으면 카톡이 안 열리는 폰이 있다)
+  const [kakao, setKakao] = useState<Awaited<ReturnType<typeof loadKakaoShare>> | null>(null);
+  const track = (m: ShareMethod) => trackShare(m, "capture");
+
+  useEffect(() => {
+    if (locale !== "ko") return;
+    let off = false;
+    loadKakaoShare()
+      .then((k) => !off && setKakao(k))
+      .catch(() => {});
+    return () => {
+      off = true;
+    };
+  }, [locale]);
 
   useEffect(() => {
     let off = false;
@@ -306,6 +324,7 @@ export function CaptureSheet({ target, fileName, shareTitle, shareUrl, onClose }
 
   const save = async () => {
     if (!preview || !file) return;
+    track("save");
     if (ios && canShareFile) {
       try {
         await navigator.share({ files: [file] });
@@ -323,6 +342,7 @@ export function CaptureSheet({ target, fileName, shareTitle, shareUrl, onClose }
 
   const shareImage = async () => {
     if (!file) return;
+    track("image");
     try {
       // 이미지만 보낸다. 글·주소를 같이 넣으면 카톡에서 이미지·글·링크 미리보기 세 덩어리로 갈라진다
       // (이미지 아래에 tripnalc.com이 찍혀 있고, 링크는 "링크 공유"로 따로 보낼 수 있다)
@@ -333,6 +353,7 @@ export function CaptureSheet({ target, fileName, shareTitle, shareUrl, onClose }
   };
 
   const shareLink = async () => {
+    track("link");
     if (navigator.share) {
       try {
         await navigator.share({ title: shareTitle, url: link });
@@ -341,10 +362,11 @@ export function CaptureSheet({ target, fileName, shareTitle, shareUrl, onClose }
         return;
       }
     }
-    await copyLink();
+    await copyLink(false);
   };
 
-  const copyLink = async () => {
+  const copyLink = async (counted = true) => {
+    if (counted) track("copy");
     try {
       await navigator.clipboard.writeText(link);
       setToast(t("링크를 복사했어요"));
@@ -353,7 +375,19 @@ export function CaptureSheet({ target, fileName, shareTitle, shareUrl, onClose }
     }
   };
 
+  const sendToKakao = () => {
+    if (!kakao) return;
+    track("kakao");
+    try {
+      // 카드 속 버튼은 긴 원래 주소로 간다(카톡이 주소를 숨겨 길어도 괜찮다). 카카오가 이 주소의 og 태그를 읽는다
+      sendKakao(kakao, withUtm(shareUrl, "kakao"));
+    } catch {
+      setToast("카카오톡을 열지 못했어요");
+    }
+  };
+
   const naver = () => {
+    track("naver");
     const u = `https://share.naver.com/web/shareView?url=${encodeURIComponent(link)}&title=${encodeURIComponent(shareTitle)}`;
     window.open(u, "_blank", "noopener,noreferrer,width=600,height=700");
   };
@@ -379,6 +413,11 @@ export function CaptureSheet({ target, fileName, shareTitle, shareUrl, onClose }
           <button className="share-btn primary" onClick={save} disabled={!blob}>
             {t("이미지 저장")}
           </button>
+          {kakao && (
+            <button className="share-btn kakao" onClick={sendToKakao}>
+              카카오톡으로 보내기
+            </button>
+          )}
           {canShareFile && (
             <button className="share-btn" onClick={shareImage} disabled={!blob}>
               {t("이미지 공유하기 (카톡·인스타·카페·블로그)")}
@@ -393,7 +432,7 @@ export function CaptureSheet({ target, fileName, shareTitle, shareUrl, onClose }
               네이버 블로그·카페
             </button>
           )}
-          <button className="share-btn" onClick={copyLink}>
+          <button className="share-btn" onClick={() => copyLink()}>
             {t("링크 복사")}
           </button>
         </div>

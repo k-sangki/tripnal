@@ -21,6 +21,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/weather`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE}/overseas`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE}/weekend`, lastModified: now, changeFrequency: "daily", priority: 0.8 },
+    { url: `${BASE}/tide`, lastModified: now, changeFrequency: "daily", priority: 0.9 },
     { url: `${BASE}/golf`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     ...SEASON_PAGES.map((p) => ({ url: `${BASE}${p.href}`, lastModified: now, changeFrequency: "daily" as const, priority: 0.8 })),
     ...activeGolfRegions().map((r) => ({ url: `${BASE}/golf/${r.slug}`, lastModified: now, changeFrequency: "daily" as const, priority: 0.8 })),

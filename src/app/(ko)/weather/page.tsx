@@ -39,6 +39,7 @@ export default function PlacesIndex() {
               {l.emoji} {l.label}
             </h2>
             <nav className="place-links">
+              {l.id === "fishing" && <Link href="/tide">🌊 전국 물때표·바다날씨 →</Link>}
               {list.map((p) => (
                 <Link key={p.slug} href={`/weather/${p.slug}`}>
                   {p.name} 날씨

@@ -2959,3 +2959,53 @@ button.cc-col.on {
 .season-summary b {
   color: var(--pine);
 }
+
+/* 물때표 모음 (/tide) */
+.tide-mul.sari {
+  color: #d63c3c;
+}
+.tide-mul.jogeum {
+  color: #2f6fd6;
+}
+.tide-week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.tide-week li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 7px 0;
+  border-radius: 12px;
+  background: var(--chip);
+}
+.tide-week small {
+  font-size: 11px;
+  color: var(--muted);
+}
+.tide-week b {
+  font-size: 13px;
+}
+.tide-week li.sari b {
+  color: #d63c3c;
+}
+.tide-week li.jogeum b {
+  color: #2f6fd6;
+}
+.tide-times i {
+  font-style: normal;
+  font-size: 12px;
+  font-weight: 700;
+  margin-right: 2px;
+}
+.tide-times i.hi {
+  color: #d63c3c;
+}
+.tide-times i.lo {
+  color: #2f6fd6;
+}

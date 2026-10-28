@@ -12,6 +12,8 @@ describe("엣지 캐시", () => {
     expect(cacheTtl("/ja/weather/seoul/11")).toBe(900);
     expect(cacheTtl("/zh/weather/nami-island")).toBe(900);
     expect(cacheTtl("/en/weather/seoul/x")).toBeNull();
+    expect(cacheTtl("/ja/korea/11")).toBe(3600);
+    expect(cacheTtl("/korea/11")).toBeNull();
     expect(cacheTtl("/overseas/osaka/forecast")).toBe(900);
     expect(cacheTtl("/api/og")).toBe(3 * 3600);
     expect(cacheTtl("/api/search")).toBeNull();

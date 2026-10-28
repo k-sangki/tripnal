@@ -207,7 +207,7 @@ export function monthTitle(name: string, m: number, n: MonthNormal, l: Locale): 
   if (l === "ja") {
     const d = vsHome(n, m, l);
     const tail = d == null || Math.abs(d) < 1 ? hook(n, l) : `東京より${Math.round(Math.abs(d))}℃${d < 0 ? "寒い" : "暖かい"}？`;
-    return `${name} ${m}月の天気と服装・${tail}`;
+    return `${name} ${m}月の気温・天気と服装｜${tail}`;
   }
   if (l === "zh") {
     const d = vsHome(n, m, l);
@@ -225,4 +225,36 @@ export function monthDescription(name: string, m: number, n: MonthNormal, l: Loc
   if (l === "zh") return `${name}${m}月天氣：平均最高${hi}℃、最低${lo}℃、雨量${n.rain}mm。${m}月去韓國穿什麼、要注意什麼，還有最新16天預報一次看。`;
   if (l === "ja") return `${name}の${m}月の天気は、平均最高気温${hi}℃、最低気温${lo}℃、降水量${n.rain}mm。${m}月の韓国旅行の服装の目安と注意点、最新の2週間予報もまとめてチェック。`;
   return `${name} ${m}월 평년 날씨는 낮 최고 ${hi}°C, 아침 최저 ${lo}°C, 강수량 ${n.rain}mm. ${m}월 여행·나들이 옷차림과 알아 둘 날씨, 이번주·주말 예보까지 한 번에.`;
+}
+
+/**
+ * 한국 전체 ○월 페이지 (/ja/korea/11 등, 외국어만). 일본에서 "韓国 11月 気温"이 달마다 수천 번 검색되는데
+ * 도시 이름 없이 찾는 사람에게는 서울 기준 기온 + 도시별 표로 답한다 (키워드 플래너, 2026-10-28).
+ */
+export function countryMonthTitle(m: number, l: Locale): string {
+  const n = KR.seoul.months[m - 1];
+  const d = vsHome(n, m, l);
+  if (l === "ja") {
+    const tail = d == null || Math.abs(d) < 1 ? hook(n, l) : `ソウルは東京より${Math.round(Math.abs(d))}℃${d < 0 ? "寒い" : "暖かい"}？`;
+    return `韓国 ${m}月の気温と服装・${tail}`;
+  }
+  if (l === "zh") {
+    const tail = d == null || Math.abs(d) < 1 ? hook(n, l) : `首爾比台北${d < 0 ? "冷" : "熱"}${Math.round(Math.abs(d))}℃？`;
+    return `韓國${m}月氣溫與穿搭・${tail}`;
+  }
+  return `Korea Weather in ${MONTH_EN[m - 1]} · Temperatures & What to Wear (${hook(n, "en")})`;
+}
+
+export function countryMonthDescription(m: number, l: Locale): string {
+  const t = (slug: string) => {
+    const n = KR[slug].months[m - 1];
+    return [Math.round(n.hi), Math.round(n.lo)];
+  };
+  const [sh, sl] = t("seoul");
+  const [bh, bl] = t("busan");
+  const [jh, jl] = t("jeju");
+  if (l === "ja")
+    return `${m}月の韓国の気温は、ソウル最高${sh}℃・最低${sl}℃、釜山${bh}℃/${bl}℃、済州島${jh}℃/${jl}℃。${m}月の韓国旅行の服装と注意点を、10都市の平年値でまとめました。`;
+  if (l === "zh") return `${m}月韓國氣溫：首爾最高${sh}℃、最低${sl}℃，釜山${bh}℃/${bl}℃，濟州${jh}℃/${jl}℃。用10個城市的平均值整理${m}月去韓國怎麼穿、要注意什麼。`;
+  return `How warm is Korea in ${MONTH_EN[m - 1]}? Seoul averages ${sh}°C / ${sl}°C, Busan ${bh}°C / ${bl}°C, Jeju ${jh}°C / ${jl}°C. What to wear and seasonal tips, with averages for 10 cities.`;
 }

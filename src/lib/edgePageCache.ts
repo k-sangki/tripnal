@@ -16,6 +16,8 @@ export function cacheTtl(pathname: string): number | null {
   if (pathname === "/" || pathname === "/weekend" || pathname === "/weather" || pathname.startsWith("/weather/")) return 15 * MIN;
   // 영어·일본어 홈과 장소 페이지 (한국어 장소 페이지와 같다), 도시 월별 평년 날씨
   if (/^\/(en|ja|zh)(\/weather\/[^/]+(\/\d{1,2})?)?$/.test(pathname)) return 15 * MIN;
+  // 한국 전체 월별 평년 날씨 (외국어)
+  if (/^\/(en|ja|zh)\/korea\/\d{1,2}$/.test(pathname)) return HOUR;
   // 해외 16일 예보는 예보가 들어 있고, 나머지 해외 페이지는 평년값이라 거의 그대로다
   if (/^\/overseas\/[^/]+\/forecast$/.test(pathname)) return 15 * MIN;
   if (pathname === "/overseas" || pathname.startsWith("/overseas/")) return HOUR;

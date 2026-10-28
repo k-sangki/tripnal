@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { PLACE_TEXT } from "@/data/places-i18n";
-import { localePath, type Locale } from "@/lib/i18n";
+import { localePath, type ForeignLocale, type Locale } from "@/lib/i18n";
 import { KOREA_MONTH_CITIES, clothes, degrees, krNormals, krStation, krYears, monthName, monthNotes, vsHome } from "@/lib/korea-month";
 import { getPlace } from "@/lib/places";
 import { shortName } from "@/lib/seo-foreign";
@@ -38,6 +38,9 @@ function fill(s: string, v: Record<string, string | number>) {
 }
 
 /** 도시 이름 (외국어는 짧은 이름: "Seoul", "ソウル") */
+/** 외국어판에서 한국 전체 월별 페이지로 가는 링크 이름 */
+const ALL_KOREA: Record<ForeignLocale, string> = { en: "All of Korea", ja: "韓国全体", zh: "韓國全區" };
+
 export function cityName(slug: string, l: Locale): string {
   if (l === "ko") return getPlace(slug)?.name ?? slug;
   return shortName(PLACE_TEXT[slug]?.[l].name ?? slug);
@@ -135,6 +138,7 @@ export function KoreaMonthPage({ slug, month: m, locale: l }: { slug: string; mo
       <section className="card" style={{ marginTop: 12 }}>
         <h2 className="card-title">{fill(T.others[l], { m: mn })}</h2>
         <nav className="place-links">
+          {l !== "ko" && <Link href={localePath(l, `/korea/${m}`)}>{ALL_KOREA[l]}</Link>}
           {KOREA_MONTH_CITIES.filter((s) => s !== slug).map((s) => (
             <Link key={s} href={localePath(l, `/weather/${s}/${m}`)}>
               {cityName(s, l)}

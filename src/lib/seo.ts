@@ -15,6 +15,9 @@ export function topic(word: string): string {
 /** 사는 곳보다 놀러 가는 곳으로 찾는 도시 */
 const TOURIST_CITY = new Set(["gyeongju", "jeonju-hanok-village", "jeju", "gangneung"]);
 
+/** 화면 이름과 검색어가 다른 곳 (구글 2026-10-28: "제주도 날씨"·"제주 날씨" 각 월 5만) */
+const TITLE_NAME: Record<string, string> = { jeju: "제주도" };
+
 /**
  * 장소 페이지 제목. "{장소} 날씨"를 맨 앞에 두고, 많이 찾는 검색어(이번주·주말 날씨, 물때표)와 훅을 레저별로 붙인다.
  * "16일"은 쓰지 않는다 (16일자 날씨로 읽힐 수 있어서). 모든 검색 제목은 필수 검색어 + 훅(B급 유머) (SK 2026-10-22).
@@ -39,8 +42,9 @@ export function placeTitle(p: Place): string {
     case "travel":
       // 같은 "여행"이라도 찾는 목적이 다르다: 바다는 물놀이·사진, 관광지는 여행 동선, 사는 도시는 생활(세차·빨래)
       if (/해수욕장|해변/.test(p.name)) return `${p.name} 날씨 · 이번주 바다 가면 인생샷? 산발샷?`;
-      if (TOURIST_CITY.has(p.slug)) return `${p.name} 날씨 · 이번주·주말 여행, 우산 들고 다닐 각?`;
-      return `${p.name} 날씨 · 이번주·주말, 세차해도 될까요?`;
+      // "○○ 다음주 날씨"·"주간 날씨"도 많이 찾는다 (구글 2026-10-28: 제주도 다음주·주간 날씨 각 월 5천)
+      if (TOURIST_CITY.has(p.slug)) return `${TITLE_NAME[p.slug] ?? p.name} 날씨 · 이번주·다음주·주말 여행, 우산 들고 다닐 각?`;
+      return `${p.name} 날씨 · 이번주·다음주·주말, 세차해도 될까요?`;
     default:
       return `${p.name} 날씨 · 이번주 ${getLeisure(p.leisure).label}, 하늘이 허락할까?`;
   }
@@ -56,7 +60,7 @@ export function placeDescription(p: Place): string {
         : "기온·체감온도·비·돌풍과 일몰 시간을";
   if (p.leisure === "golf")
     return `${p.name}(${p.region}) 골프장 날씨를 3시간 간격으로. 티오프 시간대 비·낙뢰·바람(돌풍)·체감온도와 일출·일몰까지, 라운딩을 미룰지 우비를 챙길지 미리 정하세요.`;
-  return `${p.name}(${p.region}) 이번주·주말 날씨를 3시간 간격으로. ${extra} ${l.label}에 맞게 한눈에 보여드리고, 여행 일정을 날씨로 계획할 수 있습니다.`;
+  return `${p.name}(${p.region}) 이번주·다음주·주말 날씨를 3시간 간격으로. ${extra} ${l.label}에 맞게 한눈에 보여드리고, 여행 일정을 날씨로 계획할 수 있습니다.`;
 }
 
 /** 주말이 맑을 때·비 올 때·바람 셀 때 레저별 한마디 (검색 설명 끝에 붙는 훅) */

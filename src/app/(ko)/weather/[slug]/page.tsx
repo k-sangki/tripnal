@@ -6,12 +6,13 @@ import { MonthCards } from "@/components/CityClimate";
 import { WeatherApp } from "@/components/WeatherApp";
 import { localMonth } from "@/lib/climate";
 import { golfRegionOf } from "@/lib/golf";
+import { MOUNTAIN_INTRO } from "@/data/mountain-intro";
 import { hasForeignPage } from "@/data/places-i18n";
 import { languageAlternates } from "@/lib/i18n";
 import { krNormals, krYears, monthCityFor } from "@/lib/korea-month";
 import { getLeisure } from "@/lib/leisure";
 import { getPlace, nearbyPlaces } from "@/lib/places";
-import { placeLiveDescription, placeSchemaType, placeSummaryRows, placeTitle } from "@/lib/seo";
+import { placeLiveDescription, placeSchemaType, placeSummaryRows, placeTitle, topic } from "@/lib/seo";
 import { KST_OFFSET_MIN } from "@/lib/time";
 import { getForecast } from "@/lib/weather";
 import type { Forecast } from "@/lib/weather/types";
@@ -70,6 +71,8 @@ export default async function PlacePage({ params }: PageProps<"/weather/[slug]">
   }
 
   const leisure = getLeisure(place.leisure);
+  // 산마다 다른 소개 (같은 틀 페이지로 보이지 않게)
+  const intro = MOUNTAIN_INTRO[place.slug];
   // 같은 레저 중 가까운 곳 (같은 날 갈 만한 대안, 내부 링크)
   const related = nearbyPlaces(place, 8);
   const golf = place.leisure === "golf";
@@ -91,6 +94,7 @@ export default async function PlacePage({ params }: PageProps<"/weather/[slug]">
       {
         "@type": placeSchemaType(place),
         name: place.name,
+        ...(intro ? { description: intro.intro } : {}),
         address: place.region,
         geo: { "@type": "GeoCoordinates", latitude: place.lat, longitude: place.lon, ...(place.elevation ? { elevation: place.elevation } : {}) },
       },
@@ -116,7 +120,20 @@ export default async function PlacePage({ params }: PageProps<"/weather/[slug]">
         headingSuffix="16일 날씨"
       />
 
-      <section className="card seo-text" style={{ marginTop: 16 }}>
+      {intro && (
+        <section className="card seo-text" style={{ marginTop: 16 }}>
+          <h2>{topic(place.name)} 어떤 산?</h2>
+          <p>
+            {place.name}({place.region}
+            {place.elevation ? `, 해발 ${place.elevation.toLocaleString()}m` : ""}). {intro.intro}
+          </p>
+          <p>
+            <b>많이 찾는 때</b> · {intro.best}
+          </p>
+        </section>
+      )}
+
+      <section className="card seo-text" style={{ marginTop: intro ? 12 : 16 }}>
         <h2>
           {place.name} {leisure.label} 날씨 요약
         </h2>

@@ -1,91 +1,32 @@
 import type { MetadataRoute } from "next";
-import { activeGolfRegions } from "@/lib/golf";
 import { DESTINATIONS } from "@/lib/overseas";
-import { PLACE_TEXT } from "@/data/places-i18n";
-import { FOREIGN_LOCALES, languageAlternates, localePath, type Locale } from "@/lib/i18n";
-import { KOREA_MONTH_CITIES } from "@/lib/korea-month";
 import { PLACES } from "@/lib/places";
 import { SEASON_PAGES } from "@/lib/seasonal";
-import { overseasMonthIndexed } from "@/lib/indexing";
-
-/** 번역된 페이지는 각 언어판 주소를 함께 적는다 (hreflang) */
-function languages(path: string, locales?: readonly Locale[]) {
-  return Object.fromEntries(Object.entries(languageAlternates(path, locales)).map(([l, p]) => [l, `${BASE}${p}`]));
-}
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://tripnalc.com";
 
+/**
+ * 검색에 내보내는 한국어 페이지만 적는다. 골프장·외국어판·국내 월별·해외 월별·해외 예보는
+ * noindex라 넣지 않는다 (src/lib/indexing.ts).
+ * lastModified는 적지 않는다: 매번 지금 시각을 넣으면 구글이 값을 믿지 않는다.
+ */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const now = new Date();
+  const page = (path: string, changeFrequency: "hourly" | "daily" | "weekly" | "monthly", priority: number) => ({
+    url: `${BASE}${path}`,
+    changeFrequency,
+    priority,
+  });
   return [
-    { url: `${BASE}/`, lastModified: now, changeFrequency: "hourly", priority: 1, alternates: { languages: languages("/") } },
-    { url: `${BASE}/weather`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
-    { url: `${BASE}/overseas`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
-    { url: `${BASE}/weekend`, lastModified: now, changeFrequency: "daily", priority: 0.8 },
-    { url: `${BASE}/tide`, lastModified: now, changeFrequency: "daily", priority: 0.9 },
-    { url: `${BASE}/golf`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
-    ...SEASON_PAGES.map((p) => ({ url: `${BASE}${p.href}`, lastModified: now, changeFrequency: "daily" as const, priority: 0.8 })),
-    ...activeGolfRegions().map((r) => ({ url: `${BASE}/golf/${r.slug}`, lastModified: now, changeFrequency: "daily" as const, priority: 0.8 })),
-    ...Array.from({ length: 12 }, (_, i) => ({
-      url: `${BASE}/overseas/month/${i + 1}`,
-      lastModified: now,
-      changeFrequency: "monthly" as const,
-      priority: 0.8,
-    })),
-    ...["/about", "/privacy", "/contact"].map((path) => ({ url: `${BASE}${path}`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.3 })),
-    ...FOREIGN_LOCALES.flatMap((l) =>
-      ["/about", "/privacy"].map((path) => ({ url: `${BASE}${localePath(l, path)}`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.3 })),
-    ),
-    // 골프장은 검색에서 뺐으므로 사이트맵에도 넣지 않는다 (시·도 목록만)
-    ...PLACES.filter((p) => p.leisure !== "golf").map((p) => ({
-      url: `${BASE}/weather/${p.slug}`,
-      lastModified: now,
-      changeFrequency: "hourly" as const,
-      priority: 0.9,
-      ...(p.slug in PLACE_TEXT ? { alternates: { languages: languages(`/weather/${p.slug}`) } } : {}),
-    })),
-    // 국내 도시 월별 평년 날씨 (한국어·영어·일본어)
-    ...(["ko", ...FOREIGN_LOCALES] as Locale[]).flatMap((l) =>
-      KOREA_MONTH_CITIES.flatMap((slug) =>
-        Array.from({ length: 12 }, (_, i) => ({
-          url: `${BASE}${localePath(l, `/weather/${slug}/${i + 1}`)}`,
-          lastModified: now,
-          changeFrequency: "monthly" as const,
-          priority: 0.7,
-          alternates: { languages: languages(`/weather/${slug}/${i + 1}`) },
-        })),
-      ),
-    ),
-    // 한국 전체 월별 평년 날씨 (외국어만)
-    ...FOREIGN_LOCALES.flatMap((l) =>
-      Array.from({ length: 12 }, (_, i) => ({
-        url: `${BASE}${localePath(l, `/korea/${i + 1}`)}`,
-        lastModified: now,
-        changeFrequency: "monthly" as const,
-        priority: 0.8,
-        alternates: { languages: languages(`/korea/${i + 1}`, FOREIGN_LOCALES) },
-      })),
-    ),
-    // 영어·일본어 홈과 장소 페이지
-    ...FOREIGN_LOCALES.flatMap((l) => [
-      { url: `${BASE}${localePath(l, "/")}`, lastModified: now, changeFrequency: "daily" as const, priority: 0.9, alternates: { languages: languages("/") } },
-      ...Object.keys(PLACE_TEXT).map((slug) => ({
-        url: `${BASE}${localePath(l, `/weather/${slug}`)}`,
-        lastModified: now,
-        changeFrequency: "hourly" as const,
-        priority: 0.9,
-        alternates: { languages: languages(`/weather/${slug}`) },
-      })),
-    ]),
-    ...DESTINATIONS.flatMap((d) => [
-      { url: `${BASE}/overseas/${d.slug}`, lastModified: now, changeFrequency: "daily" as const, priority: 0.8 },
-      // 예보 페이지는 검색에서 뺐고, 월별은 인기 여행지만 넣는다
-      ...Array.from({ length: overseasMonthIndexed(d.slug) ? 12 : 0 }, (_, i) => ({
-        url: `${BASE}/overseas/${d.slug}/${i + 1}`,
-        lastModified: now,
-        changeFrequency: "monthly" as const,
-        priority: 0.6,
-      })),
-    ]),
+    page("/", "hourly", 1),
+    page("/weather", "weekly", 0.8),
+    page("/overseas", "weekly", 0.8),
+    page("/weekend", "daily", 0.8),
+    page("/tide", "daily", 0.9),
+    page("/golf", "weekly", 0.6),
+    ...SEASON_PAGES.map((p) => page(p.href, "daily", 0.8)),
+    ...Array.from({ length: 12 }, (_, i) => page(`/overseas/month/${i + 1}`, "monthly", 0.8)),
+    ...["/about", "/privacy", "/contact"].map((path) => page(path, "monthly", 0.3)),
+    ...PLACES.filter((p) => p.leisure !== "golf").map((p) => page(`/weather/${p.slug}`, "hourly", 0.9)),
+    ...DESTINATIONS.map((d) => page(`/overseas/${d.slug}`, "daily", 0.8)),
   ];
 }

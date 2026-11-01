@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { NOINDEX } from "@/lib/indexing";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { GolfCards } from "@/components/GolfFinder";
@@ -27,6 +28,8 @@ export async function generateMetadata({ params }: PageProps<"/golf/[region]">):
     description,
     keywords: [`${r.name} 골프장 날씨`, `${r.short} 골프장 날씨`, `${r.short} CC 날씨`, "골프장 날씨", "라운딩 날씨"],
     alternates: { canonical: url },
+    // 골프장은 당분간 검색에서 뺀다 (src/lib/indexing.ts). 전국 목록 /golf만 색인
+    robots: NOINDEX,
     openGraph: { siteName: "트립날씨", locale: "ko_KR", title, description, url },
   };
 }

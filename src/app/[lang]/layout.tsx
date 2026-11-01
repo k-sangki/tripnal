@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { LocaleProvider } from "@/components/LocaleContext";
 import { ADSENSE, RootDocument, SITE_VIEWPORT } from "@/components/RootDocument";
 import { FOREIGN_LOCALES, LANG_TAG, OG_LOCALE, SITE_NAME, isForeignLocale } from "@/lib/i18n";
+import { NOINDEX } from "@/lib/indexing";
 import "../globals.css";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://tripnalc.com";
@@ -30,6 +31,8 @@ export async function generateMetadata({ params }: LayoutProps<"/[lang]">): Prom
     description: DESCRIPTION[lang],
     applicationName: SITE_NAME[lang],
     openGraph: { type: "website", siteName: SITE_NAME[lang], locale: OG_LOCALE[lang], description: DESCRIPTION[lang] },
+    // 외국어판은 당분간 검색에서 뺀다 (src/lib/indexing.ts)
+    robots: NOINDEX,
     formatDetection: { telephone: false },
     other: ADSENSE ? { "google-adsense-account": ADSENSE } : {},
   };

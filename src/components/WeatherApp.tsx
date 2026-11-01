@@ -45,6 +45,8 @@ interface Props {
   headingSuffix?: string;
   /** 해외 여행지 페이지: 검색·지도·특보·알림 없이, 날짜·시각은 이 현지 시간대(UTC와의 차이, 분)로 */
   overseasOffset?: number;
+  /** false면 광고 자리를 두지 않는다 (검색에서 뺀 틀 페이지) */
+  ads?: boolean;
 }
 
 const DEFAULT_PLACE: AppPlace = { name: "서울", lat: 37.5665, lon: 126.978, address: "서울특별시" };
@@ -58,7 +60,7 @@ function store(): Storage | null {
   }
 }
 
-export function WeatherApp({ initialPlace, initialForecast, initialLeisure, initialFrom, initialTo, initialInterval, headingSuffix, overseasOffset }: Props) {
+export function WeatherApp({ initialPlace, initialForecast, initialLeisure, initialFrom, initialTo, initialInterval, headingSuffix, overseasOffset, ads = true }: Props) {
   const router = useRouter();
   const { locale, units, setUnits } = useLocale();
   const t = useT();
@@ -254,9 +256,11 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
             </div>
           )}
         </div>
-        <div className="o-ad pc-only">
-          <AdSlot slot={AD_SLOTS.side} />
-        </div>
+        {ads && (
+          <div className="o-ad pc-only">
+            <AdSlot slot={AD_SLOTS.side} />
+          </div>
+        )}
       </div>
 
       <main className="a-main">
@@ -341,14 +345,18 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
                       : `기온은 해발 ${Math.round(forecast.elevation)}m 기준으로 보정된 값입니다. 바람은 고도 보정이 되지 않아 높은 산에서는 실제보다 약할 수 있습니다. `)}
                   {t("예보 제공")}: {forecast.source}
                 </p>
-                <div style={{ height: 12 }} />
-                <AdSlot slot={AD_SLOTS.afterSummary} />
+                {ads && (
+                  <>
+                    <div style={{ height: 12 }} />
+                    <AdSlot slot={AD_SLOTS.afterSummary} />
+                  </>
+                )}
               </div>
             )
           )}
 
           {/* 예보가 있으면 위 광고와 붙지 않게 아래 광고는 빼고, 예보를 못 불러왔을 때만 보인다 */}
-          {!forecast && !loading && (
+          {ads && !forecast && !loading && (
             <>
               <div style={{ height: 12 }} />
               <AdSlot slot={AD_SLOTS.bottom} />

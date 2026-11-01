@@ -16,6 +16,7 @@ import datetime as dt
 import json
 import math
 import os
+import random
 import sys
 import time
 import urllib.request
@@ -25,7 +26,14 @@ import numpy as np
 
 from overseas import POINTS, pick
 
-BASE = "https://ecmwf-forecasts.s3.eu-central-1.amazonaws.com"
+# 같은 파일을 두는 공개 미러들. AWS S3가 "Slow Down"(503)을 오래 돌려줄 때가 있어(2026-10-31·11-01)
+# 같은 경로를 ECMWF 자체 서버·Azure 미러에서도 받아 본다. 파일과 .index 바이트 위치는 셋 다 같다.
+MIRRORS = [
+    "https://ecmwf-forecasts.s3.eu-central-1.amazonaws.com",
+    "https://data.ecmwf.int/forecasts",
+    "https://ai4edataeuwest.blob.core.windows.net/ecmwf",
+]
+ECMWF_PREFIX = "ecmwf:"
 # 한국 영역 (제주·울릉·독도 포함)
 LAT_MIN, LAT_MAX = 32.5, 39.5
 LON_MIN, LON_MAX = 124.0, 132.0
@@ -36,21 +44,35 @@ ALIAS = {"10fg3": "10fg", "10fg6": "10fg"}
 STEPS = list(range(0, 145, 3)) + list(range(150, 361, 6))
 
 
+def _get(url, rng):
+    req = urllib.request.Request(url, headers={"Range": f"bytes={rng[0]}-{rng[1]}"} if rng else {})
+    with urllib.request.urlopen(req, timeout=60) as r:
+        return r.read()
+
+
 def http(url, rng=None, tries=7):
+    """주소 하나를 받는다. "ecmwf:경로"면 미러를 돌아가며 받는다.
+    일시 오류(503·타임아웃 등)는 점점 길게(무작위 섞어) 쉬었다가 다시 시도한다."""
+    urls = [m + url[len(ECMWF_PREFIX):] for m in MIRRORS] if url.startswith(ECMWF_PREFIX) else [url]
     for i in range(tries):
-        try:
-            req = urllib.request.Request(url, headers={"Range": f"bytes={rng[0]}-{rng[1]}"} if rng else {})
-            with urllib.request.urlopen(req, timeout=60) as r:
-                return r.read()
-        except Exception:
-            if i == tries - 1:
-                raise
-            # S3가 "Slow Down"(503)으로 막으면 잠시 쉬었다 다시
-            time.sleep(min(30, 2**i))
+        errs = []
+        # 미러는 시도마다 시작점을 바꿔 한 곳에 몰리지 않게 한다
+        for u in urls[i % len(urls) :] + urls[: i % len(urls)]:
+            try:
+                return _get(u, rng)
+            except Exception as e:  # 404(아직 안 올라온 미러)·503·연결 끊김 모두 다음 미러로
+                errs.append(e)
+        # ECMWF 미러가 모두 404면 아직 없는 파일이라 기다려도 소용없다 (latest_run이 바로 이전 run으로 넘어가게)
+        # 다른 수집기(GFS·ICON 등)는 덜 올라온 파일을 기다리던 예전 동작 그대로 둔다
+        all404 = len(urls) > 1 and all(getattr(e, "code", None) == 404 for e in errs)
+        if i == tries - 1 or all404:
+            raise errs[0]
+        # S3가 "Slow Down"(503)으로 막으면 잠시 쉬었다 다시 (1·2·4·8·16·30초 + 흔들기)
+        time.sleep(min(30, 2**i) * random.uniform(0.7, 1.3))
 
 
 def run_path(run):
-    return f"{BASE}/{run[:8]}/{run[8:10]}z/ifs/0p25/oper/{run}0000"
+    return f"{ECMWF_PREFIX}/{run[:8]}/{run[8:10]}z/ifs/0p25/oper/{run}0000"
 
 
 def latest_run():
@@ -101,13 +123,15 @@ def fields(run, step):
     return out
 
 
-def retry(fn, *args, tries=3):
+def retry(fn, *args, tries=3, quiet=False):
     """step 하나가 실패하면(일시적인 S3 오류·덜 올라온 파일) 잠시 뒤 통째로 다시 받는다"""
     for i in range(tries):
         try:
             return fn(*args)
         except Exception as e:
             if i == tries - 1:
+                if quiet:
+                    raise
                 # GitHub Actions 주석으로 남겨 API로도 원인을 볼 수 있게 한다
                 print(f"::error::{fn.__name__}{args}: {type(e).__name__}: {e}", flush=True)
                 raise
@@ -128,8 +152,22 @@ def main():
     steps = [int(s) for s in a.steps.split(",")] if a.steps else STEPS
     print("run", run, "steps", len(steps), flush=True)
 
+    def first_try(s):
+        try:
+            return retry(fields, run, s, quiet=True)
+        except Exception as e:
+            print(f"step {s} 미룸: {type(e).__name__}: {e}", flush=True)
+            return None
+
     with cf.ThreadPoolExecutor(4) as ex:
-        data = dict(zip(steps, ex.map(lambda s: retry(fields, run, s), steps)))
+        data = dict(zip(steps, ex.map(first_try, steps)))
+    # 서버가 한동안 503을 내던 step은 다른 step을 다 받은 뒤 쉬었다가 하나씩 다시 받는다
+    late = [s for s in steps if data[s] is None]
+    if late:
+        print("다시 받을 step", late, flush=True)
+        time.sleep(90)
+        for s in late:
+            data[s] = retry(fields, run, s)
 
     folder = os.path.join(a.out, "ecmwf", run)
     os.makedirs(folder, exist_ok=True)

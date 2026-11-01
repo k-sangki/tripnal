@@ -92,25 +92,35 @@ def main():
     ap.add_argument("--dry-run", action="store_true")
     a = ap.parse_args()
 
-    dates = [d.isoformat() for d in weekend(dt.datetime.now(KST).date())]
-    result = {}
-    every = {}
-    failed = 0
-    with cf.ThreadPoolExecutor(3) as ex:
-        futs = {ex.submit(summary, p, dates): p for p in places()}
-        for fut in cf.as_completed(futs):
-            p = futs[fut]
-            try:
-                s, all_days = fut.result()
-            except Exception as e:  # 한두 곳 실패는 건너뛴다
-                print("실패", p["slug"], e, flush=True)
-                failed += 1
-                continue
-            if s:
-                result[p["slug"]] = s
-            if all_days:
-                every[p["slug"]] = all_days
-    print(f"주말 {dates} · {len(result)}곳 · 실패 {failed}곳", flush=True)
+    def gather(dates):
+        result, every, failed = {}, {}, 0
+        with cf.ThreadPoolExecutor(3) as ex:
+            futs = {ex.submit(summary, p, dates): p for p in places()}
+            for fut in cf.as_completed(futs):
+                p = futs[fut]
+                try:
+                    s, all_days = fut.result()
+                except Exception as e:  # 한두 곳 실패는 건너뛴다
+                    print("실패", p["slug"], e, flush=True)
+                    failed += 1
+                    continue
+                if s:
+                    result[p["slug"]] = s
+                if all_days:
+                    every[p["slug"]] = all_days
+        print(f"주말 {dates} · {len(result)}곳 · 실패 {failed}곳", flush=True)
+        return result, every
+
+    def this_weekend():
+        return [d.isoformat() for d in weekend(dt.datetime.now(KST).date())]
+
+    dates = this_weekend()
+    result, every = gather(dates)
+    # 한국 시간 자정 무렵에 돌면 모으는 도중 날짜가 바뀌어 사이트 예보에서 토요일이 빠진다
+    # (2026-10-31 23:59 KST 시작 → 30곳만 모임). 주말 기간이 바뀌었으면 새 기간으로 한 번 더 모은다.
+    if len(result) < 100 and this_weekend() != dates:
+        dates = this_weekend()
+        result, every = gather(dates)
     if len(result) < 100:
         sys.exit("모은 장소가 너무 적어 올리지 않음")
 

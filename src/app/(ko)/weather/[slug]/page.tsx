@@ -14,6 +14,7 @@ import { getLeisure } from "@/lib/leisure";
 import { getPlace, nearbyPlaces } from "@/lib/places";
 import { placeLiveDescription, placeSchemaType, placeSummaryRows, placeTitle, topic } from "@/lib/seo";
 import { KST_OFFSET_MIN } from "@/lib/time";
+import { NOINDEX } from "@/lib/indexing";
 import { getForecast } from "@/lib/weather";
 import type { Forecast } from "@/lib/weather/types";
 
@@ -54,6 +55,8 @@ export async function generateMetadata({ params, searchParams }: PageProps<"/wea
     ],
     // 영어·일본어판이 있는 장소는 서로 가리킨다 (hreflang)
     alternates: { canonical: url, ...(hasForeignPage(place.slug) ? { languages: languageAlternates(url) } : {}) },
+    // 골프장 469곳은 고유한 글 없이 같은 틀이라 검색에서 뺀다 (애드센스 품질 대응, 시·도 목록은 색인)
+    ...(place.leisure === "golf" ? { robots: NOINDEX } : {}),
     openGraph: { siteName: "트립날씨", locale: "ko_KR", title, description, url, images: [{ url: image, width: 1200, height: 630 }] },
     twitter: { card: "summary_large_image", title, description, images: [image] },
   };
@@ -118,6 +121,7 @@ export default async function PlacePage({ params }: PageProps<"/weather/[slug]">
         initialForecast={forecast}
         initialLeisure={place.leisure}
         headingSuffix="16일 날씨"
+        ads={!golf}
       />
 
       {intro && (

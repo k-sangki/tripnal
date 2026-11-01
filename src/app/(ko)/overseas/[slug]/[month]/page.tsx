@@ -7,6 +7,7 @@ import { SiteFooter, SiteHeader } from "@/components/SiteHeader";
 import { CLIMATE_SOURCE, getNormals, goodMonths, monthGuide } from "@/lib/climate";
 import { DESTINATIONS, getDestination, type Destination } from "@/lib/overseas";
 import { wetDry } from "@/lib/season";
+import { NOINDEX, overseasMonthIndexed } from "@/lib/indexing";
 
 /** 평년값만 쓰므로 미리 만들어 두지 않고 요청 때 그린다 (234곳 × 12달) */
 export const dynamic = "force-dynamic";
@@ -51,6 +52,8 @@ export async function generateMetadata({ params }: PageProps<"/overseas/[slug]/[
       ...(wetOrDry(p.d, p.m) ? [`${n} ${p.m}월 ${wetOrDry(p.d, p.m)}`] : []),
     ]),
     alternates: { canonical: url },
+    // 인기 여행지만 색인에 남긴다 (애드센스 품질 대응)
+    ...(overseasMonthIndexed(p.d.slug) ? {} : { robots: NOINDEX }),
     openGraph: { siteName: "트립날씨", locale: "ko_KR", title: title(p.d, p.m), description: description(p.d, p.m), url, images: [{ url: image, width: 1200, height: 630 }] },
     twitter: { card: "summary_large_image", title: title(p.d, p.m), description: description(p.d, p.m), images: [image] },
   };
@@ -134,9 +137,11 @@ export default async function MonthPage({ params }: PageProps<"/overseas/[slug]/
       {guide && <GuideCard title={`${m}월 ${d.name} 여행 가이드`} guide={guide} />}
 
       {/* 여행 가이드 바로 아래 광고 (여행·숙박 광고가 붙기 좋은 자리) */}
-      <div style={{ marginTop: 12 }}>
-        <AdSlot slot={AD_SLOTS.afterSummary} />
-      </div>
+      {overseasMonthIndexed(d.slug) && (
+        <div style={{ marginTop: 12 }}>
+          <AdSlot slot={AD_SLOTS.afterSummary} />
+        </div>
+      )}
 
       <nav className="month-nav">
         <Link href={`/overseas/${d.slug}/${prev}`}>← {prev}월</Link>

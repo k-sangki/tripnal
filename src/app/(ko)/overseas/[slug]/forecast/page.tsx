@@ -5,6 +5,7 @@ import { SiteFooter, SiteHeader } from "@/components/SiteHeader";
 import { WeatherApp } from "@/components/WeatherApp";
 import { DESTINATIONS, destinationOffset, getDestination, type Destination } from "@/lib/overseas";
 import { placeSummary } from "@/lib/seo";
+import { NOINDEX } from "@/lib/indexing";
 import { getForecast } from "@/lib/weather";
 import type { Forecast } from "@/lib/weather/types";
 
@@ -42,6 +43,8 @@ export async function generateMetadata({ params }: PageProps<"/overseas/[slug]/f
     description: desc,
     keywords: [d.name, ...(d.aliases ?? [])].flatMap((n) => [`${n} 날씨`, `${n} 이번주 날씨`]),
     alternates: { canonical: url },
+    // 도시 페이지와 겹치는 예보표라 검색에서 뺀다 (애드센스 품질 대응)
+    robots: NOINDEX,
     openGraph: { siteName: "트립날씨", locale: "ko_KR", title: title(d), description: desc, url, images: [{ url: image, width: 1200, height: 630 }] },
     twitter: { card: "summary_large_image", title: title(d), description: desc, images: [image] },
   };
@@ -84,6 +87,7 @@ export default async function DestinationForecastPage({ params }: PageProps<"/ov
         ← {d.name} 월별 날씨·여행 정보
       </Link>
       <WeatherApp
+        ads={false}
         initialPlace={{ name: d.name, lat: d.lat, lon: d.lon, address: d.country, slug: d.slug }}
         initialForecast={forecast}
         initialLeisure="travel"

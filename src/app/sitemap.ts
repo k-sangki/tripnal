@@ -6,6 +6,7 @@ import { FOREIGN_LOCALES, languageAlternates, localePath, type Locale } from "@/
 import { KOREA_MONTH_CITIES } from "@/lib/korea-month";
 import { PLACES } from "@/lib/places";
 import { SEASON_PAGES } from "@/lib/seasonal";
+import { overseasMonthIndexed } from "@/lib/indexing";
 
 /** 번역된 페이지는 각 언어판 주소를 함께 적는다 (hreflang) */
 function languages(path: string, locales?: readonly Locale[]) {
@@ -35,7 +36,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...FOREIGN_LOCALES.flatMap((l) =>
       ["/about", "/privacy"].map((path) => ({ url: `${BASE}${localePath(l, path)}`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.3 })),
     ),
-    ...PLACES.map((p) => ({
+    // 골프장은 검색에서 뺐으므로 사이트맵에도 넣지 않는다 (시·도 목록만)
+    ...PLACES.filter((p) => p.leisure !== "golf").map((p) => ({
       url: `${BASE}/weather/${p.slug}`,
       lastModified: now,
       changeFrequency: "hourly" as const,
@@ -77,8 +79,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ]),
     ...DESTINATIONS.flatMap((d) => [
       { url: `${BASE}/overseas/${d.slug}`, lastModified: now, changeFrequency: "daily" as const, priority: 0.8 },
-      { url: `${BASE}/overseas/${d.slug}/forecast`, lastModified: now, changeFrequency: "hourly" as const, priority: 0.7 },
-      ...Array.from({ length: 12 }, (_, i) => ({
+      // 예보 페이지는 검색에서 뺐고, 월별은 인기 여행지만 넣는다
+      ...Array.from({ length: overseasMonthIndexed(d.slug) ? 12 : 0 }, (_, i) => ({
         url: `${BASE}/overseas/${d.slug}/${i + 1}`,
         lastModified: now,
         changeFrequency: "monthly" as const,

@@ -3009,3 +3009,42 @@ button.cc-col.on {
 .tide-times i.lo {
   color: #2f6fd6;
 }
+
+/* 날씨 가이드 글 (/guide) */
+.guide-list {
+  padding-left: 18px;
+}
+.guide-list li {
+  margin-bottom: 14px;
+}
+.guide-table {
+  overflow-x: auto;
+  margin: 12px 0;
+}
+.guide-table table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 14px;
+}
+.guide-table th,
+.guide-table td {
+  border: 1px solid var(--line);
+  padding: 6px 8px;
+  text-align: left;
+  vertical-align: top;
+}
+.guide-table th {
+  background: var(--chip);
+}
+.guide-tip {
+  background: var(--chip);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+.guide-link {
+  margin: 10px 0 0;
+  font-size: 14px;
+}
+.guide-link a {
+  color: var(--pine);
+}

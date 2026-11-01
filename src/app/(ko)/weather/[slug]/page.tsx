@@ -7,6 +7,7 @@ import { WeatherApp } from "@/components/WeatherApp";
 import { localMonth } from "@/lib/climate";
 import { golfRegionOf } from "@/lib/golf";
 import { MOUNTAIN_INTRO } from "@/data/mountain-intro";
+import { guidesFor } from "@/data/guides";
 import { hasForeignPage } from "@/data/places-i18n";
 import { languageAlternates } from "@/lib/i18n";
 import { krNormals, krYears, monthCityFor } from "@/lib/korea-month";
@@ -14,7 +15,6 @@ import { getLeisure } from "@/lib/leisure";
 import { getPlace, nearbyPlaces } from "@/lib/places";
 import { placeLiveDescription, placeSchemaType, placeSummaryRows, placeTitle, topic } from "@/lib/seo";
 import { KST_OFFSET_MIN } from "@/lib/time";
-import { NOINDEX } from "@/lib/indexing";
 import { getForecast } from "@/lib/weather";
 import type { Forecast } from "@/lib/weather/types";
 
@@ -55,8 +55,6 @@ export async function generateMetadata({ params, searchParams }: PageProps<"/wea
     ],
     // 영어·일본어판이 있는 장소는 서로 가리킨다 (hreflang)
     alternates: { canonical: url, ...(hasForeignPage(place.slug) ? { languages: languageAlternates(url) } : {}) },
-    // 골프장 469곳은 고유한 글 없이 같은 틀이라 검색에서 뺀다 (애드센스 품질 대응, 시·도 목록은 색인)
-    ...(place.leisure === "golf" ? { robots: NOINDEX } : {}),
     openGraph: { siteName: "트립날씨", locale: "ko_KR", title, description, url, images: [{ url: image, width: 1200, height: 630 }] },
     twitter: { card: "summary_large_image", title, description, images: [image] },
   };
@@ -121,7 +119,6 @@ export default async function PlacePage({ params }: PageProps<"/weather/[slug]">
         initialForecast={forecast}
         initialLeisure={place.leisure}
         headingSuffix="16일 날씨"
-        ads={!golf}
       />
 
       {intro && (
@@ -159,6 +156,17 @@ export default async function PlacePage({ params }: PageProps<"/weather/[slug]">
           {place.name}({place.region})의 날씨를 오늘부터 최대 16일까지 3시간 간격으로 보여드립니다. 기간을 직접 고르면 1박 2일, 2박 3일처럼 원하는
           날짜만 볼 수 있고, 캡처 버튼으로 이미지를 저장해 일행과 공유할 수 있습니다.
         </p>
+        {!golf && (
+          <p className="guide-link">
+            📖{" "}
+            {guidesFor(place.leisure).map((g, i) => (
+              <span key={g.slug}>
+                {i > 0 && " · "}
+                <Link href={`/guide/${g.slug}`}>{g.h1} →</Link>
+              </span>
+            ))}
+          </p>
+        )}
       </section>
 
       {monthCity && (

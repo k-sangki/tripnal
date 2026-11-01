@@ -421,7 +421,10 @@ export function getGuide(slug: string): Guide | undefined {
 
 /** 장소 페이지에 걸 가이드 (레저가 맞는 글, 없으면 예보 모델 글) */
 export function guidesFor(leisure: string, limit = 2): Guide[] {
-  const hit = GUIDES.filter((g) => g.leisure.includes(leisure as LeisureId));
+  // 그 레저만 다루는 글을 먼저 (태그가 적은 글이 더 딱 맞는 글)
+  const hit = GUIDES.filter((g) =>
+    g.leisure.includes(leisure as LeisureId),
+  ).sort((a, b) => a.leisure.length - b.leisure.length);
   return (
     hit.length
       ? hit

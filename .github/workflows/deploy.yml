@@ -39,7 +39,10 @@ jobs:
           OPEN_METEO_API_KEY: ${{ secrets.OPEN_METEO_API_KEY }}
           # 공공데이터포털 인증키 (조석예보와 같은 키, 기상특보 조회에 씀)
           DATA_GO_KR_KEY: ${{ secrets.KHOA_API_KEY }}
+          # 예약 작업이 수집 워크플로를 제시간에 시작하는 GitHub 토큰 (tripnal 저장소 Actions 읽기·쓰기만)
+          COLLECT_DISPATCH_TOKEN: ${{ secrets.COLLECT_DISPATCH_TOKEN }}
         run: |
           if [ -n "$KAKAO_REST_API_KEY" ]; then echo "$KAKAO_REST_API_KEY" | npx wrangler secret put KAKAO_REST_API_KEY; fi
           if [ -n "$OPEN_METEO_API_KEY" ]; then echo "$OPEN_METEO_API_KEY" | npx wrangler secret put OPEN_METEO_API_KEY; fi
           if [ -n "$DATA_GO_KR_KEY" ]; then echo "$DATA_GO_KR_KEY" | npx wrangler secret put DATA_GO_KR_KEY; fi
+          if [ -n "$COLLECT_DISPATCH_TOKEN" ]; then echo "$COLLECT_DISPATCH_TOKEN" | npx wrangler secret put COLLECT_DISPATCH_TOKEN; fi

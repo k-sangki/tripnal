@@ -10,5 +10,13 @@
  */
 export const NOINDEX = { index: false, follow: true } as const;
 
-/** 외국어 "한국 N월 날씨"(/{lang}/korea/{m}, 36개)를 색인할지 */
-export const FOREIGN_KOREA_MONTH_INDEXED = false;
+/**
+ * 다시 색인하는 외국어. 일본어·중국어는 유입이 있었고 영어는 거의 없어 나중에 연다 (SK 2026-11-02).
+ * 이 언어들은 홈·장소·소개·개인정보와 "한국 N월 날씨"(/{lang}/korea/{m})를 색인한다.
+ * 국내 도시 월별(/{lang}/weather/{slug}/{m})은 모든 언어에서 계속 noindex.
+ */
+export const INDEXED_LOCALES: readonly string[] = ["ja", "zh"];
+
+export function localeIndexed(lang: string): boolean {
+  return INDEXED_LOCALES.includes(lang);
+}

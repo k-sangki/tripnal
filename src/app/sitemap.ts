@@ -3,7 +3,7 @@ import { GUIDES } from "@/data/guides";
 import { PLACE_TEXT } from "@/data/places-i18n";
 import { activeGolfRegions } from "@/lib/golf";
 import { FOREIGN_LOCALES, languageAlternates, localePath } from "@/lib/i18n";
-import { FOREIGN_KOREA_MONTH_INDEXED } from "@/lib/indexing";
+import { localeIndexed } from "@/lib/indexing";
 import { DESTINATIONS } from "@/lib/overseas";
 import { PLACES } from "@/lib/places";
 import { SEASON_PAGES } from "@/lib/seasonal";
@@ -72,8 +72,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
       ),
     ),
     ...DESTINATIONS.map((d) => page(`/overseas/${d.slug}`, "daily", 0.8)),
-    // 외국어 홈·장소 (번역된 실제 예보, SK 2026-11-02 다시 색인)
-    ...FOREIGN_LOCALES.flatMap((l) => [
+    // 일본어·중국어 홈·장소·한국 월별 (SK 2026-11-02 다시 색인, 영어는 나중에)
+    ...FOREIGN_LOCALES.filter(localeIndexed).flatMap((l) => [
       page(localePath(l, "/"), "daily", 0.9, languages("/")),
       ...["/about", "/privacy"].map((path) =>
         page(localePath(l, path), "monthly", 0.3),
@@ -86,16 +86,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
           languages(`/weather/${slug}`),
         ),
       ),
-      ...(FOREIGN_KOREA_MONTH_INDEXED
-        ? Array.from({ length: 12 }, (_, i) =>
-            page(
-              localePath(l, `/korea/${i + 1}`),
-              "monthly",
-              0.8,
-              languages(`/korea/${i + 1}`, FOREIGN_LOCALES),
-            ),
-          )
-        : []),
+      ...Array.from({ length: 12 }, (_, i) =>
+        page(
+          localePath(l, `/korea/${i + 1}`),
+          "monthly",
+          0.8,
+          languages(`/korea/${i + 1}`, FOREIGN_LOCALES),
+        ),
+      ),
     ]),
   ];
 }

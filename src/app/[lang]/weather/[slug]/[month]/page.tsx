@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { NOINDEX } from "@/lib/indexing";
 import { notFound } from "next/navigation";
 import { ForeignFooter, ForeignHeader } from "@/components/ForeignHeader";
 import { KoreaMonthPage, cityName } from "@/components/KoreaMonthPage";
@@ -30,6 +31,8 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/weather/[s
         ? [`${name} weather in ${mo}`, `${name} in ${mo}`, `what to wear in ${name} in ${mo}`, `Korea weather ${mo}`]
         : [`${name} ${p.m}月 天気`, `${name} ${p.m}月 服装`, `${name} ${p.m}月 気温`, `韓国 ${p.m}月 服装`],
     alternates: { canonical: url, languages: languageAlternates(path) },
+    // 월별 페이지는 당분간 검색에서 뺀다 (src/lib/indexing.ts)
+    robots: NOINDEX,
     openGraph: { siteName: SITE_NAME[p.l], locale: OG_LOCALE[p.l], title, description, url },
   };
 }

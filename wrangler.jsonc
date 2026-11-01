@@ -19,6 +19,8 @@
   // 배포 버전: 엣지 캐시 키에 넣어 배포 뒤 예전 페이지를 쓰지 않게 한다 (worker.ts)
   "version_metadata": { "binding": "CF_VERSION_METADATA" },
   // 직접 수집한 예보 (collector/ → .github/workflows/collect.yml)
+  // 예보 수집 시작 (worker.ts scheduled → GitHub collect.yml). ECMWF 360시간 자료는 run 뒤 약 7시간 35분에 다 올라온다
+  "triggers": { "crons": ["40 8 * * *", "40 20 * * *"] },
   "r2_buckets": [{ "binding": "DATA", "bucket_name": "tripnal-data" }],
   "routes": [
     { "pattern": "tripnalc.com", "custom_domain": true },

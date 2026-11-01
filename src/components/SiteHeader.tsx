@@ -75,6 +75,7 @@ export function SiteFooter({ langPath }: { langPath?: string } = {}) {
         <Link href="/about">소개</Link>
         <Link href="/weather">장소별 날씨</Link>
         <Link href="/overseas">해외 날씨</Link>
+        <Link href="/guide">날씨 가이드</Link>
         <Link href="/privacy">개인정보처리방침</Link>
         <Link href="/contact">문의</Link>
       </nav>

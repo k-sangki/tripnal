@@ -100,6 +100,16 @@ export default async function PlacePage({ params }: PageProps<"/weather/[slug]">
         geo: { "@type": "GeoCoordinates", latitude: place.lat, longitude: place.lon, ...(place.elevation ? { elevation: place.elevation } : {}) },
       },
       {
+        // 예보를 언제 새로 만들었는지 (AI 답변이 최신 자료인지 판단하는 데 쓴다)
+        "@type": "WebPage",
+        url: `https://tripnalc.com/weather/${place.slug}`,
+        name: `${place.name} 날씨`,
+        inLanguage: "ko",
+        ...(forecast?.generatedAt ? { dateModified: forecast.generatedAt } : {}),
+        isPartOf: { "@id": "https://tripnalc.com/#website" },
+        publisher: { "@type": "Organization", "@id": "https://tripnalc.com/#organization", name: "트립날씨", url: "https://tripnalc.com/" },
+      },
+      {
         "@type": "BreadcrumbList",
         itemListElement: [
           { "@type": "ListItem", position: 1, name: "트립날씨", item: "https://tripnalc.com/" },

@@ -8,7 +8,8 @@ const DESCRIPTION = "놀러 갈 땐, 트립날씨. 캠핑날씨·여행날씨·�
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "트립날씨 · 캠핑·등산·낚시·여행 이번주 날씨, 놀러 가도 되는 날 3초 컷",
+    // 사이트 이름(트립날씨)은 구글이 제목 위에 따로 보여 주므로 제목 앞에 반복하지 않는다 (SK 2026-11-02)
+    default: "캠핑·등산·낚시·여행 이번주 날씨, 놀러 가도 되는 날 3초 컷",
     // 검색 결과 위에 사이트 이름(트립날씨)이 따로 나오니 제목 뒤에 붙이지 않는다
     template: "%s",
   },

@@ -1,17 +1,18 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { loadKakaoShare, sendKakao } from "@/lib/kakaoShare";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { SLOGAN } from "@/lib/brand";
 import type { Leisure } from "@/lib/leisure";
 import { weekday, weekdayKo } from "@/lib/time";
 import { trackShare } from "@/lib/track";
-import { stripUtm, withUtm } from "@/lib/utm";
 import { dayVerdict, verdictDay } from "@/lib/verdict";
 import type { DayForecast } from "@/lib/weather/types";
+import { captureElement } from "./CaptureSheet";
 
 interface Props {
   days: DayForecast[];
   leisure: Leisure;
+  placeName: string;
   today: string;
   /** 공유 링크로 들어왔을 때 고를 날짜 (?vd=) */
   initialDate: string | null;
@@ -27,20 +28,10 @@ function pickDefault(days: DayForecast[], today: string, initial: string | null)
 }
 
 /** "가도 될까?" 판정 카드 (예보표 위). 근거 숫자를 칩으로 같이 보여준다 */
-export function VerdictCard({ days, leisure, today, initialDate }: Props) {
+export function VerdictCard({ days, leisure, placeName, today, initialDate }: Props) {
   const [date, setDate] = useState(() => pickDefault(days, today, initialDate));
-  const [kakao, setKakao] = useState<Awaited<ReturnType<typeof loadKakaoShare>> | null>(null);
   const [toast, setToast] = useState<string | null>(null);
-
-  useEffect(() => {
-    let off = false;
-    loadKakaoShare()
-      .then((k) => !off && setKakao(k))
-      .catch(() => {});
-    return () => {
-      off = true;
-    };
-  }, []);
+  const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
     if (!toast) return;
@@ -53,36 +44,30 @@ export function VerdictCard({ days, leisure, today, initialDate }: Props) {
   const v = useMemo(() => (day ? dayVerdict(verdictDay(day), leisure.id, leisure.group) : null), [day, leisure]);
   if (!day || !v) return null;
 
-  const share = async () => {
-    const u = new URL(stripUtm(window.location.href));
-    u.searchParams.set("vd", day.date);
-    if (kakao) {
-      trackShare("kakao", "verdict");
-      try {
-        sendKakao(kakao, withUtm(u.toString(), "kakao"));
-      } catch {
-        setToast("카카오톡을 열지 못했어요");
-      }
-      return;
-    }
-    trackShare("link", "verdict");
+  // 판정 카드만 그림으로 떠서 클립보드에 넣는다 (카톡·블로그에 바로 붙여넣기)
+  const capture = async () => {
+    const el = ref.current;
+    if (!el) return;
+    trackShare("image_copy", "verdict");
     try {
-      if (navigator.share) await navigator.share({ url: u.toString() });
-      else {
-        await navigator.clipboard.writeText(u.toString());
-        setToast("링크를 복사했어요");
-      }
+      // 그림을 만드는 동안에도 "누른 직후"로 인정받게 Promise째 넘긴다 (사파리)
+      await navigator.clipboard.write([new ClipboardItem({ "image/png": captureElement(el) })]);
+      setToast("캡처가 복사되었습니다");
     } catch {
-      // 공유 창을 닫은 경우
+      setToast("복사하지 못했어요. 캡처해서 공유를 써 주세요");
     }
   };
 
   return (
-    <section className="card verdict">
+    <section className="card verdict" ref={ref}>
       <div className="verdict-head">
         <h2>
           {leisure.emoji} {leisure.label} 가도 될까?
         </h2>
+        {/* 캡처 그림에만 보인다 */}
+        <span className="verdict-cap">
+          {placeName} · {md(day.date)}({weekdayKo(day.date)})
+        </span>
       </div>
       <div className="verdict-days" role="tablist" aria-label="날짜 고르기">
         {days.map((d) => {
@@ -117,10 +102,14 @@ export function VerdictCard({ days, leisure, today, initialDate }: Props) {
           </span>
         ))}
       </div>
-      <button className="verdict-share" onClick={share}>
-        💬 단톡방에 판정 보내기
+      <button className="verdict-share" onClick={capture}>
+        📸 판정 캡처하기
       </button>
       <p className="verdict-note">비·바람·기온으로 매긴 판정이에요. 숫자를 꼭 같이 보세요.</p>
+      <div className="verdict-cap verdict-mark">
+        <span>{SLOGAN}</span>
+        <b>tripnalc.com</b>
+      </div>
       {toast && <div className="toast">{toast}</div>}
     </section>
   );

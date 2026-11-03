@@ -3158,8 +3158,8 @@ button.cc-col.on {
   height: 46px;
   margin-top: 12px;
   border-radius: 14px;
-  background: #fee500;
-  color: rgba(0, 0, 0, 0.85);
+  background: var(--pine);
+  color: #fff;
   font-size: 15px;
   font-weight: 800;
 }
@@ -3168,4 +3168,45 @@ button.cc-col.on {
   text-align: center;
   font-size: 12px;
   color: var(--muted);
+}
+.verdict-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+/* 캡처 그림에만 장소·날짜와 주소를 넣고, 날짜 칩·버튼·안내는 뺀다 */
+.verdict-cap {
+  display: none;
+}
+.verdict.capturing .verdict-cap {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink-2);
+}
+.verdict.capturing .verdict-mark {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+  color: var(--muted);
+}
+.verdict-mark b {
+  color: var(--pine);
+}
+.verdict.capturing .verdict-days {
+  display: none;
+}
+.verdict.capturing .verdict-stamp {
+  margin-top: 12px;
+}
+.verdict.capturing .verdict-share,
+.verdict.capturing .verdict-note {
+  display: none;
+}
+.verdict.capturing {
+  border-radius: 0;
 }

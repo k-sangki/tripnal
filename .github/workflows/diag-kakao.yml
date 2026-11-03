@@ -17,7 +17,8 @@ jobs:
             p.on("requestfailed", (r) => console.log("reqfail", r.url(), r.failure()?.errorText));
             p.on("response", (r) => { if (/kakao/.test(r.url())) console.log("resp", r.status(), r.url().slice(0, 120)); });
             await p.goto("https://tripnalc.com/weather/seoul?me=1", { waitUntil: "networkidle" });
-            await p.click("button.fab");
+            await p.evaluate(() => document.querySelector('[aria-labelledby="welcome-title"]')?.remove());
+            await p.click("button.fab", { force: true });
             await p.waitForTimeout(8000);
             console.log("buttons", await p.$$eval(".share-grid button", (bs) => bs.map((x) => x.textContent)));
             console.log("Kakao", await p.evaluate(() => ({ has: !!window.Kakao, share: !!window.Kakao?.Share, init: window.Kakao?.isInitialized?.(), scripts: [...document.scripts].map((s) => s.src).filter((s) => /kakao/.test(s)) })));

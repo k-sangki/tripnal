@@ -25,8 +25,14 @@ export function loadKakaoShare(): Promise<KakaoJs> {
     if (!KAKAO_JS_KEY) return reject(new Error("no key"));
     const ready = () => {
       const K = window.Kakao;
-      if (!K?.Share) return reject(new Error("blocked"));
-      if (!K.isInitialized()) K.init(KAKAO_JS_KEY!);
+      if (!K) return reject(new Error("blocked"));
+      // Kakao.Share 는 init() 뒤에야 생긴다
+      try {
+        if (!K.isInitialized()) K.init(KAKAO_JS_KEY!);
+      } catch (e) {
+        return reject(e);
+      }
+      if (!K.Share) return reject(new Error("no share"));
       resolve(K);
     };
     if (window.Kakao) return ready();

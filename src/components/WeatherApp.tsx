@@ -210,11 +210,6 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
   const days = useMemo(() => (forecast ? forecast.days.filter((d) => inPeriod(d.date, period)) : []), [forecast, period]);
 
   const shareUrl = typeof window === "undefined" ? "https://tripnalc.com" : window.location.href;
-  const shareTitle = foreign
-    ? `${place?.name ?? ""} ${t("날씨")} · ${periodLabel(period, locale)}`
-    : place
-      ? `${place.name} ${periodLabel(period)} ${leisure.label} 날씨`
-      : "tripnalc 날씨";
   const fileName = `tripnalc_${place?.name ?? "weather"}_${period.from}_${period.to}_${interval}.png`.replace(/\s+/g, "_");
   const getTarget = useCallback(() => captureRef.current, []);
 
@@ -391,7 +386,7 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
       )}
       {/* 해외 여행지는 알림이 없으므로 안내도 띄우지 않는다 */}
       {!simple && !capturing && <WelcomePopup />}
-      {capturing && <CaptureSheet target={getTarget} fileName={fileName} shareTitle={shareTitle} shareUrl={shareUrl} onClose={() => setCapturing(false)} />}
+      {capturing && <CaptureSheet target={getTarget} fileName={fileName} shareUrl={shareUrl} onClose={() => setCapturing(false)} />}
     </div>
   );
 }

@@ -1,0 +1,13 @@
+name: diag-kakao
+on: push
+jobs:
+  diag:
+    if: github.ref == 'refs/heads/claude/project-thread-x7f4ry'
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          for v in 2.6.0 2.7.0 2.7.2 2.7.3 2.7.4 2.7.5 2.7.6 2.7.7 2.7.8 2.7.9; do
+            curl -s -o /dev/null -w "$v %{http_code}\n" https://t1.kakaocdn.net/kakao_js_sdk/$v/kakao.min.js
+          done
+          curl -sI -H "Origin: https://tripnalc.com" https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.min.js | grep -i "access-control\|content-type\|HTTP" || true
+          curl -s https://developers.kakao.com/docs/latest/ko/javascript/getting-started | grep -o "kakao_js_sdk/[0-9.]*/kakao.min.js" | sort -u | head || true

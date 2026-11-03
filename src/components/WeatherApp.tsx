@@ -308,7 +308,7 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
           ) : (
             forecast && (
               <div style={{ opacity: loading ? 0.5 : 1 }}>
-                {!simple && <VerdictCard days={days} leisure={leisure} today={today} initialDate={sharedDate} />}
+                {!simple && place && <VerdictCard days={days} leisure={leisure} placeName={place.name} today={today} initialDate={sharedDate} />}
                 <ForecastTable days={days} leisure={leisure} interval={interval} today={today} nowHour={nowHour} />
                 {forecast.source.includes("·") &&
                   (foreign ? (

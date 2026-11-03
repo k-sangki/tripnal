@@ -22,7 +22,8 @@ const SITE_LD = {
       "@type": "WebSite",
       "@id": "https://tripnalc.com/#website",
       name: "트립날씨",
-      alternateName: ["tripnalc", "tripnalc.com", "트립날씨 tripnalc"],
+      // 주소(tripnalc.com)는 넣지 않는다: 구글이 대체 이름으로 주소를 고르기 쉬워짐
+      alternateName: ["트립날씨 tripnalc", "tripnalc"],
       url: "https://tripnalc.com/",
       inLanguage: "ko",
       publisher: { "@id": "https://tripnalc.com/#organization" },

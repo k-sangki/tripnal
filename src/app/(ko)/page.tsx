@@ -17,10 +17,29 @@ function one(v: string | string[] | undefined) {
 /** 검색엔진이 사이트 이름을 "트립날씨"로 알 수 있게 */
 const SITE_LD = {
   "@context": "https://schema.org",
-  "@type": "WebSite",
-  name: "트립날씨",
-  alternateName: ["tripnalc", "tripnalc.com", "트립날씨 tripnalc"],
-  url: "https://tripnalc.com/",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://tripnalc.com/#website",
+      name: "트립날씨",
+      alternateName: ["tripnalc", "tripnalc.com", "트립날씨 tripnalc"],
+      url: "https://tripnalc.com/",
+      inLanguage: "ko",
+      publisher: { "@id": "https://tripnalc.com/#organization" },
+    },
+    {
+      // AI 답변·검색이 "누가 만든 어떤 서비스인지" 알 수 있게
+      "@type": "Organization",
+      "@id": "https://tripnalc.com/#organization",
+      name: "트립날씨",
+      alternateName: "tripnalc",
+      url: "https://tripnalc.com/",
+      logo: "https://tripnalc.com/icon-v2-512.png",
+      email: "contact@tripnalc.com",
+      description: "캠핑·등산·낚시·자전거·골프·여행을 위한 대한민국 레저 날씨. ECMWF·GFS·ICON 세 예보의 중간값으로 16일 뒤까지 3시간 간격 예보를 보여 준다.",
+      areaServed: "KR",
+    },
+  ],
 };
 
 /** 홈 아래 많이 찾는 장소 바로가기 */

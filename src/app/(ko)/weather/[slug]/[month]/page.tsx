@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { NOINDEX } from "@/lib/indexing";
 import { notFound } from "next/navigation";
 import { KoreaMonthPage, cityName } from "@/components/KoreaMonthPage";
 import { SiteFooter, SiteHeader } from "@/components/SiteHeader";
@@ -25,6 +26,8 @@ export async function generateMetadata({ params }: PageProps<"/weather/[slug]/[m
     description,
     keywords: [`${name} ${p.m}월 날씨`, `${name} ${p.m}월 옷차림`, `${name} ${p.m}월 여행`, `${p.m}월 ${name} 기온`],
     alternates: { canonical: url, languages: languageAlternates(url) },
+    // 월별 평년 페이지는 당분간 검색에서 뺀다 (src/lib/indexing.ts)
+    robots: NOINDEX,
     openGraph: { siteName: "트립날씨", locale: "ko_KR", title, description, url },
   };
 }

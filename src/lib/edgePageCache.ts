@@ -29,7 +29,7 @@ export function cacheTtl(pathname: string): number | null {
   if (pathname === "/api/forecast") return 15 * MIN;
   if (pathname === "/api/og") return 3 * HOUR;
   if (pathname === "/api/warnings") return 5 * MIN;
-  if (["/sitemap.xml", "/robots.txt", "/manifest.webmanifest", "/ads.txt"].includes(pathname)) return 6 * HOUR;
+  if (["/sitemap.xml", "/robots.txt", "/llms.txt", "/manifest.webmanifest", "/ads.txt"].includes(pathname)) return 6 * HOUR;
   if (/^(\/(en|ja|zh))?\/(about|privacy|contact)$/.test(pathname)) return 24 * HOUR;
   return null;
 }

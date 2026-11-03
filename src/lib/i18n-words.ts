@@ -185,6 +185,9 @@ export const WORDS: Record<string, { en: string; ja: string; zh: string }> = {
   "이미지 공유하기 (카톡·인스타·카페·블로그)": { en: "Share image (WhatsApp, Instagram, X…)", ja: "画像を共有（LINE・インスタ・Xなど）", zh: "分享圖片（LINE・IG・FB等）" },
   "링크 공유": { en: "Share link", ja: "リンクを共有", zh: "分享連結" },
   "링크 복사": { en: "Copy link", ja: "リンクをコピー", zh: "複製連結" },
+  "이미지 복사": { en: "Copy image", ja: "画像をコピー", zh: "複製圖片" },
+  "이미지를 복사했어요. 붙여넣기 하세요": { en: "Image copied. Paste it anywhere", ja: "画像をコピーしました。貼り付けてください", zh: "已複製圖片，請直接貼上" },
+  "이미지를 복사하지 못했어요": { en: "Couldn't copy the image", ja: "画像をコピーできませんでした", zh: "無法複製圖片" },
   '저장 메뉴가 열리면 "이미지 저장"을 누르세요. 미리보기를 길게 눌러도 저장할 수 있어요.': {
     en: "When the menu opens, tap “Save Image”. You can also long-press the preview to save it.",
     ja: "メニューが開いたら「画像を保存」をタップしてください。プレビューを長押ししても保存できます。",

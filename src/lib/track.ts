@@ -6,7 +6,7 @@ declare global {
   }
 }
 
-export type ShareMethod = "kakao" | "image" | "save" | "link" | "copy" | "naver";
+export type ShareMethod = "kakao" | "image" | "image_copy" | "save" | "link" | "copy" | "naver";
 
 /**
  * 공유 버튼 누름을 GA4 추천 이벤트 share 로 남긴다.

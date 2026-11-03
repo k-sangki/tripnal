@@ -340,6 +340,20 @@ export function CaptureSheet({ target, fileName, shareTitle, shareUrl: rawUrl, o
     setToast(t(/Android/.test(navigator.userAgent) ? "갤러리에 저장했어요" : "이미지를 저장했어요"));
   };
 
+  // 클립보드에 그림을 넣을 수 있는 브라우저에서만 보인다 (PC 크롬·엣지·사파리, 안드로이드 크롬 등)
+  const canCopyImage = typeof window !== "undefined" && typeof ClipboardItem !== "undefined" && !!navigator.clipboard?.write;
+
+  const copyImage = async () => {
+    if (!blob) return;
+    track("image_copy");
+    try {
+      await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
+      setToast(t("이미지를 복사했어요. 붙여넣기 하세요"));
+    } catch {
+      setToast(t("이미지를 복사하지 못했어요"));
+    }
+  };
+
   const shareImage = async () => {
     if (!file) return;
     track("image");
@@ -413,6 +427,11 @@ export function CaptureSheet({ target, fileName, shareTitle, shareUrl: rawUrl, o
           <button className="share-btn primary" onClick={save} disabled={!blob}>
             {t("이미지 저장")}
           </button>
+          {canCopyImage && (
+            <button className="share-btn" onClick={copyImage} disabled={!blob}>
+              {t("이미지 복사")}
+            </button>
+          )}
           {kakao && (
             <button className="share-btn kakao" onClick={sendToKakao}>
               카카오톡으로 보내기

@@ -20,6 +20,7 @@ import { useLocale, useT } from "./LocaleContext";
 import { PeriodPicker } from "./PeriodPicker";
 import { SearchBar } from "./SearchBar";
 import { WarningTicker } from "./WarningTicker";
+import { VerdictCard } from "./VerdictCard";
 import { WelcomePopup } from "./WelcomePopup";
 
 export interface AppPlace {
@@ -68,6 +69,8 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
   /** 영어·일본어 장소 페이지: 해외 여행지처럼 검색·지도·특보·알림 없이 (시간은 한국 시간) */
   const foreign = locale !== "ko";
   const simple = overseas || foreign;
+  // 판정 카드 공유 링크(?vd=날짜)로 들어오면 그 날을 고른다. 주소는 곧 다시 쓰이므로 처음에 읽어 둔다
+  const [sharedDate] = useState(() => (typeof window === "undefined" ? null : new URLSearchParams(window.location.search).get("vd")));
   const [today] = useState(() => kstDate(new Date(), overseasOffset));
   const [nowHour] = useState(() => Number(kstHourKey(new Date(), overseasOffset).slice(11, 13)));
   const [place, setPlace] = useState<AppPlace | null>(initialPlace);
@@ -305,6 +308,7 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
           ) : (
             forecast && (
               <div style={{ opacity: loading ? 0.5 : 1 }}>
+                {!simple && <VerdictCard days={days} leisure={leisure} today={today} initialDate={sharedDate} />}
                 <ForecastTable days={days} leisure={leisure} interval={interval} today={today} nowHour={nowHour} />
                 {forecast.source.includes("·") &&
                   (foreign ? (

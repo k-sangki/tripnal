@@ -6,8 +6,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          for v in 2.6.0 2.7.0 2.7.2 2.7.3 2.7.4 2.7.5 2.7.6 2.7.7 2.7.8 2.7.9; do
-            curl -s -o /dev/null -w "$v %{http_code}\n" https://t1.kakaocdn.net/kakao_js_sdk/$v/kakao.min.js
-          done
-          curl -sI -H "Origin: https://tripnalc.com" https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.min.js | grep -i "access-control\|content-type\|HTTP" || true
-          curl -s https://developers.kakao.com/docs/latest/ko/javascript/getting-started | grep -o "kakao_js_sdk/[0-9.]*/kakao.min.js" | sort -u | head || true
+          npm init -y >/dev/null && npm i playwright@1.48.2 >/dev/null && npx playwright install chromium >/dev/null
+          cat > t.js <<'JS'
+          const { chromium } = require("playwright");
+          (async () => {
+            const b = await chromium.launch();
+            const p = await b.newPage({ viewport: { width: 390, height: 844 }, locale: "ko-KR" });
+            p.on("console", (m) => console.log("console", m.type(), m.text()));
+            p.on("pageerror", (e) => console.log("pageerror", e.message));
+            p.on("requestfailed", (r) => console.log("reqfail", r.url(), r.failure()?.errorText));
+            p.on("response", (r) => { if (/kakao/.test(r.url())) console.log("resp", r.status(), r.url().slice(0, 120)); });
+            await p.goto("https://tripnalc.com/weather/seoul?me=1", { waitUntil: "networkidle" });
+            await p.click("button.fab");
+            await p.waitForTimeout(8000);
+            console.log("buttons", await p.$$eval(".share-grid button", (bs) => bs.map((x) => x.textContent)));
+            console.log("Kakao", await p.evaluate(() => ({ has: !!window.Kakao, share: !!window.Kakao?.Share, init: window.Kakao?.isInitialized?.(), scripts: [...document.scripts].map((s) => s.src).filter((s) => /kakao/.test(s)) })));
+            await b.close();
+          })();
+          JS
+          node t.js

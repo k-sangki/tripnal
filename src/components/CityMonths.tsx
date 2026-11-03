@@ -144,7 +144,6 @@ export function CityMonths({
           <CaptureSheet
             target={getTarget}
             fileName={`tripnalc_${name}_월별날씨_${month}월.png`.replace(/\s+/g, "_")}
-            shareTitle={`${name} 월별 날씨 · 여행하기 좋은 달`}
             shareUrl={window.location.href}
             onClose={() => setCapturing(false)}
           />

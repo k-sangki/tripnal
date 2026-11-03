@@ -751,11 +751,8 @@ a {
   background: var(--pine);
   color: #fff;
 }
-.share-btn.naver {
-  background: #03c75a;
-  color: #fff;
-}
 .share-btn.kakao {
+  grid-column: 1 / -1;
   background: #fee500;
   color: rgba(0, 0, 0, 0.85);
 }

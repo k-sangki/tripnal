@@ -11,7 +11,6 @@ import { stripUtm, withUtm } from "@/lib/utm";
 interface Props {
   target: () => HTMLElement | null;
   fileName: string;
-  shareTitle: string;
   shareUrl: string;
   onClose: () => void;
 }
@@ -246,7 +245,7 @@ export async function captureElement(el: HTMLElement): Promise<Blob> {
   }
 }
 
-export function CaptureSheet({ target, fileName, shareTitle, shareUrl: rawUrl, onClose }: Props) {
+export function CaptureSheet({ target, fileName, shareUrl: rawUrl, onClose }: Props) {
   const t = useT();
   const { locale } = useLocale();
   const [blob, setBlob] = useState<Blob | null>(null);
@@ -354,33 +353,8 @@ export function CaptureSheet({ target, fileName, shareTitle, shareUrl: rawUrl, o
     }
   };
 
-  const shareImage = async () => {
-    if (!file) return;
-    track("image");
-    try {
-      // 이미지만 보낸다. 글·주소를 같이 넣으면 카톡에서 이미지·글·링크 미리보기 세 덩어리로 갈라진다
-      // (이미지 아래에 tripnalc.com이 찍혀 있고, 링크는 "링크 공유"로 따로 보낼 수 있다)
-      await navigator.share({ files: [file] });
-    } catch {
-      // 사용자가 취소한 경우
-    }
-  };
-
-  const shareLink = async () => {
-    track("link");
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: shareTitle, url: link });
-        return;
-      } catch {
-        return;
-      }
-    }
-    await copyLink(false);
-  };
-
-  const copyLink = async (counted = true) => {
-    if (counted) track("copy");
+  const copyLink = async () => {
+    track("copy");
     try {
       await navigator.clipboard.writeText(link);
       setToast(t("링크를 복사했어요"));
@@ -398,12 +372,6 @@ export function CaptureSheet({ target, fileName, shareTitle, shareUrl: rawUrl, o
     } catch {
       setToast("카카오톡을 열지 못했어요");
     }
-  };
-
-  const naver = () => {
-    track("naver");
-    const u = `https://share.naver.com/web/shareView?url=${encodeURIComponent(link)}&title=${encodeURIComponent(shareTitle)}`;
-    window.open(u, "_blank", "noopener,noreferrer,width=600,height=700");
   };
 
   return (
@@ -427,31 +395,17 @@ export function CaptureSheet({ target, fileName, shareTitle, shareUrl: rawUrl, o
           <button className="share-btn primary" onClick={save} disabled={!blob}>
             {t("이미지 저장")}
           </button>
-          {canCopyImage && (
-            <button className="share-btn" onClick={copyImage} disabled={!blob}>
-              {t("이미지 복사")}
-            </button>
-          )}
           {kakao && (
             <button className="share-btn kakao" onClick={sendToKakao}>
               카카오톡으로 보내기
             </button>
           )}
-          {canShareFile && (
-            <button className="share-btn" onClick={shareImage} disabled={!blob}>
-              {t("이미지 공유하기 (카톡·인스타·카페·블로그)")}
+          {canCopyImage && (
+            <button className="share-btn" onClick={copyImage} disabled={!blob}>
+              {t("이미지 복사")}
             </button>
           )}
-          <button className="share-btn" onClick={shareLink}>
-            {t("링크 공유")}
-          </button>
-          {/* 네이버는 한국 사이트라 외국어 화면에서는 뺀다 */}
-          {locale === "ko" && (
-            <button className="share-btn naver" onClick={naver}>
-              네이버 블로그·카페
-            </button>
-          )}
-          <button className="share-btn" onClick={() => copyLink()}>
+          <button className="share-btn" onClick={copyLink}>
             {t("링크 복사")}
           </button>
         </div>

@@ -8,6 +8,7 @@ import { getPlace } from "@/lib/places";
 import { clampPeriod, periodLabel } from "@/lib/period";
 import { kstDate } from "@/lib/time";
 import { isInKorea } from "@/lib/weather";
+import { verdictShareTitle } from "@/lib/verdict";
 import { loadWeekend, weekendBest } from "@/lib/weekend";
 
 function one(v: string | string[] | undefined) {
@@ -70,14 +71,19 @@ export async function generateMetadata({ searchParams }: PageProps<"/">): Promis
   const period = clampPeriod(one(sp.from), one(sp.to), kstDate());
   const title = `${name} ${leisure.label} 날씨`;
   const description = `${periodLabel(period)} ${name} 날씨를 3시간 간격으로 확인하세요.`;
-  const image = `/api/og?${new URLSearchParams({ lat: lat.toFixed(4), lon: lon.toFixed(4), name, act: leisure.id, from: period.from, to: period.to })}`;
+  const q = new URLSearchParams({ lat: lat.toFixed(4), lon: lon.toFixed(4), name, act: leisure.id, from: period.from, to: period.to });
+  // 판정 카드에서 보낸 링크는 그날 판정 그림으로
+  const vd = one(sp.vd);
+  const shareTitle = verdictShareTitle(name, leisure.label, vd);
+  if (shareTitle) q.set("vd", vd!);
+  const image = `/api/og?${q}`;
   return {
     title,
     description,
     // 같은 장소라도 기간마다 다른 화면이라 검색에는 기본 주소만 남긴다
     // 영어·일본어 홈과 서로 가리킨다 (hreflang)
     alternates: { canonical: "/", languages: languageAlternates("/") },
-    openGraph: { siteName: "트립날씨", locale: "ko_KR", title, description, images: [{ url: image, width: 1200, height: 630 }] },
+    openGraph: { siteName: "트립날씨", locale: "ko_KR", title: shareTitle ?? title, description, images: [{ url: image, width: 1200, height: 630 }] },
     twitter: { card: "summary_large_image", title, description, images: [image] },
   };
 }

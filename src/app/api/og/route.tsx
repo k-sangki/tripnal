@@ -12,11 +12,13 @@ import { SLOGAN, SLOGAN_FOREIGN } from "@/lib/brand";
 import { placeText } from "@/data/places-i18n";
 import { isForeignLocale, type Locale } from "@/lib/i18n";
 import { shortName } from "@/lib/seo-foreign";
+import { dayVerdict, stripEmoji, verdictDay, verdictShareTitle, type VerdictLevel } from "@/lib/verdict";
 
 /**
  * 카카오톡·네이버 등에 링크를 붙였을 때 보이는 미리보기 이미지 (1200×630).
  * 장소·기간의 날짜별 날씨를 요약해 그린다. 주소: /api/og?lat&lon&name&from&to&act 또는 /api/og?slug&from&to&act
  * lang=en|ja|zh 를 붙이면 영어·일본어·중국어 그림 (영어는 바람 km/h)
+ * vd=YYYY-MM-DD 를 붙이면 그날의 "가도 될까?" 판정 그림 (판정 카드의 단톡방 보내기)
  */
 
 const W = 1200;
@@ -99,10 +101,12 @@ export async function GET(request: Request) {
   const period = sp.get("from") ? clampPeriod(sp.get("from"), sp.get("to"), today) : { from: today, to: addDays(today, MAX_COLS - 1) };
 
   let days: DayForecast[] = [];
+  let verdictOf: DayForecast | undefined;
   if (Number.isFinite(lat) && Number.isFinite(lon) && (dest || isInKorea(lat, lon))) {
     try {
       const f = await getForecast(lat, lon, slugPlace?.elevation ?? dest?.elevation, undefined, offset);
       days = f.days.filter((d) => inPeriod(d.date, period)).slice(0, MAX_COLS);
+      if (l === "ko" && sp.get("vd")) verdictOf = f.days.find((d) => d.date === sp.get("vd"));
     } catch (e) {
       console.error(e);
     }
@@ -120,6 +124,8 @@ export async function GET(request: Request) {
   const slogan = l === "ko" ? SLOGAN : SLOGAN_FOREIGN[l];
   const family = l === "ja" ? "Noto Sans JP" : l === "zh" ? "Noto Sans TC" : "Noto Sans KR";
   const narrow = days.length > 5;
+
+  if (verdictOf) return verdictImage(verdictOf, name, leisure.id, leisure.label, leisure.group);
 
   const element = (
     <div style={{ width: W, height: H, display: "flex", flexDirection: "column", background: "#eef2f1", fontFamily: family }}>
@@ -160,6 +166,70 @@ export async function GET(request: Request) {
         { name: family, data: bold, weight: 700, style: "normal" },
       ],
       // 카카오톡은 이미지를 따로 오래 저장하므로 여기서는 30분만 둔다
+      headers: { "Cache-Control": "public, max-age=1800, s-maxage=1800" },
+    });
+  } catch (e) {
+    console.error(e);
+    return new Response("미리보기 이미지를 만들지 못했습니다.", { status: 500 });
+  }
+}
+
+const STAMP: Record<VerdictLevel, { bg: string; fg: string }> = {
+  go: { bg: "#e3f9f0", fg: "#0b6b4c" },
+  meh: { bg: "#fff4dd", fg: "#8a5a00" },
+  stop: { bg: "#ffece7", fg: "#b8361a" },
+};
+
+/** 판정 그림: 장소·날짜 제목, 날씨 아이콘, 한 줄 판정, 근거 숫자 */
+async function verdictImage(d: DayForecast, name: string, act: Parameters<typeof dayVerdict>[1], label: string, group: Parameters<typeof dayVerdict>[2]) {
+  const v = dayVerdict(verdictDay(d), act, group);
+  const title = verdictShareTitle(name, label, d.date)!;
+  const verdict = stripEmoji(v.title);
+  const chips = v.chips.map((c) => ({ text: stripEmoji(c.text), bad: c.bad }));
+  const icon = ICONS[codeIcon(d.code).replace("\uFE0F", "")] ?? ICONS["☁"];
+  const c = STAMP[v.level];
+  const family = "Noto Sans KR";
+  const element = (
+    <div style={{ width: W, height: H, display: "flex", flexDirection: "column", background: "#fff", fontFamily: family }}>
+      <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", background: DARK, color: "#fff", padding: "32px 48px 28px" }}>
+        <div style={{ fontSize: title.length > 24 ? 44 : 52, fontWeight: 700 }}>{title}</div>
+      </div>
+      <div style={{ flex: 1, display: "flex", alignItems: "center", padding: "0 56px" }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={icon} width={190} height={190} alt="" />
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", marginLeft: 44 }}>
+          <div style={{ display: "flex", background: c.bg, color: c.fg, borderRadius: 28, padding: "22px 30px", fontSize: verdict.length > 14 ? 54 : 64, fontWeight: 700, lineHeight: 1.2 }}>
+            {verdict}
+          </div>
+          <div style={{ fontSize: 32, color: c.fg, marginTop: 14, marginLeft: 6 }}>{v.sub}</div>
+          <div style={{ display: "flex", flexWrap: "wrap", marginTop: 22 }}>
+            {chips.map((x) => (
+              <div
+                key={x.text}
+                style={{ display: "flex", fontSize: 28, fontWeight: 700, padding: "8px 18px", borderRadius: 999, marginRight: 10, marginBottom: 10, background: x.bad ? "#ffece7" : "#f2f4f6", color: x.bad ? "#b8361a" : "#4e5968" }}
+              >
+                {x.text}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div style={{ display: "flex", justifyContent: "space-between", borderTop: "2px solid #e5e8eb", padding: "18px 48px 22px", fontSize: 26, color: "#556" }}>
+        <span>{TEXT.ko.source}</span>
+        <span style={{ fontWeight: 700, color: DARK }}>{SLOGAN} · tripnalc.com</span>
+      </div>
+    </div>
+  );
+  const glyphs = [title, verdict, v.sub, ...chips.map((x) => x.text), TEXT.ko.source, SLOGAN, "tripnalc.com", "0123456789/°-%.,()ms·"].join("");
+  try {
+    const [regular, bold] = await Promise.all([loadFont(glyphs, 400, family), loadFont(glyphs, 700, family)]);
+    return new ImageResponse(element, {
+      width: W,
+      height: H,
+      fonts: [
+        { name: family, data: regular, weight: 400, style: "normal" },
+        { name: family, data: bold, weight: 700, style: "normal" },
+      ],
       headers: { "Cache-Control": "public, max-age=1800, s-maxage=1800" },
     });
   } catch (e) {

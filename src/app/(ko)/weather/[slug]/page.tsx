@@ -15,6 +15,7 @@ import { getLeisure } from "@/lib/leisure";
 import { getPlace, nearbyPlaces } from "@/lib/places";
 import { placeLiveDescription, placeSchemaType, placeSummaryRows, placeTitle, topic } from "@/lib/seo";
 import { KST_OFFSET_MIN } from "@/lib/time";
+import { verdictShareTitle } from "@/lib/verdict";
 import { getForecast } from "@/lib/weather";
 import type { Forecast } from "@/lib/weather/types";
 
@@ -24,7 +25,7 @@ export const dynamic = "force-dynamic";
 /** 미리보기 이미지 주소. 공유 링크에 붙은 레저·기간을 그대로 넘긴다 */
 function ogImage(slug: string, sp: Record<string, string | string[] | undefined>) {
   const q = new URLSearchParams({ slug });
-  for (const k of ["act", "from", "to"]) {
+  for (const k of ["act", "from", "to", "vd"]) {
     const v = sp[k];
     if (typeof v === "string") q.set(k, v);
   }
@@ -39,7 +40,10 @@ export async function generateMetadata({ params, searchParams }: PageProps<"/wea
   const forecast = await getForecast(place.lat, place.lon, place.elevation).catch(() => null);
   const description = placeLiveDescription(place, forecast);
   const url = `/weather/${place.slug}`;
-  const image = ogImage(place.slug, await searchParams);
+  const sp = await searchParams;
+  const image = ogImage(place.slug, sp);
+  // 판정 카드에서 보낸 링크는 미리보기 제목을 "○○, 11/7(토) 가도 될까?"로
+  const shareTitle = verdictShareTitle(place.name, getLeisure(typeof sp.act === "string" ? sp.act : place.leisure).label, typeof sp.vd === "string" ? sp.vd : undefined);
   return {
     // 구글 결과 위에 사이트 이름(트립날씨)이 따로 나오니 뒤에 "| 트립날씨"를 붙이지 않는다
     title: { absolute: title },
@@ -55,7 +59,7 @@ export async function generateMetadata({ params, searchParams }: PageProps<"/wea
     ],
     // 영어·일본어판이 있는 장소는 서로 가리킨다 (hreflang)
     alternates: { canonical: url, ...(hasForeignPage(place.slug) ? { languages: languageAlternates(url) } : {}) },
-    openGraph: { siteName: "트립날씨", locale: "ko_KR", title, description, url, images: [{ url: image, width: 1200, height: 630 }] },
+    openGraph: { siteName: "트립날씨", locale: "ko_KR", title: shareTitle ?? title, description, url, images: [{ url: image, width: 1200, height: 630 }] },
     twitter: { card: "summary_large_image", title, description, images: [image] },
   };
 }

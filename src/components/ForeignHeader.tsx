@@ -3,6 +3,7 @@ import { SLOGAN_FOREIGN } from "@/lib/brand";
 import { LANG_TAG, LOCALE_NAME, localePath, type ForeignLocale, type Locale } from "@/lib/i18n";
 import { Logo } from "./Logo";
 import { CONTACT_EMAIL } from "./TextPage";
+import { withFlags } from "./Flag";
 
 /**
  * 영어·일본어·중국어 페이지 머리. 로고 옆 슬로건과 언어 전환(지금 보는 페이지의 다른 언어판)만 둔다.
@@ -58,7 +59,7 @@ export function ForeignFooter({ locale }: { locale: ForeignLocale }) {
   const f = FOOT[locale];
   return (
     <footer className="foot">
-      <p>{f.text}</p>
+      <p>{withFlags(f.text)}</p>
       <nav className="foot-links">
         <Link href={localePath(locale, "/")}>{f.places}</Link>
         <Link href={localePath(locale, "/about")}>{f.about}</Link>

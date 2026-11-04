@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useRef, useState } from "react";
 import { CaptureSheet } from "@/components/CaptureSheet";
+import { withFlags } from "@/components/Flag";
 import { InstallButton } from "@/components/InstallButton";
 import { Logo } from "@/components/Logo";
 import { SLOGAN_C } from "@/lib/brand";
@@ -184,7 +185,7 @@ function TideCapture({
         ))}
         <footer className="cf-foot">
           <span className="cf-src">
-            만조·간조 : 국립해양조사원 · 바람 : ECMWF·GFS·ICON
+            만조·간조 : 국립해양조사원 · 바람 : {withFlags("ECMWF·GFS·ICON")}
           </span>
           <span className="cap-brand">
             <span className="cap-slogan">{SLOGAN_C}</span>

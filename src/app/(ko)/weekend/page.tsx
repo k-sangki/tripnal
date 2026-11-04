@@ -8,6 +8,7 @@ import { kstDate, shortDateKo } from "@/lib/time";
 import { getForecast } from "@/lib/weather";
 import { codeInfo } from "@/lib/weather/codes";
 import { loadWeekend, rankWeekend, weekendBest, weekendFromForecast, type WeekendData } from "@/lib/weekend";
+import { Flag } from "@/components/Flag";
 
 /** 수집 작업이 하루 두 번 올리는 R2 자료를 요청 때 읽는다 */
 export const dynamic = "force-dynamic";
@@ -102,7 +103,7 @@ export default async function WeekendPage() {
           더위·추위만큼 점수를 뺍니다. 낚시와 자전거는 바람에 더 민감하게, 스키장은 눈이 오면 감점하지 않습니다.
         </p>
         <p>
-          예보는 유럽(ECMWF)·미국(GFS)·독일(ICON) 세 모델의 중간값이며 하루 두 번 새로 계산합니다. 장소를 누르면 그 주말의 3시간 간격 날씨를 바로 볼 수
+          예보는 <Flag c="eu" />유럽(ECMWF)·<Flag c="us" />미국(GFS)·<Flag c="de" />독일(ICON) 세 모델의 중간값이며 하루 두 번 새로 계산합니다. 장소를 누르면 그 주말의 3시간 간격 날씨를 바로 볼 수
           있어요. 주말 캠핑·등산·여행 일정을 정할 때 참고하세요.
         </p>
       </section>

@@ -4,6 +4,7 @@ import { TideBoard } from "@/components/TideBoard";
 import { seasonDays } from "@/lib/seasonal";
 import { loadTideDay, muldaeWeek, SEAS, TIDE_PLACES, tideRows } from "@/lib/tide";
 import { kstDate, shortDateKo } from "@/lib/time";
+import { Flag } from "@/components/Flag";
 
 /** 만조·간조와 바람은 R2 자료를 요청 때 읽는다 (엣지 캐시 1시간) */
 export const dynamic = "force-dynamic";
@@ -75,7 +76,7 @@ export default async function TidePage() {
         <h2>바다날씨는 돌풍부터</h2>
         <p>
           평균 풍속보다 순간 돌풍이 배와 갯바위를 흔들어요. 돌풍이 세게 예보된 날은 낚싯배가 출항하지 않을 수 있으니 선장님 공지를 꼭 확인하세요. 바람은
-          유럽(ECMWF)·미국(GFS)·독일(ICON) 세 모델의 중간값이에요.
+          <Flag c="eu" />유럽(ECMWF)·<Flag c="us" />미국(GFS)·<Flag c="de" />독일(ICON) 세 모델의 중간값이에요.
         </p>
       </section>
       <SiteFooter />

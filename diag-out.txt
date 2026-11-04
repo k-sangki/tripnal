@@ -1,0 +1,96 @@
+== /weather/seoul/11 [Mozilla/5.0 (Linux; ]
+HTTP/2 200 
+x-edge-cache: MISS
+<meta name="robots" content="noindex, follow"/>
+2031:<meta name="robots"
+4697:</head>
+<meta name="robots" content="noindex, follow"/>
+== /weather/seoul/11 [Mozilla/5.0 Chrome/1]
+HTTP/2 200 
+x-edge-cache: MISS
+<meta name="robots" content="noindex, follow"/>
+2031:<meta name="robots"
+4697:</head>
+<meta name="robots" content="noindex, follow"/>
+== /weather/busan/3 [Mozilla/5.0 (Linux; ]
+HTTP/2 200 
+x-edge-cache: MISS
+<meta name="robots" content="noindex, follow"/>
+2024:<meta name="robots"
+4677:</head>
+<meta name="robots" content="noindex, follow"/>
+== /weather/busan/3 [Mozilla/5.0 Chrome/1]
+HTTP/2 200 
+x-edge-cache: MISS
+<meta name="robots" content="noindex, follow"/>
+2024:<meta name="robots"
+4677:</head>
+<meta name="robots" content="noindex, follow"/>
+== /overseas/tokyo/11 [Mozilla/5.0 (Linux; ]
+HTTP/2 200 
+x-edge-cache: MISS
+<meta name="robots" content="noindex, follow"/>
+1823:<meta name="robots"
+4360:</head>
+<meta name="robots" content="noindex, follow"/>
+== /overseas/tokyo/11 [Mozilla/5.0 Chrome/1]
+HTTP/2 200 
+x-edge-cache: MISS
+<meta name="robots" content="noindex, follow"/>
+1823:<meta name="robots"
+4360:</head>
+<meta name="robots" content="noindex, follow"/>
+== /overseas/tokyo/forecast [Mozilla/5.0 (Linux; ]
+HTTP/2 200 
+x-edge-cache: MISS
+<meta name="robots" content="noindex, follow"/>
+2003:<meta name="robots"
+4469:</head>
+<meta name="robots" content="noindex, follow"/>
+== /overseas/tokyo/forecast [Mozilla/5.0 Chrome/1]
+HTTP/2 200 
+x-edge-cache: MISS
+<meta name="robots" content="noindex, follow"/>
+2003:<meta name="robots"
+4469:</head>
+<meta name="robots" content="noindex, follow"/>
+== /en [Mozilla/5.0 (Linux; ]
+HTTP/2 200 
+x-edge-cache: MISS
+<meta name="robots" content="noindex, follow"/>
+1730:<meta name="robots"
+4238:</head>
+<meta name="robots" content="noindex, follow"/>
+== /en [Mozilla/5.0 Chrome/1]
+HTTP/2 200 
+x-edge-cache: MISS
+<meta name="robots" content="noindex, follow"/>
+1730:<meta name="robots"
+4238:</head>
+<meta name="robots" content="noindex, follow"/>
+== /en/weather/seoul/11 [Mozilla/5.0 (Linux; ]
+HTTP/2 200 
+x-edge-cache: MISS
+<meta name="robots" content="noindex, follow"/>
+1832:<meta name="robots"
+4395:</head>
+<meta name="robots" content="noindex, follow"/>
+== /en/weather/seoul/11 [Mozilla/5.0 Chrome/1]
+HTTP/2 200 
+x-edge-cache: MISS
+<meta name="robots" content="noindex, follow"/>
+1832:<meta name="robots"
+4395:</head>
+<meta name="robots" content="noindex, follow"/>
+== /ja [Mozilla/5.0 (Linux; ]
+HTTP/2 200 
+x-edge-cache: MISS
+NO robots meta
+4300:</head>
+NO robots meta (no query)
+== /ja [Mozilla/5.0 Chrome/1]
+HTTP/2 200 
+x-edge-cache: MISS
+NO robots meta
+4300:</head>
+NO robots meta (no query)

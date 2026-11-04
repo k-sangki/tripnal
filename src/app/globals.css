@@ -3011,6 +3011,128 @@ button.cc-col.on {
   color: #2f6fd6;
 }
 
+.tide-chips button {
+  padding: 7px 14px;
+  background: var(--card);
+  box-shadow: var(--shadow);
+}
+.tide-chips button.on {
+  background: var(--pine);
+}
+/* 물때표 캡처 */
+.tide-cf {
+  gap: 14px;
+}
+.tide-cf .tide-cf-mul.sari,
+.tide-cf .tide-cf-week li.sari b {
+  color: #ff8a8a;
+}
+.tide-cf .tide-cf-mul.jogeum,
+.tide-cf .tide-cf-week li.jogeum b {
+  color: #8cb8ff;
+}
+.tide-cf-week {
+  margin: 0;
+}
+.tide-cf-week li {
+  background: rgba(255, 255, 255, 0.1);
+}
+.tide-cf-week small {
+  color: rgba(255, 255, 255, 0.7);
+}
+.tide-cf-sea {
+  padding: 4px 14px;
+  border-radius: 14px;
+  background: #fff;
+  color: var(--ink);
+}
+.tide-cf-sea h3 {
+  margin: 8px 0 2px;
+  font-size: 15px;
+  color: var(--pine);
+}
+.tide-cf-sea ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.tide-cf .tide-cf-sea ol {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 20px;
+}
+.tide-cf.narrow .tide-cf-sea {
+  padding: 2px 12px;
+}
+.tide-cf.narrow .tide-cf-sea ol {
+  column-gap: 12px;
+}
+/* 휴대폰 캡처는 두 줄로 쌓아 두 칸에 넣는다 (이미지가 너무 길어지지 않게) */
+.tide-cf.narrow .tide-cf-sea li {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 7px 0;
+}
+.tide-cf.narrow .tide-cf-name {
+  flex-direction: row;
+  align-items: baseline;
+  gap: 5px;
+}
+.tide-cf.narrow .tide-cf-times {
+  align-items: flex-start;
+  font-size: 12px;
+}
+.tide-cf.narrow .tide-cf-times small {
+  font-size: 10px;
+}
+.tide-cf-sea li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-top: 1px solid var(--line);
+}
+.tide-cf .tide-cf-sea li:nth-child(-n + 2) {
+  border-top: 0;
+}
+.tide-cf-name {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+.tide-cf-name b {
+  font-size: 14px;
+}
+.tide-cf-name small {
+  font-size: 11px;
+  color: var(--muted);
+}
+.tide-cf-times {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.tide-cf-times small {
+  font-size: 11px;
+  color: var(--muted);
+}
+.tide-cf-times i {
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 700;
+}
+.tide-cf-times i.hi {
+  color: #d63c3c;
+}
+.tide-cf-times i.lo {
+  color: #2f6fd6;
+}
+
 /* 날씨 가이드 글 (/guide) */
 .guide-list {
   padding-left: 18px;

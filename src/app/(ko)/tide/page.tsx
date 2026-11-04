@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { SiteFooter, SiteHeader } from "@/components/SiteHeader";
+import { TideBoard } from "@/components/TideBoard";
 import { seasonDays } from "@/lib/seasonal";
 import { loadTideDay, muldaeWeek, SEAS, TIDE_PLACES, tideRows } from "@/lib/tide";
 import { kstDate, shortDateKo } from "@/lib/time";
@@ -44,47 +44,23 @@ export default async function TidePage() {
         </ol>
       </section>
 
-      <nav className="season-nav" aria-label="바다">
-        {SEAS.map((s) => (
-          <a key={s.id} href={`#${s.id}`}>
-            {s.label}
-          </a>
-        ))}
-      </nav>
-
-      {SEAS.map((s) => {
-        const rows = tideRows(s.id, tides, days?.places, today);
-        return (
-          <section key={s.id} id={s.id} className="card" style={{ marginTop: 12 }}>
-            <h2 className="card-title">
-              🌊 {s.label} 물때표·바다날씨 ({rows.length}곳)
-            </h2>
-            <ol className="wk-list">
-              {rows.map(({ place, tide, day }) => (
-                <li key={place.slug}>
-                  <Link href={`/weather/${place.slug}`}>
-                    <span className="wk-name">
-                      <b>{place.name}</b>
-                      <small>{place.region}</small>
-                    </span>
-                    <span className="wk-wx tide-times">
-                      <span>
-                        <i className="hi">만조</i> {tide?.high.join(" · ") || "-"}
-                      </span>
-                      <span>
-                        <i className="lo">간조</i> {tide?.low.join(" · ") || "-"}
-                      </span>
-                      <small>
-                        {day?.wind == null ? "바람 -" : `바람 ${Math.round(day.wind)}m/s`} · {day?.gust == null ? "돌풍 -" : `돌풍 ${Math.round(day.gust)}m/s`}
-                      </small>
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ol>
-          </section>
-        );
-      })}
+      <TideBoard
+        dateText={shortDateKo(today)}
+        week={week.map((d) => ({ ...d, label: shortDateKo(d.date).replace(/^\d+\//, "") }))}
+        seas={SEAS.map((s) => ({
+          id: s.id,
+          label: s.label,
+          items: tideRows(s.id, tides, days?.places, today).map(({ place, tide, day }) => ({
+            slug: place.slug,
+            name: place.name,
+            region: place.region,
+            high: tide?.high ?? [],
+            low: tide?.low ?? [],
+            wind: day?.wind ?? null,
+            gust: day?.gust ?? null,
+          })),
+        }))}
+      />
 
       <section className="card seo-text" style={{ marginTop: 16 }}>
         <h2>물때표 보는 법</h2>

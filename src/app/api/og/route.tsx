@@ -8,6 +8,7 @@ import { getForecast, isInKorea } from "@/lib/weather";
 import { codeIcon } from "@/lib/weather/codes";
 import type { DayForecast } from "@/lib/weather/types";
 import { ICONS } from "./icons";
+import { FLAG_OF, flagDataUrl } from "@/components/Flag";
 import { SLOGAN, SLOGAN_FOREIGN } from "@/lib/brand";
 import { placeText } from "@/data/places-i18n";
 import { isForeignLocale, type Locale } from "@/lib/i18n";
@@ -40,6 +41,26 @@ async function loadFont(text: string, weight: number, family: string): Promise<A
 const BLUE = "#1c6dd0";
 
 /** 그림 속 고정 문구 */
+/** 출처 글의 ECMWF·GFS·ICON 앞에 국기 그림 (satori는 글과 그림을 섞으려면 flex 줄이어야 한다) */
+function OgSource({ text }: { text: string }) {
+  const parts = text.split(/(ECMWF|GFS|ICON)/).filter(Boolean);
+  return (
+    <span style={{ display: "flex", alignItems: "center" }}>
+      {parts.map((p, i) =>
+        FLAG_OF[p] ? (
+          <span key={i} style={{ display: "flex", alignItems: "center" }}>
+            {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text */}
+            <img src={flagDataUrl(FLAG_OF[p])} width={30} height={20} style={{ marginRight: 6, borderRadius: 3 }} />
+            {p}
+          </span>
+        ) : (
+          <span key={i}>{p.replace(/^ | $/g, "\u00a0")}</span>
+        ),
+      )}
+    </span>
+  );
+}
+
 const TEXT: Record<Locale, { empty: string; source: string; wind: (v: number) => string }> = {
   ko: { empty: "캠핑·낚시·등산 16일 날씨, 3시간 간격으로", source: "ECMWF·GFS·ICON 예보 종합", wind: (v) => `바람 ${Math.round(v)}m/s` },
   en: { empty: "Korea weather, 16 days ahead, every 3 hours", source: "Blend of ECMWF·GFS·ICON", wind: (v) => `Wind ${Math.round(v * 3.6)}km/h` },
@@ -146,7 +167,7 @@ export async function GET(request: Request) {
         )}
       </div>
       <div style={{ display: "flex", justifyContent: "space-between", padding: "18px 48px 24px", fontSize: 26, color: "#556" }}>
-        <span>{TEXT[l].source}</span>
+        <OgSource text={TEXT[l].source} />
         <span style={{ fontWeight: 700, color: DARK }}>tripnalc.com</span>
       </div>
     </div>
@@ -215,7 +236,7 @@ async function verdictImage(d: DayForecast, name: string, act: Parameters<typeof
         </div>
       </div>
       <div style={{ display: "flex", justifyContent: "space-between", borderTop: "2px solid #e5e8eb", padding: "18px 48px 22px", fontSize: 26, color: "#556" }}>
-        <span>{TEXT.ko.source}</span>
+        <OgSource text={TEXT.ko.source} />
         <span style={{ fontWeight: 700, color: DARK }}>{SLOGAN} · tripnalc.com</span>
       </div>
     </div>

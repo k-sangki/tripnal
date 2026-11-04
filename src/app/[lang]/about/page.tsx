@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { ForeignFooter, ForeignHeader } from "@/components/ForeignHeader";
 import { CONTACT_EMAIL } from "@/components/TextPage";
 import { SITE_NAME, isForeignLocale, languageAlternates, localePath, type ForeignLocale } from "@/lib/i18n";
+import { withFlags } from "@/components/Flag";
 
 /** 영어·일본어·중국어 소개 */
 const DOC: Record<ForeignLocale, { title: string; paras: string[]; contact: string }> = {
@@ -59,7 +60,7 @@ export default async function About({ params }: PageProps<"/[lang]/about">) {
       <article className="card seo-text doc">
         <h1>{d.title}</h1>
         {d.paras.map((p) => (
-          <p key={p}>{p}</p>
+          <p key={p}>{withFlags(p)}</p>
         ))}
         <h2>{d.contact}</h2>
         <p>

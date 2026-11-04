@@ -6,6 +6,7 @@ import { intervalLong, type Interval } from "@/lib/interval";
 import { periodLabel, type Period } from "@/lib/period";
 import type { DayForecast } from "@/lib/weather/types";
 import { ForecastTable } from "./ForecastTable";
+import { Flag, FLAG_OF } from "./Flag";
 import { Logo } from "./Logo";
 import { SLOGAN_C, SLOGAN_FOREIGN } from "@/lib/brand";
 import { useLocale, useT } from "./LocaleContext";
@@ -167,6 +168,7 @@ export function CaptureFrame({ frameRef, ...p }: Props) {
                   {i > 0 && " · "}
                   {/* 한 기관 이름이 줄 중간에서 끊기지 않게 */}
                   <span className="cf-src-item">
+                    {FLAG_OF[s] && <Flag c={FLAG_OF[s]} />}
                     {s}
                     {SOURCE_NAMES[s] && <span className="cf-src-sub"> ({t(SOURCE_NAMES[s])})</span>}
                   </span>

@@ -7,6 +7,7 @@ import { OG_LOCALE, SITE_NAME, isForeignLocale, languageAlternates, localePath, 
 import { monthName } from "@/lib/korea-month";
 import { getPlace } from "@/lib/places";
 import { foreignLeisure } from "@/lib/seo-foreign";
+import { withFlags } from "@/components/Flag";
 
 const HOME: Record<ForeignLocale, { title: string; description: string; h1: string; lead: string[]; months: string; groups: Record<string, string> }> = {
   en: {
@@ -80,7 +81,7 @@ export default async function ForeignHome({ params }: PageProps<"/[lang]">) {
       <section className="card seo-text">
         <h1 style={{ fontSize: 22, margin: "0 0 8px" }}>{h.h1}</h1>
         {h.lead.map((x) => (
-          <p key={x}>{x}</p>
+          <p key={x}>{withFlags(x)}</p>
         ))}
       </section>
       <section className="card" style={{ marginTop: 12 }}>

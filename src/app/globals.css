@@ -3332,3 +3332,16 @@ button.cc-col.on {
 .verdict.capturing {
   border-radius: 0;
 }
+
+/* 예보 모델 기관 국기 (components/Flag.tsx) */
+.flag {
+  display: inline-block;
+  vertical-align: -0.08em;
+  margin-right: 0.2em;
+  border-radius: 2px;
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.25);
+  flex: none;
+}
+.flag-w {
+  white-space: nowrap;
+}

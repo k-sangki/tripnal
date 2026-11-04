@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { GolfFinder } from "@/components/GolfFinder";
 import { SiteFooter, SiteHeader } from "@/components/SiteHeader";
 import { GOLF_COURSES, activeGolfRegions, coursesIn } from "@/lib/golf";
+import { Flag } from "@/components/Flag";
 
 export const metadata: Metadata = {
   title: { absolute: "전국 골프장 날씨 · 지역별 CC 이번주·주말 날씨, 비 오는 날 그린피는 아깝잖아요" },
@@ -42,7 +43,7 @@ export default function GolfIndex() {
           낙뢰, 풍속·돌풍, 체감온도를 함께 확인하세요.
         </p>
         <p>
-          예보는 ECMWF(유럽)·GFS(미국)·ICON(독일) 세 모델의 가운데 값이며, 골프장 위치의 고도로 기온을 보정합니다. 골프장 위치는 OpenStreetMap(©
+          예보는 <Flag c="eu" />ECMWF(유럽)·<Flag c="us" />GFS(미국)·<Flag c="de" />ICON(독일) 세 모델의 가운데 값이며, 골프장 위치의 고도로 기온을 보정합니다. 골프장 위치는 OpenStreetMap(©
           OpenStreetMap contributors) 자료입니다.
         </p>
       </section>

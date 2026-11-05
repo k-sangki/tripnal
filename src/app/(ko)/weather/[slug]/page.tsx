@@ -133,6 +133,10 @@ export default async function PlacePage({ params }: PageProps<"/weather/[slug]">
         initialForecast={forecast}
         initialLeisure={place.leisure}
         headingSuffix="16일 날씨"
+        nearby={related
+          .filter((r) => r.km <= 100)
+          .slice(0, 6)
+          .map(({ place: q, km }) => ({ slug: q.slug, name: q.name, lat: q.lat, lon: q.lon, elevation: q.elevation, km: Math.round(km) }))}
       />
 
       {intro && (

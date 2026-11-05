@@ -19,3 +19,12 @@ export function trackShare(method: ShareMethod, contentType: string) {
     // 통계가 막혀 있어도 공유는 그대로
   }
 }
+
+/** 그 밖의 참여 이벤트 (내 장소 추가, 가까운 대안 누름 등) */
+export function trackEvent(name: "favorite_add" | "favorite_remove" | "favorite_open" | "alt_place_click", params: Record<string, string> = {}) {
+  try {
+    window.gtag?.("event", name, { item_id: location.pathname, ...params });
+  } catch {
+    // 통계가 막혀 있어도 동작은 그대로
+  }
+}

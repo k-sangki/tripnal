@@ -11,13 +11,6 @@
 export const NOINDEX = { index: false, follow: true } as const;
 
 /**
- * 구글에서만 빼는 페이지 (meta googlebot noindex). 네이버·빙은 그대로 색인한다.
- * 골프장 469곳: 네이버 검색이 많아 남기되, 같은 틀 페이지가 구글 사이트 평가를 깎아 구글에서만 뺀다
- * (2026-11-07, 구글 노출 회복 전까지). 사이트맵은 네이버용으로 그대로 둔다.
- */
-export const GOOGLE_NOINDEX = { index: true, follow: true, googleBot: { index: false, follow: true } } as const;
-
-/**
  * 다시 색인하는 외국어. 일본어·중국어는 유입이 있었고 영어는 거의 없어 나중에 연다 (SK 2026-11-02).
  * 이 언어들은 홈·장소·소개·개인정보와 "한국 N월 날씨"(/{lang}/korea/{m})를 색인한다.
  * 국내 도시 월별(/{lang}/weather/{slug}/{m})은 모든 언어에서 계속 noindex.

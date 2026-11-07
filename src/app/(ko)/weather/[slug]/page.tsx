@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { GOOGLE_NOINDEX } from "@/lib/indexing";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SiteFooter, SiteHeader } from "@/components/SiteHeader";
@@ -59,8 +58,6 @@ export async function generateMetadata({ params, searchParams }: PageProps<"/wea
       ...(place.aliases ?? []).map((a) => `${a} 날씨`),
     ],
     // 영어·일본어판이 있는 장소는 서로 가리킨다 (hreflang)
-    // 골프장은 구글에서만 뺀다 (src/lib/indexing.ts)
-    ...(place.leisure === "golf" ? { robots: GOOGLE_NOINDEX } : {}),
     alternates: { canonical: url, ...(hasForeignPage(place.slug) ? { languages: languageAlternates(url) } : {}) },
     openGraph: { siteName: "트립날씨", locale: "ko_KR", title: shareTitle ?? title, description, url, images: [{ url: image, width: 1200, height: 630 }] },
     twitter: { card: "summary_large_image", title, description, images: [image] },

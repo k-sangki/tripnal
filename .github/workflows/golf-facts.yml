@@ -1,0 +1,29 @@
+name: golf-facts (임시)
+
+# 골프장 소개 카드 자료를 한 번 모아 브랜치에 커밋한다. 다 모으면 이 워크플로는 지운다.
+on:
+  push:
+    branches: [claude/project-thread-pf7wcr]
+    paths: [collector/golf_facts.py, .github/workflows/golf-facts.yml]
+
+permissions:
+  contents: write
+
+jobs:
+  facts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install numpy rasterio shapely
+      - run: python collector/golf_facts.py
+      - name: 결과 커밋
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898699+github-actions[bot]@users.noreply.github.com"
+          git add src/data/golf-facts.json
+          git commit -m "골프장 소개 자료 (OSM·Copernicus DEM·NASA POWER)"
+          git push

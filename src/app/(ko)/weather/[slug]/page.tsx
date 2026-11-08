@@ -7,6 +7,7 @@ import { WeatherApp } from "@/components/WeatherApp";
 import { localMonth } from "@/lib/climate";
 import { golfRegionOf } from "@/lib/golf";
 import { MOUNTAIN_INTRO } from "@/data/mountain-intro";
+import { PLACE_INTRO } from "@/data/place-intro";
 import { guidesFor } from "@/data/guides";
 import { hasForeignPage } from "@/data/places-i18n";
 import { languageAlternates } from "@/lib/i18n";
@@ -76,8 +77,9 @@ export default async function PlacePage({ params }: PageProps<"/weather/[slug]">
   }
 
   const leisure = getLeisure(place.leisure);
-  // 산마다 다른 소개 (같은 틀 페이지로 보이지 않게)
-  const intro = MOUNTAIN_INTRO[place.slug];
+  // 장소마다 다른 소개 (같은 틀 페이지로 보이지 않게)
+  const mountain = MOUNTAIN_INTRO[place.slug];
+  const intro = mountain ?? PLACE_INTRO[place.slug];
   // 같은 레저 중 가까운 곳 (같은 날 갈 만한 대안, 내부 링크)
   const related = nearbyPlaces(place, 8);
   const golf = place.leisure === "golf";
@@ -137,7 +139,9 @@ export default async function PlacePage({ params }: PageProps<"/weather/[slug]">
 
       {intro && (
         <section className="card seo-text" style={{ marginTop: 16 }}>
-          <h2>{topic(place.name)} 어떤 산?</h2>
+          <h2>
+            {topic(place.name)} 어떤 {mountain ? "산" : "곳"}?
+          </h2>
           <p>
             {place.name}({place.region}
             {place.elevation ? `, 해발 ${place.elevation.toLocaleString()}m` : ""}). {intro.intro}

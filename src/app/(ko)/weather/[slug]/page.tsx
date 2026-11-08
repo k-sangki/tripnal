@@ -6,6 +6,7 @@ import { MonthCards } from "@/components/CityClimate";
 import { WeatherApp } from "@/components/WeatherApp";
 import { localMonth } from "@/lib/climate";
 import { golfRegionOf } from "@/lib/golf";
+import { golfIntroRows } from "@/lib/golfIntro";
 import { MOUNTAIN_INTRO } from "@/data/mountain-intro";
 import { PLACE_INTRO } from "@/data/place-intro";
 import { guidesFor } from "@/data/guides";
@@ -15,7 +16,7 @@ import { krNormals, krYears, monthCityFor } from "@/lib/korea-month";
 import { getLeisure } from "@/lib/leisure";
 import { getPlace, nearbyPlaces } from "@/lib/places";
 import { placeLiveDescription, placeSchemaType, placeSummaryRows, placeTitle, topic } from "@/lib/seo";
-import { KST_OFFSET_MIN } from "@/lib/time";
+import { KST_OFFSET_MIN, kstDate } from "@/lib/time";
 import { verdictShareTitle } from "@/lib/verdict";
 import { getForecast } from "@/lib/weather";
 import type { Forecast } from "@/lib/weather/types";
@@ -89,6 +90,8 @@ export default async function PlacePage({ params }: PageProps<"/weather/[slug]">
   const monthYears = monthCity ? krYears(monthCity.slug) : null;
   const nowMonth = localMonth(KST_OFFSET_MIN);
   const golfRegion = golf ? golfRegionOf(place) : undefined;
+  // 골프장 소개: 자료로 계산한 코스·날씨 특징 (src/lib/golfIntro.ts)
+  const golfRows = golf ? golfIntroRows(place, kstDate()) : [];
   const crumbs = golf
     ? [
         { name: "전국 골프장 날씨", item: "https://tripnalc.com/golf" },
@@ -149,10 +152,27 @@ export default async function PlacePage({ params }: PageProps<"/weather/[slug]">
           <p>
             <b>많이 찾는 때</b> · {intro.best}
           </p>
+          {intro.caution && (
+            <p>
+              <b>주의할 점</b> · {intro.caution}
+            </p>
+          )}
         </section>
       )}
 
-      <section className="card seo-text" style={{ marginTop: intro ? 12 : 16 }}>
+      {golfRows.length > 0 && (
+        <section className="card seo-text" style={{ marginTop: 16 }}>
+          <h2>{place.name}, 어떤 골프장?</h2>
+          {golfRows.map((r) => (
+            <p key={r.label}>
+              <span aria-hidden>{r.icon}</span> <b>{r.label}</b> · {r.text}
+            </p>
+          ))}
+          <p className="sum-note">자료: OpenStreetMap 지도, Copernicus 지형 고도, NASA POWER 평년값으로 계산한 값이에요.</p>
+        </section>
+      )}
+
+      <section className="card seo-text" style={{ marginTop: intro || golfRows.length ? 12 : 16 }}>
         <h2>
           {place.name} {leisure.label} 날씨 요약
         </h2>

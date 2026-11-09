@@ -128,7 +128,7 @@ export default async function CityPage({ params }: PageProps<"/overseas/[slug]">
 
       {/* 여행 가이드 바로 아래 광고 (여행·숙박 광고가 붙기 좋은 자리) */}
       <div style={{ marginTop: 12 }}>
-        <AdSlot slot={AD_SLOTS.afterSummary} />
+        <AdSlot slot={AD_SLOTS.afterSummary} kind="inline" />
       </div>
 
       <section className="card" style={{ marginTop: 12, textAlign: "center" }}>

@@ -24,6 +24,9 @@ jobs:
       NEXT_PUBLIC_AD_SLOT_DAYS: ${{ secrets.NEXT_PUBLIC_AD_SLOT_DAYS }}
       NEXT_PUBLIC_AD_SLOT_SIDE: ${{ secrets.NEXT_PUBLIC_AD_SLOT_SIDE }}
       NEXT_PUBLIC_AD_SLOT_BOTTOM: ${{ secrets.NEXT_PUBLIC_AD_SLOT_BOTTOM }}
+      NEXT_PUBLIC_ADFIT_MOBILE: ${{ secrets.NEXT_PUBLIC_ADFIT_MOBILE }}
+      NEXT_PUBLIC_ADFIT_PC: ${{ secrets.NEXT_PUBLIC_ADFIT_PC }}
+      NEXT_PUBLIC_ADFIT_SIDE: ${{ secrets.NEXT_PUBLIC_ADFIT_SIDE }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

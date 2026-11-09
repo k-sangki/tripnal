@@ -21,7 +21,7 @@ export function OverseasFinder({ month: m, sp }: { month: number; sp: URLSearchP
       <TripFinder rows={finderRows(DESTINATIONS)} groups={DESTINATION_GROUPS} month={m} initial={parseQuery(sp, m)} seoulHi={SEOUL_HI} />
 
       <div style={{ marginTop: 12 }}>
-        <AdSlot slot={AD_SLOTS.afterSummary} />
+        <AdSlot slot={AD_SLOTS.afterSummary} kind="inline" />
       </div>
 
       <section className="card seo-text" style={{ marginTop: 12 }}>

@@ -256,7 +256,7 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
         </div>
         {ads && (
           <div className="o-ad pc-only">
-            <AdSlot slot={AD_SLOTS.side} />
+            <AdSlot slot={AD_SLOTS.side} kind="side" />
           </div>
         )}
       </div>
@@ -347,7 +347,7 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
                 {ads && (
                   <>
                     <div style={{ height: 12 }} />
-                    <AdSlot slot={AD_SLOTS.afterSummary} />
+                    <AdSlot slot={AD_SLOTS.afterSummary} kind="inline" />
                   </>
                 )}
               </div>
@@ -358,7 +358,7 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
           {ads && !forecast && !loading && (
             <>
               <div style={{ height: 12 }} />
-              <AdSlot slot={AD_SLOTS.bottom} />
+              <AdSlot slot={AD_SLOTS.bottom} kind="inline" />
             </>
           )}
         </div>

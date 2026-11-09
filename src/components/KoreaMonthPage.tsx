@@ -105,7 +105,7 @@ export function KoreaMonthPage({ slug, month: m, locale: l }: { slug: string; mo
       </section>
 
       <div style={{ marginTop: 12 }}>
-        <AdSlot slot={AD_SLOTS.afterSummary} />
+        <AdSlot slot={AD_SLOTS.afterSummary} kind="inline" />
       </div>
 
       <section className="card" style={{ marginTop: 12 }}>

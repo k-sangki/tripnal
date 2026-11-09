@@ -149,7 +149,7 @@ export default async function GuidePage({
       </p>
       {g.blocks.map((b, i) => (
         <Fragment key={i}>
-          {i === mid && <AdSlot slot={AD_SLOTS.afterSummary} />}
+          {i === mid && <AdSlot slot={AD_SLOTS.afterSummary} kind="inline" />}
           <Block b={b} />
         </Fragment>
       ))}

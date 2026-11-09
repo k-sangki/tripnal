@@ -365,8 +365,9 @@ export function ForecastTable({ days, leisure, interval, today, nowHour, capture
                   <SlotRow key={k} k={k} cols={cols} days={days} step={step} em={em(k)} />
                 ))}
               </tbody>
-              {more.length > 0 && (
-                <tbody className="ft-more" hidden={!open}>
+              {/* 접힌 줄은 펼칠 때만 그린다: 모든 장소 페이지에 똑같이 깔리는 글자를 줄이려고 (얇은 페이지 대응) */}
+              {more.length > 0 && open && (
+                <tbody className="ft-more">
                   {more.map((k) => (
                     <SlotRow key={k} k={k} cols={cols} days={days} step={step} em={false} />
                   ))}
@@ -545,10 +546,12 @@ function DailyTable({
         {rows.filter((k) => k !== "precip").flatMap((k) => metricRow(k, em(k)))}
         {(["sunrise", "sunset"] as const).filter(sunEm).map(sunRow)}
       </tbody>
-      <tbody className="ft-more" hidden={!open}>
-        {more.flatMap((k) => metricRow(k, false))}
-        {(["sunrise", "sunset"] as const).filter((k) => !sunEm(k)).map(sunRow)}
-      </tbody>
+      {open && (
+        <tbody className="ft-more">
+          {more.flatMap((k) => metricRow(k, false))}
+          {(["sunrise", "sunset"] as const).filter((k) => !sunEm(k)).map(sunRow)}
+        </tbody>
+      )}
     </table>
   );
 }

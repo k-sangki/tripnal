@@ -24,6 +24,16 @@ export interface GolfIntroRow {
 
 const FACTS = facts as unknown as Record<string, GolfFacts>;
 
+const meanWind = (f: GolfFacts) => (f.clim ? f.clim.wind.reduce((a, b) => a + b, 0) / 12 : null);
+/** 전국 골프장 평년 바람 순위(센 쪽부터 0~1) */
+const WIND_RANK = (() => {
+  const xs = Object.entries(FACTS)
+    .map(([slug, f]) => [slug, meanWind(f)] as const)
+    .filter((x): x is readonly [string, number] => x[1] != null)
+    .sort((a, b) => b[1] - a[1]);
+  return new Map(xs.map(([slug], i) => [slug, i / xs.length]));
+})();
+
 export function golfFacts(slug: string): GolfFacts | undefined {
   return FACTS[slug];
 }
@@ -76,7 +86,7 @@ export function golfIntroRows(p: { slug: string; lat: number; lon: number }, tod
   const f = FACTS[p.slug];
   const rows: GolfIntroRow[] = [];
   if (f) {
-    const size = [f.holes ? `${f.holes}홀` : null, f.areaHa ? `코스 넓이 약 ${f.areaHa}ha` : null].filter(Boolean).join(" · ");
+    const size = [f.holes ? `${f.holes}홀` : null, f.areaHa && f.areaHa >= 20 ? `지도상 코스 넓이 약 ${f.areaHa}ha` : null].filter(Boolean).join(" · ");
     if (size) rows.push({ icon: "⛳", label: "규모", text: f.hazards && f.hazards >= 2 ? `${size} · 지도에 표시된 워터 해저드 ${f.hazards}곳` : size });
 
     if (f.elev) {
@@ -95,7 +105,7 @@ export function golfIntroRows(p: { slug: string; lat: number; lon: number }, tod
           icon: "🌡️",
           label: "고도",
           text:
-            `해발 약 ${mid}m(가장 낮은 곳 ${lo}m~높은 곳 ${hi}m)라 바닷가 평지보다 기온이 약 ${d}° 낮아요.` +
+            `코스 대부분이 해발 ${lo}~${hi}m에 있어(가운데 약 ${mid}m) 바닷가 평지보다 기온이 약 ${d}° 낮아요.` +
             (mid >= 400 ? " 공기가 옅어 같은 클럽으로 공이 조금 더 멀리 가요." : ""),
         });
       } else {
@@ -123,7 +133,7 @@ export function golfIntroRows(p: { slug: string; lat: number; lon: number }, tod
     const c = f.clim;
     if (c) {
       const good = c.hi.map((h, i) => ({ m: i + 1, h, r: c.rain[i] })).filter((x) => x.h >= 15 && x.h <= 27 && x.r < 160).map((x) => x.m);
-      const frost = c.lo.map((l, i) => ({ m: i + 1, l })).filter((x) => x.l <= 0).map((x) => x.m);
+      const frost = c.lo.map((l, i) => ({ m: i + 1, l })).filter((x) => x.l <= -1).map((x) => x.m);
       const wet = c.rain.indexOf(Math.max(...c.rain)) + 1;
       const windy = c.wind.indexOf(Math.max(...c.wind)) + 1;
       const parts: string[] = [];
@@ -131,6 +141,9 @@ export function golfIntroRows(p: { slug: string; lat: number; lon: number }, tod
       if (frost.length) parts.push(`${monthSpans(frost)}은 아침 평균 기온이 영하라 그린이 얼어 첫 티오프가 늦어지거나 그린이 딱딱할 수 있어요.`);
       else parts.push("한겨울에도 아침 평균 기온이 영하로 내려가지 않는 따뜻한 편이에요.");
       parts.push(`비는 ${wet}월(평년 약 ${c.rain[wet - 1]}mm)에 가장 많고, 바람은 ${windy}월에 가장 세요.`);
+      const rank = WIND_RANK.get(p.slug);
+      if (rank != null && rank < 0.2) parts.push(`평년 바람이 전국 골프장 가운데 센 편(상위 ${Math.max(1, Math.ceil(rank * 100))}%)이라 클럽 선택에 바람을 꼭 넣어 계산하세요.`);
+      else if (rank != null && rank > 0.8) parts.push("평년 바람은 전국 골프장 가운데 약한 편이에요.");
       rows.push({ icon: "📅", label: "평년 날씨", text: parts.join(" ") });
     }
   }

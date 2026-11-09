@@ -4,7 +4,7 @@ name: golf-facts (임시)
 on:
   push:
     branches: [claude/project-thread-pf7wcr]
-    paths: [collector/golf_facts.py, .github/workflows/golf-facts.yml]
+    paths: [collector/golf_facts.py, collector/golf_facts_patch.py, .github/workflows/golf-facts.yml]
 
 permissions:
   contents: write
@@ -19,7 +19,8 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install numpy rasterio shapely
-      - run: python collector/golf_facts.py
+      - run: python golf_facts_patch.py
+        working-directory: collector
       - name: 결과 커밋
         run: |
           git config user.name "github-actions[bot]"

@@ -154,56 +154,71 @@ def dem_stats(poly):
     return [round(float(p5)), round(float(p50)), round(float(p95))]
 
 
-def water_near(lat, lon, shape_xy, f):
-    q = f"""[out:json][timeout:120];
-(
-  nwr(around:2000,{lat},{lon})["natural"="water"]["name"];
-  way(around:1500,{lat},{lon})["waterway"="river"]["name"];
-  way(around:5000,{lat},{lon})["natural"="coastline"];
-);
-out geom;"""
-    data = overpass(q)
+COURSES_SET = f'(way["leisure"="golf_course"]({BBOX});relation["leisure"="golf_course"]({BBOX}););'
+
+
+def geoms_of(el):
+    gs = []
+    if el.get("geometry"):
+        gs.append([(p["lon"], p["lat"]) for p in el["geometry"]])
+    for m in el.get("members", []):
+        if m.get("geometry"):
+            gs.append([(p["lon"], p["lat"]) for p in m["geometry"]])
+    return [g for g in gs if len(g) >= 2]
+
+
+def water_features():
+    """골프장 근처 물가를 한 번에 받는다 (코스별로 물으면 너무 느리다)"""
+    out = {}
+    for kind, q in [
+        ("lake", f'[out:json][timeout:900];{COURSES_SET}->.c;nwr(around.c:2000)["natural"="water"]["name"];out geom;'),
+        ("river", f'[out:json][timeout:900];{COURSES_SET}->.c;way(around.c:1500)["waterway"="river"]["name"];out geom;'),
+        ("coast", f'[out:json][timeout:900];{COURSES_SET}->.c;way(around.c:5000)["natural"="coastline"];out geom;'),
+    ]:
+        feats = []
+        for el in overpass(q)["elements"]:
+            gs = geoms_of(el)
+            if gs:
+                feats.append((el.get("tags", {}).get("name"), gs))
+        print(kind, len(feats), flush=True)
+        out[kind] = feats
+    return out
+
+
+def water_near(shape_ll, f, feats):
+    """shape_ll: 위경도 도형. 거리는 지점 근처 평면(m)으로 잰다"""
+    near = shape_ll.buffer(0.06)
+    shape_xy = Polygon([f(x, y) for x, y in shape_ll.exterior.coords]) if shape_ll.geom_type == "Polygon" else unary_union(
+        [Polygon([f(x, y) for x, y in g.exterior.coords]) for g in getattr(shape_ll, "geoms", [])]
+    )
     lakes, rivers, coast = {}, {}, None
-    for el in data["elements"]:
-        tags = el.get("tags", {})
-        geoms = []
-        if el.get("geometry"):
-            geoms.append(el["geometry"])
-        for m in el.get("members", []):
-            if m.get("geometry"):
-                geoms.append(m["geometry"])
-        d = None
-        for g in geoms:
-            pts = to_xy(g, f)
-            if len(pts) < 2:
+    for kind in ("lake", "river", "coast"):
+        for name, gs in feats[kind]:
+            if not any(near.intersects(LineString(g)) for g in gs):
                 continue
-            dd = shape_xy.distance(LineString(pts))
-            if len(pts) >= 4 and pts[0] == pts[-1] and Polygon(pts).is_valid and Polygon(pts).intersects(shape_xy):
-                dd = 0
-            d = dd if d is None else min(d, dd)
-        if d is None:
-            continue
-        name = tags.get("name")
-        if tags.get("natural") == "coastline":
-            coast = d if coast is None else min(coast, d)
-        elif tags.get("waterway") == "river":
-            rivers[name] = min(rivers.get(name, 1e9), d)
-        else:
-            # 골프장 안 연못(이름이 골프장 이름인 것)·아주 작은 못은 뺀다
+            d = None
             area = 0
-            if el.get("geometry"):
-                pts = to_xy(el["geometry"], f)
-                if len(pts) >= 4:
-                    area = Polygon(pts).area
-            elif el.get("bounds"):
-                b = el["bounds"]
-                x0, y0 = f(b["minlon"], b["minlat"])
-                x1, y1 = f(b["maxlon"], b["maxlat"])
-                area = abs(x1 - x0) * abs(y1 - y0) * 0.5
-            if area >= 50000:  # 5ha 이상
+            for g in gs:
+                pts = [f(x, y) for x, y in g]
+                dd = shape_xy.distance(LineString(pts))
+                if len(pts) >= 4 and pts[0] == pts[-1]:
+                    poly = Polygon(pts)
+                    if poly.is_valid:
+                        area += poly.area
+                        if poly.intersects(shape_xy):
+                            dd = 0
+                d = dd if d is None else min(d, dd)
+            if d is None:
+                continue
+            if kind == "coast":
+                coast = d if coast is None else min(coast, d)
+            elif kind == "river":
+                rivers[name] = min(rivers.get(name, 1e9), d)
+            elif area >= 50000 or len(gs) > 1:  # 5ha 이상 호수·저수지
                 lakes[name] = min(lakes.get(name, 1e9), d)
-    pick = lambda d: [{"name": k, "m": round(v)} for k, v in sorted(d.items(), key=lambda x: x[1])[:2]]
-    return {"lakes": pick(lakes), "rivers": pick(rivers), "coastM": None if coast is None else round(coast)}
+    lim = {"lake": 2000, "river": 1500}
+    pick = lambda d, k: [{"name": n, "m": round(v)} for n, v in sorted(d.items(), key=lambda x: x[1]) if v <= lim[k]][:2]
+    return {"lakes": pick(lakes, "lake"), "rivers": pick(rivers, "river"), "coastM": None if coast is None or coast > 5000 else round(coast)}
 
 
 def climate(lat, lon, elev):
@@ -239,6 +254,7 @@ def main():
     wx = np.array([h[0] for h in hazards]) if hazards else np.zeros(0)
     wy = np.array([h[1] for h in hazards]) if hazards else np.zeros(0)
 
+    feats = water_features()
     facts = {}
     for i, g in enumerate(golf):
         pt = Point(g["lon"], g["lat"])
@@ -257,6 +273,11 @@ def main():
         rec = {}
         if best:
             poly, tags = best
+            # 27홀처럼 코스가 여러 조각으로 그려진 곳은 이름이 같고 맞닿은 조각을 합친다
+            name = tags.get("name")
+            parts = [q for q, t in polys if q is not poly and t.get("name") == name and name and q.distance(poly) < 0.0005]
+            if parts:
+                poly = unary_union([poly, *parts])
             # 면적(ha)
             xy = Polygon([f(x, y) for x, y in poly.exterior.coords]) if poly.geom_type == "Polygon" else unary_union(
                 [Polygon([f(x, y) for x, y in p.exterior.coords]) for p in poly.geoms]
@@ -271,15 +292,14 @@ def main():
             rec["holesMapped"] = n
             rec["hazards"] = int(contains_xy(poly, wx, wy).sum()) if wx.size else 0
             rec["elev"] = dem_stats(poly)
-            shape_xy = xy
+            shape_ll = poly
         else:
-            shape_xy = Point(*f(g["lon"], g["lat"]))
-            rec["elev"] = dem_stats(pt.buffer(0.004))
+            shape_ll = pt.buffer(0.004)
+            rec["elev"] = dem_stats(shape_ll)
         try:
-            rec.update(water_near(g["lat"], g["lon"], shape_xy, f))
+            rec.update(water_near(shape_ll, f, feats))
         except Exception as e:
             print("water fail", g["slug"], e, flush=True)
-        time.sleep(1)
         facts[g["slug"]] = rec
         if i % 20 == 0:
             print(i, g["slug"], rec, flush=True)
@@ -292,7 +312,7 @@ def main():
             print("climate fail", g["slug"], ex, flush=True)
             return g["slug"], None
 
-    with cf.ThreadPoolExecutor(4) as ex:
+    with cf.ThreadPoolExecutor(6) as ex:
         for slug, c in ex.map(clim, golf):
             if c:
                 facts[slug]["clim"] = c

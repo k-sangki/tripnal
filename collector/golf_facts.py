@@ -58,6 +58,8 @@ def overpass(q):
         except Exception as e:
             last = e
             print("overpass retry", i, e, flush=True)
+            if getattr(e, "code", None) == 400:  # 문법 오류는 다시 물어도 소용없다
+                raise
             time.sleep(10 * (i + 1))
     raise last
 
@@ -154,7 +156,7 @@ def dem_stats(poly):
     return [round(float(p5)), round(float(p50)), round(float(p95))]
 
 
-COURSES_SET = f'(way["leisure"="golf_course"]({BBOX});relation["leisure"="golf_course"]({BBOX}););'
+COURSES_SET = f'(way["leisure"="golf_course"]({BBOX});relation["leisure"="golf_course"]({BBOX});)'
 
 
 def geoms_of(el):
@@ -254,7 +256,11 @@ def main():
     wx = np.array([h[0] for h in hazards]) if hazards else np.zeros(0)
     wy = np.array([h[1] for h in hazards]) if hazards else np.zeros(0)
 
-    feats = water_features()
+    try:
+        feats = water_features()
+    except Exception as e:
+        print("water features fail", e, flush=True)
+        feats = {"lake": [], "river": [], "coast": []}
     facts = {}
     for i, g in enumerate(golf):
         pt = Point(g["lon"], g["lat"])

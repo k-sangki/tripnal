@@ -71,6 +71,8 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
   const simple = overseas || foreign;
   // 판정 카드 공유 링크(?vd=날짜)로 들어오면 그 날을 고른다. 주소는 곧 다시 쓰이므로 처음에 읽어 둔다
   const [sharedDate] = useState(() => (typeof window === "undefined" ? null : new URLSearchParams(window.location.search).get("vd")));
+  // 판정 카드에서 고른 날 (공유받은 날 포함). 주소에 담아 링크 미리보기가 그날 판정으로 나오게 한다
+  const [verdictDate, setVerdictDate] = useState(sharedDate);
   const [today] = useState(() => kstDate(new Date(), overseasOffset));
   const [nowHour] = useState(() => Number(kstHourKey(new Date(), overseasOffset).slice(11, 13)));
   const [place, setPlace] = useState<AppPlace | null>(initialPlace);
@@ -206,9 +208,10 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
     q.set("int", interval);
     q.set("from", period.from);
     q.set("to", period.to);
+    if (verdictDate && /^\d{4}-\d{2}-\d{2}$/.test(verdictDate) && verdictDate >= today) q.set("vd", verdictDate);
     window.history.replaceState(window.history.state, "", `${window.location.pathname}?${q}`);
     if (!place.slug) store()?.setItem(STORE_KEY, JSON.stringify({ place, leisure: leisureId }));
-  }, [place, leisureId, interval, period]);
+  }, [place, leisureId, interval, period, verdictDate, today]);
 
   const days = useMemo(() => (forecast ? forecast.days.filter((d) => inPeriod(d.date, period)) : []), [forecast, period]);
 
@@ -308,7 +311,7 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
           ) : (
             forecast && (
               <div style={{ opacity: loading ? 0.5 : 1 }}>
-                {!simple && place && <VerdictCard days={days} leisure={leisure} placeName={place.name} today={today} initialDate={sharedDate} />}
+                {!simple && place && <VerdictCard days={days} leisure={leisure} placeName={place.name} today={today} initialDate={sharedDate} onPick={setVerdictDate} />}
                 <ForecastTable days={days} leisure={leisure} interval={interval} today={today} nowHour={nowHour} />
                 {forecast.source.includes("·") &&
                   (foreign ? (

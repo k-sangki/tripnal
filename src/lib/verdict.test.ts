@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { dayVerdict, stripEmoji, type VerdictDay } from "@/lib/verdict";
+import { dayVerdict, pickVerdictDate, signalWindow, stripEmoji, type VerdictDay } from "@/lib/verdict";
 
 const day = (o: Partial<VerdictDay>): VerdictDay => ({ code: 0, rain: 0, prob: 10, gust: 5, tMin: 8, tMax: 18, wave: null, ...o });
 
@@ -39,5 +39,27 @@ describe("stripEmoji", () => {
   it("그림 글자만 뗀다", () => {
     expect(stripEmoji("텐트 쳐도 됨, 불멍 각 🔥")).toBe("텐트 쳐도 됨, 불멍 각");
     expect(stripEmoji("☔ 비 2mm")).toBe("비 2mm");
+  });
+});
+
+describe("미리보기 그림의 판정 날짜", () => {
+  // 2026-11-10(화)부터 16일
+  const dates = Array.from({ length: 16 }, (_, i) => new Date(Date.UTC(2026, 10, 10 + i)).toISOString().slice(0, 10));
+  it("링크에 날짜가 있으면 그날", () => {
+    expect(pickVerdictDate(dates, "2026-11-12")).toBe("2026-11-12");
+  });
+  it("없거나 지난 날짜면 다가오는 토요일", () => {
+    expect(pickVerdictDate(dates, null)).toBe("2026-11-14");
+    expect(pickVerdictDate(dates, "2026-11-01")).toBe("2026-11-14");
+  });
+  it("보고 있는 기간에 토요일이 없으면 기간의 첫날", () => {
+    expect(pickVerdictDate(dates, null, (d) => d >= "2026-11-11" && d <= "2026-11-13")).toBe("2026-11-11");
+  });
+  it("신호등은 오늘부터 7일, 먼 날짜면 그날이 보이게 민다", () => {
+    expect(signalWindow(dates, "2026-11-14")).toEqual(dates.slice(0, 7));
+    const w = signalWindow(dates, "2026-11-21");
+    expect(w).toHaveLength(7);
+    expect(w).toContain("2026-11-21");
+    expect(signalWindow(dates, "2026-11-25")).toEqual(dates.slice(9));
   });
 });

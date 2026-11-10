@@ -37,8 +37,8 @@ export function placeTitle(p: Place): string {
     case "ski":
       return `${p.name} 날씨 · 이번주 스키장 눈 소식, 연차 쓸 각?`;
     case "golf":
-      // "○○CC 날씨", "○○ 골프장 날씨"로 찾는다. 라운딩 전날·당일에 비·바람을 본다
-      return `${p.name} 날씨 · 이번주·주말 라운딩, 오늘 OB는 바람 탓 가능?`;
+      // "○○cc 날씨"로 찾는다(네이버 2026-11-10: 필로스cc 날씨 노출 1,832·클릭 0). 클릭이 난 검색어는 "주말"·날짜가 붙은 것이라 주말을 남기고, 네이버 골프장 테마날씨(8일)가 닿지 않는 다음주를 더한다
+      return `${p.name} 날씨 · 이번주·주말·다음주 라운딩, OB는 바람 탓 가능?`;
     case "travel":
       // 같은 "여행"이라도 찾는 목적이 다르다: 바다는 물놀이·사진, 관광지는 여행 동선, 사는 도시는 생활(세차·빨래)
       if (/해수욕장|해변/.test(p.name)) return `${p.name} 날씨 · 이번주 바다 가면 인생샷? 산발샷?`;
@@ -98,7 +98,9 @@ export function placeLiveDescription(p: Place, f: Forecast | null, now = new Dat
       ? "정상 고도 보정 기온·돌풍"
       : p.leisure === "fishing"
         ? "물때표·바다날씨·만조·간조·파고"
-        : "기온·비·바람";
+        : p.leisure === "golf"
+          ? "다음주 라운딩까지 티오프 시간대 비·바람·체감온도"
+          : "기온·비·바람";
   return `${p.name} 이번 주말(${when}) ${sky}, ${lo}~${hi}°, 강수 ${rain}mm, 돌풍 ${gust}m/s. ${line} ${extra}, 3시간 간격으로 한눈에.`;
 }
 

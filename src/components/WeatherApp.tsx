@@ -323,7 +323,7 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
           </section>
         </div>
 
-        {/* 판정 카드: 모바일에서는 검색·장소 이름 바로 아래(지도·기간 설정보다 위) */}
+        {/* 판정 카드: 모바일에서는 기간 설정 바로 아래(지도·해외 띠보다 위) */}
         {!simple && place && forecast && (
           <div className="o-verdict" style={{ opacity: loading ? 0.5 : 1 }}>
             <VerdictCard

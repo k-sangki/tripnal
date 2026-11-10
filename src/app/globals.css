@@ -136,23 +136,24 @@ a {
 .o-hero {
   order: 2;
 }
-/* 판정이 첫 화면에 보이도록 지도·기간 설정보다 위에 둔다 */
-.o-verdict {
+/* 기간을 먼저 고르고 그 기간의 판정을 본다 (판정 날짜 칩은 고른 기간 안의 날짜) */
+.o-controls {
   order: 3;
+  padding: 16px !important;
+}
+/* 판정은 지도·해외 띠보다 위 */
+.o-verdict {
+  order: 4;
   min-width: 0;
 }
 .o-banner {
-  order: 4;
+  order: 5;
 }
 .o-banner .ov-banner {
   margin-bottom: 0;
 }
 .o-map {
-  order: 5;
-}
-.o-controls {
   order: 6;
-  padding: 16px !important;
 }
 .o-fc {
   order: 7;

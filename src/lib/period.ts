@@ -45,10 +45,10 @@ export function matchPreset(p: Period, today: string): PresetId | null {
   })?.id ?? null;
 }
 
-/** 범위를 오늘~16일 안으로 맞추고 from<=to 보장. 잘못된 값이면 기본(3일). */
+/** 범위를 오늘~16일 안으로 맞추고 from<=to 보장. 기간이 없거나 잘못된 값이면 기본(이번 주말, SK 2026-11-10). */
 export function clampPeriod(from: string | null | undefined, to: string | null | undefined, today: string): Period {
   const valid = (s: string | null | undefined): s is string => !!s && /^\d{4}-\d{2}-\d{2}$/.test(s);
-  if (!valid(from) || !valid(to)) return presetPeriod("16d", today);
+  if (!valid(from) || !valid(to)) return presetPeriod("weekend", today);
   const end = lastDay(today);
   const clamp = (d: string) => (diffDays(today, d) < 0 ? today : diffDays(d, end) < 0 ? end : d);
   let a = clamp(from);

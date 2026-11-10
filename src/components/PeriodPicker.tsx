@@ -13,7 +13,7 @@ export function PeriodPicker({ value, today, onChange }: { value: Period; today:
   const { locale } = useLocale();
   const t = useT();
   const active = matchPreset(value, today);
-  // 날짜 버튼(직접 선택)을 기본으로 펼쳐 둔다
+  // 날짜 버튼은 기본으로 펼쳐 둔다. 고른 기간이 프리셋(기본: 이번 주말)과 같으면 그 버튼을 켠다
   const [custom, setCustom] = useState(true);
   // 시작일만 고른 상태
   const [anchor, setAnchor] = useState<string | null>(null);
@@ -36,7 +36,7 @@ export function PeriodPicker({ value, today, onChange }: { value: Period; today:
           <button
             key={p.id}
             className="chip"
-            aria-pressed={!custom && active === p.id}
+            aria-pressed={active === p.id}
             onClick={() => {
               setCustom(false);
               setAnchor(null);
@@ -46,7 +46,7 @@ export function PeriodPicker({ value, today, onChange }: { value: Period; today:
             {t(p.label)}
           </button>
         ))}
-        <button className="chip" aria-pressed={custom} onClick={() => setCustom(true)}>
+        <button className="chip" aria-pressed={active == null} onClick={() => setCustom(true)}>
           {t("직접 선택")}
         </button>
       </div>

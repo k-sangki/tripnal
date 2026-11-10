@@ -19,7 +19,6 @@ import { LeisureTabs } from "./LeisureTabs";
 import { useLocale, useT } from "./LocaleContext";
 import { PeriodPicker } from "./PeriodPicker";
 import { SearchBar } from "./SearchBar";
-import { OverseasBanner } from "./SiteHeader";
 import { WarningTicker } from "./WarningTicker";
 import { VerdictCard, type NearbyPlace } from "./VerdictCard";
 import { FavButton } from "./FavButton";
@@ -323,7 +322,7 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
           </section>
         </div>
 
-        {/* 판정 카드: 모바일에서는 기간 설정 바로 아래(지도·해외 띠보다 위) */}
+        {/* 판정 카드: 모바일에서는 기간 설정 바로 아래, 예보표 위 */}
         {!simple && place && forecast && (
           <div className="o-verdict" style={{ opacity: loading ? 0.5 : 1 }}>
             <VerdictCard
@@ -344,12 +343,6 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
           </div>
         )}
 
-        {/* 해외 띠: 모바일에서는 판정 카드 아래 (PC는 머리글 아래 그대로) */}
-        {!simple && (
-          <div className="o-banner">
-            <OverseasBanner />
-          </div>
-        )}
 
         <div className="o-fc">
           {!simple && <WarningTicker address={place?.address} />}

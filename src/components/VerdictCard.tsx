@@ -114,6 +114,9 @@ export function VerdictCard({ days, leisure, placeName, today, initialDate, near
         <h2>
           {leisure.emoji} {leisure.label} 가도 될까?
         </h2>
+        <button className="verdict-share" onClick={capture}>
+          📸 캡처
+        </button>
         {/* 캡처 그림에만 보인다 */}
         <span className="verdict-cap">
           {placeName} · {md(day.date)}({weekdayKo(day.date)})
@@ -164,13 +167,14 @@ export function VerdictCard({ days, leisure, placeName, today, initialDate, near
           <span className="verdict-pd-t">{day.predictability >= 80 ? "거의 굳은 예보예요" : day.predictability >= 60 ? "조금 바뀔 수 있어요" : "아직 뒤집힐 수 있어요"}</span>
           {day.predictability < 80 && onAlert && (
             <button className="verdict-pd-alert" onClick={onAlert}>
-              🔔 바뀌면 알려드릴까요?
+              🔔 바뀌면 알림
             </button>
           )}
         </div>
       )}
       <p className="verdict-luck">
         이 날 잡은 사람: <b>{luck}</b>
+        <span className="verdict-note"> · 숫자도 꼭 같이 보세요</span>
       </p>
       {better && (
         <div className="verdict-alt">
@@ -196,10 +200,6 @@ export function VerdictCard({ days, leisure, placeName, today, initialDate, near
           )}
         </div>
       )}
-      <button className="verdict-share" onClick={capture}>
-        📸 판정 캡처하기
-      </button>
-      <p className="verdict-note">비·바람·기온으로 매긴 판정이에요. 숫자를 꼭 같이 보세요.</p>
       <div className="verdict-cap verdict-mark">
         <span>{SLOGAN}</span>
         <b>tripnalc.com</b>

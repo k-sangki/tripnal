@@ -7,7 +7,7 @@ const OV_FONT = `https://fonts.googleapis.com/css2?family=Black+Han+Sans&text=${
 /** 띠 아랫줄: 날씨(맑은 곳)와 돈(싼 곳) 두 가지 이득을 짧게, 수고는 적게(3초) */
 const OV_SUB = "지금 맑은 곳·싼 곳, 3초 만에 골라보기";
 
-/** "해외날씨 보러가기" 띠 카드. 예보 화면은 모바일에서 판정 카드 아래에 따로 그린다 (WeatherApp) */
+/** "해외날씨 보러가기" 띠 카드 (머리글 아래 맨 위) */
 export function OverseasBanner({ className }: { className?: string }) {
   return (
     <Link href="/overseas" className={`ov-banner main${className ? ` ${className}` : ""}`}>
@@ -27,11 +27,11 @@ export function OverseasBanner({ className }: { className?: string }) {
   );
 }
 
-/** overseasBanner: 맨 위 "해외날씨 보러가기" 띠 카드 (해외 날씨 페이지에서는 끈다). "pc"면 PC에서만 (모바일은 화면 안에서 따로 그릴 때) */
+/** overseasBanner: 맨 위 "해외날씨 보러가기" 띠 카드 (해외 날씨 페이지에서는 끈다). */
 export function SiteHeader({
   overseasBanner = true,
 }: {
-  overseasBanner?: boolean | "pc";
+  overseasBanner?: boolean;
 }) {
   return (
     <>
@@ -46,7 +46,7 @@ export function SiteHeader({
           </Link>
         </nav>
       </header>
-      {overseasBanner && <OverseasBanner className={overseasBanner === "pc" ? "pc-only" : undefined} />}
+      {overseasBanner && <OverseasBanner />}
     </>
   );
 }

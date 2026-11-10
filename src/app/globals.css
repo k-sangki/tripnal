@@ -353,6 +353,9 @@ a {
   font-size: 13px;
   color: var(--muted);
 }
+.tagline a {
+  color: inherit;
+}
 
 /* ---------- 카드 ---------- */
 .card {
@@ -3532,9 +3535,9 @@ button.cc-col.on {
   margin-left: auto;
   padding: 4px 11px;
   border-radius: 999px;
-  background: #ffd43b;
-  color: #5c3c00;
-  box-shadow: 0 2px 6px rgba(250, 176, 5, 0.35);
+  background: #1c6dd0;
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(28, 109, 208, 0.3);
   font-size: 12px;
   font-weight: 800;
 }

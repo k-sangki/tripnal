@@ -41,9 +41,9 @@ export function SiteHeader({
           <span className="slogan">{SLOGAN_C}</span>
         </Link>
         <nav className="top-nav">
-          <Link href="/weather" className="tagline">
-            장소별 날씨
-          </Link>
+          <span className="tagline">
+            <Link href="/golf">전국 골프장</Link>·<Link href="/weather">장소별 날씨</Link>
+          </span>
         </nav>
       </header>
       {overseasBanner && <OverseasBanner />}

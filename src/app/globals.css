@@ -133,22 +133,27 @@ a {
 .o-search {
   order: 1;
 }
-.o-map {
+.o-hero {
   order: 2;
 }
-.o-hero {
+/* 판정이 첫 화면에 보이도록 지도·기간 설정보다 위에 둔다 */
+.o-verdict {
   order: 3;
+  min-width: 0;
+}
+.o-map {
+  order: 4;
 }
 .o-controls {
-  order: 4;
+  order: 5;
   padding: 16px !important;
 }
 .o-fc {
-  order: 5;
+  order: 6;
   min-width: 0;
 }
 .o-ad {
-  order: 6;
+  order: 7;
 }
 @media (min-width: 1024px) {
   /* 긴 예보 표를 내려 봐도 왼쪽 광고가 화면에 남도록 */
@@ -3174,7 +3179,6 @@ button.cc-col.on {
 
 /* "가도 될까?" 판정 카드 (VerdictCard) */
 .verdict {
-  margin-bottom: 12px;
   padding: 18px 18px 14px;
 }
 .verdict-head h2 {
@@ -3185,7 +3189,7 @@ button.cc-col.on {
 .verdict-days {
   display: flex;
   gap: 6px;
-  margin: 12px -18px 14px;
+  margin: 12px -18px 2px;
   padding: 0 18px;
   overflow-x: auto;
   scrollbar-width: none;
@@ -3224,6 +3228,7 @@ button.cc-col.on {
   align-items: center;
   gap: 12px;
   border-radius: 16px;
+  margin-top: 12px;
   padding: 14px 16px;
   word-break: keep-all;
 }
@@ -3444,4 +3449,66 @@ button.cc-col.on {
 }
 .my-place .dot.stop {
   background: #f0533a;
+}
+
+/* 날짜 칩의 판정 신호등 */
+.verdict-dot {
+  display: block;
+  width: 8px;
+  height: 8px;
+  margin: 4px auto 0;
+  border-radius: 50%;
+}
+.verdict-dot.go {
+  background: #12b886;
+}
+.verdict-dot.meh {
+  background: #fab005;
+}
+.verdict-dot.stop {
+  background: #fa5252;
+}
+.verdict-day.on .verdict-dot {
+  box-shadow: 0 0 0 2px #fff;
+}
+.verdict.capturing .verdict-pd-alert {
+  display: none;
+}
+.verdict-pd {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  margin-top: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink-2);
+}
+.verdict-pd b {
+  padding: 2px 7px;
+  border-radius: 6px;
+}
+.verdict-pd.hi b {
+  background: #e3f9f0;
+  color: #0b6b4c;
+}
+.verdict-pd.mid b {
+  background: #fff4dd;
+  color: #8a5a00;
+}
+.verdict-pd.lo b {
+  background: #fff0f0;
+  color: #c92a2a;
+}
+.verdict-pd-t {
+  font-weight: 600;
+}
+.verdict-pd-alert {
+  margin-left: auto;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--chip);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--pine);
 }

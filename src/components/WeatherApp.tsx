@@ -323,6 +323,22 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
           </section>
         </div>
 
+        {/* 판정 카드: 모바일에서는 검색·장소 이름 바로 아래(지도·기간 설정보다 위) */}
+        {!simple && place && forecast && (
+          <div className="o-verdict" style={{ opacity: loading ? 0.5 : 1 }}>
+            <VerdictCard
+              days={days}
+              leisure={leisure}
+              placeName={place.name}
+              today={today}
+              initialDate={sharedDate}
+              nearby={nearby}
+              onPick={setVerdictDate}
+              onAlert={() => document.querySelector<HTMLButtonElement>(".alert-pill")?.click()}
+            />
+          </div>
+        )}
+
         <div className="o-fc">
           {!simple && <WarningTicker address={place?.address} />}
           {loading && !forecast ? (
@@ -330,7 +346,6 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
           ) : (
             forecast && (
               <div style={{ opacity: loading ? 0.5 : 1 }}>
-                {!simple && place && <VerdictCard days={days} leisure={leisure} placeName={place.name} today={today} initialDate={sharedDate} nearby={nearby} onPick={setVerdictDate} />}
                 <ForecastTable days={days} leisure={leisure} interval={interval} today={today} nowHour={nowHour} />
                 {forecast.source.includes("·") &&
                   (foreign ? (

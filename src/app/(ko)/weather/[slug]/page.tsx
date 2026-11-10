@@ -131,7 +131,7 @@ export default async function PlacePage({ params }: PageProps<"/weather/[slug]">
 
   return (
     <div className="shell">
-      <SiteHeader />
+      <SiteHeader overseasBanner="pc" />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <WeatherApp
         initialPlace={{ name: place.name, lat: place.lat, lon: place.lon, address: place.region, elevation: place.elevation, slug: place.slug }}

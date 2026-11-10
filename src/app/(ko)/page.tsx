@@ -99,7 +99,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
 
   return (
     <div className="shell">
-      <SiteHeader />
+      <SiteHeader overseasBanner="pc" />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(SITE_LD) }} />
       <WeatherApp initialPlace={place} initialLeisure={one(sp.act)} initialFrom={one(sp.from)} initialTo={one(sp.to)} initialInterval={one(sp.int)} />
       <section className="card seo-text" style={{ marginTop: 16 }}>

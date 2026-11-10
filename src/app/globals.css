@@ -3332,3 +3332,116 @@ button.cc-col.on {
 .verdict.capturing {
   border-radius: 0;
 }
+
+/* 판정 B급 칭호 (캡처에도 들어간다) */
+.verdict-luck {
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink-2);
+}
+.verdict-luck b {
+  color: var(--pine);
+}
+/* 판정이 나쁜 날: 가까운 곳 대안 (캡처에는 빠진다) */
+.verdict-alt {
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 14px;
+  background: var(--chip);
+  font-size: 13px;
+}
+.verdict-alt > b {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--ink-2);
+}
+.verdict-alt > small {
+  color: var(--muted);
+  font-weight: 600;
+}
+.verdict-alt-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.verdict-alt-row a {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--ink);
+  font-weight: 700;
+  text-decoration: none;
+}
+.verdict-alt-row small {
+  color: var(--muted);
+  font-weight: 600;
+}
+.verdict.capturing .verdict-alt {
+  display: none;
+}
+
+/* 내 장소 단추 (히어로 안) */
+.fav-pill.on {
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffe27a;
+}
+
+/* 홈 맨 위 내 장소 띠 */
+.my-places {
+  margin-bottom: 10px;
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  background: var(--card);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+.my-places-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 14px;
+}
+.my-places-head span {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--muted);
+}
+.my-places-row {
+  display: flex;
+  gap: 6px;
+  margin: 10px -14px 0;
+  padding: 0 14px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.my-places-row::-webkit-scrollbar {
+  display: none;
+}
+.my-place {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 11px;
+  border-radius: 999px;
+  background: var(--chip);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}
+.my-place .dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--line);
+}
+.my-place .dot.go {
+  background: #12b886;
+}
+.my-place .dot.meh {
+  background: #f5a524;
+}
+.my-place .dot.stop {
+  background: #f0533a;
+}

@@ -8,7 +8,7 @@ import { weekdayKo } from "@/lib/time";
  * 점수 대신 비·돌풍·파고·기온 문턱으로 정한다. 왜 그렇게 나왔는지 근거 숫자(chips)를 늘 같이 보여준다.
  */
 export type VerdictLevel = "go" | "meh" | "stop";
-type Cause = "rain" | "wind" | "wave" | "cold" | "heat" | "none";
+export type Cause = "rain" | "wind" | "wave" | "cold" | "heat" | "none";
 type Kind = "camp" | "hike" | "fish" | "sea" | "ride" | "golf" | "ski" | "air" | "trip";
 
 export interface VerdictChip {
@@ -18,6 +18,8 @@ export interface VerdictChip {
 
 export interface Verdict {
   level: VerdictLevel;
+  /** 판정을 가른 원인 (좋은 날은 none) */
+  cause: Cause;
   emoji: string;
   title: string;
   sub: string;
@@ -195,7 +197,38 @@ export function dayVerdict(v: VerdictDay, leisure: LeisureId, group: GroupId): V
   ];
   if (sea && v.wave != null) chips.push({ text: `🌊 파고 ${v.wave.toFixed(1)}m`, bad: v.wave >= 1.2 });
   chips.push({ text: `🌡️ ${r(v.tMin)}° / ${r(v.tMax)}°`, bad: cause === "cold" || cause === "heat" || (level === "go" && (v.tMin ?? 99) < 0) });
-  return { level, emoji, title, sub: subText(level, cause, kind, v), chips };
+  return { level, cause, emoji, title, sub: subText(level, cause, kind, v), chips };
+}
+
+/**
+ * 판정 캡처에 붙는 B급 칭호 ("이 날 잡은 사람: 🧚 날씨 요정").
+ * 단톡방에서 날짜 정한 사람을 놀리거나 칭찬하는 용도. 같은 장소·날짜면 늘 같은 칭호가 나오게 seed로 고른다.
+ */
+const LUCK: Record<VerdictLevel, Partial<Record<Cause, string[]>> & { _: string[] }> = {
+  go: { _: ["🧚 날씨 요정", "☀️ 태양신의 총애를 받는 자", "🍀 날짜 고르기 금손", "😎 하늘이 돕는 사람"] },
+  meh: {
+    _: ["🤏 아슬아슬 줄타기 장인"],
+    rain: ["🌂 우산 챙기는 현자", "🌦 반반 확률 도박사"],
+    wind: ["🌬 바람의 아이", "🪁 연 날리기 전문가"],
+    wave: ["🌊 파도 조련사"],
+    cold: ["🧤 핫팩 수집가", "🧣 내복 홍보대사"],
+    heat: ["🥵 사우나 애호가"],
+  },
+  stop: {
+    _: ["🙈 날짜 다시 고르기 장인"],
+    rain: ["☔ 비구름 소환사", "🐸 개구리 왕자(공주)"],
+    wind: ["🌪 태풍의 절친", "🍃 날려 보내기 전문가"],
+    wave: ["🐉 용왕님 초대손님"],
+    cold: ["🥶 동장군 베프", "🧊 냉동실 탐험가"],
+    heat: ["🔥 불지옥 투어 가이드"],
+  },
+};
+
+export function luckTitle(v: Pick<Verdict, "level" | "cause">, seed: string): string {
+  const list = LUCK[v.level][v.cause] ?? LUCK[v.level]._;
+  let h = 0;
+  for (const ch of seed) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  return list[h % list.length];
 }
 
 /** 공유 그림에 넣을 때 그림 글자(이모지)를 뗀다 (미리보기 그림 폰트에 이모지가 없다) */

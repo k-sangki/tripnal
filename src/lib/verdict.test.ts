@@ -63,3 +63,18 @@ describe("미리보기 그림의 판정 날짜", () => {
     expect(signalWindow(dates, "2026-11-25")).toEqual(dates.slice(9));
   });
 });
+
+describe("luckTitle", () => {
+  it("좋은 날은 칭찬, 비 오는 날은 비구름 쪽 칭호", async () => {
+    const { luckTitle } = await import("@/lib/verdict");
+    const go = luckTitle(dayVerdict(day({}), "camping", "camp"), "a");
+    expect(["🧚 날씨 요정", "☀️ 태양신의 총애를 받는 자", "🍀 날짜 고르기 금손", "😎 하늘이 돕는 사람"]).toContain(go);
+    const rain = luckTitle(dayVerdict(day({ rain: 14, prob: 90 }), "hiking", "active"), "b");
+    expect(["☔ 비구름 소환사", "🐸 개구리 왕자(공주)"]).toContain(rain);
+  });
+  it("같은 seed면 늘 같은 칭호", async () => {
+    const { luckTitle } = await import("@/lib/verdict");
+    const v = dayVerdict(day({ gust: 20 }), "camping", "camp");
+    expect(luckTitle(v, "서울|2026-11-08")).toBe(luckTitle(v, "서울|2026-11-08"));
+  });
+});

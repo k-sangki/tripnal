@@ -12,7 +12,6 @@ import { AD_SLOTS, AdSlot } from "./AdSlot";
 import { CaptureFrame } from "./CaptureFrame";
 import { AlertButton } from "./AlertButton";
 import { CaptureSheet } from "./CaptureSheet";
-import { InstallButton } from "./InstallButton";
 import { ForecastTable } from "./ForecastTable";
 import { IntervalPicker } from "./IntervalPicker";
 import { KakaoMap } from "./KakaoMap";
@@ -20,6 +19,7 @@ import { LeisureTabs } from "./LeisureTabs";
 import { useLocale, useT } from "./LocaleContext";
 import { PeriodPicker } from "./PeriodPicker";
 import { SearchBar } from "./SearchBar";
+import { OverseasBanner } from "./SiteHeader";
 import { WarningTicker } from "./WarningTicker";
 import { VerdictCard, type NearbyPlace } from "./VerdictCard";
 import { FavButton } from "./FavButton";
@@ -334,8 +334,20 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
               initialDate={sharedDate}
               nearby={nearby}
               onPick={setVerdictDate}
-              onAlert={() => document.querySelector<HTMLButtonElement>(".alert-pill")?.click()}
+              onAlert={() => {
+                // 장소 이름 아래의 "날씨 바뀌면 알림" 버튼을 대신 누르고, 결과 글이 보이게 그쪽으로 올린다
+                const btn = document.querySelector<HTMLButtonElement>(".alert-pill:not(.fav-pill):not(.on)");
+                btn?.scrollIntoView({ block: "center", behavior: "smooth" });
+                btn?.click();
+              }}
             />
+          </div>
+        )}
+
+        {/* 해외 띠: 모바일에서는 판정 카드 아래 (PC는 머리글 아래 그대로) */}
+        {!simple && (
+          <div className="o-banner">
+            <OverseasBanner />
           </div>
         )}
 
@@ -403,10 +415,17 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
 
       {forecast && !capturing && (
         // 오른손으로 누르기 쉽게 캡처를 오른쪽에 둔다
-        <div className="fab-bar">
-          {!foreign && <InstallButton />}
-          <button className="fab" onClick={() => setCapturing(true)}>
-            <i className="logo-dot" aria-hidden /> {t("캡처해서 공유")}
+        <div className="fab-bar fab-corner">
+          <button className="fab" onClick={() => setCapturing(true)} aria-label={t("캡처해서 공유")}>
+            <i className="logo-dot" aria-hidden />
+            {foreign ? (
+              t("캡처해서 공유")
+            ) : (
+              <>
+                <span className="fab-short">캡처</span>
+                <span className="fab-long">캡처해서 공유</span>
+              </>
+            )}
           </button>
         </div>
       )}

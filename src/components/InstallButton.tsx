@@ -39,7 +39,7 @@ function remember() {
 }
 
 /**
- * 홈 화면에 추가 버튼.
+ * 홈 화면에 추가 버튼 (바닥글).
  * 안드로이드·PC 크롬은 브라우저 설치 창을 띄우고, 이미 설치했으면 브라우저가 알려주지 않아 버튼이 숨는다.
  * 아이폰은 설치 창을 띄울 수 없어 공유 메뉴 안내를 보여주고, "이미 추가했어요"를 누르면 다시 보이지 않는다.
  * 홈 화면에서 연 경우에는 항상 숨긴다.
@@ -90,10 +90,10 @@ export function InstallButton() {
 
   return (
     <>
-      <button className="fab fab-sub" onClick={click}>
+      <button className="foot-install" onClick={click}>
         <span aria-hidden>＋</span> 홈 화면에 추가
       </button>
-      {/* 버튼 줄이 transform을 써서, 안내 창은 body에 그려야 화면 전체를 덮는다 */}
+      {/* 안내 창은 body에 그려야 화면 전체를 덮는다 */}
       {guide &&
         createPortal(
           <div

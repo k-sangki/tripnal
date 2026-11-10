@@ -1,16 +1,37 @@
 import Link from "next/link";
 import { Logo } from "./Logo";
+import { InstallButton } from "./InstallButton";
 import { SLOGAN, SLOGAN_C } from "@/lib/brand";
 
 const OV_FONT = `https://fonts.googleapis.com/css2?family=Black+Han+Sans&text=${encodeURIComponent("해외날씨·여행지")}&display=swap`;
 /** 띠 아랫줄: 날씨(맑은 곳)와 돈(싼 곳) 두 가지 이득을 짧게, 수고는 적게(3초) */
 const OV_SUB = "지금 맑은 곳·싼 곳, 3초 만에 골라보기";
 
-/** overseasBanner: 맨 위 "해외날씨 보러가기" 띠 카드 (해외 날씨 페이지에서는 끈다) */
+/** "해외날씨 보러가기" 띠 카드. 예보 화면은 모바일에서 판정 카드 아래에 따로 그린다 (WeatherApp) */
+export function OverseasBanner({ className }: { className?: string }) {
+  return (
+    <Link href="/overseas" className={`ov-banner main${className ? ` ${className}` : ""}`}>
+      {/* 제목 글자만 담은 제목용 글꼴 (구글 폰트 text= 부분 로드라 몇 KB) */}
+      <link rel="stylesheet" href={OV_FONT} precedence="default" />
+      <span className="ov-banner-text">
+        <b className="ov-banner-title">
+          해외날씨·여행지
+          <svg className="ov-plane" viewBox="0 0 24 24" aria-hidden>
+            <path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z" />
+          </svg>
+        </b>
+        <small>{OV_SUB}</small>
+      </span>
+      <span>보러가기 →</span>
+    </Link>
+  );
+}
+
+/** overseasBanner: 맨 위 "해외날씨 보러가기" 띠 카드 (해외 날씨 페이지에서는 끈다). "pc"면 PC에서만 (모바일은 화면 안에서 따로 그릴 때) */
 export function SiteHeader({
   overseasBanner = true,
 }: {
-  overseasBanner?: boolean;
+  overseasBanner?: boolean | "pc";
 }) {
   return (
     <>
@@ -25,22 +46,7 @@ export function SiteHeader({
           </Link>
         </nav>
       </header>
-      {overseasBanner && (
-        <Link href="/overseas" className="ov-banner main">
-          {/* 제목 글자만 담은 제목용 글꼴 (구글 폰트 text= 부분 로드라 몇 KB) */}
-          <link rel="stylesheet" href={OV_FONT} precedence="default" />
-          <span className="ov-banner-text">
-            <b className="ov-banner-title">
-              해외날씨·여행지
-              <svg className="ov-plane" viewBox="0 0 24 24" aria-hidden>
-                <path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z" />
-              </svg>
-            </b>
-            <small>{OV_SUB}</small>
-          </span>
-          <span>보러가기 →</span>
-        </Link>
-      )}
+      {overseasBanner && <OverseasBanner className={overseasBanner === "pc" ? "pc-only" : undefined} />}
     </>
   );
 }
@@ -79,6 +85,7 @@ export function SiteFooter({ langPath }: { langPath?: string } = {}) {
         <Link href="/privacy">개인정보처리방침</Link>
         <Link href="/contact">문의</Link>
       </nav>
+      <InstallButton />
       <p className="foot-slogan">{SLOGAN}</p>
       <p>© 트립날씨 tripnalc.com</p>
     </footer>

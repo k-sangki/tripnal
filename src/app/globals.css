@@ -141,19 +141,30 @@ a {
   order: 3;
   min-width: 0;
 }
-.o-map {
+.o-banner {
   order: 4;
 }
-.o-controls {
+.o-banner .ov-banner {
+  margin-bottom: 0;
+}
+.o-map {
   order: 5;
+}
+.o-controls {
+  order: 6;
   padding: 16px !important;
 }
 .o-fc {
-  order: 6;
+  order: 7;
   min-width: 0;
 }
 .o-ad {
-  order: 7;
+  order: 8;
+}
+@media (min-width: 1024px) {
+  .o-banner {
+    display: none;
+  }
 }
 @media (min-width: 1024px) {
   /* 긴 예보 표를 내려 봐도 왼쪽 광고가 화면에 남도록 */
@@ -3511,4 +3522,48 @@ button.cc-col.on {
   font-size: 13px;
   font-weight: 700;
   color: var(--pine);
+}
+
+/* 예보 화면의 캡처 버튼: 모바일에서는 오른쪽 아래 작게 (표와 버튼을 덜 가리게) */
+.fab-long {
+  display: none;
+}
+@media (max-width: 1023px) {
+  .fab-corner {
+    left: auto;
+    right: 12px;
+    transform: none;
+  }
+  .fab-corner .fab {
+    height: 46px;
+    padding: 0 16px;
+    font-size: 14px;
+  }
+}
+@media (min-width: 1024px) {
+  .fab-short {
+    display: none;
+  }
+  .fab-long {
+    display: inline;
+  }
+}
+/* 바닥글의 홈 화면에 추가 */
+.foot-install {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 4px 0 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--pine);
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: var(--shadow);
+}
+@media (min-width: 1024px) {
+  .ov-banner.pc-only {
+    display: flex;
+  }
 }

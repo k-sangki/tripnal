@@ -133,38 +133,23 @@ a {
 .o-search {
   order: 1;
 }
-.o-hero {
+/* 날씨 검색이 중심: 검색 → 지도 → 장소 → 기간 → 판정 → 예보표 (SK 2026-11-10) */
+.o-map {
   order: 2;
 }
-/* 판정이 첫 화면에 보이도록 지도·기간 설정보다 위에 둔다 */
-.o-verdict {
+.o-hero {
   order: 3;
-  min-width: 0;
-}
-.o-banner {
-  order: 4;
-}
-.o-banner .ov-banner {
-  margin-bottom: 0;
-}
-.o-map {
-  order: 5;
 }
 .o-controls {
-  order: 6;
+  order: 4;
   padding: 16px !important;
 }
 .o-fc {
-  order: 7;
+  order: 5;
   min-width: 0;
 }
 .o-ad {
-  order: 8;
-}
-@media (min-width: 1024px) {
-  .o-banner {
-    display: none;
-  }
+  order: 6;
 }
 @media (min-width: 1024px) {
   /* 긴 예보 표를 내려 봐도 왼쪽 광고가 화면에 남도록 */
@@ -368,6 +353,9 @@ a {
   font-size: 13px;
   color: var(--muted);
 }
+.tagline a {
+  color: inherit;
+}
 
 /* ---------- 카드 ---------- */
 .card {
@@ -478,6 +466,17 @@ a {
   font-size: 15px;
   font-weight: 600;
   white-space: nowrap;
+}
+/* 기간 버튼: 오늘·주말·16일·직접 선택을 한 줄로 */
+.period-chips {
+  flex-wrap: nowrap;
+  gap: 6px;
+}
+.period-chips .chip {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 0 6px;
+  font-size: 14px;
 }
 .chip[aria-pressed="true"] {
   background: var(--pine);
@@ -3190,18 +3189,19 @@ button.cc-col.on {
 
 /* "가도 될까?" 판정 카드 (VerdictCard) */
 .verdict {
-  padding: 18px 18px 14px;
+  padding: 10px 14px 10px;
 }
 .verdict-head h2 {
-  font-size: 16px;
+  margin: 0;
+  font-size: 15px;
   font-weight: 800;
   letter-spacing: -0.02em;
 }
 .verdict-days {
   display: flex;
   gap: 6px;
-  margin: 12px -18px 2px;
-  padding: 0 18px;
+  margin: 8px -14px 0;
+  padding: 0 14px;
   overflow-x: auto;
   scrollbar-width: none;
 }
@@ -3210,19 +3210,19 @@ button.cc-col.on {
 }
 .verdict-day {
   flex: none;
-  min-width: 50px;
-  padding: 7px 10px;
+  min-width: 44px;
+  padding: 4px 8px;
   border-radius: var(--radius-sm);
   background: var(--chip);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
   color: var(--ink-2);
-  line-height: 1.3;
+  line-height: 1.2;
 }
 .verdict-day i {
   display: block;
   font-style: normal;
-  font-size: 14px;
+  font-size: 12px;
 }
 .verdict-day.sat {
   color: var(--rain);
@@ -3237,27 +3237,27 @@ button.cc-col.on {
 .verdict-stamp {
   display: flex;
   align-items: center;
-  gap: 12px;
-  border-radius: 16px;
-  margin-top: 12px;
-  padding: 14px 16px;
+  gap: 10px;
+  border-radius: 14px;
+  margin-top: 8px;
+  padding: 8px 12px;
   word-break: keep-all;
 }
 .verdict-emoji {
-  font-size: 38px;
+  font-size: 26px;
   line-height: 1;
 }
 .verdict-stamp b {
   display: block;
-  font-size: 20px;
+  font-size: 17px;
   font-weight: 900;
   letter-spacing: -0.04em;
-  line-height: 1.25;
+  line-height: 1.2;
 }
 .verdict-stamp small {
   display: block;
-  margin-top: 4px;
-  font-size: 13px;
+  margin-top: 1px;
+  font-size: 12px;
   font-weight: 700;
   opacity: 0.85;
 }
@@ -3273,18 +3273,27 @@ button.cc-col.on {
   background: var(--coral-soft);
   color: #b8361a;
 }
+/* 근거 칩은 한 줄 (넘치면 옆으로 밀어서) */
 .verdict-chips {
   display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 10px;
+  flex-wrap: nowrap;
+  gap: 4px;
+  margin: 8px -14px 0;
+  padding: 0 14px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.verdict-chips::-webkit-scrollbar {
+  display: none;
 }
 .verdict-chips span {
-  padding: 5px 9px;
+  flex: none;
+  white-space: nowrap;
+  padding: 3px 7px;
   border-radius: 999px;
   background: var(--chip);
   color: var(--ink-2);
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 700;
 }
 .verdict-chips span.bad {
@@ -3292,25 +3301,24 @@ button.cc-col.on {
   color: #b8361a;
 }
 .verdict-share {
-  width: 100%;
-  height: 46px;
-  margin-top: 12px;
-  border-radius: 14px;
+  flex: none;
+  height: 26px;
+  margin-left: auto;
+  padding: 0 10px;
+  border-radius: 999px;
   background: var(--pine);
   color: #fff;
-  font-size: 15px;
+  font-size: 12px;
   font-weight: 800;
 }
 .verdict-note {
-  margin-top: 8px;
-  text-align: center;
-  font-size: 12px;
+  font-weight: 500;
   color: var(--muted);
 }
 .verdict-head {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: center;
   gap: 8px;
 }
 /* 캡처 그림에만 장소·날짜와 주소를 넣고, 날짜 칩·버튼·안내는 뺀다 */
@@ -3351,8 +3359,8 @@ button.cc-col.on {
 
 /* 판정 B급 칭호 (캡처에도 들어간다) */
 .verdict-luck {
-  margin-top: 10px;
-  font-size: 13px;
+  margin-top: 6px;
+  font-size: 12px;
   font-weight: 700;
   color: var(--ink-2);
 }
@@ -3467,7 +3475,7 @@ button.cc-col.on {
   display: block;
   width: 8px;
   height: 8px;
-  margin: 4px auto 0;
+  margin: 3px auto 0;
   border-radius: 50%;
 }
 .verdict-dot.go {
@@ -3482,16 +3490,21 @@ button.cc-col.on {
 .verdict-day.on .verdict-dot {
   box-shadow: 0 0 0 2px #fff;
 }
+/* 예보표 카드 아래 간격 */
+.o-fc .verdict {
+  margin-top: 12px;
+}
 .verdict.capturing .verdict-pd-alert {
   display: none;
 }
 .verdict-pd {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
-  gap: 6px 8px;
-  margin-top: 12px;
-  font-size: 13px;
+  gap: 6px;
+  white-space: nowrap;
+  margin-top: 8px;
+  font-size: 12px;
   font-weight: 700;
   color: var(--ink-2);
 }
@@ -3512,16 +3525,21 @@ button.cc-col.on {
   color: #c92a2a;
 }
 .verdict-pd-t {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
   font-weight: 600;
 }
 .verdict-pd-alert {
+  flex: none;
   margin-left: auto;
-  padding: 6px 12px;
+  padding: 4px 11px;
   border-radius: 999px;
-  background: var(--chip);
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--pine);
+  background: #1c6dd0;
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(28, 109, 208, 0.3);
+  font-size: 12px;
+  font-weight: 800;
 }
 
 /* 예보 화면의 캡처 버튼: 모바일에서는 오른쪽 아래 작게 (표와 버튼을 덜 가리게) */
@@ -3561,9 +3579,4 @@ button.cc-col.on {
   font-size: 13px;
   font-weight: 700;
   box-shadow: var(--shadow);
-}
-@media (min-width: 1024px) {
-  .ov-banner.pc-only {
-    display: flex;
-  }
 }

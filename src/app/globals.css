@@ -144,16 +144,12 @@ a {
   order: 4;
   padding: 16px !important;
 }
-.o-verdict {
+.o-fc {
   order: 5;
   min-width: 0;
 }
-.o-fc {
-  order: 6;
-  min-width: 0;
-}
 .o-ad {
-  order: 7;
+  order: 6;
 }
 @media (min-width: 1024px) {
   /* 긴 예보 표를 내려 봐도 왼쪽 광고가 화면에 남도록 */
@@ -467,6 +463,17 @@ a {
   font-size: 15px;
   font-weight: 600;
   white-space: nowrap;
+}
+/* 기간 버튼: 오늘·주말·16일·직접 선택을 한 줄로 */
+.period-chips {
+  flex-wrap: nowrap;
+  gap: 6px;
+}
+.period-chips .chip {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 0 6px;
+  font-size: 14px;
 }
 .chip[aria-pressed="true"] {
   background: var(--pine);
@@ -3263,14 +3270,23 @@ button.cc-col.on {
   background: var(--coral-soft);
   color: #b8361a;
 }
+/* 근거 칩은 한 줄 (넘치면 옆으로 밀어서) */
 .verdict-chips {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 4px;
-  margin-top: 8px;
+  margin: 8px -14px 0;
+  padding: 0 14px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.verdict-chips::-webkit-scrollbar {
+  display: none;
 }
 .verdict-chips span {
-  padding: 3px 8px;
+  flex: none;
+  white-space: nowrap;
+  padding: 3px 7px;
   border-radius: 999px;
   background: var(--chip);
   color: var(--ink-2);
@@ -3471,14 +3487,19 @@ button.cc-col.on {
 .verdict-day.on .verdict-dot {
   box-shadow: 0 0 0 2px #fff;
 }
+/* 예보표 카드 아래 간격 */
+.o-fc .verdict {
+  margin-top: 12px;
+}
 .verdict.capturing .verdict-pd-alert {
   display: none;
 }
 .verdict-pd {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
-  gap: 4px 8px;
+  gap: 6px;
+  white-space: nowrap;
   margin-top: 8px;
   font-size: 12px;
   font-weight: 700;
@@ -3501,16 +3522,21 @@ button.cc-col.on {
   color: #c92a2a;
 }
 .verdict-pd-t {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
   font-weight: 600;
 }
 .verdict-pd-alert {
+  flex: none;
   margin-left: auto;
-  padding: 3px 10px;
+  padding: 4px 11px;
   border-radius: 999px;
-  background: var(--chip);
+  background: #ffd43b;
+  color: #5c3c00;
+  box-shadow: 0 2px 6px rgba(250, 176, 5, 0.35);
   font-size: 12px;
-  font-weight: 700;
-  color: var(--pine);
+  font-weight: 800;
 }
 
 /* 예보 화면의 캡처 버튼: 모바일에서는 오른쪽 아래 작게 (표와 버튼을 덜 가리게) */

@@ -322,27 +322,6 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
           </section>
         </div>
 
-        {/* 판정 카드: 모바일에서는 기간 설정 바로 아래, 예보표 위 */}
-        {!simple && place && forecast && (
-          <div className="o-verdict" style={{ opacity: loading ? 0.5 : 1 }}>
-            <VerdictCard
-              days={days}
-              leisure={leisure}
-              placeName={place.name}
-              today={today}
-              initialDate={sharedDate}
-              nearby={nearby}
-              onPick={setVerdictDate}
-              onAlert={() => {
-                // 장소 이름 아래의 "날씨 바뀌면 알림" 버튼을 대신 누르고, 결과 글이 보이게 그쪽으로 올린다
-                const btn = document.querySelector<HTMLButtonElement>(".alert-pill:not(.fav-pill):not(.on)");
-                btn?.scrollIntoView({ block: "center", behavior: "smooth" });
-                btn?.click();
-              }}
-            />
-          </div>
-        )}
-
 
         <div className="o-fc">
           {!simple && <WarningTicker address={place?.address} />}
@@ -352,6 +331,24 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
             forecast && (
               <div style={{ opacity: loading ? 0.5 : 1 }}>
                 <ForecastTable days={days} leisure={leisure} interval={interval} today={today} nowHour={nowHour} />
+                {/* 판정 카드: 예보표 아래 (날씨 검색이 먼저, SK 2026-11-10) */}
+                {!simple && place && (
+                  <VerdictCard
+                    days={days}
+                    leisure={leisure}
+                    placeName={place.name}
+                    today={today}
+                    initialDate={sharedDate}
+                    nearby={nearby}
+                    onPick={setVerdictDate}
+                    onAlert={() => {
+                      // 장소 이름 아래의 "날씨 바뀌면 알림" 버튼을 대신 누르고, 결과 글이 보이게 그쪽으로 올린다
+                      const btn = document.querySelector<HTMLButtonElement>(".alert-pill:not(.fav-pill):not(.on)");
+                      btn?.scrollIntoView({ block: "center", behavior: "smooth" });
+                      btn?.click();
+                    }}
+                  />
+                )}
                 {forecast.source.includes("·") &&
                   (foreign ? (
                     <section className="card model-note">

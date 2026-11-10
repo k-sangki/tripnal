@@ -31,7 +31,7 @@ export function PeriodPicker({ value, today, onChange }: { value: Period; today:
 
   return (
     <div>
-      <div className="chips" role="group" aria-label={t("기간 선택")}>
+      <div className="chips period-chips" role="group" aria-label={t("기간 선택")}>
         {PRESETS.map((p) => (
           <button
             key={p.id}

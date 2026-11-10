@@ -8,12 +8,11 @@ export interface Period {
   to: string;
 }
 
-export type PresetId = "today" | "3d" | "weekend" | "16d";
+export type PresetId = "today" | "weekend" | "16d";
 
 export const PRESETS: { id: PresetId; label: string }[] = [
   { id: "today", label: "오늘" },
-  { id: "3d", label: "3일" },
-  { id: "weekend", label: "이번 주말" },
+  { id: "weekend", label: "주말" },
   { id: "16d", label: "16일" },
 ];
 
@@ -25,8 +24,6 @@ export function presetPeriod(id: PresetId, today: string): Period {
   switch (id) {
     case "today":
       return { from: today, to: today };
-    case "3d":
-      return { from: today, to: addDays(today, 2) };
     case "16d":
       return { from: today, to: lastDay(today) };
     case "weekend": {

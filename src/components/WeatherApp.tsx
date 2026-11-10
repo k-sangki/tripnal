@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { getLeisure, type LeisureId } from "@/lib/leisure";
 import { parseInterval, intervalLong, type Interval } from "@/lib/interval";
 import { clampPeriod, inPeriod, periodLabel, type Period } from "@/lib/period";
+import { FORECAST_VERSION } from "@/lib/forecastClient";
 import { kstDate, kstHourKey } from "@/lib/time";
 import type { Forecast } from "@/lib/weather/types";
 import { AD_SLOTS, AdSlot } from "./AdSlot";
@@ -20,7 +21,9 @@ import { useLocale, useT } from "./LocaleContext";
 import { PeriodPicker } from "./PeriodPicker";
 import { SearchBar } from "./SearchBar";
 import { WarningTicker } from "./WarningTicker";
-import { VerdictCard } from "./VerdictCard";
+import { VerdictCard, type NearbyPlace } from "./VerdictCard";
+import { FavButton } from "./FavButton";
+import { MyPlaces } from "./MyPlaces";
 import { WelcomePopup } from "./WelcomePopup";
 import { Flag, withFlags } from "./Flag";
 
@@ -34,7 +37,7 @@ export interface AppPlace {
   slug?: string;
 }
 
-const FORECAST_VERSION = "6";
+
 
 interface Props {
   initialPlace: AppPlace | null;
@@ -47,6 +50,8 @@ interface Props {
   headingSuffix?: string;
   /** 해외 여행지 페이지: 검색·지도·특보·알림 없이, 날짜·시각은 이 현지 시간대(UTC와의 차이, 분)로 */
   overseasOffset?: number;
+  /** 장소 페이지: 같은 레저의 가까운 곳 (판정이 나쁜 날 대안으로 보여 준다) */
+  nearby?: NearbyPlace[];
   /** false면 광고 자리를 두지 않는다 (검색에서 뺀 틀 페이지) */
   ads?: boolean;
 }
@@ -62,7 +67,7 @@ function store(): Storage | null {
   }
 }
 
-export function WeatherApp({ initialPlace, initialForecast, initialLeisure, initialFrom, initialTo, initialInterval, headingSuffix, overseasOffset, ads = true }: Props) {
+export function WeatherApp({ initialPlace, initialForecast, initialLeisure, initialFrom, initialTo, initialInterval, headingSuffix, overseasOffset, nearby, ads = true }: Props) {
   const router = useRouter();
   const { locale, units, setUnits } = useLocale();
   const t = useT();
@@ -264,6 +269,15 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
 
       <main className="a-main">
         <div className="o-hero">
+          {!simple && !initialPlace?.slug && (
+            <MyPlaces
+              today={today}
+              onPick={(p) => {
+                setLeisureId(getLeisure(p.act).id);
+                choose({ name: p.name, lat: p.lat, lon: p.lon, address: p.address, elevation: p.elevation });
+              }}
+            />
+          )}
           {/* 서버 오류 글은 한국어라 외국어 화면에서는 같은 뜻의 번역으로 */}
           {error && <div className="error">{foreign ? t("날씨 정보를 가져오지 못했습니다.") : error}</div>}
           <section className="hero">
@@ -289,6 +303,11 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
                   ⛰️ {t("해발")} {Math.round(forecast.elevation).toLocaleString()}m
                 </span>
               )}
+              {place && !simple && (
+                <FavButton
+                  place={{ name: place.name, lat: place.lat, lon: place.lon, elevation: place.elevation, address: place.address, slug: place.slug, act: leisureId }}
+                />
+              )}
               {place && forecast && !simple && <AlertButton
                   key={`${place.lat},${place.lon}`}
                   place={place}
@@ -309,7 +328,7 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
           ) : (
             forecast && (
               <div style={{ opacity: loading ? 0.5 : 1 }}>
-                {!simple && place && <VerdictCard days={days} leisure={leisure} placeName={place.name} today={today} initialDate={sharedDate} />}
+                {!simple && place && <VerdictCard days={days} leisure={leisure} placeName={place.name} today={today} initialDate={sharedDate} nearby={nearby} />}
                 <ForecastTable days={days} leisure={leisure} interval={interval} today={today} nowHour={nowHour} />
                 {forecast.source.includes("·") &&
                   (foreign ? (

@@ -32,6 +32,8 @@ interface Props {
   today: string;
   /** 공유 링크로 들어왔을 때 고를 날짜 (?vd=) */
   initialDate: string | null;
+  /** 날짜를 직접 골랐을 때 (주소에 담아 공유 링크의 미리보기가 그날 판정이 되게) */
+  onPick?: (date: string) => void;
 }
 
 const md = (d: string) => `${Number(d.slice(5, 7))}/${Number(d.slice(8, 10))}`;
@@ -44,7 +46,7 @@ function pickDefault(days: DayForecast[], today: string, initial: string | null)
 }
 
 /** "가도 될까?" 판정 카드 (예보표 위). 근거 숫자를 칩으로 같이 보여준다 */
-export function VerdictCard({ days, leisure, placeName, today, initialDate, nearby }: Props) {
+export function VerdictCard({ days, leisure, placeName, today, initialDate, nearby, onPick }: Props) {
   const [date, setDate] = useState(() => pickDefault(days, today, initialDate));
   const [toast, setToast] = useState<string | null>(null);
   /** 가까운 곳 예보 (날짜별 하루 요약). 판정이 나쁜 날을 처음 볼 때 한 번만 받는다 */
@@ -124,7 +126,10 @@ export function VerdictCard({ days, leisure, placeName, today, initialDate, near
               role="tab"
               aria-selected={d.date === day?.date}
               className={`verdict-day${d.date === day?.date ? " on" : ""}${w === 6 ? " sat" : w === 0 ? " sun" : ""}`}
-              onClick={() => setDate(d.date)}
+              onClick={() => {
+                setDate(d.date);
+                onPick?.(d.date);
+              }}
             >
               {md(d.date)}
               <i>{weekdayKo(d.date)}</i>

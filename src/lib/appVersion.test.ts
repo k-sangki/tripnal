@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { alreadyTried, internalNavHref, isNewer, markTried, saveScroll, takeScroll, updateText } from "./appVersion";
+import { alreadyTried, internalNavHref, isNewer, markTried, saveScroll, takeScroll } from "./appVersion";
 
 function mem(): Storage {
   const m = new Map<string, string>();
@@ -58,8 +58,4 @@ describe("appVersion", () => {
     expect(alreadyTried(s, "v3")).toBe(false);
   });
 
-  it("언어별 단추 문구", () => {
-    expect(updateText("ko")).toBe("새 버전이 나왔어요 · 눌러서 적용");
-    expect(updateText("zh-Hant")).toBe("有新版本 · 點一下更新");
-  });
 });

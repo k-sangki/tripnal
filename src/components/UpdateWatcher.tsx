@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import {
   CHECK_EVERY_MS,
   RESUME_MIN_GAP_MS,
@@ -13,7 +13,6 @@ import {
   markTried,
   saveScroll,
   takeScroll,
-  updateText,
 } from "@/lib/appVersion";
 
 /** 다시 불러온 뒤 내용(예보 표 등)이 늦게 그려져도 따라가며 스크롤을 맞추는 시간 */
@@ -63,10 +62,9 @@ function restoreScroll() {
 
 /**
  * 새 버전 감지·적용 (규칙은 src/lib/appVersion.ts).
- * 앱으로 돌아올 때는 그 자리에서 다시 불러오고, 보는 동안 알게 되면 단추를 띄운 뒤 다음 페이지 이동 때 적용한다.
+ * 앱으로 돌아올 때는 그 자리에서 다시 불러오고, 보는 동안 알게 되면 묻지 않고 다음 페이지 이동 때 적용한다.
  */
-export function UpdateWatcher({ lang }: { lang: string }) {
-  const [ready, setReady] = useState<string | null>(null);
+export function UpdateWatcher() {
   const readyRef = useRef<string | null>(null);
   const pathname = usePathname();
   const firstPath = useRef(pathname);
@@ -88,7 +86,6 @@ export function UpdateWatcher({ lang }: { lang: string }) {
       checking = false;
       if (!isNewer(v) || !v) return;
       readyRef.current = v;
-      setReady(v);
       if (resume) resumeApply(v);
     };
 
@@ -104,7 +101,7 @@ export function UpdateWatcher({ lang }: { lang: string }) {
     document.addEventListener("visibilitychange", onResume);
     window.addEventListener("pageshow", onPageShow);
 
-    // 보고 있는 동안 10분마다 (가려진 탭에서는 확인하지 않는다)
+    // 보고 있는 동안 하루에 한 번 (가려진 탭에서는 확인하지 않는다)
     const timer = window.setInterval(() => {
       if (document.visibilityState === "visible" && !readyRef.current && Date.now() - lastCheck >= CHECK_EVERY_MS) {
         void check(false);
@@ -143,10 +140,5 @@ export function UpdateWatcher({ lang }: { lang: string }) {
     }
   }, [pathname]);
 
-  if (!ready) return null;
-  return (
-    <button type="button" className="update-btn" onClick={() => apply(ready)}>
-      {updateText(lang)}
-    </button>
-  );
+  return null;
 }

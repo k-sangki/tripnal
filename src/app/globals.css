@@ -3591,3 +3591,32 @@ button.cc-col.on {
   font-weight: 700;
   box-shadow: var(--shadow);
 }
+
+/* ---------- 새 버전 단추 (src/components/UpdateWatcher.tsx) ---------- */
+/* 캡처 단추 줄(.fab-bar) 위에 뜨고, 시트·팝업(.sheet-bg)보다는 아래에 있다 */
+.update-btn {
+  position: fixed;
+  z-index: 35;
+  left: 50%;
+  bottom: calc(76px + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  max-width: calc(100vw - 32px);
+  padding: 12px 18px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--pine);
+  color: #fff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.22);
+  cursor: pointer;
+  animation: update-in 0.25s ease-out;
+}
+@keyframes update-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 12px);
+  }
+}

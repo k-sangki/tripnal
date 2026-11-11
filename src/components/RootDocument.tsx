@@ -1,6 +1,7 @@
 import type { Viewport } from "next";
 import type { ReactNode } from "react";
 import { PullToRefresh } from "@/components/PullToRefresh";
+import { UpdateWatcher } from "@/components/UpdateWatcher";
 
 // 시크릿에 줄바꿈이 섞여 들어와도 ads.txt·스크립트 주소가 깨지지 않게 다듬는다
 export const ADSENSE = process.env.NEXT_PUBLIC_ADSENSE_CLIENT?.trim();
@@ -56,6 +57,7 @@ export function RootDocument({ lang, children }: { lang: string; children: React
       <body>
         <PullToRefresh />
         {children}
+        <UpdateWatcher lang={lang} />
         {CF_BEACON && (
           <script dangerouslySetInnerHTML={{ __html: beacon(CF_BEACON) }} />
         )}

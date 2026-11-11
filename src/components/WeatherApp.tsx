@@ -12,7 +12,6 @@ import { AD_SLOTS, AdSlot } from "./AdSlot";
 import { CaptureFrame } from "./CaptureFrame";
 import { AlertButton } from "./AlertButton";
 import { CaptureSheet } from "./CaptureSheet";
-import { InstallButton } from "./InstallButton";
 import { ForecastTable } from "./ForecastTable";
 import { IntervalPicker } from "./IntervalPicker";
 import { KakaoMap } from "./KakaoMap";
@@ -77,6 +76,8 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
   const simple = overseas || foreign;
   // 판정 카드 공유 링크(?vd=날짜)로 들어오면 그 날을 고른다. 주소는 곧 다시 쓰이므로 처음에 읽어 둔다
   const [sharedDate] = useState(() => (typeof window === "undefined" ? null : new URLSearchParams(window.location.search).get("vd")));
+  // 판정 카드에서 고른 날 (공유받은 날 포함). 주소에 담아 링크 미리보기가 그날 판정으로 나오게 한다
+  const [verdictDate, setVerdictDate] = useState(sharedDate);
   const [today] = useState(() => kstDate(new Date(), overseasOffset));
   const [nowHour] = useState(() => Number(kstHourKey(new Date(), overseasOffset).slice(11, 13)));
   const [place, setPlace] = useState<AppPlace | null>(initialPlace);
@@ -212,9 +213,10 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
     q.set("int", interval);
     q.set("from", period.from);
     q.set("to", period.to);
+    if (verdictDate && /^\d{4}-\d{2}-\d{2}$/.test(verdictDate) && verdictDate >= today) q.set("vd", verdictDate);
     window.history.replaceState(window.history.state, "", `${window.location.pathname}?${q}`);
     if (!place.slug) store()?.setItem(STORE_KEY, JSON.stringify({ place, leisure: leisureId }));
-  }, [place, leisureId, interval, period]);
+  }, [place, leisureId, interval, period, verdictDate, today]);
 
   const days = useMemo(() => (forecast ? forecast.days.filter((d) => inPeriod(d.date, period)) : []), [forecast, period]);
 
@@ -321,6 +323,7 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
           </section>
         </div>
 
+
         <div className="o-fc">
           {!simple && <WarningTicker address={place?.address} />}
           {loading && !forecast ? (
@@ -328,8 +331,25 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
           ) : (
             forecast && (
               <div style={{ opacity: loading ? 0.5 : 1 }}>
-                {!simple && place && <VerdictCard days={days} leisure={leisure} placeName={place.name} today={today} initialDate={sharedDate} nearby={nearby} />}
                 <ForecastTable days={days} leisure={leisure} interval={interval} today={today} nowHour={nowHour} />
+                {/* 판정 카드: 예보표 아래 (날씨 검색이 먼저, SK 2026-11-10) */}
+                {!simple && place && (
+                  <VerdictCard
+                    days={days}
+                    leisure={leisure}
+                    placeName={place.name}
+                    today={today}
+                    initialDate={sharedDate}
+                    nearby={nearby}
+                    onPick={setVerdictDate}
+                    onAlert={() => {
+                      // 장소 이름 아래의 "날씨 바뀌면 알림" 버튼을 대신 누르고, 결과 글이 보이게 그쪽으로 올린다
+                      const btn = document.querySelector<HTMLButtonElement>(".alert-pill:not(.fav-pill):not(.on)");
+                      btn?.scrollIntoView({ block: "center", behavior: "smooth" });
+                      btn?.click();
+                    }}
+                  />
+                )}
                 {forecast.source.includes("·") &&
                   (foreign ? (
                     <section className="card model-note">
@@ -386,10 +406,17 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
 
       {forecast && !capturing && (
         // 오른손으로 누르기 쉽게 캡처를 오른쪽에 둔다
-        <div className="fab-bar">
-          {!foreign && <InstallButton />}
-          <button className="fab" onClick={() => setCapturing(true)}>
-            <i className="logo-dot" aria-hidden /> {t("캡처해서 공유")}
+        <div className="fab-bar fab-corner">
+          <button className="fab" onClick={() => setCapturing(true)} aria-label={t("캡처해서 공유")}>
+            <i className="logo-dot" aria-hidden />
+            {foreign ? (
+              t("캡처해서 공유")
+            ) : (
+              <>
+                <span className="fab-short">캡처</span>
+                <span className="fab-long">캡처해서 공유</span>
+              </>
+            )}
           </button>
         </div>
       )}

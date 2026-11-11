@@ -32,6 +32,10 @@ interface Props {
   today: string;
   /** 공유 링크로 들어왔을 때 고를 날짜 (?vd=) */
   initialDate: string | null;
+  /** 날짜를 직접 골랐을 때 (주소에 담아 공유 링크의 미리보기가 그날 판정이 되게) */
+  onPick?: (date: string) => void;
+  /** 예보가 아직 흔들리는 날: 날씨 변화 알림 켜기 */
+  onAlert?: () => void;
 }
 
 const md = (d: string) => `${Number(d.slice(5, 7))}/${Number(d.slice(8, 10))}`;
@@ -44,7 +48,7 @@ function pickDefault(days: DayForecast[], today: string, initial: string | null)
 }
 
 /** "가도 될까?" 판정 카드 (예보표 위). 근거 숫자를 칩으로 같이 보여준다 */
-export function VerdictCard({ days, leisure, placeName, today, initialDate, nearby }: Props) {
+export function VerdictCard({ days, leisure, placeName, today, initialDate, nearby, onPick, onAlert }: Props) {
   const [date, setDate] = useState(() => pickDefault(days, today, initialDate));
   const [toast, setToast] = useState<string | null>(null);
   /** 가까운 곳 예보 (날짜별 하루 요약). 판정이 나쁜 날을 처음 볼 때 한 번만 받는다 */
@@ -110,27 +114,13 @@ export function VerdictCard({ days, leisure, placeName, today, initialDate, near
         <h2>
           {leisure.emoji} {leisure.label} 가도 될까?
         </h2>
+        <button className="verdict-share" onClick={capture}>
+          📸 캡처
+        </button>
         {/* 캡처 그림에만 보인다 */}
         <span className="verdict-cap">
           {placeName} · {md(day.date)}({weekdayKo(day.date)})
         </span>
-      </div>
-      <div className="verdict-days" role="tablist" aria-label="날짜 고르기">
-        {days.map((d) => {
-          const w = weekday(d.date);
-          return (
-            <button
-              key={d.date}
-              role="tab"
-              aria-selected={d.date === day?.date}
-              className={`verdict-day${d.date === day?.date ? " on" : ""}${w === 6 ? " sat" : w === 0 ? " sun" : ""}`}
-              onClick={() => setDate(d.date)}
-            >
-              {md(d.date)}
-              <i>{weekdayKo(d.date)}</i>
-            </button>
-          );
-        })}
       </div>
       <div className={`verdict-stamp ${v.level}`}>
         <div className="verdict-emoji" aria-hidden>
@@ -141,6 +131,27 @@ export function VerdictCard({ days, leisure, placeName, today, initialDate, near
           <small>{v.sub}</small>
         </div>
       </div>
+      <div className="verdict-days" role="tablist" aria-label="날짜 고르기">
+        {days.map((d) => {
+          const w = weekday(d.date);
+          return (
+            <button
+              key={d.date}
+              role="tab"
+              aria-selected={d.date === day?.date}
+              className={`verdict-day${d.date === day?.date ? " on" : ""}${w === 6 ? " sat" : w === 0 ? " sun" : ""}`}
+              onClick={() => {
+                setDate(d.date);
+                onPick?.(d.date);
+              }}
+            >
+              {md(d.date)}
+              <i>{weekdayKo(d.date)}</i>
+              <em className={`verdict-dot ${dayVerdict(verdictDay(d), leisure.id, leisure.group).level}`} aria-hidden />
+            </button>
+          );
+        })}
+      </div>
       <div className="verdict-chips">
         {v.chips.map((c) => (
           <span key={c.text} className={c.bad ? "bad" : undefined}>
@@ -148,8 +159,22 @@ export function VerdictCard({ days, leisure, placeName, today, initialDate, near
           </span>
         ))}
       </div>
+      {day.predictability != null && (
+        <div className={`verdict-pd ${day.predictability >= 80 ? "hi" : day.predictability >= 60 ? "mid" : "lo"}`}>
+          <span>
+            예측 가능성 <b>{day.predictability}%</b>
+          </span>
+          <span className="verdict-pd-t">{day.predictability >= 80 ? "거의 굳은 예보예요" : day.predictability >= 60 ? "조금 바뀔 수 있어요" : "아직 뒤집힐 수 있어요"}</span>
+          {day.predictability < 80 && onAlert && (
+            <button className="verdict-pd-alert" onClick={onAlert}>
+              🔔 바뀌면 알림
+            </button>
+          )}
+        </div>
+      )}
       <p className="verdict-luck">
         이 날 잡은 사람: <b>{luck}</b>
+        <span className="verdict-note"> · 숫자도 꼭 같이 보세요</span>
       </p>
       {better && (
         <div className="verdict-alt">
@@ -175,10 +200,6 @@ export function VerdictCard({ days, leisure, placeName, today, initialDate, near
           )}
         </div>
       )}
-      <button className="verdict-share" onClick={capture}>
-        📸 판정 캡처하기
-      </button>
-      <p className="verdict-note">비·바람·기온으로 매긴 판정이에요. 숫자를 꼭 같이 보세요.</p>
       <div className="verdict-cap verdict-mark">
         <span>{SLOGAN}</span>
         <b>tripnalc.com</b>

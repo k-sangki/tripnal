@@ -8,12 +8,11 @@ export interface Period {
   to: string;
 }
 
-export type PresetId = "today" | "3d" | "weekend" | "16d";
+export type PresetId = "today" | "weekend" | "16d";
 
 export const PRESETS: { id: PresetId; label: string }[] = [
   { id: "today", label: "오늘" },
-  { id: "3d", label: "3일" },
-  { id: "weekend", label: "이번 주말" },
+  { id: "weekend", label: "주말" },
   { id: "16d", label: "16일" },
 ];
 
@@ -25,8 +24,6 @@ export function presetPeriod(id: PresetId, today: string): Period {
   switch (id) {
     case "today":
       return { from: today, to: today };
-    case "3d":
-      return { from: today, to: addDays(today, 2) };
     case "16d":
       return { from: today, to: lastDay(today) };
     case "weekend": {
@@ -45,10 +42,10 @@ export function matchPreset(p: Period, today: string): PresetId | null {
   })?.id ?? null;
 }
 
-/** 범위를 오늘~16일 안으로 맞추고 from<=to 보장. 잘못된 값이면 기본(3일). */
+/** 범위를 오늘~16일 안으로 맞추고 from<=to 보장. 기간이 없거나 잘못된 값이면 기본(이번 주말, SK 2026-11-10). */
 export function clampPeriod(from: string | null | undefined, to: string | null | undefined, today: string): Period {
   const valid = (s: string | null | undefined): s is string => !!s && /^\d{4}-\d{2}-\d{2}$/.test(s);
-  if (!valid(from) || !valid(to)) return presetPeriod("16d", today);
+  if (!valid(from) || !valid(to)) return presetPeriod("weekend", today);
   const end = lastDay(today);
   const clamp = (d: string) => (diffDays(today, d) < 0 ? today : diffDays(d, end) < 0 ? end : d);
   let a = clamp(from);

@@ -110,6 +110,7 @@ export const WORDS: Record<string, { en: string; ja: string; zh: string }> = {
   // 기간·간격 (period.ts, interval.ts)
   "3일": { en: "3 days", ja: "3日間", zh: "3天" },
   "이번 주말": { en: "This weekend", ja: "今週末", zh: "本週末" },
+  "주말": { en: "Weekend", ja: "週末", zh: "週末" },
   "16일": { en: "16 days", ja: "16日間", zh: "16天" },
   "직접 선택": { en: "Pick dates", ja: "日付を選ぶ", zh: "自選日期" },
   "기간 선택": { en: "Choose dates", ja: "期間の選択", zh: "選擇期間" },

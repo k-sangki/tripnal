@@ -13,13 +13,14 @@ import { SLOGAN, SLOGAN_FOREIGN } from "@/lib/brand";
 import { placeText } from "@/data/places-i18n";
 import { isForeignLocale, type Locale } from "@/lib/i18n";
 import { shortName } from "@/lib/seo-foreign";
-import { dayVerdict, stripEmoji, verdictDay, verdictShareTitle, type VerdictLevel } from "@/lib/verdict";
+import { dayVerdict, pickVerdictDate, signalWindow, stripEmoji, verdictDay, verdictShareTitle, type VerdictLevel } from "@/lib/verdict";
 
 /**
  * 카카오톡·네이버 등에 링크를 붙였을 때 보이는 미리보기 이미지 (1200×630).
  * 장소·기간의 날짜별 날씨를 요약해 그린다. 주소: /api/og?lat&lon&name&from&to&act 또는 /api/og?slug&from&to&act
  * lang=en|ja|zh 를 붙이면 영어·일본어·중국어 그림 (영어는 바람 km/h)
- * vd=YYYY-MM-DD 를 붙이면 그날의 "가도 될까?" 판정 그림 (판정 카드의 단톡방 보내기)
+ * 국내 한국어 그림은 "가도 될까?" 판정 그림: vd=YYYY-MM-DD 가 있으면 그날, 없으면 기간 안의 다가오는 토요일.
+ * 판정 아래에 예측 가능성과 7일 신호등 한 줄을 같이 그린다. 해외·외국어 그림은 날짜별 날씨 칸 그대로.
  */
 
 const W = 1200;
@@ -122,12 +123,21 @@ export async function GET(request: Request) {
   const period = sp.get("from") ? clampPeriod(sp.get("from"), sp.get("to"), today) : { from: today, to: addDays(today, MAX_COLS - 1) };
 
   let days: DayForecast[] = [];
-  let verdictOf: DayForecast | undefined;
+  let verdict: { day: DayForecast; row: DayForecast[]; issued: string } | undefined;
   if (Number.isFinite(lat) && Number.isFinite(lon) && (dest || isInKorea(lat, lon))) {
     try {
       const f = await getForecast(lat, lon, slugPlace?.elevation ?? dest?.elevation, undefined, offset);
       days = f.days.filter((d) => inPeriod(d.date, period)).slice(0, MAX_COLS);
-      if (l === "ko" && sp.get("vd")) verdictOf = f.days.find((d) => d.date === sp.get("vd"));
+      if (l === "ko" && !dest) {
+        const ahead = f.days.filter((d) => d.date >= today);
+        const dates = ahead.map((d) => d.date);
+        const picked = pickVerdictDate(dates, sp.get("vd"), (d) => inPeriod(d, period));
+        const day = ahead.find((d) => d.date === picked);
+        if (day) {
+          const row = signalWindow(dates, day.date);
+          verdict = { day, row: ahead.filter((d) => row.includes(d.date)), issued: issuedLabel(f.generatedAt) };
+        }
+      }
     } catch (e) {
       console.error(e);
     }
@@ -146,7 +156,7 @@ export async function GET(request: Request) {
   const family = l === "ja" ? "Noto Sans JP" : l === "zh" ? "Noto Sans TC" : "Noto Sans KR";
   const narrow = days.length > 5;
 
-  if (verdictOf) return verdictImage(verdictOf, name, leisure.id, leisure.label, leisure.group);
+  if (verdict) return verdictImage(verdict.day, verdict.row, verdict.issued, name, leisure.id, leisure.label, leisure.group);
 
   const element = (
     <div style={{ width: W, height: H, display: "flex", flexDirection: "column", background: "#eef2f1", fontFamily: family }}>
@@ -195,53 +205,120 @@ export async function GET(request: Request) {
   }
 }
 
-const STAMP: Record<VerdictLevel, { bg: string; fg: string }> = {
-  go: { bg: "#e3f9f0", fg: "#0b6b4c" },
-  meh: { bg: "#fff4dd", fg: "#8a5a00" },
-  stop: { bg: "#ffece7", fg: "#b8361a" },
+const STAMP: Record<VerdictLevel, { bg: string; fg: string; dot: string }> = {
+  go: { bg: "#e3f9f0", fg: "#0b6b4c", dot: "#12b886" },
+  meh: { bg: "#fff4dd", fg: "#8a5a00", dot: "#fab005" },
+  stop: { bg: "#ffece7", fg: "#b8361a", dot: "#fa5252" },
 };
 
-/** 판정 그림: 장소·날짜 제목, 날씨 아이콘, 한 줄 판정, 근거 숫자 */
-async function verdictImage(d: DayForecast, name: string, act: Parameters<typeof dayVerdict>[1], label: string, group: Parameters<typeof dayVerdict>[2]) {
+/** 언제 만든 예보인지 ("11/10 오전 예보"). 카카오톡이 그림을 한동안 저장해 두므로 그림에 적어 둔다 */
+function issuedLabel(generatedAt: string | undefined): string {
+  const t = generatedAt ? new Date(generatedAt) : new Date();
+  const at = Number.isNaN(t.getTime()) ? new Date() : t;
+  const d = kstDate(at);
+  const hour = new Date(at.getTime() + 9 * 3600_000).getUTCHours();
+  return `${Number(d.slice(5, 7))}/${Number(d.slice(8, 10))} ${hour < 12 ? "오전" : "오후"} 예보`;
+}
+
+/** 예측 가능성에 붙이는 말 (예보표와 같은 80·60 문턱) */
+function predictText(p: number): { text: string; bg: string; fg: string } {
+  if (p >= 80) return { text: "거의 굳은 예보예요", bg: "#e3f9f0", fg: "#0b6b4c" };
+  if (p >= 60) return { text: "조금 바뀔 수 있어요", bg: "#fff4dd", fg: "#8a5a00" };
+  return { text: "아직 뒤집힐 수 있어요", bg: "#fff0f0", fg: "#c92a2a" };
+}
+
+const md = (date: string) => `${Number(date.slice(5, 7))}/${Number(date.slice(8, 10))}`;
+
+/** 판정 그림: 장소·날짜 제목, 날씨 아이콘, 한 줄 판정, 근거 숫자, 예측 가능성, 7일 신호등 */
+async function verdictImage(
+  d: DayForecast,
+  row: DayForecast[],
+  issued: string,
+  name: string,
+  act: Parameters<typeof dayVerdict>[1],
+  label: string,
+  group: Parameters<typeof dayVerdict>[2],
+) {
   const v = dayVerdict(verdictDay(d), act, group);
   const title = verdictShareTitle(name, label, d.date)!;
   const verdict = stripEmoji(v.title);
   const chips = v.chips.map((c) => ({ text: stripEmoji(c.text), bad: c.bad }));
-  const icon = ICONS[codeIcon(d.code).replace("\uFE0F", "")] ?? ICONS["☁"];
+  const icon = ICONS[codeIcon(d.code).replace("️", "")] ?? ICONS["☁"];
   const c = STAMP[v.level];
+  const pd = d.predictability == null ? null : { p: d.predictability, ...predictText(d.predictability) };
   const family = "Noto Sans KR";
   const element = (
     <div style={{ width: W, height: H, display: "flex", flexDirection: "column", background: "#fff", fontFamily: family }}>
-      <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", background: DARK, color: "#fff", padding: "32px 48px 28px" }}>
-        <div style={{ fontSize: title.length > 24 ? 44 : 52, fontWeight: 700 }}>{title}</div>
+      <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", background: DARK, color: "#fff", padding: "26px 48px 22px" }}>
+        <div style={{ fontSize: title.length > 24 ? 40 : title.length > 20 ? 44 : 50, fontWeight: 700 }}>{title}</div>
+        <div style={{ fontSize: 26, opacity: 0.85, marginLeft: 20, whiteSpace: "nowrap" }}>{issued}</div>
       </div>
-      <div style={{ flex: 1, display: "flex", alignItems: "center", padding: "0 56px" }}>
+      <div style={{ flex: 1, display: "flex", alignItems: "center", padding: "0 48px" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={icon} width={190} height={190} alt="" />
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", marginLeft: 44 }}>
-          <div style={{ display: "flex", background: c.bg, color: c.fg, borderRadius: 28, padding: "22px 30px", fontSize: verdict.length > 14 ? 54 : 64, fontWeight: 700, lineHeight: 1.2 }}>
+        <img src={icon} width={160} height={160} alt="" />
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "flex-start", marginLeft: 40 }}>
+          <div style={{ display: "flex", background: c.bg, color: c.fg, borderRadius: 26, padding: "14px 28px", fontSize: verdict.length > 14 ? 46 : 56, fontWeight: 700, lineHeight: 1.2 }}>
             {verdict}
           </div>
-          <div style={{ fontSize: 32, color: c.fg, marginTop: 14, marginLeft: 6 }}>{v.sub}</div>
-          <div style={{ display: "flex", flexWrap: "wrap", marginTop: 22 }}>
+          <div style={{ fontSize: 28, color: c.fg, marginTop: 8, marginLeft: 6 }}>{v.sub}</div>
+          <div style={{ display: "flex", flexWrap: "wrap", marginTop: 12 }}>
             {chips.map((x) => (
               <div
                 key={x.text}
-                style={{ display: "flex", fontSize: 28, fontWeight: 700, padding: "8px 18px", borderRadius: 999, marginRight: 10, marginBottom: 10, background: x.bad ? "#ffece7" : "#f2f4f6", color: x.bad ? "#b8361a" : "#4e5968" }}
+                style={{ display: "flex", fontSize: 25, fontWeight: 700, padding: "6px 16px", borderRadius: 999, marginRight: 10, marginBottom: 6, background: x.bad ? "#ffece7" : "#f2f4f6", color: x.bad ? "#b8361a" : "#4e5968" }}
               >
                 {x.text}
               </div>
             ))}
           </div>
+          {pd && (
+            <div style={{ display: "flex", alignItems: "center", marginTop: 6, fontSize: 26, fontWeight: 700, color: "#4e5968" }}>
+              <span>예측 가능성</span>
+              <span style={{ background: pd.bg, color: pd.fg, padding: "2px 12px", borderRadius: 10, margin: "0 12px" }}>{pd.p}%</span>
+              <span>{pd.text}</span>
+            </div>
+          )}
         </div>
       </div>
-      <div style={{ display: "flex", justifyContent: "space-between", borderTop: "2px solid #e5e8eb", padding: "18px 48px 22px", fontSize: 26, color: "#556" }}>
+      {row.length > 1 && (
+        <div style={{ display: "flex", padding: "0 43px 12px" }}>
+          {row.map((x) => {
+            const w = weekday(x.date);
+            const on = x.date === d.date;
+            const dot = STAMP[dayVerdict(verdictDay(x), act, group).level].dot;
+            return (
+              <div
+                key={x.date}
+                style={{
+                  flex: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  margin: "0 5px",
+                  padding: "6px 0 9px",
+                  borderRadius: 16,
+                  background: on ? "#fff" : "#f6f7f8",
+                  border: `4px solid ${on ? DARK : "#f6f7f8"}`,
+                  fontSize: 23,
+                  fontWeight: 700,
+                  color: "#333",
+                }}
+              >
+                <div style={{ display: "flex" }}>{md(x.date)}</div>
+                <div style={{ display: "flex", color: w === 0 ? "#d6336c" : w === 6 ? BLUE : "#333" }}>{weekdayKo(x.date)}</div>
+                <div style={{ display: "flex", width: 28, height: 28, borderRadius: 14, background: dot, marginTop: 4 }} />
+              </div>
+            );
+          })}
+        </div>
+      )}
+      <div style={{ display: "flex", justifyContent: "space-between", borderTop: "2px solid #e5e8eb", padding: "12px 48px 16px", fontSize: 24, color: "#556" }}>
         <OgSource text={TEXT.ko.source} />
         <span style={{ fontWeight: 700, color: DARK }}>{SLOGAN} · tripnalc.com</span>
       </div>
     </div>
   );
-  const glyphs = [title, verdict, v.sub, ...chips.map((x) => x.text), TEXT.ko.source, SLOGAN, "tripnalc.com", "0123456789/°-%.,()ms·"].join("");
+  const glyphs = [title, verdict, v.sub, ...chips.map((x) => x.text), issued, "오전오후예보", "예측 가능성", pd?.text ?? "", "일월화수목금토", TEXT.ko.source, SLOGAN, "tripnalc.com", "0123456789/°-%.,()ms·"].join("");
   try {
     const [regular, bold] = await Promise.all([loadFont(glyphs, 400, family), loadFont(glyphs, 700, family)]);
     return new ImageResponse(element, {

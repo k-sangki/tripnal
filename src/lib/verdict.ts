@@ -239,3 +239,21 @@ export function verdictShareTitle(name: string, label: string, date: string | un
   if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date)) return null;
   return `${name} ${label}, ${Number(date.slice(5, 7))}/${Number(date.slice(8, 10))}(${weekdayKo(date)}) 가도 될까?`;
 }
+
+/**
+ * 미리보기 그림에서 판정할 날: 링크에 담긴 날(vd) → 보고 있는 기간 안의 다가오는 토요일 → 기간의 첫날.
+ * dates는 오늘 이후 예보 날짜(오름차순), inPeriod는 그 날짜가 보고 있는 기간 안인지.
+ */
+export function pickVerdictDate(dates: string[], vd: string | null | undefined, inPeriod: (date: string) => boolean = () => true): string | null {
+  if (vd && dates.includes(vd)) return vd;
+  const shown = dates.filter(inPeriod);
+  const pool = shown.length ? shown : dates;
+  return pool.find((d) => weekdayKo(d) === "토") ?? pool[0] ?? null;
+}
+
+/** 신호등 한 줄에 넣을 날짜들: 오늘부터 n일, 판정할 날이 그 뒤면 그날이 보이게 뒤로 민다 */
+export function signalWindow(dates: string[], picked: string, n = 7): string[] {
+  const i = dates.indexOf(picked);
+  const start = i < n ? 0 : Math.max(0, Math.min(i - (n - 3), dates.length - n));
+  return dates.slice(start, start + n);
+}

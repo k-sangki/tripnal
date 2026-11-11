@@ -3368,6 +3368,8 @@ button.cc-col.on {
 }
 .flag-w {
   white-space: nowrap;
+}
+
 /* 판정 B급 칭호 (캡처에도 들어간다) */
 .verdict-luck {
   margin-top: 6px;

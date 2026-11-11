@@ -3357,6 +3357,17 @@ button.cc-col.on {
   border-radius: 0;
 }
 
+/* 예보 모델 기관 국기 (components/Flag.tsx) */
+.flag {
+  display: inline-block;
+  vertical-align: -0.08em;
+  margin-right: 0.2em;
+  border-radius: 2px;
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.25);
+  flex: none;
+}
+.flag-w {
+  white-space: nowrap;
 /* 판정 B급 칭호 (캡처에도 들어간다) */
 .verdict-luck {
   margin-top: 6px;

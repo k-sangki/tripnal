@@ -4,6 +4,7 @@ import { SiteFooter, SiteHeader } from "@/components/SiteHeader";
 import { PLACES } from "@/lib/places";
 import { SNOWMAKING_C, seasonDays, skiRows } from "@/lib/seasonal";
 import { kstDate, shortDateKo } from "@/lib/time";
+import { Flag } from "@/components/Flag";
 
 /** 수집 작업이 하루 두 번 올리는 R2 자료를 요청 때 읽는다 */
 export const dynamic = "force-dynamic";
@@ -79,7 +80,7 @@ export default async function SkiPage() {
           이런 밤이 며칠 이어져야 개장 준비가 끝나요. 그래서 밤 최저기온이 영하 3도 이하인 날 수를 세어 순서대로 보여드립니다.
         </p>
         <p>
-          실제 개장일은 리조트마다 따로 발표하니 방문 전 공지를 확인하세요. 예보는 유럽(ECMWF)·미국(GFS)·독일(ICON) 세 모델의 중간값이며 하루 두 번 새로
+          실제 개장일은 리조트마다 따로 발표하니 방문 전 공지를 확인하세요. 예보는 <Flag c="eu" />유럽(ECMWF)·<Flag c="us" />미국(GFS)·<Flag c="de" />독일(ICON) 세 모델의 중간값이며 하루 두 번 새로
           계산합니다. 스키장을 누르면 3시간 간격 날씨와 바람·체감온도를 볼 수 있어요.
         </p>
       </section>

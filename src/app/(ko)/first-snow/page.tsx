@@ -5,6 +5,7 @@ import { SiteFooter, SiteHeader } from "@/components/SiteHeader";
 import { PLACES } from "@/lib/places";
 import { SEASON_CITIES, seasonDays, snowRows, type SnowRow } from "@/lib/seasonal";
 import { kstDate, shortDateKo } from "@/lib/time";
+import { Flag } from "@/components/Flag";
 
 /** 수집 작업이 하루 두 번 올리는 R2 자료를 요청 때 읽는다 */
 export const dynamic = "force-dynamic";
@@ -93,7 +94,7 @@ export default async function FirstSnowPage() {
       <section className="card seo-text" style={{ marginTop: 16 }}>
         <h2>첫눈 예보는 이렇게 봐요</h2>
         <p>
-          유럽(ECMWF)·미국(GFS)·독일(ICON) 세 예보 모델의 중간값에서 하루 날씨가 눈(진눈깨비·눈 소나기 포함)으로 나온 첫날을 보여드립니다. 하루 두 번
+          <Flag c="eu" />유럽(ECMWF)·<Flag c="us" />미국(GFS)·<Flag c="de" />독일(ICON) 세 예보 모델의 중간값에서 하루 날씨가 눈(진눈깨비·눈 소나기 포함)으로 나온 첫날을 보여드립니다. 하루 두 번
           새로 계산하며, 2주 뒤 예보는 바뀔 수 있어요.
         </p>
         <p>

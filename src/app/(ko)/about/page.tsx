@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { languageAlternates } from "@/lib/i18n";
 import Link from "next/link";
 import { CONTACT_EMAIL, TextPage } from "@/components/TextPage";
+import { Flag } from "@/components/Flag";
 
 export const metadata: Metadata = {
   title: "트립날씨 소개",
@@ -33,7 +34,7 @@ export default function About() {
       <h2>예보를 만드는 방법</h2>
       <ul>
         <li>
-          <strong>세 예보의 중간값</strong>: 유럽(ECMWF), 미국(GFS), 독일(ICON) 수치예보모델 자료를 직접 받아, 기온·비·바람마다 세 값 중 가운데 값을
+          <strong>세 예보의 중간값</strong>: <Flag c="eu" />유럽(ECMWF), <Flag c="us" />미국(GFS), <Flag c="de" />독일(ICON) 수치예보모델 자료를 직접 받아, 기온·비·바람마다 세 값 중 가운데 값을
           씁니다. 한 모델이 크게 빗나가도 결과가 덜 흔들립니다.
         </li>
         <li>
@@ -54,9 +55,12 @@ export default function About() {
       </ul>
       <p>사용한 자료와 출처는 다음과 같습니다.</p>
       <ul>
-        <li>ECMWF 공개 예보 (IFS), CC BY 4.0 · © European Centre for Medium-Range Weather Forecasts</li>
-        <li>미국 해양대기청(NOAA) GFS·GEFS·GFS-Wave 예보</li>
-        <li>독일 기상청(DWD) ICON 예보</li>
+        <li>
+          <Flag c="eu" />ECMWF 공개 예보 (IFS), CC BY 4.0 · © European Centre for Medium-Range Weather Forecasts</li>
+        <li>
+          <Flag c="us" />미국 해양대기청(NOAA) GFS·GEFS·GFS-Wave 예보</li>
+        <li>
+          <Flag c="de" />독일 기상청(DWD) ICON 예보</li>
         <li>Copernicus 대기 모니터링 서비스(CAMS) 미세먼지 예보 · Copernicus DEM 지형 고도 (© DLR e.V., Airbus Defence and Space GmbH, European Union)</li>
         <li>국립해양조사원 조석예보 (공공데이터포털)</li>
         <li>기상청 기상특보 (공공데이터포털)</li>

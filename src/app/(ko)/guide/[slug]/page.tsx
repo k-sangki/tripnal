@@ -6,6 +6,7 @@ import { AD_SLOTS, AdSlot } from "@/components/AdSlot";
 import { TextPage } from "@/components/TextPage";
 import { GUIDES, getGuide, type GuideBlock } from "@/data/guides";
 import { getPlace } from "@/lib/places";
+import { withFlags } from "@/components/Flag";
 
 export const dynamicParams = false;
 export function generateStaticParams() {
@@ -35,12 +36,12 @@ export async function generateMetadata({
 
 function Block({ b }: { b: GuideBlock }) {
   if ("h" in b) return <h2>{b.h}</h2>;
-  if ("p" in b) return <p>{b.p}</p>;
+  if ("p" in b) return <p>{withFlags(b.p)}</p>;
   if ("ul" in b)
     return (
       <ul>
         {b.ul.map((x) => (
-          <li key={x}>{x}</li>
+          <li key={x}>{withFlags(x)}</li>
         ))}
       </ul>
     );
@@ -48,18 +49,18 @@ function Block({ b }: { b: GuideBlock }) {
     return (
       <ol>
         {b.ol.map((x) => (
-          <li key={x}>{x}</li>
+          <li key={x}>{withFlags(x)}</li>
         ))}
       </ol>
     );
-  if ("tip" in b) return <p className="guide-tip">💡 {b.tip}</p>;
+  if ("tip" in b) return <p className="guide-tip">💡 {withFlags(b.tip)}</p>;
   return (
     <div className="guide-table">
       <table>
         <thead>
           <tr>
             {b.table.head.map((x) => (
-              <th key={x}>{x}</th>
+              <th key={x}>{withFlags(x)}</th>
             ))}
           </tr>
         </thead>
@@ -67,7 +68,7 @@ function Block({ b }: { b: GuideBlock }) {
           {b.table.rows.map((r) => (
             <tr key={r.join("|")}>
               {r.map((x, i) => (
-                <td key={i}>{x}</td>
+                <td key={i}>{withFlags(x)}</td>
               ))}
             </tr>
           ))}

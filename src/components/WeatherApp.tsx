@@ -382,7 +382,7 @@ export function WeatherApp({ initialPlace, initialForecast, initialLeisure, init
                     (foreign
                       ? t("ELEVATION_NOTE").replace("{m}", Math.round(forecast.elevation).toLocaleString())
                       : `기온은 해발 ${Math.round(forecast.elevation)}m 기준으로 보정된 값입니다. 바람은 고도 보정이 되지 않아 높은 산에서는 실제보다 약할 수 있습니다. `)}
-                  {t("예보 제공")}: {forecast.source}
+                  {t("예보 제공")}: {withFlags(forecast.source)}
                 </p>
                 {ads && (
                   <>

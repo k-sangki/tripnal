@@ -1,3 +1,4 @@
+import { withFlags } from "@/components/Flag";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { TextPage } from "@/components/TextPage";
@@ -26,7 +27,7 @@ export default function GuideIndex() {
               <b>{g.h1}</b>
             </Link>
             <br />
-            <span className="muted">{g.description}</span>
+            <span className="muted">{withFlags(g.description)}</span>
           </li>
         ))}
       </ul>

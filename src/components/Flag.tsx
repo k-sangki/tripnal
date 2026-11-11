@@ -29,8 +29,12 @@ export function Flag({ c }: { c: FlagCode }) {
   return <svg className="flag" viewBox="0 0 24 16" aria-hidden width="1.25em" height="0.83em" dangerouslySetInnerHTML={{ __html: INNER[c] }} />;
 }
 
-/** 모델·나라 이름 → 국기. "유럽(ECMWF)"처럼 나라 이름이 앞에 붙으면 나라 이름 앞에 넣는다 */
-const FLAG_RE = /(유럽|미국|독일)\((ECMWF|GFS|ICON)\)|\b(ECMWF|GFS|ICON)\b/g;
+/**
+ * 모델·나라 이름 → 국기. "유럽(ECMWF)"·"유럽 ECMWF"·"European (ECMWF)"·"ヨーロッパ（ECMWF）"처럼
+ * 나라 이름이 바로 앞에 붙으면 나라 이름 앞에 넣는다
+ */
+const FLAG_RE =
+  /(유럽|미국|독일|European|American|German|ヨーロッパ|アメリカ|ドイツ|歐洲|美國|德國) ?(?:[(（](ECMWF|GFS|ICON)[)）]|(ECMWF|GFS|ICON)\b)|\b(ECMWF|GFS|ICON)\b/g;
 export const FLAG_OF: Record<string, FlagCode> = { ECMWF: "eu", GFS: "us", ICON: "de" };
 
 /** 글 안의 ECMWF·GFS·ICON 앞에 국기를 붙인다 */
@@ -38,7 +42,7 @@ export function withFlags(text: string): ReactNode {
   const out: ReactNode[] = [];
   let last = 0;
   for (const m of text.matchAll(FLAG_RE)) {
-    const model = m[2] ?? m[3];
+    const model = m[2] ?? m[3] ?? m[4];
     out.push(text.slice(last, m.index));
     out.push(
       // 국기와 이름이 줄 끝에서 갈라지지 않게

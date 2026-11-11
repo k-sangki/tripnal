@@ -1,28 +1,17 @@
 /**
  * 새 버전 감지·적용 규칙 (SK 2026-11-11). 화면 쪽은 src/components/UpdateWatcher.tsx.
  * - 앱으로 돌아올 때: 새 버전이 있으면 그 자리에서 다시 불러온다 (스크롤 위치 유지).
- * - 보는 동안: 10분마다 확인, 새 버전이면 아래에 단추. 다음에 다른 페이지로 넘어갈 때 저절로 적용.
- * - 글을 쓰는 중이거나 창이 열려 있으면: 자동으로 다시 불러오지 않고 단추만.
+ * - 보는 동안: 하루에 한 번 확인, 새 버전이면 묻지 않고 다음에 다른 페이지로 넘어갈 때 바로 적용 (단추 없음).
+ * - 글을 쓰는 중이거나 창이 열려 있으면: 그 자리에서 다시 불러오지 않고 다음 페이지 이동 때 적용.
  */
 
 /** 이 화면의 버전 (빌드 때 next.config.ts가 넣는다) */
 export const BUILD_ID = process.env.NEXT_PUBLIC_BUILD_ID ?? "";
 
-/** 보고 있는 동안 확인 간격 */
-export const CHECK_EVERY_MS = 10 * 60e3;
+/** 보고 있는 동안 확인 간격 (하루) */
+export const CHECK_EVERY_MS = 24 * 60 * 60e3;
 /** 앱으로 돌아올 때 확인은 이 간격보다 자주 하지 않는다 (잠깐 껐다 켜기 반복) */
 export const RESUME_MIN_GAP_MS = 30e3;
-
-export const UPDATE_TEXT: Record<string, string> = {
-  ko: "새 버전이 나왔어요 · 눌러서 적용",
-  en: "New version available · Tap to update",
-  ja: "新しいバージョンがあります · タップで更新",
-  zh: "有新版本 · 點一下更新",
-};
-
-export function updateText(lang: string): string {
-  return UPDATE_TEXT[lang.slice(0, 2)] ?? UPDATE_TEXT.ko;
-}
 
 /** 서버 버전이 이 화면과 다른지. 둘 중 하나라도 모르면 새 버전으로 보지 않는다 */
 export function isNewer(server: string | null | undefined, mine: string = BUILD_ID): boolean {

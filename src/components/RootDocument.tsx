@@ -57,7 +57,7 @@ export function RootDocument({ lang, children }: { lang: string; children: React
       <body>
         <PullToRefresh />
         {children}
-        <UpdateWatcher lang={lang} />
+        <UpdateWatcher />
         {CF_BEACON && (
           <script dangerouslySetInnerHTML={{ __html: beacon(CF_BEACON) }} />
         )}

@@ -22,15 +22,8 @@ jobs:
           set +e
           {
             pip install -q boto3 >/dev/null 2>&1
-            python3 - <<'PY'
-          import sys, json; sys.path.insert(0, "collector")
-          from upload import client
-          s3 = client()
-          for k in ["weekend/latest.json","weekend/days.json"]:
-              b = s3.get_object(Bucket="tripnal-data", Key=k)
-              open(k.replace("/","_"),"wb").write(b["Body"].read())
-              print(k, b["LastModified"])
-          PY
+            python3 diag_pairs.py
+            ls -la pairs_*
           } > diag-out.txt 2>&1
           git config user.name diag; git config user.email diag@example.com
-          git add -A diag-out.txt weekend_latest.json weekend_days.json; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026
+          git add -A diag-out.txt pairs_fc.csv.gz pairs_site.csv.gz; git commit -m 'diag out'; git push -f origin HEAD:claude/diag-1026

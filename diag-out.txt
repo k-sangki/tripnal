@@ -1,2 +1,8 @@
-weekend/latest.json 2026-10-25 13:49:23+00:00
-weekend/days.json 2026-10-25 13:49:23+00:00
+obs 28 ['verify/obs/20261019.json'] ['verify/obs/20261115.json']
+fc 144 ['verify/fc/ecmwf/2026102112.json'] ['verify/fc/icon/2026111512.json']
+site 53 ['verify/site/2026102201.json'] ['verify/site/2026111520.json']
+obs points 65183
+fc pairs 952878
+site pairs 442049
+-rw-r--r-- 1 runner runner 13058554 Nov 16 01:03 pairs_fc.csv.gz
+-rw-r--r-- 1 runner runner  5397735 Nov 16 01:03 pairs_site.csv.gz

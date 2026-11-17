@@ -6,7 +6,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - run: pip install boto3 -q
+      - env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+        working-directory: collector
+        run: |
+          python3 - > ../diag-out.txt 2>&1 <<'PY' || true
+          from upload import client
+          s3 = client(); n = 0; ex = []
+          for page in s3.get_paginator("list_objects_v2").paginate(Bucket="tripnal-data", Prefix="fc/"):
+              for o in page.get("Contents", []):
+                  n += 1
+                  if len(ex) < 8: ex.append((o["Key"], o["Size"], str(o["LastModified"])))
+          print("fc objects", n)
+          for e in ex: print(e)
+          for m in ["ecmwf","gfs","icon","wave","gefs","cams"]:
+              import json
+              print(m, json.loads(s3.get_object(Bucket="tripnal-data", Key=f"{m}/latest.json")["Body"].read()).get("run"))
+          PY
       - run: |
-          python3 .github/diag.py > diag-out.txt 2>&1 || true
           git config user.name diag; git config user.email diag@users.noreply.github.com
           git add diag-out.txt; git commit -m "diag output"; git push

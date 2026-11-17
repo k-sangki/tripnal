@@ -7,10 +7,13 @@
   verify/site/{UTC YYYYMMDDHH}.json: 사이트가 실제로 보여 준 3시간 칸 (/api/forecast)
 - obs: 관측소 시간 자료(공공데이터포털 기상청 지상(종관, ASOS) 시간자료)를 날짜별로 남긴다.
   verify/obs/{YYYYMMDD}.json (한국 시간 하루). 아직 없는 최근 사흘(오늘 제외)만 받는다.
+- calib: 최근 14일 동안 모델별·관측소별·시각별로 기온이 얼마나 틀렸는지(예보 이틀 앞까지) 평균해
+  verify/calib/latest.json 에 남긴다. 사이트가 이 값을 빼서 기온을 보정한다 (src/lib/weather/calibrate.ts).
+  사이트가 보여 준 값이 아니라 모델 예보 기록(verify/fc)으로 배우므로, 보정한 값을 다시 배우는 일이 없다.
 
 환경 변수: CLOUDFLARE_ACCOUNT_ID·R2_ACCESS_KEY_ID·R2_SECRET_ACCESS_KEY, R2_BUCKET(기본 tripnal-data),
           KHOA_API_KEY(공공데이터포털 키, obs), SITE_URL(기본 https://tripnalc.com)
-사용: python collector/verify.py forecast|obs [--dry-run]
+사용: python collector/verify.py forecast|obs|calib [--dry-run]
 """
 
 import argparse
@@ -251,9 +254,91 @@ def archive_obs(s3, dry):
         put_json(s3, dest, {"date": day, "stations": stations}, dry)
 
 
+# 기온 보정: 최근 며칠을 보고, 예보 몇 시간 앞까지로 배우는지, 표본이 적을 때 0 쪽으로 줄이는 정도
+CALIB_DAYS = 14
+CALIB_LEAD = 48
+CALIB_SHRINK = 10
+
+
+def list_keys(s3, prefix):
+    out, tok = [], None
+    while True:
+        kw = {"Bucket": BUCKET, "Prefix": prefix, "MaxKeys": 1000}
+        if tok:
+            kw["ContinuationToken"] = tok
+        r = s3.list_objects_v2(**kw)
+        out += [o["Key"] for o in r.get("Contents", [])]
+        if not r.get("IsTruncated"):
+            return out
+        tok = r["NextContinuationToken"]
+
+
+def archive_calib(s3, dry):
+    now = dt.datetime.now(KST).replace(tzinfo=None)
+    start = now - dt.timedelta(days=CALIB_DAYS)
+    obs = {}
+    for k in list_keys(s3, "verify/obs/"):
+        day = k.rsplit("/", 1)[1][:8]
+        if day < start.strftime("%Y%m%d"):
+            continue
+        d = get_json(s3, k) or {"stations": {}}
+        for sid, hours in d["stations"].items():
+            for hh, v in hours.items():
+                if v.get("temp") is not None:
+                    obs[(sid, dt.datetime.strptime(day + hh, "%Y%m%d%H"))] = v["temp"]
+    oldest_run = (start - dt.timedelta(hours=CALIB_LEAD + 9)).strftime("%Y%m%d%H")
+    temp = {}
+    for model in MODELS:
+        acc = {}
+        keys = [k for k in list_keys(s3, f"verify/fc/{model}/") if k.rsplit("/", 1)[1][:10] >= oldest_run]
+        with cf.ThreadPoolExecutor(8) as ex:
+            for d in ex.map(lambda k: get_json(s3, k), keys):
+                if not d:
+                    continue
+                run = dt.datetime.strptime(d["run"], "%Y%m%d%H") + dt.timedelta(hours=9)
+                for sid, series in d["stations"].items():
+                    for i, step in enumerate(d["step"]):
+                        if step > CALIB_LEAD:
+                            break
+                        t = run + dt.timedelta(hours=step)
+                        o, f = obs.get((sid, t)), series["temp"][i]
+                        if t < start or o is None or f is None or t.hour % 3:
+                            continue
+                        a = acc.setdefault((sid, t.hour // 3), [0.0, 0])
+                        a[0] += f - o
+                        a[1] += 1
+        out = {}
+        for st in STATIONS:
+            sid = str(st["id"])
+            vals = []
+            for h in range(8):
+                e, n = acc.get((sid, h), (0.0, 0))
+                vals.append(round(e / (n + CALIB_SHRINK), 2))
+            if any(acc.get((sid, h)) for h in range(8)):
+                out[sid] = vals
+        print(model, "runs", len(keys), "관측소", len(out), flush=True)
+        if len(out) >= len(STATIONS) * 0.8:
+            temp[model] = out
+    if not temp:
+        sys.exit("보정에 쓸 기록이 모자람")
+    put_json(
+        s3,
+        "verify/calib/latest.json",
+        {
+            "generated": dt.datetime.now(dt.timezone.utc).isoformat(timespec="minutes"),
+            "days": CALIB_DAYS,
+            # 관측소: [위도, 경도, 해발고도]
+            "stations": {str(st["id"]): [st["lat"], st["lon"], st["elevation"]] for st in STATIONS},
+            # 모델별 관측소별 KST 0·3·…·21시 기온 치우침 (예보 − 관측, °C)
+            "temp": temp,
+        },
+        dry,
+    )
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("what", choices=["forecast", "obs"])
+    ap.add_argument("what", choices=["forecast", "obs", "calib"])
     ap.add_argument("--dry-run", action="store_true")
     a = ap.parse_args()
     s3 = client()
@@ -261,8 +346,10 @@ def main():
         for m in MODELS:
             archive_model(s3, m, a.dry_run)
         archive_site(s3, a.dry_run)
-    else:
+    elif a.what == "obs":
         archive_obs(s3, a.dry_run)
+    else:
+        archive_calib(s3, a.dry_run)
 
 
 if __name__ == "__main__":

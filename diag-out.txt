@@ -1,14 +1,3 @@
-200 ttfb=1.326472 x-edge-cache: MISS https://tripnalc.com/weather/unaksan?d=1671513506
-200 ttfb=0.573601 x-edge-cache: MISS https://tripnalc.com/weather/oido?d=222749590
-200 ttfb=0.757765 x-edge-cache: MISS https://tripnalc.com/weather/nami-island?d=711714624
-200 ttfb=1.454277 x-edge-cache: MISS https://tripnalc.com/weather/everland?d=663121104
-200 ttfb=0.545731 x-edge-cache: MISS https://tripnalc.com/weather/aewol?d=2164625997
-200 ttfb=0.523104 x-edge-cache: MISS https://tripnalc.com/weather/gwangalli-beach?d=2933422533
-200 ttfb=0.428924 x-edge-cache: MISS https://tripnalc.com/weather/bora-cc?d=2988616069
-200 ttfb=0.624436 x-edge-cache: MISS https://tripnalc.com/weather/seoul?d=369011149
-200 ttfb=0.519660 x-edge-cache: MISS https://tripnalc.com/weather/chuncheon?d=61329221
-200 ttfb=0.521962 x-edge-cache: MISS https://tripnalc.com/weather/jirisan-cheonwangbong?d=236072154
-200 ttfb=2.578752 x-edge-cache: MISS https://tripnalc.com/weather/bike-damyang-dam?d=36047484
-200 ttfb=2.564169 x-edge-cache: MISS https://tripnalc.com/weather/biseulsan-camp?d=850522259
-200 ttfb=0.455656 x-edge-cache: MISS https://tripnalc.com/weather/dongchon-gc?d=176983289
-200 ttfb=0.274124 x-edge-cache: MISS https://tripnalc.com/weather/edenblue-cc?d=129661953
+conc 1: {200: 6} median 2.15s max 2.77s
+conc 4: {200: 24} median 2.02s max 3.12s
+conc 8: {200: 47, 500: 1} median 1.81s max 3.19s

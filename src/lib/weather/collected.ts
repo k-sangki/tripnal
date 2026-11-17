@@ -405,12 +405,22 @@ async function bucket(): Promise<DataBucket> {
   return env.DATA;
 }
 
-/** 같은 run의 격자점은 바뀌지 않으므로 Worker 메모리에 잠시 둔다 */
+/**
+ * 같은 run의 격자점은 바뀌지 않으므로 Worker 메모리에 잠시 둔다.
+ * 장소 하나가 파일 36개쯤(모델 3개×두 판×네 모서리, 파고·강수 확률·미세먼지)을 읽고 파일 하나가 풀면 수백 KB라,
+ * 예전 한도 2,000개는 Worker 메모리(128MB)를 넘겨 동시 요청 때 500·응답 끊김이 났다(2026-11-17 동시 8개 측정 2%).
+ * 장소 서너 곳 분량만 둔다. 계산 결과는 R2(fc/)에 따로 보관하므로 이걸로 충분하다.
+ */
+const MEMO_MAX = 150;
 const memo = new Map<string, Promise<unknown>>();
 function cached<T>(key: string, load: () => Promise<T>): Promise<T> {
   let p = memo.get(key) as Promise<T> | undefined;
-  if (!p) {
-    if (memo.size > 2000) memo.clear();
+  if (p) {
+    // 최근에 쓴 것을 뒤로 보내 오래 안 쓴 것부터 지운다
+    memo.delete(key);
+    memo.set(key, p);
+  } else {
+    while (memo.size >= MEMO_MAX) memo.delete(memo.keys().next().value as string);
     p = load().catch((e) => {
       memo.delete(key);
       throw e;

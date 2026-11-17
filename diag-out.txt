@@ -1,3 +1,0 @@
-conc 1: {200: 6} median 2.15s max 2.77s
-conc 4: {200: 24} median 2.02s max 3.12s
-conc 8: {200: 47, 500: 1} median 1.81s max 3.19s

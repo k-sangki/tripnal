@@ -60,7 +60,46 @@ export async function getForecast(lat: number, lon: number, elevation?: number, 
   if (!version) return compute();
   const day = kstDate(new Date(), utcOffset ?? KST_OFFSET_MIN);
   const key = ["forecast", await deployId(), p.name, `${la}_${lo}`, elevation ?? "", utcOffset ?? "", day, version].join("/");
-  return cachedJson(key, FORECAST_TTL, compute);
+  const storeKey = `fc/${day}/${STORE_FORMAT}/${p.name}/${la}_${lo}/${elevation ?? "-"}/${utcOffset ?? "-"}/${version}.json`;
+  return cachedJson(key, FORECAST_TTL, () => storedForecast(storeKey, compute));
+}
+
+/**
+ * 계산한 예보를 R2(fc/{날짜}/…)에도 둔다. 엣지 캐시는 데이터센터마다 따로라서, 방문이 드문 장소 페이지는
+ * 검색 로봇이 올 때마다 격자점 파일 40여 개를 새로 읽느라 2~5초가 걸렸다(2026-11-17 측정).
+ * 수집이 끝나면 .github/workflows/prewarm.yml이 장소 페이지를 한 번씩 열어 미리 채워 두고,
+ * 지난 날짜 폴더는 같은 워크플로가 지운다.
+ * aggregate 결과 모양이 바뀌면 STORE_FORMAT을 올린다 (원자료 판이 바뀌면 키가 바뀌므로 길어야 12시간 남는다).
+ */
+const STORE_FORMAT = "1";
+
+interface StoreBucket {
+  get(key: string): Promise<{ json<T>(): Promise<T> } | null>;
+  put(key: string, value: string, options?: { httpMetadata?: { contentType?: string } }): Promise<unknown>;
+}
+
+async function storeBucket(): Promise<StoreBucket | null> {
+  try {
+    const { getCloudflareContext } = await import("@opennextjs/cloudflare");
+    const env = (await getCloudflareContext({ async: true })).env as unknown as { DATA?: StoreBucket };
+    return env.DATA ?? null;
+  } catch {
+    return null;
+  }
+}
+
+export async function storedForecast(key: string, compute: () => Promise<Forecast>, bucket?: StoreBucket | null): Promise<Forecast> {
+  const b = bucket === undefined ? await storeBucket() : bucket;
+  if (!b) return compute();
+  const hit = await b
+    .get(key)
+    .then((o) => (o ? o.json<Forecast>() : null))
+    .catch(() => null);
+  if (hit) return hit;
+  const value = await compute();
+  // 보관에 실패해도 예보는 보여준다
+  await b.put(key, JSON.stringify(value), { httpMetadata: { contentType: "application/json" } }).catch(() => null);
+  return value;
 }
 
 export type { Forecast, DayForecast, Slot } from "./types";

@@ -1,8 +1,4 @@
-obs 28 ['verify/obs/20261019.json'] ['verify/obs/20261115.json']
-fc 144 ['verify/fc/ecmwf/2026102112.json'] ['verify/fc/icon/2026111512.json']
-site 53 ['verify/site/2026102201.json'] ['verify/site/2026111520.json']
-obs points 65183
-fc pairs 952878
-site pairs 442049
--rw-r--r-- 1 runner runner 13058554 Nov 16 01:03 pairs_fc.csv.gz
--rw-r--r-- 1 runner runner  5397735 Nov 16 01:03 pairs_site.csv.gz
+ecmwf runs 30 관측소 97
+gfs runs 31 관측소 97
+icon runs 30 관측소 97
+dry-run verify/calib/latest.json 17650 bytes {"generated":"2026-11-17T01:46+00:00","days":14,"stations":{"90":[38.2509,128.5647,17.5],"93":[37.9474,127.7544,95.8],"95":[38.1479,127.3042,155.5],"98":[37.9019,127.0607,115.6],"99":[37.8859,126.7665,30.6],"100":[37.6771,128.7183,772.4],"101":[37.9026,127.7357,75.8],"102":[37.974,124.7124,36.0],"10

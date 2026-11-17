@@ -1,0 +1,17 @@
+name: diag
+on: { push: { branches: [claude/project-thread-i8evdz] } }
+permissions: { contents: write }
+jobs:
+  d:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          UA='Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'
+          o=diag-out.txt
+          t() { curl -s -o /dev/null -D h.txt -w "%{http_code} ttfb=%{time_starttransfer}" -A "$UA" "$1"; echo " $(grep -i '^x-edge-cache' h.txt | tr -d '\r') $1"; }
+          for s in unaksan oido nami-island everland aewol gwangalli-beach bora-cc seoul chuncheon jirisan-cheonwangbong bike-damyang-dam biseulsan-camp dongchon-gc edenblue-cc; do
+            t "https://tripnalc.com/weather/$s?d=$RANDOM$RANDOM" >> $o
+          done
+          git config user.name diag; git config user.email diag@users.noreply.github.com
+          git add $o; git commit -m "diag output"; git push

@@ -1,0 +1,58 @@
+200 ttfb=4.161261 total=4.168993 a5bad435be2b6a5e-EWR x-edge-cache: MISS https://tripnalc.com/weather/unaksan?d=31236593
+200 ttfb=1.245999 total=1.263978 a5bad44fde58c5a9-EWR x-edge-cache: MISS https://tripnalc.com/weather/unaksan?d=416932610
+200 ttfb=0.109790 total=0.117672 a5bad457a9bc42c8-EWR x-edge-cache: HIT https://tripnalc.com/weather/unaksan?d=416932610
+200 ttfb=1.680686 total=1.689122 a5bad4587d5d0c7e-EWR x-edge-cache: MISS https://tripnalc.com/weather/unaksan
+
+200 ttfb=4.999906 total=5.116891 a5bad4640a438c3b-EWR x-edge-cache: MISS https://tripnalc.com/weather/oido?d=132405032
+200 ttfb=1.127880 total=1.146370 a5bad4834d244b5f-EWR x-edge-cache: MISS https://tripnalc.com/weather/oido?d=2540029298
+200 ttfb=0.167899 total=0.183359 a5bad48aefa58c8f-EWR x-edge-cache: HIT https://tripnalc.com/weather/oido?d=2540029298
+200 ttfb=0.189880 total=0.211206 a5bad48bcfa2da53-EWR x-edge-cache: MISS https://tripnalc.com/weather/oido
+
+200 ttfb=3.223164 total=3.249804 a5bad48d1c93c07d-EWR x-edge-cache: MISS https://tripnalc.com/weather/nami-island?d=837012555
+200 ttfb=0.203153 total=0.210915 a5bad4a16c30424f-EWR x-edge-cache: MISS https://tripnalc.com/weather/nami-island?d=1865627062
+200 ttfb=0.417474 total=0.427939 a5bad4a44a557c88-EWR x-edge-cache: HIT https://tripnalc.com/weather/nami-island?d=1865627062
+200 ttfb=1.486647 total=1.574494 a5bad4a5fe0b58c1-EWR x-edge-cache: MISS https://tripnalc.com/weather/nami-island
+
+200 ttfb=2.474048 total=2.493467 a5bad4af9de146ff-EWR x-edge-cache: MISS https://tripnalc.com/weather/everland?d=3173630365
+200 ttfb=0.434989 total=0.454234 a5bad4c0fd1d08ff-EWR x-edge-cache: MISS https://tripnalc.com/weather/everland?d=211956954
+200 ttfb=0.160158 total=0.195338 a5bad4c2498b42be-EWR x-edge-cache: HIT https://tripnalc.com/weather/everland?d=211956954
+200 ttfb=1.456027 total=1.465211 a5bad4c348433418-EWR x-edge-cache: MISS https://tripnalc.com/weather/everland
+
+200 ttfb=3.590367 total=3.600067 a5bad4cc7e185930-EWR x-edge-cache: MISS https://tripnalc.com/weather/aewol?d=2188320386
+200 ttfb=1.384274 total=1.391983 a5bad4e3081243e2-EWR x-edge-cache: MISS https://tripnalc.com/weather/aewol?d=876918361
+200 ttfb=0.118646 total=0.126837 a5bad4ebd9604234-EWR x-edge-cache: HIT https://tripnalc.com/weather/aewol?d=876918361
+200 ttfb=0.256929 total=0.266599 a5bad4ecbd606d50-EWR x-edge-cache: MISS https://tripnalc.com/weather/aewol
+
+404 ttfb=0.227479 total=0.228260 a5bad4eed89d5e5f-EWR  https://tripnalc.com/weather/jirisan?d=1650822907
+404 ttfb=0.190399 total=0.191017 a5bad4f00ccb4153-EWR  https://tripnalc.com/weather/jirisan?d=1432617591
+404 ttfb=0.186838 total=0.187081 a5bad4f158d48c78-EWR  https://tripnalc.com/weather/jirisan?d=1432617591
+404 ttfb=0.157992 total=0.158125 a5bad4f26dc24370-EWR  https://tripnalc.com/weather/jirisan
+
+200 ttfb=2.551062 total=2.559589 a5bad4f38d4b4244-EWR x-edge-cache: MISS https://tripnalc.com/weather/gwangalli-beach?d=217932511
+200 ttfb=0.207981 total=0.217185 a5bad50398b4c34e-EWR x-edge-cache: MISS https://tripnalc.com/weather/gwangalli-beach?d=871411942
+200 ttfb=1.361619 total=2.043186 a5bad508bd590f9c-EWR x-edge-cache: HIT https://tripnalc.com/weather/gwangalli-beach?d=871411942
+200 ttfb=0.263649 total=0.273339 a5bad511e85ec352-EWR x-edge-cache: MISS https://tripnalc.com/weather/gwangalli-beach
+
+200 ttfb=2.237707 total=2.256081 a5bad513c885fbc3-EWR x-edge-cache: MISS https://tripnalc.com/weather/bora-cc?d=288298955
+200 ttfb=0.925223 total=0.944082 a5bad521f8248ce9-EWR x-edge-cache: MISS https://tripnalc.com/weather/bora-cc?d=775415713
+200 ttfb=0.112981 total=0.121571 a5bad527bfab4234-EWR x-edge-cache: HIT https://tripnalc.com/weather/bora-cc?d=775415713
+200 ttfb=1.193960 total=1.202911 a5bad5289cc17b0b-EWR x-edge-cache: MISS https://tripnalc.com/weather/bora-cc
+
+200 ttfb=0.206034 total=0.214744 a5bad5304d047c7b-EWR x-edge-cache: MISS https://tripnalc.com/weather/seoul?d=576125361
+200 ttfb=1.001797 total=1.214615 a5bad534a9dec54a-EWR x-edge-cache: MISS https://tripnalc.com/weather/seoul?d=541721811
+200 ttfb=0.397613 total=0.418215 a5bad53b2b533b14-EWR x-edge-cache: HIT https://tripnalc.com/weather/seoul?d=541721811
+200 ttfb=0.177609 total=0.188271 a5bad53bf87543c4-EWR x-edge-cache: MISS https://tripnalc.com/weather/seoul
+
+200 ttfb=1.586479 total=1.720634 a5bad53dea2142e2-EWR x-edge-cache: MISS https://tripnalc.com/weather/chuncheon?d=2280016219
+200 ttfb=0.157689 total=0.178782 a5bad5483bf75745-EWR x-edge-cache: MISS https://tripnalc.com/weather/chuncheon?d=315431777
+200 ttfb=0.195908 total=0.242057 a5bad5493bc80f78-EWR x-edge-cache: HIT https://tripnalc.com/weather/chuncheon?d=315431777
+200 ttfb=0.747708 total=0.755436 a5bad54c3f4fbdee-EWR x-edge-cache: MISS https://tripnalc.com/weather/chuncheon
+
+200 ttfb=0.251914 total=0.586174 a5bad54ffd24103b-EWR x-edge-cache: MISS https://tripnalc.com/?d=21191
+200 ttfb=0.127363 total=0.128192 a5bad5535c4cc43b-EWR  https://tripnalc.com/guide?d=3483
+200 ttfb=0.151572 total=0.152444 a5bad5542b19f812-EWR x-edge-cache: MISS https://tripnalc.com/overseas/osaka?d=20538
+200 ttfb=0.381379 total=0.398177 a5bad556b9058186-EWR x-edge-cache: MISS https://tripnalc.com/golf?d=18347
+200 ttfb=3.827696 total=3.829558 a5bad557cf2ec359-EWR x-edge-cache: MISS https://tripnalc.com/tide?d=31409
+200 ttfb=0.453182 total=0.454414 a5bad56fcc1f43e2-EWR x-edge-cache: MISS https://tripnalc.com/weekend?d=30094
+200 ttfb=0.108795 total=0.108910 a5bad572a8978ccd-EWR x-edge-cache: MISS https://tripnalc.com/robots.txt?d=24623
+200 ttfb=0.141745 total=0.162271 a5bad5736a73a6cc-EWR x-edge-cache: MISS https://tripnalc.com/sitemap.xml?d=7131

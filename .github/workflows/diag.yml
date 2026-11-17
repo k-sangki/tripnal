@@ -7,11 +7,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: |
-          UA='Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'
-          o=diag-out.txt
-          t() { curl -s -o /dev/null -D h.txt -w "%{http_code} ttfb=%{time_starttransfer}" -A "$UA" "$1"; echo " $(grep -i '^x-edge-cache' h.txt | tr -d '\r') $1"; }
-          for s in unaksan oido nami-island everland aewol gwangalli-beach bora-cc seoul chuncheon jirisan-cheonwangbong bike-damyang-dam biseulsan-camp dongchon-gc edenblue-cc; do
-            t "https://tripnalc.com/weather/$s?d=$RANDOM$RANDOM" >> $o
-          done
+          o=diag-out.txt; rm -f $o
+          python3 - <<'PY' >> $o
+          import random, time, urllib.request, concurrent.futures as cf, collections
+          def one(i):
+              lat = round(random.uniform(35.0, 37.8), 2); lon = round(random.uniform(126.8, 129.0), 2)
+              t = time.time()
+              try:
+                  with urllib.request.urlopen(urllib.request.Request(f"https://tripnalc.com/api/forecast?lat={lat}&lon={lon}&z={random.random()}", headers={"User-Agent": "tripnalc-loadtest"}), timeout=60) as r:
+                      r.read(); return r.status, time.time() - t
+              except urllib.error.HTTPError as e: return e.code, time.time() - t
+              except Exception as e: return type(e).__name__, time.time() - t
+          for conc in (1, 4, 8):
+              with cf.ThreadPoolExecutor(conc) as ex: res = list(ex.map(one, range(conc * 6)))
+              c = collections.Counter(s for s, _ in res); ts = sorted(t for _, t in res)
+              print(f"conc {conc}: {dict(c)} median {ts[len(ts)//2]:.2f}s max {ts[-1]:.2f}s", flush=True)
+          PY
           git config user.name diag; git config user.email diag@users.noreply.github.com
           git add $o; git commit -m "diag output"; git push

@@ -22,12 +22,12 @@ interface Ctx {
  * Cloudflare 예약 작업(wrangler.jsonc triggers.crons)이 제시간에 workflow_dispatch로 시작시킨다.
  * 토큰이 없거나 실패하면 GitHub 예약 실행이 예전처럼 대신 돈다.
  */
-async function dispatchCollect(env: Env): Promise<void> {
+async function dispatch(env: Env, workflow: string): Promise<void> {
   if (!env.COLLECT_DISPATCH_TOKEN) {
-    console.warn("collect dispatch: COLLECT_DISPATCH_TOKEN 없음");
+    console.warn(`${workflow} dispatch: COLLECT_DISPATCH_TOKEN 없음`);
     return;
   }
-  const res = await fetch("https://api.github.com/repos/k-sangki/tripnal/actions/workflows/collect.yml/dispatches", {
+  const res = await fetch(`https://api.github.com/repos/k-sangki/tripnal/actions/workflows/${workflow}/dispatches`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${env.COLLECT_DISPATCH_TOKEN}`,
@@ -37,16 +37,20 @@ async function dispatchCollect(env: Env): Promise<void> {
     },
     body: JSON.stringify({ ref: "main" }),
   });
-  if (!res.ok) throw new Error(`collect dispatch ${res.status}: ${(await res.text()).slice(0, 300)}`);
-  console.log("collect dispatch ok");
+  if (!res.ok) throw new Error(`${workflow} dispatch ${res.status}: ${(await res.text()).slice(0, 300)}`);
+  console.log(`${workflow} dispatch ok`);
 }
+
+/** wrangler.jsonc triggers.crons와 같은 값 */
+const PREWARM_CRON = "5 15 * * *";
 
 const worker = {
   async fetch(request: Request, env: Env, ctx: Ctx): Promise<Response> {
     return withEdgeCache(request, ctx, env.CF_VERSION_METADATA?.id ?? "dev", () => handler.fetch(request, env, ctx));
   },
-  async scheduled(_controller: unknown, env: Env, ctx: Ctx): Promise<void> {
-    ctx.waitUntil(dispatchCollect(env));
+  async scheduled(controller: { cron?: string }, env: Env, ctx: Ctx): Promise<void> {
+    // 15:05 UTC(한국 자정 직후): 새 날짜의 장소 예보를 미리 채운다 (prewarm.yml). 나머지는 수집 시작
+    ctx.waitUntil(dispatch(env, controller.cron === PREWARM_CRON ? "prewarm.yml" : "collect.yml"));
   },
 };
 

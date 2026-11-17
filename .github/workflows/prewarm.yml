@@ -1,0 +1,32 @@
+name: Prewarm
+
+# 장소 페이지 예보를 R2에 미리 채운다 (collector/prewarm.py, src/lib/weather/index.ts storedForecast).
+# 방문이 드문 장소 페이지는 검색 로봇이 올 때마다 예보를 새로 계산해 2~5초가 걸렸다(2026-11-17).
+# 수집이 끝난 뒤와, 한국 날짜가 바뀐 직후(Cloudflare 예약 작업 15:05 UTC가 workflow_dispatch)에 돈다.
+on:
+  workflow_run:
+    workflows: [Collect]
+    types: [completed]
+  workflow_dispatch:
+
+concurrency: prewarm
+
+jobs:
+  warm:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: collector/requirements.txt
+      - run: pip install -r collector/requirements.txt
+      - name: 장소 페이지 예보 채우기·지난 날짜 정리
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+        working-directory: collector
+        run: python prewarm.py

@@ -1,6 +1,7 @@
 import { getPosition } from "suncalc";
 import { KST_OFFSET_MIN, addDays, kstDate } from "@/lib/time";
 import type { DatedTideEvent, ForecastChange, HourlySeries, RawForecast, WeatherProvider } from "./types";
+import { applyTempCorrection, calibrateProb, stationWeights, tempCorrection, type TempCalib } from "./calibrate";
 
 /**
  * 직접 수집한 ECMWF·GFS·ICON 예보(collector/, R2 버킷 tripnal-data)를 읽는 provider.
@@ -689,6 +690,12 @@ export async function loadTide(b: DataBucket, lat: number, lon: number, keys: st
   return { seaLevel, tideEvents, station: file.name };
 }
 
+/** 기온 보정값 (10분마다 다시 읽음). 없거나 못 읽으면 보정 없이 */
+function loadCalib(b: DataBucket): Promise<TempCalib | null> {
+  const key = "verify/calib/latest.json";
+  return cached(`${key}:${Math.floor(Date.now() / 600e3)}`, () => b.get(key).then((o) => (o ? o.json<TempCalib>() : null))).catch(() => null);
+}
+
 /** off: 해외 여행지의 현지 시간대(UTC와의 차이, 분). 해외는 파고·물때·지형 고도 보정 없이 날씨만 */
 export async function loadCollected(b: DataBucket, lat: number, lon: number, elevation?: number, now = new Date(), off = KST_OFFSET_MIN): Promise<RawForecast> {
   const overseas = off !== KST_OFFSET_MIN;
@@ -719,21 +726,29 @@ export async function loadCollected(b: DataBucket, lat: number, lon: number, ele
   // 지점 고도를 모르면 지형 고도 격자에서, 그것도 없으면 모델 지형 고도를 쓴다 (보정 없음)
   const target = elevation ?? (await dem);
   const gridElev = median(ok.map((m) => combineCorners(m.points, keys.slice(0, 1), null).elevation));
-  const perModel = ok.map((m) => combineCorners(m.points, keys, target, off));
+  // 한국은 최근 14일 관측으로 배운 모델별 기온 치우침을 뺀다 (보정값이 없으면 그대로)
+  const calib = overseas ? null : await loadCalib(b);
+  const weights = calib ? stationWeights(calib, lat, lon, target ?? gridElev) : [];
+  const correct = (m: CollectedModel, h: ModelHourly) => {
+    const corr = calib ? tempCorrection(calib, m, weights, keys, now) : null;
+    return corr ? applyTempCorrection(h, corr) : h;
+  };
+  const perModel = ok.map((m) => correct(m.model, combineCorners(m.points, keys, target, off)));
   const hourly = blendCollected(perModel, keys, lat, lon, off);
   const w = await wave;
   if (w) Object.assign(hourly, w);
   const tide = overseas ? null : await loadTide(b, lat, lon, keys, w != null).catch(() => null);
   if (tide) hourly.seaLevel = tide.seaLevel;
   const p = await prob;
-  if (p) hourly.precipitationProbability = p;
+  // 한국은 GEFS 확률이 실제보다 높게 나와 절반쯤 낮춘다 (예측 가능성 계산엔 원래 값)
+  if (p) hourly.precipitationProbability = overseas ? p : p.map(calibrateProb);
   const q = await air;
   if (q) Object.assign(hourly, q);
   const prevModels = (await previous).filter((m) => m != null);
   // 지난 예보도 같은 모델들이 다 있을 때만 비교한다 (모델 구성이 다르면 중간값이 달라져서)
   const change =
     prevModels.length === ok.length && ok.length
-      ? forecastChange(hourly, blendCollected(prevModels.map((m) => combineCorners(m.points, keys, target, off)), keys, lat, lon, off))
+      ? forecastChange(hourly, blendCollected(prevModels.map((m) => correct(m.model, combineCorners(m.points, keys, target, off))), keys, lat, lon, off))
       : null;
   const names: Record<CollectedModel, string> = { ecmwf: "ECMWF", gfs: "GFS", icon: "ICON" };
   return {
@@ -758,7 +773,9 @@ export const collectedProvider: WeatherProvider = {
   async version() {
     const b = await bucket();
     const runs = await Promise.all((["ecmwf", "gfs", "icon", "wave", "gefs", "cams"] as const).map((m) => latestRun(b, m)));
+    // 보정값이 바뀌어도 저장한 예보를 다시 만든다
+    const calib = await loadCalib(b);
     // 주 모델이 하나도 없으면 보관하지 않는다
-    return runs.slice(0, 3).some(Boolean) ? runs.map((r) => r ?? "-").join(".") : null;
+    return runs.slice(0, 3).some(Boolean) ? [...runs.map((r) => r ?? "-"), calib?.generated.replace(/\D/g, "").slice(0, 12) || "-"].join(".") : null;
   },
 };

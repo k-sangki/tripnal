@@ -188,6 +188,7 @@ export function VerdictCard({ days, leisure, placeName, today, initialDate, near
                   <Link
                     key={p.slug}
                     href={`/weather/${p.slug}?act=${leisure.id}&vd=${day.date}`}
+                    rel="nofollow"
                     onClick={() => trackEvent("alt_place_click", { to: p.slug })}
                   >
                     {DOT[level]} {p.name} <small>{p.km}km</small>

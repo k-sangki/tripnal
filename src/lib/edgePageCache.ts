@@ -91,12 +91,15 @@ export function fromStored(res: Response): Response {
 }
 
 /**
- * 예전 주소(tripnal.com)·www·http는 Next를 거치지 않고 바로 https://tripnalc.com으로 보낸다 (next.config.ts redirects와 같은 규칙).
+ * www·http는 Next를 거치지 않고 바로 https://tripnalc.com으로 보낸다 (next.config.ts redirects와 같은 규칙).
+ * 예전 주소 tripnal.com은 쓰지 않아 연결을 끊었다(SK 2026-11-19). 혹시 아직 연결돼 있어도
+ * 같은 내용이 중복으로 잡히지 않게 404로 답한다.
  * 네이버 로봇(Yeti)이 확실히 따라가도록 308이 아닌 301을 쓴다.
  */
 export function canonicalRedirect(request: Request): Response | null {
   const url = new URL(request.url);
-  const oldHost = /^(www\.)?tripnal\.com$|^www\.tripnalc\.com$/.test(url.hostname);
+  if (/^(www\.)?tripnal\.com$/.test(url.hostname)) return new Response("Not Found", { status: 404 });
+  const oldHost = url.hostname === "www.tripnalc.com";
   const plainHttp = url.hostname === "tripnalc.com" && url.protocol === "http:";
   if (!oldHost && !plainHttp) return null;
   return Response.redirect(`https://tripnalc.com${url.pathname}${url.search}`, 301);

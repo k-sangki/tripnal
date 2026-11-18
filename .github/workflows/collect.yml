@@ -265,3 +265,6 @@ jobs:
         env:
           KHOA_API_KEY: ${{ secrets.KHOA_API_KEY }}
         run: python collector/verify.py obs
+      - name: 기온 보정값 (최근 14일 모델별 치우침)
+        if: always()
+        run: python collector/verify.py calib

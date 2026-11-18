@@ -118,7 +118,7 @@ export default async function CityPage({ params }: PageProps<"/overseas/[slug]">
           <p>{guide.land}</p>
           <p>{guide.climate}</p>
           <p>
-            <b>가기 좋은 때</b> · {guide.best}
+            <b>많이 찾는 때</b> · {guide.best}
           </p>
           {guide.caution && (
             <p>

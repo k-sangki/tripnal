@@ -1,6 +1,0 @@
-zhangjiajie guide=1
-taihang guide=1
-jiuzhaigou guide=1
-osaka guide=1
-sydney guide=1
-london guide=1

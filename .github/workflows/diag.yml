@@ -10,12 +10,10 @@ jobs:
       - run: |
           UA="Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
           {
-          curl -s -A "$UA" "https://tripnalc.com/sitemap.xml" > sm.xml
-          echo "urls: $(grep -c '<loc>' sm.xml)"; echo "foreign: $(grep -cE '<loc>https://tripnalc.com/(en|ja|zh)(/|<)' sm.xml)"; echo "hreflang: $(grep -c 'hreflang' sm.xml)"
-          echo "removed: $(curl -s https://tripnalc.com/sitemap-removed.xml | grep -c '<loc>')"
-          for u in / /weather/seoul /ja /zh/weather/jeju /en/weather/seoul /ja/korea/11; do
-            h=$(curl -s -A "$UA" -H "Accept-Language: en-US" -D hdr.txt "https://tripnalc.com$u")
-            echo "$u $(head -1 hdr.txt|tr -d '\r') robots=$(echo "$h"|grep -o '<meta name="robots"[^>]*>'|head -1) canon=$(echo "$h"|grep -o '<link rel="canonical"[^>]*>'|head -1) hreflang=$(echo "$h"|grep -ci hreflang)"
+          for ua in "$UA" "Mozilla/5.0 Chrome/130"; do
+            curl -s -A "$ua" "https://tripnalc.com/?v=$RANDOM" > h.html
+            echo "== $ua size=$(wc -c < h.html)"; grep -o '<title>[^<]*</title>' h.html | head -2; grep -oi '<link[^>]*canonical[^>]*>' h.html | head; grep -o '<meta name="description"[^>]*>' h.html | head -1
+            grep -o 'hrefLang="[^"]*"' h.html | head -3
           done
           } > diag-out.txt 2>&1
           git config user.name bot; git config user.email bot@x; git add diag-out.txt; git commit -m "diag output"; git push

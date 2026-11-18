@@ -73,7 +73,7 @@ export default async function WeekendPage() {
               <ol className="wk-list">
                 {picks.map((x, i) => (
                   <li key={x.place.slug}>
-                    <Link href={`/weather/${x.place.slug}${query}`}>
+                    <Link href={`/weather/${x.place.slug}${query}`} rel={query ? "nofollow" : undefined}>
                       <span className="wk-rank">{i + 1}</span>
                       <span className="wk-name">
                         <b>{x.place.name}</b>

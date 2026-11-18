@@ -69,7 +69,7 @@ export function MyPlaces({ today, onPick }: { today: string; onPick: (p: FavPlac
           );
           const open = () => trackEvent("favorite_open");
           return p.slug ? (
-            <Link key={favKey(p)} className="my-place" href={`/weather/${p.slug}?act=${p.act}&vd=${date}`} onClick={open}>
+            <Link key={favKey(p)} className="my-place" href={`/weather/${p.slug}?act=${p.act}&vd=${date}`} rel="nofollow" onClick={open}>
               {body}
             </Link>
           ) : (

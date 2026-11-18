@@ -21,7 +21,8 @@ export function SeasonRow({
 }) {
   return (
     <li>
-      <Link href={href}>
+      {/* 날짜·조건이 붙은 주소는 구글봇이 따라가지 않게 (본체 주소만 수집, 2026-11-19) */}
+      <Link href={href} rel={href.includes("?") ? "nofollow" : undefined}>
         <span className="wk-name">
           <b>{name}</b>
           <small>{region}</small>

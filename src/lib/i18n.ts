@@ -36,10 +36,17 @@ export function localePath(l: Locale, path: string): string {
 }
 
 /**
+ * hreflang을 낼지. 외국어 페이지를 모두 noindex로 둔 동안(SK 2026-11-18, src/lib/indexing.ts)
+ * 한국어 페이지가 검색 제외된 외국어판을 가리키지 않게 끈다. 외국어를 다시 색인할 때 켠다.
+ */
+export const HREFLANG_ENABLED = false;
+
+/**
  * hreflang 대체 주소. 번역된 언어만 넣는다. 영어를 x-default로 둬서
  * 한국어·일본어·중국어가 아닌 사람(동남아·유럽 등)에게는 영어판이 나오게 한다.
  */
 export function languageAlternates(path: string, locales: readonly Locale[] = ["ko", ...FOREIGN_LOCALES]): Record<string, string> {
+  if (!HREFLANG_ENABLED) return {};
   const out: Record<string, string> = {};
   for (const l of locales) out[LANG_TAG[l]] = localePath(l, path);
   if (locales.includes("en")) out["x-default"] = localePath("en", path);

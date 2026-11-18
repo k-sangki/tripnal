@@ -9,6 +9,8 @@ import { CLIMATE_SOURCE, climateSummary, getIntro, getNormals, goodMonths, local
 import { travelFacts } from "@/lib/countryInfo";
 import { seasons, wetDry } from "@/lib/season";
 import { DESTINATIONS, destinationOffset, getDestination, type Destination } from "@/lib/overseas";
+import { getOverseasGuide } from "@/data/overseas-guide";
+import { topic } from "@/lib/seo";
 
 /** 요청마다 그린다 (현지 달이 바뀌므로). 16일 예보는 브라우저에서 따로 받아 페이지가 기다리지 않는다 */
 export const dynamic = "force-dynamic";
@@ -59,6 +61,7 @@ export default async function CityPage({ params }: PageProps<"/overseas/[slug]">
   const month = localMonth(offset);
   const good = goodMonths(d.slug);
   const related = DESTINATIONS.filter((x) => x.slug !== d.slug && x.group === d.group);
+  const guide = getOverseasGuide(d.slug);
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -108,6 +111,22 @@ export default async function CityPage({ params }: PageProps<"/overseas/[slug]">
         {normals && <CityIssues lat={d.lat} lon={d.lon} normals={normals} />}
         <ForecastButton slug={d.slug} light />
       </section>
+
+      {guide && (
+        <section className="card seo-text" style={{ marginTop: 12 }}>
+          <h2>{topic(d.name)} 어떤 날씨?</h2>
+          <p>{guide.land}</p>
+          <p>{guide.climate}</p>
+          <p>
+            <b>가기 좋은 때</b> · {guide.best}
+          </p>
+          {guide.caution && (
+            <p>
+              <b>주의할 점</b> · {guide.caution}
+            </p>
+          )}
+        </section>
+      )}
 
       {normals && (
         <CityMonths

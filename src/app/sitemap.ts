@@ -40,7 +40,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: `${BASE}${path}`,
     changeFrequency,
     priority,
-    ...(langs ? { alternates: { languages: langs } } : {}),
+    ...(langs && Object.keys(langs).length ? { alternates: { languages: langs } } : {}),
   });
   const translated = Object.keys(PLACE_TEXT);
   return [

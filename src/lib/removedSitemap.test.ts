@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { localeIndexed } from "@/lib/indexing";
 import { removedPaths } from "@/lib/removedSitemap";
 
 describe("removedPaths", () => {
@@ -8,7 +9,8 @@ describe("removedPaths", () => {
     expect(paths).toContain("/overseas/tokyo/forecast");
     expect(paths).toContain("/en");
     expect(paths).toContain("/ja/weather/seoul/11");
-    expect(paths).not.toContain("/ja");
+    if (localeIndexed("ja")) expect(paths).not.toContain("/ja");
+    else expect(paths).toContain("/ja");
     expect(paths).not.toContain("/weather/seoul");
     expect(new Set(paths).size).toBe(paths.length);
   });

@@ -11,11 +11,13 @@
 export const NOINDEX = { index: false, follow: true } as const;
 
 /**
- * 다시 색인하는 외국어. 일본어·중국어는 유입이 있었고 영어는 거의 없어 나중에 연다 (SK 2026-11-02).
+ * 다시 색인하는 외국어. 2026-11-18 SK 결정으로 비웠다: 한국어 사이트가 구글에서 회복될 때까지
+ * 영어·일본어·중국어 페이지는 모두 noindex·사이트맵 제외(페이지는 그대로 열림).
+ * 회복 뒤 유입이 있던 일본어·중국어부터 다시 넣는다 (예전 값 ["ja", "zh"], 2026-11-02).
  * 이 언어들은 홈·장소·소개·개인정보와 "한국 N월 날씨"(/{lang}/korea/{m})를 색인한다.
  * 국내 도시 월별(/{lang}/weather/{slug}/{m})은 모든 언어에서 계속 noindex.
  */
-export const INDEXED_LOCALES: readonly string[] = ["ja", "zh"];
+export const INDEXED_LOCALES: readonly string[] = [];
 
 export function localeIndexed(lang: string): boolean {
   return INDEXED_LOCALES.includes(lang);

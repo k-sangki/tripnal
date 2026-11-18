@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { PLACE_TEXT } from "@/data/places-i18n";
 import { WORDS } from "./i18n-words";
-import { languageAlternates, localePath, tr } from "./i18n";
+import { HREFLANG_ENABLED, languageAlternates, localePath, tr } from "./i18n";
 import { INTERVALS, slotHead } from "./interval";
 import { METRIC_LABEL } from "./leisure";
 import { PRESETS, periodLabel } from "./period";
@@ -62,6 +62,10 @@ describe("i18n", () => {
   it("hreflang 주소", () => {
     expect(localePath("en", "/")).toBe("/en");
     expect(localePath("ja", "/weather/seoul")).toBe("/ja/weather/seoul");
+    if (!HREFLANG_ENABLED) {
+      expect(languageAlternates("/weather/seoul")).toEqual({});
+      return;
+    }
     expect(languageAlternates("/weather/seoul")).toEqual({
       ko: "/weather/seoul",
       en: "/en/weather/seoul",

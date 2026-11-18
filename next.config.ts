@@ -16,15 +16,9 @@ const nextConfig: NextConfig = {
   // 예보 계산이 느린 장소 페이지와 홈은 Googlebot이 받은 HTML의 <head>에 제목·설명·canonical이 비어 있었다(2026-11-17 점검).
   // 구글이 화면을 그려 보기 전(렌더링 대기)에는 제목 없는 페이지로 보이므로, 기본 목록에 Googlebot·Daum·네이버를 더한다.
   htmlLimitedBots: new RegExp(`${HTML_LIMITED_BOT_UA_RE.source}|Googlebot|Daum|NaverBot`, "i"),
-  // 예전 주소(tripnal.com)와 www는 tripnalc.com 같은 경로로 영구 이동(301, 네이버 로봇이 확실히 따라가는 코드)
+  // www는 tripnalc.com 같은 경로로 영구 이동(301, 네이버 로봇이 확실히 따라가는 코드). 예전 tripnal.com은 2026-11-19 연결 해제
   async redirects() {
     return [
-      {
-        source: "/:path*",
-        has: [{ type: "host", value: "(www\\.)?tripnal\\.com" }],
-        destination: "https://tripnalc.com/:path*",
-        statusCode: 301,
-      },
       {
         source: "/:path*",
         has: [{ type: "host", value: "www\\.tripnalc\\.com" }],

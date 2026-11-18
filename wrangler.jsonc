@@ -24,9 +24,7 @@
   "r2_buckets": [{ "binding": "DATA", "bucket_name": "tripnal-data" }],
   "routes": [
     { "pattern": "tripnalc.com", "custom_domain": true },
-    { "pattern": "www.tripnalc.com", "custom_domain": true },
-    { "pattern": "tripnal.com", "custom_domain": true },
-    { "pattern": "www.tripnal.com", "custom_domain": true }
+    { "pattern": "www.tripnalc.com", "custom_domain": true }
   ],
   "vars": {
     "WEATHER_PROVIDER": "collected",

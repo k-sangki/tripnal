@@ -1,0 +1,18 @@
+name: diag
+on: { push: { branches: [claude/project-thread-i8evdz] } }
+permissions: { contents: write }
+jobs:
+  d:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'diag output')"
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          UA="Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+          {
+          for u in zhangjiajie taihang jiuzhaigou osaka sydney london; do
+            echo "$u guide=$(curl -s -A "$UA" "https://tripnalc.com/overseas/$u" | grep -c '어떤 날씨?')"
+          done
+          } > diag-out.txt 2>&1
+          google-chrome --headless=new --no-sandbox --hide-scrollbars --window-size=420,2600 --force-device-scale-factor=2 --screenshot=diag-shot.png "https://tripnalc.com/overseas/zhangjiajie?me=1" || true
+          git config user.name bot; git config user.email bot@x; git add diag-out.txt diag-shot.png; git commit -m "diag output"; git push

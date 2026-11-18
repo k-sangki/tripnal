@@ -1,4 +1,0 @@
-/weekend query-links=40 nofollow=40
-/autumn-foliage query-links=19 nofollow=19
-/weather/seoul query-links=0 nofollow=0
-/ query-links=0 nofollow=0

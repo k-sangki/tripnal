@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { SiteFooter, SiteHeader } from "@/components/SiteHeader";
 import { getLeisure, type LeisureId } from "@/lib/leisure";
 import { presetPeriod } from "@/lib/period";
@@ -9,6 +8,7 @@ import { getForecast } from "@/lib/weather";
 import { codeInfo } from "@/lib/weather/codes";
 import { loadWeekend, rankWeekend, weekendBest, weekendFromForecast, type WeekendData } from "@/lib/weekend";
 import { Flag } from "@/components/Flag";
+import { QueryLink } from "@/components/QueryLink";
 
 /** 수집 작업이 하루 두 번 올리는 R2 자료를 요청 때 읽는다 */
 export const dynamic = "force-dynamic";
@@ -73,7 +73,7 @@ export default async function WeekendPage() {
               <ol className="wk-list">
                 {picks.map((x, i) => (
                   <li key={x.place.slug}>
-                    <Link href={`/weather/${x.place.slug}${query}`} rel={query ? "nofollow" : undefined}>
+                    <QueryLink href={`/weather/${x.place.slug}`} query={query}>
                       <span className="wk-rank">{i + 1}</span>
                       <span className="wk-name">
                         <b>{x.place.name}</b>
@@ -88,7 +88,7 @@ export default async function WeekendPage() {
                         </small>
                       </span>
                       <span className={`wk-score${x.score >= 8 ? " hi" : x.score >= 6 ? " mid" : ""}`}>{x.score.toFixed(1)}</span>
-                    </Link>
+                    </QueryLink>
                   </li>
                 ))}
               </ol>

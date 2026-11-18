@@ -4,12 +4,12 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { SLOGAN } from "@/lib/brand";
 import type { Leisure } from "@/lib/leisure";
 import { weekday, weekdayKo } from "@/lib/time";
-import Link from "next/link";
 import { fetchForecast } from "@/lib/forecastClient";
 import { trackEvent, trackShare } from "@/lib/track";
 import { dayVerdict, luckTitle, verdictDay, type VerdictLevel } from "@/lib/verdict";
 import type { DayForecast } from "@/lib/weather/types";
 import { captureElement } from "./CaptureSheet";
+import { QueryLink } from "@/components/QueryLink";
 
 /** 같은 레저의 가까운 장소 (서버에서 거리순으로 넘긴다) */
 export interface NearbyPlace {
@@ -185,14 +185,14 @@ export function VerdictCard({ days, leisure, placeName, today, initialDate, near
               </b>
               <div className="verdict-alt-row">
                 {better.map(({ p, level }) => (
-                  <Link
+                  <QueryLink
                     key={p.slug}
-                    href={`/weather/${p.slug}?act=${leisure.id}&vd=${day.date}`}
-                    rel="nofollow"
+                    href={`/weather/${p.slug}`}
+                    query={`act=${leisure.id}&vd=${day.date}`}
                     onClick={() => trackEvent("alt_place_click", { to: p.slug })}
                   >
                     {DOT[level]} {p.name} <small>{p.km}km</small>
-                  </Link>
+                  </QueryLink>
                 ))}
               </div>
             </>

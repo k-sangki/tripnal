@@ -1,0 +1,17 @@
+name: diag
+on: { push: { branches: [claude/project-thread-i8evdz] } }
+permissions: { contents: write }
+jobs:
+  d:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'diag output')"
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          {
+          for u in https://tripnal.com/ https://www.tripnal.com/weather/seoul http://tripnal.com/ https://www.tripnalc.com/weekend http://tripnalc.com/ https://tripnalc.com/; do
+            echo "$u -> $(curl -s -o /dev/null -m 15 -w '%{http_code} %{redirect_url}' "$u" 2>&1) exit=$?"
+          done
+          dig +short tripnal.com; dig +short www.tripnal.com
+          } > diag-out.txt 2>&1
+          git config user.name bot; git config user.email bot@x; git add diag-out.txt; git commit -m "diag output"; git push

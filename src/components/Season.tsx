@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SEASON_PAGES } from "@/lib/seasonal";
+import { QueryLink } from "@/components/QueryLink";
 
 /** 계절 페이지 목록 한 줄: 장소 이름 · 오른쪽 날씨 요약 · 배지 */
 export function SeasonRow({
@@ -21,8 +22,8 @@ export function SeasonRow({
 }) {
   return (
     <li>
-      {/* 날짜·조건이 붙은 주소는 구글봇이 따라가지 않게 (본체 주소만 수집, 2026-11-19) */}
-      <Link href={href} rel={href.includes("?") ? "nofollow" : undefined}>
+      {/* 링크는 본체 주소, 날짜 조건은 누를 때만 붙인다 (2026-11-19) */}
+      <QueryLink href={href.split("?")[0]} query={href.split("?")[1]}>
         <span className="wk-name">
           <b>{name}</b>
           <small>{region}</small>
@@ -32,7 +33,7 @@ export function SeasonRow({
           {sub && <small>{sub}</small>}
         </span>
         {badge && <span className={`wk-score season-badge${tone ? ` ${tone}` : ""}`}>{badge}</span>}
-      </Link>
+      </QueryLink>
     </li>
   );
 }

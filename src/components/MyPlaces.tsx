@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FAV_EVENT, favKey, loadFavs, nextWeekendDay, type FavPlace } from "@/lib/favorites";
 import { fetchForecast } from "@/lib/forecastClient";
@@ -8,6 +7,7 @@ import { getLeisure } from "@/lib/leisure";
 import { weekdayKo } from "@/lib/time";
 import { trackEvent } from "@/lib/track";
 import { dayVerdict, verdictDay, type VerdictLevel } from "@/lib/verdict";
+import { QueryLink } from "@/components/QueryLink";
 
 const md = (d: string) => `${Number(d.slice(5, 7))}/${Number(d.slice(8, 10))}`;
 
@@ -69,9 +69,9 @@ export function MyPlaces({ today, onPick }: { today: string; onPick: (p: FavPlac
           );
           const open = () => trackEvent("favorite_open");
           return p.slug ? (
-            <Link key={favKey(p)} className="my-place" href={`/weather/${p.slug}?act=${p.act}&vd=${date}`} rel="nofollow" onClick={open}>
+            <QueryLink key={favKey(p)} className="my-place" href={`/weather/${p.slug}`} query={`act=${p.act}&vd=${date}`} onClick={open}>
               {body}
-            </Link>
+            </QueryLink>
           ) : (
             <button
               key={favKey(p)}

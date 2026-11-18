@@ -1,0 +1,10 @@
+urls: 1073
+foreign: 0
+hreflang: 0
+removed: 3684
+/ HTTP/2 200  robots= canon= hreflang=0
+/weather/seoul HTTP/2 200  robots= canon=<link rel="canonical" href="https://tripnalc.com/weather/seoul"/> hreflang=1
+/ja HTTP/2 200  robots=<meta name="robots" content="noindex, follow"/> canon=<link rel="canonical" href="https://tripnalc.com/ja"/> hreflang=1
+/zh/weather/jeju HTTP/2 200  robots=<meta name="robots" content="noindex, follow"/> canon=<link rel="canonical" href="https://tripnalc.com/zh/weather/jeju"/> hreflang=1
+/en/weather/seoul HTTP/2 200  robots=<meta name="robots" content="noindex, follow"/> canon=<link rel="canonical" href="https://tripnalc.com/en/weather/seoul"/> hreflang=1
+/ja/korea/11 HTTP/2 200  robots=<meta name="robots" content="noindex, follow"/> canon=<link rel="canonical" href="https://tripnalc.com/ja/korea/11"/> hreflang=1

@@ -62,9 +62,14 @@ export async function generateMetadata({ searchParams }: PageProps<"/">): Promis
   if (!one(sp.lat) || !Number.isFinite(lat) || !Number.isFinite(lon) || !isInKorea(lat, lon)) {
     // 기본 홈: 설명에 이번 주말 1등 장소를 넣는다 (CTR 개선 2026-10-27). 자료가 없으면 layout 기본 설명
     const w = weekendBest(await loadWeekend(), kstDate());
-    if (!w) return {};
+    // 기본 홈도 자기 자신을 canonical로 (11/18 점검 때 빠져 있었음)
+    if (!w) return { alternates: { canonical: "/", languages: languageAlternates("/") } };
     const description = `놀러 갈 땐, 트립날씨. 이번 주말(${w.range}) 날씨 1등은 ${w.best}! 캠핑·등산·낚시·여행지 이번주 날씨를 3시간 간격으로 3초 만에.`;
-    return { description, openGraph: { siteName: "트립날씨", locale: "ko_KR", description } };
+    return {
+      description,
+      alternates: { canonical: "/", languages: languageAlternates("/") },
+      openGraph: { siteName: "트립날씨", locale: "ko_KR", description },
+    };
   }
   const name = one(sp.name)?.slice(0, 40) || "선택한 위치";
   const leisure = getLeisure(one(sp.act));

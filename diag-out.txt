@@ -1,6 +1,0 @@
-https://tripnal.com/ -> 000  exit=6
-https://www.tripnal.com/weather/seoul -> 000  exit=6
-http://tripnal.com/ -> 000  exit=6
-https://www.tripnalc.com/weekend -> 301 https://tripnalc.com/weekend exit=0
-http://tripnalc.com/ -> 301 https://tripnalc.com/ exit=0
-https://tripnalc.com/ -> 200  exit=0

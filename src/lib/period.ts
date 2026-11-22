@@ -35,9 +35,21 @@ export function presetPeriod(id: PresetId, today: string): Period {
   }
 }
 
+/**
+ * 기간 버튼이 고르는 기간. presetPeriod와 같지만 일요일의 "주말"은 오늘 하루(= "오늘" 버튼과 같아
+ * 눌러도 반응이 없어 보임) 대신 다음 토·일을 고른다.
+ */
+export function chipPeriod(id: PresetId, today: string): Period {
+  if (id === "weekend" && weekday(today) === 0) {
+    const sat = addDays(today, 6);
+    return { from: sat, to: addDays(sat, 1) };
+  }
+  return presetPeriod(id, today);
+}
+
 export function matchPreset(p: Period, today: string): PresetId | null {
   return PRESETS.find(({ id }) => {
-    const q = presetPeriod(id, today);
+    const q = chipPeriod(id, today);
     return q.from === p.from && q.to === p.to;
   })?.id ?? null;
 }

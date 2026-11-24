@@ -51,7 +51,10 @@ function km(lat1: number, lon1: number, lat2: number, lon2: number) {
   return Math.hypot(x, y) * 6371;
 }
 
-type Bucket = { get(key: string): Promise<{ json<T>(): Promise<T> } | null> };
+type Bucket = {
+  get(key: string): Promise<{ json<T>(): Promise<T> } | null>;
+  put(key: string, value: string, options?: { httpMetadata?: { contentType?: string } }): Promise<unknown>;
+};
 
 async function bucket(): Promise<Bucket | null> {
   try {
@@ -63,9 +66,29 @@ async function bucket(): Promise<Bucket | null> {
   }
 }
 
-/** 장소별 그날 만조·간조 시각 (가장 가까운 국립해양조사원 관측소). R2가 없으면 null */
+/**
+ * 장소별 그날 만조·간조 시각 (가장 가까운 국립해양조사원 관측소). R2가 없으면 null.
+ * 관측소 파일 수십 개를 읽느라 캐시가 빈 /tide가 2~4초 걸려서(2026-11-24, 미국 데이터센터 측정)
+ * 한 번 계산한 그날 결과를 R2(fc/{날짜}/, 지난 날짜는 prewarm이 지움)에 두고 다음부터는 파일 하나만 읽는다.
+ */
 export async function loadTideDay(places: Place[], date: string): Promise<Record<string, TideDay> | null> {
   const b = await bucket();
+  if (!b) return computeTideDay(null, places, date);
+  const key = `fc/${date}/tide-day/${places.length}.json`;
+  const hit = await b
+    .get(key)
+    .then((o) => (o ? o.json<Record<string, TideDay>>() : null))
+    .catch(() => null);
+  if (hit) return hit;
+  const out = await computeTideDay(b, places, date);
+  // 관측소 파일을 거의 못 읽었으면 보관하지 않는다 (다음 요청이 다시 계산)
+  if (out && Object.keys(out).length >= places.length / 2) {
+    await b.put(key, JSON.stringify(out), { httpMetadata: { contentType: "application/json" } }).catch(() => null);
+  }
+  return out;
+}
+
+async function computeTideDay(b: Bucket | null, places: Place[], date: string): Promise<Record<string, TideDay> | null> {
   const stations = b ? await b.get("tide/stations.json").then((o) => o?.json<TideStation[]>() ?? null).catch(() => null) : null;
   if (!b || !stations) return process.env.NODE_ENV === "development" ? devTideDay(places, date) : null;
   const nearest = new Map<string, string>();

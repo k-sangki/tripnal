@@ -42,6 +42,20 @@ async function deployId(): Promise<string> {
   }
 }
 
+/**
+ * 원자료 판 이름. 알아내려면 R2 파일 일곱 개를 읽어야 해서(R2는 아시아에 있어 미국 데이터센터에서는 왕복 수백 ms),
+ * 같은 데이터센터에서는 5분 동안 다시 쓴다 (Worker가 새로 뜰 때도). 수집 뒤 길어야 5분 늦게 새 판을 쓴다.
+ */
+async function dataVersion(p: WeatherProvider): Promise<string | null> {
+  const load = p.version;
+  if (!load) return null;
+  return cachedJson(`data-version/${p.name}`, 5 * 60, async () => {
+    const v = await load.call(p);
+    if (!v) throw new Error("원자료 없음");
+    return v;
+  }).catch(() => null);
+}
+
 /** 계산한 예보를 보관하는 시간. 원자료 판(run)·날짜가 바뀌면 키가 바뀌므로 길게 둔다 */
 const FORECAST_TTL = 6 * 3600;
 
@@ -56,7 +70,7 @@ export async function getForecast(lat: number, lon: number, elevation?: number, 
   const la = snapCoord(lat);
   const lo = snapCoord(lon);
   const compute = async () => aggregate(await p.fetchHourly(la, lo, elevation, utcOffset));
-  const version = await p.version?.().catch(() => null);
+  const version = await dataVersion(p);
   if (!version) return compute();
   const day = kstDate(new Date(), utcOffset ?? KST_OFFSET_MIN);
   const key = ["forecast", await deployId(), p.name, `${la}_${lo}`, elevation ?? "", utcOffset ?? "", day, version].join("/");

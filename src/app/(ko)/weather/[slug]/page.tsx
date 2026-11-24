@@ -251,7 +251,7 @@ export default async function PlacePage({ params }: PageProps<"/weather/[slug]">
             normals={krNormals(monthCity.slug)!}
             good={[]}
             current={nowMonth}
-            href={(m) => `/weather/${monthCity.slug}/${m}`}
+            hrefBase={`/weather/${monthCity.slug}`}
           />
         </section>
       )}

@@ -1,12 +1,12 @@
-import Link from "next/link";
+import { NoCrawlLink } from "@/components/NoCrawlLink";
 import type { GoodMonth, MonthGuide, MonthNormal, PrepItem } from "@/lib/climate";
 
 /** 실시간 16일 예보 페이지로 가는 버튼 */
 export function ForecastButton({ slug, light }: { slug: string; light?: boolean }) {
   return (
-    <Link href={`/overseas/${slug}/forecast`} className={`city-cta${light ? " light" : ""}`}>
+    <NoCrawlLink base={`/overseas/${slug}`} tail="/forecast" className={`city-cta${light ? " light" : ""}`}>
       실시간 16일 날씨 →
-    </Link>
+    </NoCrawlLink>
   );
 }
 
@@ -19,7 +19,7 @@ export function MonthCards({
   selected,
   onSelect,
   shoulder,
-  href = (month) => `/overseas/${slug}/${month}`,
+  hrefBase = `/overseas/${slug}`,
 }: {
   slug: string;
   normals: MonthNormal[];
@@ -30,8 +30,8 @@ export function MonthCards({
   onSelect?: (month: number) => void;
   /** 간절기인 달 (작게 표시) */
   shoulder?: number[];
-  /** 달을 눌렀을 때 갈 주소 (기본은 해외 도시 월별 페이지) */
-  href?: (month: number) => string;
+  /** 달을 눌렀을 때 갈 주소 앞부분, 뒤에 /{달}이 붙는다 (기본은 해외 도시 월별 페이지). 월별 페이지는 noindex라 로봇이 따라가지 않는 링크로 둔다 */
+  hrefBase?: string;
 }) {
   const goodMap = new Map(good.map((g) => [g.month, g]));
   return (
@@ -57,9 +57,9 @@ export function MonthCards({
             {inner}
           </button>
         ) : (
-          <Link key={month} href={href(month)} className={cls} aria-current={selected === month ? "page" : undefined}>
+          <NoCrawlLink key={month} base={hrefBase} tail={`/${month}`} className={cls} aria-current={selected === month ? "page" : undefined}>
             {inner}
-          </Link>
+          </NoCrawlLink>
         );
       })}
     </nav>
@@ -114,9 +114,9 @@ export function ClimateChart({
               {inner}
             </button>
           ) : (
-            <Link key={month} href={`/overseas/${slug}/${month}`} className={cls} aria-label={`${month}월`}>
+            <NoCrawlLink key={month} base={`/overseas/${slug}`} tail={`/${month}`} className={cls} aria-label={`${month}월`}>
               {inner}
-            </Link>
+            </NoCrawlLink>
           );
         })}
       </div>

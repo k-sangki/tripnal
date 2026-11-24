@@ -1,0 +1,12 @@
+name: diag
+on: { push: { branches: [claude/project-thread-i8evdz] } }
+permissions: { contents: write }
+jobs:
+  d:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'diag output')"
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 .github/diag/sim.py > diag-out.txt 2>&1 || true
+          git config user.name bot; git config user.email bot@x; git add diag-out.txt; git commit -m "diag output"; git push

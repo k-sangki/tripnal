@@ -16,14 +16,18 @@ describe("mountainMonths", () => {
     const rows = mountainMonths("jirisan-cheonwangbong", 35.3369, 127.7306, 1915)!;
     expect(rows).toHaveLength(12);
     expect(rows[0].wear).toContain("패딩");
-    expect(rows[0].wear).toContain("아이젠");
-    expect(rows[7].wear).not.toContain("아이젠");
+    expect(rows[0].crampon).toBe(true);
+    expect(rows[7].crampon).toBe(false);
   });
   it("옷차림 단계", () => {
     expect(wearFor(15, 25)).toContain("반팔");
     expect(wearFor(0, 8)).toContain("플리스");
   });
-  it("길잡이 글은 장마다 비어 있지 않다", () => {
-    for (const secs of Object.values(MOUNTAIN_GUIDE)) for (const s of secs) expect(s.p.length).toBeGreaterThan(100);
+  it("길잡이는 코스·사계절·가는 길이 다 있다", () => {
+    for (const g of Object.values(MOUNTAIN_GUIDE)) {
+      expect(g.courses.length).toBeGreaterThanOrEqual(3);
+      expect(g.seasons).toHaveLength(4);
+      expect(g.access.length).toBeGreaterThan(0);
+    }
   });
 });

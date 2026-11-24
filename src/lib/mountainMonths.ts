@@ -19,6 +19,8 @@ export interface MountainMonthRow {
   hi: number;
   rain: number;
   wear: string;
+  /** 아이젠 챙기기 */
+  crampon: boolean;
 }
 
 const RAD = Math.PI / 180;
@@ -46,12 +48,11 @@ const hhmm = (min: number) => {
 /** 새벽(일출 무렵) 기온 기준 옷차림. 정상은 바람이 더해지면 체감이 더 낮다. */
 export function wearFor(lo: number, hi: number): string {
   let w: string;
-  if (lo <= -10) w = "두꺼운 패딩·방한모·두꺼운 장갑";
-  else if (lo <= -3) w = "패딩이나 두꺼운 플리스+방풍 재킷·장갑";
-  else if (lo <= 3) w = "플리스+방풍 재킷·얇은 장갑";
-  else if (lo <= 12) w = "긴팔+바람막이";
-  else w = "반팔+바람막이(땀 식을 때)";
-  if (lo <= -5 || hi <= 3) w += ", 아이젠";
+  if (lo <= -10) w = "두꺼운 패딩·방한모";
+  else if (lo <= -3) w = "패딩·방풍·장갑";
+  else if (lo <= 3) w = "플리스·방풍";
+  else if (lo <= 12) w = "긴팔·바람막이";
+  else w = "반팔·바람막이";
   return w;
 }
 
@@ -65,5 +66,6 @@ export function mountainMonths(slug: string, lat: number, lon: number, elevation
     hi: Math.round(hi) || 0,
     rain: c.rain[i],
     wear: wearFor(c.lo[i], hi),
+    crampon: c.lo[i] <= -5 || hi <= 3,
   }));
 }

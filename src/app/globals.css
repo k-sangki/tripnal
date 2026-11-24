@@ -1737,6 +1737,41 @@ a {
   flex-direction: column;
   gap: 8px;
 }
+.grp-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+.grp-grid .grp-btn {
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  min-height: 58px;
+  padding: 6px 2px;
+}
+.grp-grid .grp-emoji {
+  font-size: 18px;
+}
+.grp-grid .grp-label {
+  padding: 0;
+  font-size: 12.5px;
+  white-space: nowrap;
+}
+.grp-also {
+  margin: 8px 2px 0;
+  font-size: 12.5px;
+  color: var(--ink-3, #8b95a1);
+}
+.model-note-line {
+  margin: 12px 4px 0;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.model-note-line a {
+  color: var(--pine);
+  font-weight: 600;
+  white-space: nowrap;
+}
 .grp-btn {
   display: flex;
   align-items: center;

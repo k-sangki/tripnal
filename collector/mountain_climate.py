@@ -13,12 +13,46 @@ import concurrent.futures as cf
 import json
 import os
 import sys
-
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from golf_facts import climate  # noqa: E402
+import time
+import urllib.request
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 OUT = os.path.join(ROOT, "src", "data", "mountain-climate.json")
+LAPSE = 0.0065
+UA = {"User-Agent": "tripnalc-mountain-climate/1.0 (weather site data build)"}
+
+
+def get(url, tries=6, timeout=120):
+    for i in range(tries):
+        try:
+            with urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=timeout) as r:
+                return r.read()
+        except Exception as e:
+            if i == tries - 1:
+                raise
+            print("retry", e, flush=True)
+            time.sleep(min(60, 3 * 2**i))
+
+
+def climate(lat, lon, elev):
+    """golf_facts.climate와 같은 계산 (무거운 지형 라이브러리 없이 돌리려고 따로 둔다)"""
+    url = (
+        "https://power.larc.nasa.gov/api/temporal/climatology/point"
+        f"?parameters=T2M_MAX,T2M_MIN,PRECTOTCORR,WS2M&community=AG&longitude={lon}&latitude={lat}&format=JSON"
+    )
+    j = json.loads(get(url))
+    p = j["properties"]["parameter"]
+    gz = j["geometry"]["coordinates"][2] if len(j["geometry"]["coordinates"]) > 2 else None
+    adj = (gz - elev) * LAPSE if (gz is not None and elev is not None) else 0
+    mon = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"]
+    days = [31, 28.25, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    return {
+        "hi": [round(p["T2M_MAX"][m] + adj, 1) for m in mon],
+        "lo": [round(p["T2M_MIN"][m] + adj, 1) for m in mon],
+        "rain": [round(p["PRECTOTCORR"][m] * d) for m, d in zip(mon, days)],
+        "wind": [round(p["WS2M"][m], 1) for m in mon],
+        "gridElev": gz,
+    }
 
 
 def main():

@@ -9,7 +9,6 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: "3.12" }
-      - run: pip install -r collector/requirements.txt
       - run: |
           python collector/mountain_climate.py .github/diag/mountains.json > diag-out.txt 2>&1 || true
-          git config user.name bot; git config user.email bot@x; git add diag-out.txt src/data/mountain-climate.json || true; git commit -m "diag output"; git push
+          git config user.name bot; git config user.email bot@x; git add diag-out.txt; git add src/data/mountain-climate.json || true; git commit -m "diag output"; git push

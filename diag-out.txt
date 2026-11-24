@@ -1,0 +1,15 @@
+sitemap jirisan-cheonwangbong 1
+sitemap seoraksan-daecheongbong 1
+sitemap daedunsan 1
+
+== jirisan-cheonwangbong: lines=488 chars=4307 unique_chars=1850 (42%)
+
+== seoraksan-daecheongbong: lines=484 chars=4222 unique_chars=1901 (45%)
+
+== daedunsan: lines=307 chars=2196 unique_chars=487 (22%)
+
+== unaksan: lines=306 chars=2118 unique_chars=404 (19%)
+
+== hwangmaesan: lines=307 chars=2176 unique_chars=362 (16%)
+
+guide True months True

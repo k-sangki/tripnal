@@ -9,6 +9,7 @@ import { golfRegionOf } from "@/lib/golf";
 import { golfIntroRows } from "@/lib/golfIntro";
 import { MOUNTAIN_INTRO } from "@/data/mountain-intro";
 import { PLACE_INTRO } from "@/data/place-intro";
+import { mountainClimateLine } from "@/lib/mountainClimate";
 import { guidesFor } from "@/data/guides";
 import { hasForeignPage } from "@/data/places-i18n";
 import { languageAlternates } from "@/lib/i18n";
@@ -153,6 +154,23 @@ export default async function PlacePage({ params }: PageProps<"/weather/[slug]">
             {place.name}({place.region}
             {place.elevation ? `, 해발 ${place.elevation.toLocaleString()}m` : ""}). {intro.intro}
           </p>
+          {intro.sight && <p>{intro.sight}</p>}
+          {intro.course && (
+            <p>
+              <b>대표 코스</b> · {intro.course}
+            </p>
+          )}
+          {intro.weather && (
+            <p>
+              <b>이 산 날씨의 특징</b> · {intro.weather}
+            </p>
+          )}
+          {mountain && mountainClimateLine(place.slug) && (
+            <p>
+              <b>정상 평년 날씨</b> · {mountainClimateLine(place.slug)}
+              <small className="muted"> (NASA POWER 평년값을 해발 {place.elevation?.toLocaleString()}m로 보정)</small>
+            </p>
+          )}
           <p>
             <b>많이 찾는 때</b> · {intro.best}
           </p>

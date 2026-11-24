@@ -1,0 +1,60 @@
+name: Diag (temporary)
+on:
+  push:
+    branches: [claude/project-thread-cmner1]
+jobs:
+  diag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: MISS/HIT timings
+        run: |
+          T=$RANDOM$RANDOM
+          for p in / /weather/seoul /weather/jirisan-cheonwangbong /weather/jarasum-autocamp /golf/gangwon /golf/gyeonggi /golf /tide /weekend /first-snow /ski /overseas/osaka /guide /sitemap.xml; do
+            for i in 1 2; do
+              curl -s -o /dev/null -A "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)" -D /tmp/h -w "$p try$i %{http_code} ttfb=%{time_starttransfer}s total=%{time_total}s size=%{size_download}" "https://tripnalc.com$p?_d=$T"
+              echo " $(grep -i '^x-edge-cache' /tmp/h | tr -d '\r') $(grep -i '^cf-ray' /tmp/h | tr -d '\r')"
+            done
+          done
+      - name: sitemap lastmod count
+        run: curl -s https://tripnalc.com/sitemap.xml | tee /tmp/s.xml | grep -c "<loc>"; grep -c "<lastmod>" /tmp/s.xml || true
+      - name: seoul links
+        run: curl -s https://tripnalc.com/weather/seoul | grep -o 'href="/\(en\|ja\|zh\)/[^"]*"\|href="/weather/seoul/[0-9]*"' | sort | uniq -c
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install boto3 -q
+      - name: R2 sizes
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+        working-directory: collector
+        run: |
+          python - <<'PY'
+          from upload import client
+          s=client(); b="tripnal-data"
+          for k in ["weekend/days.json","tide/stations.json"]:
+              try: print(k, s.head_object(Bucket=b,Key=k)["ContentLength"])
+              except Exception as e: print(k, e)
+          tot=0;n=0
+          for pg in s.get_paginator("list_objects_v2").paginate(Bucket=b,Prefix="tide/"):
+              for o in pg.get("Contents",[]): tot+=o["Size"]; n+=1
+          print("tide files",n,"bytes",tot)
+          n=0
+          for pg in s.get_paginator("list_objects_v2").paginate(Bucket=b,Prefix="fc/"):
+              n+=len(pg.get("Contents",[]))
+          print("fc objects",n)
+          PY
+      - name: Workers status counts (7d)
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          S=$(date -u -d '7 days ago' +%Y-%m-%dT%H:%M:%SZ); E=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          Q='{"query":"query($a:String!,$s:Time!,$e:Time!){viewer{accounts(filter:{accountTag:$a}){workersInvocationsAdaptive(limit:100,filter:{datetime_geq:$s,datetime_leq:$e},orderBy:[sum_requests_DESC]){sum{requests errors subrequests} quantiles{cpuTimeP50 cpuTimeP99 wallTimeP50 wallTimeP99} dimensions{scriptName status date}}}}}","variables":{"a":"'$CLOUDFLARE_ACCOUNT_ID'","s":"'$S'","e":"'$E'"}}'
+          curl -s https://api.cloudflare.com/client/v4/graphql -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" -H 'Content-Type: application/json' -d "$Q" | python3 -c "
+          import json,sys; d=json.load(sys.stdin)
+          if d.get('errors'): print(d['errors']); sys.exit()
+          for r in d['data']['viewer']['accounts'][0]['workersInvocationsAdaptive']:
+              print(r['dimensions'], r['sum'], r['quantiles'])
+          "

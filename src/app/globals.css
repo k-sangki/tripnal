@@ -916,6 +916,37 @@ a {
 .mg-access td:first-child {
   white-space: nowrap;
 }
+.mg-more {
+  margin-top: 6px;
+  font-size: 13px;
+}
+.mg-more summary {
+  cursor: pointer;
+  color: var(--pine-2);
+  font-weight: 600;
+  font-size: 13px;
+  list-style: none;
+}
+.mg-more summary::-webkit-details-marker {
+  display: none;
+}
+.mg-more summary::after {
+  content: " ▾";
+}
+.mg-more[open] summary::after {
+  content: " ▴";
+}
+.mg-more p,
+.mg-more ul {
+  margin: 6px 0 0;
+  line-height: 1.65;
+}
+.mg-more ul {
+  padding-left: 18px;
+}
+.mg-more li + li {
+  margin-top: 4px;
+}
 .mtn-guide .sum-note {
   margin-top: 6px;
   font-size: 12px;

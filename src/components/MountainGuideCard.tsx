@@ -8,6 +8,36 @@ const SEASONS = [
   { k: "겨울", icon: "❄️" },
 ];
 
+/** 칸 아래 "자세히": 글은 처음부터 HTML에 있고 접혀만 있다(구글이 그대로 읽음). 줄바꿈이면 목록, " · " 앞은 굵게 */
+function More({ text }: { text: string }) {
+  const lines = text.split("\n");
+  return (
+    <details className="mg-more">
+      <summary>자세히</summary>
+      {lines.length > 1 ? (
+        <ul>
+          {lines.map((line) => {
+            const [k, ...rest] = line.split(" · ");
+            return (
+              <li key={k}>
+                {rest.length ? (
+                  <>
+                    <b>{k}</b> · {rest.join(" · ")}
+                  </>
+                ) : (
+                  line
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      ) : (
+        <p>{text}</p>
+      )}
+    </details>
+  );
+}
+
 /** 명산 산행 길잡이: 코스·계절·월별 표·일출·가는 길·대피소를 칸과 표로 한눈에 */
 export default function MountainGuideCard({
   name,
@@ -36,6 +66,7 @@ export default function MountainGuideCard({
           </div>
         ))}
       </div>
+      <More text={guide.more.courses} />
 
       <h3>🗓️ 언제 가면 좋을까</h3>
       <div className="mg-grid">
@@ -49,6 +80,7 @@ export default function MountainGuideCard({
           </div>
         ))}
       </div>
+      <More text={guide.more.seasons} />
 
       {months && (
         <>
@@ -92,6 +124,7 @@ export default function MountainGuideCard({
           <li key={t}>{t}</li>
         ))}
       </ul>
+      <More text={guide.more.sunrise} />
 
       <h3>🚌 가는 길</h3>
       <table className="km-table mg-access">
@@ -115,6 +148,7 @@ export default function MountainGuideCard({
         </tbody>
       </table>
       {guide.accessTip && <p className="sum-note">💡 {guide.accessTip}</p>}
+      <More text={guide.more.access} />
 
       <h3>🏠 대피소·통제</h3>
       <div className="mg-chips">
@@ -127,6 +161,7 @@ export default function MountainGuideCard({
           <li key={t}>{t}</li>
         ))}
       </ul>
+      <More text={guide.more.shelters} />
     </section>
   );
 }

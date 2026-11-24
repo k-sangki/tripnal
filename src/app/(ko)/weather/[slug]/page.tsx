@@ -153,6 +153,17 @@ export default async function PlacePage({ params }: PageProps<"/weather/[slug]">
             {place.name}({place.region}
             {place.elevation ? `, 해발 ${place.elevation.toLocaleString()}m` : ""}). {intro.intro}
           </p>
+          {intro.sight && <p>{intro.sight}</p>}
+          {intro.course && (
+            <p>
+              <b>대표 코스</b> · {intro.course}
+            </p>
+          )}
+          {intro.weather && (
+            <p>
+              <b>이 산 날씨의 특징</b> · {intro.weather}
+            </p>
+          )}
           <p>
             <b>많이 찾는 때</b> · {intro.best}
           </p>

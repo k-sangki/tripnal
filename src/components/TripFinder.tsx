@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type MouseEvent } from "react";
 import { trackShare } from "@/lib/track";
 import { stripUtm } from "@/lib/utm";
 import {
@@ -303,9 +303,17 @@ function ResultCard({ r, total, seoulHi }: { r: FinderResult; total: number; seo
   const reason = matched.find((x) => x.m.kind !== "peak" && x.m.reason)?.m.reason ?? first.m.reason;
   // 같은 달 서울 낮 기온과 비교
   const diff = Math.round(matched.reduce((a, x) => a + x.m.hi - seoulHi[x.month - 1], 0) / matched.length);
-  const href = matched.length === 1 ? `/overseas/${row.slug}/${first.month}` : `/overseas/${row.slug}`;
+  const router = useRouter();
+  // 한 달만 맞으면 그 달 페이지로 간다. 월별 페이지는 noindex라 링크 주소(href)는 도시 페이지로 두고
+  // 누를 때만 달 페이지로 보낸다 (검색 로봇은 도시 페이지만 따라감, src/components/QueryLink.tsx와 같은 방식)
+  const month = matched.length === 1 ? first.month : null;
+  const go = (e: MouseEvent<HTMLAnchorElement>) => {
+    if (!month || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    e.preventDefault();
+    router.push(`/overseas/${row.slug}/${month}`);
+  };
   return (
-    <Link href={href} className="tf-card">
+    <Link href={`/overseas/${row.slug}`} className="tf-card" onClick={go}>
       <span className="tf-name">
         <b>{row.name}</b>
         <small>{row.country}</small>

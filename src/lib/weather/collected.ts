@@ -413,34 +413,36 @@ async function bucket(): Promise<DataBucket> {
  * 장소 서너 곳 분량만 둔다. 계산 결과는 R2(fc/)에 따로 보관하므로 이걸로 충분하다.
  */
 const MEMO_MAX = 150;
-const memo = new Map<string, Promise<unknown>>();
-function cached<T>(key: string, load: () => Promise<T>): Promise<T> {
-  let p = memo.get(key) as Promise<T> | undefined;
-  if (p) {
+/**
+ * 다 읽은 값만 둔다. 읽는 중인 Promise를 다른 요청과 나눠 쓰면, 먼저 시작한 요청이 끝나거나 끊길 때
+ * 기다리던 요청이 영영 답을 못 받아 Workers가 "code had hung"으로 끊었다
+ * (2026-11-24 Workers 로그: prewarm·주말·검증 동시 요청에서 하루 30~40번).
+ */
+const memo = new Map<string, unknown>();
+async function cached<T>(key: string, load: () => Promise<T>): Promise<T> {
+  if (memo.has(key)) {
+    const v = memo.get(key) as T;
     // 최근에 쓴 것을 뒤로 보내 오래 안 쓴 것부터 지운다
     memo.delete(key);
-    memo.set(key, p);
-  } else {
-    while (memo.size >= MEMO_MAX) memo.delete(memo.keys().next().value as string);
-    p = load().catch((e) => {
-      memo.delete(key);
-      throw e;
-    });
-    memo.set(key, p);
+    memo.set(key, v);
+    return v;
   }
-  return p;
+  const v = await load();
+  while (memo.size >= MEMO_MAX) memo.delete(memo.keys().next().value as string);
+  memo.set(key, v);
+  return v;
 }
 
 type LatestInfo = { run: string; runs?: string[] } | null;
 
-/** 최신 run(과 남아 있는 지난 run 목록)은 5분 동안 기억한다 (버킷마다 따로) */
-const latestMemos = new WeakMap<DataBucket, Map<string, { at: number; info: Promise<LatestInfo> }>>();
-function latestInfo(b: DataBucket, model: CollectedModel | "wave" | "gefs" | "cams"): Promise<LatestInfo> {
+/** 최신 run(과 남아 있는 지난 run 목록)은 5분 동안 기억한다 (버킷마다 따로, 다 읽은 값만: cached 설명 참고) */
+const latestMemos = new WeakMap<DataBucket, Map<string, { at: number; info: LatestInfo }>>();
+async function latestInfo(b: DataBucket, model: CollectedModel | "wave" | "gefs" | "cams"): Promise<LatestInfo> {
   let latestMemo = latestMemos.get(b);
   if (!latestMemo) latestMemos.set(b, (latestMemo = new Map()));
   const hit = latestMemo.get(model);
   if (hit && Date.now() - hit.at < 5 * 60e3) return hit.info;
-  const info = b
+  const info = await b
     .get(`${model}/latest.json`)
     .then((o) => (o ? o.json<{ run: string; runs?: string[] }>() : null))
     .catch(() => null);

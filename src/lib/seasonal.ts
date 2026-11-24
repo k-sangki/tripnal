@@ -1,3 +1,4 @@
+import { cachedJson } from "@/lib/cache";
 import { PLACES, type Place } from "@/lib/places";
 import { addDays, diffDays } from "@/lib/time";
 import { getForecast } from "@/lib/weather";
@@ -188,12 +189,17 @@ export function foliageRows(ref: string): FoliageRow[] {
 /** R2 자료. 바인딩이 없는 개발 환경에서는 null */
 export async function loadDays(): Promise<DaysData | null> {
   try {
-    const { getCloudflareContext } = await import("@opennextjs/cloudflare");
-    const env = (await getCloudflareContext({ async: true })).env as unknown as {
-      DATA?: { get(key: string): Promise<{ json<T>(): Promise<T> } | null> };
-    };
-    const o = await env.DATA?.get("weekend/days.json");
-    return o ? await o.json<DaysData>() : null;
+    // 파일이 500KB쯤이라 R2에서 매번 받으면 캐시가 빈 페이지가 느리다. 같은 데이터센터에서는 10분 동안 다시 쓴다
+    // (하루 두 번 바뀌므로 길어야 10분 늦게 반영). 없으면 보관하지 않는다.
+    return await cachedJson("weekend-days", 10 * 60, async () => {
+      const { getCloudflareContext } = await import("@opennextjs/cloudflare");
+      const env = (await getCloudflareContext({ async: true })).env as unknown as {
+        DATA?: { get(key: string): Promise<{ json<T>(): Promise<T> } | null> };
+      };
+      const o = await env.DATA?.get("weekend/days.json");
+      if (!o) throw new Error("weekend/days.json 없음");
+      return o.json<DaysData>();
+    });
   } catch {
     return null;
   }

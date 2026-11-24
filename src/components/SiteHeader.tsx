@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { NoCrawlLink } from "./NoCrawlLink";
 import { Logo } from "./Logo";
 import { InstallButton } from "./InstallButton";
 import { SLOGAN, SLOGAN_C } from "@/lib/brand";
@@ -51,24 +52,24 @@ export function SiteHeader({
   );
 }
 
-/** langPath: 영어·일본어판이 있는 페이지면 그 경로 (예: "/weather/seoul") → 바닥글에 언어 링크 */
+/** langPath: 영어·일본어판이 있는 페이지면 그 경로 (예: "/weather/seoul") → 바닥글에 언어 링크. 외국어판은 noindex라 로봇이 따라가지 않는 링크로 둔다 */
 export function SiteFooter({ langPath }: { langPath?: string } = {}) {
   return (
     <footer className="foot">
       {langPath && (
         <nav className="foot-lang" aria-label="Language">
           <span aria-hidden>🌐</span>
-          <Link href={`/en${langPath}`} hrefLang="en" lang="en">
+          <NoCrawlLink base="/en" tail={langPath} lang="en">
             English
-          </Link>
+          </NoCrawlLink>
           <span aria-hidden>·</span>
-          <Link href={`/ja${langPath}`} hrefLang="ja" lang="ja">
+          <NoCrawlLink base="/ja" tail={langPath} lang="ja">
             日本語
-          </Link>
+          </NoCrawlLink>
           <span aria-hidden>·</span>
-          <Link href={`/zh${langPath}`} hrefLang="zh-Hant" lang="zh-Hant">
+          <NoCrawlLink base="/zh" tail={langPath} lang="zh-Hant">
             繁體中文
-          </Link>
+          </NoCrawlLink>
         </nav>
       )}
       <p>

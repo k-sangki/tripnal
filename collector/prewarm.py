@@ -1,6 +1,6 @@
 """
 장소 페이지 예보를 R2(fc/{날짜}/…)에 미리 채운다 (src/lib/weather/index.ts storedForecast).
-사이트맵의 한국어 장소 페이지(/weather/{slug})를 한 번씩 열면 사이트가 예보를 계산해 R2에 넣는다.
+사이트맵의 한국어 장소 페이지(/weather/{slug})·골프장 시·도(/golf/{region})·물때표(/tide)를 한 번씩 열면 사이트가 예보를 계산해 R2에 넣는다.
 그 뒤에는 검색 로봇이 어느 데이터센터로 와도 파일 하나만 읽으면 된다.
 끝나면 지난 날짜 폴더(fc/어제 이전)를 지운다 (R2 값이 있을 때만).
 
@@ -24,7 +24,9 @@ def page_urls():
     with urllib.request.urlopen(urllib.request.Request(f"{SITE}/sitemap.xml", headers={"User-Agent": UA}), timeout=60) as r:
         xml = r.read().decode()
     locs = re.findall(r"<loc>([^<]+)</loc>", xml)
-    return sorted({u for u in locs if re.fullmatch(re.escape(SITE) + r"/weather/[^/?#]+", u)})
+    # 장소 페이지, 골프장 시·도 페이지(가운데 지점 예보), 물때표(그날 만조·간조 묶음)
+    pat = re.escape(SITE) + r"(/weather/[^/?#]+|/golf/[^/?#]+|/tide)"
+    return sorted({u for u in locs if re.fullmatch(pat, u)})
 
 
 def warm(url, tag):

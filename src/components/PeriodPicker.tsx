@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { MAX_DAYS, PRESETS, matchPreset, presetPeriod, type Period } from "@/lib/period";
+import { MAX_DAYS, PRESETS, chipPeriod, matchPreset, type Period } from "@/lib/period";
 import { addDays, weekday, weekdayName } from "@/lib/time";
 import { useLocale, useT } from "./LocaleContext";
 
@@ -13,8 +13,7 @@ export function PeriodPicker({ value, today, onChange }: { value: Period; today:
   const { locale } = useLocale();
   const t = useT();
   const active = matchPreset(value, today);
-  // 날짜 버튼은 기본으로 펼쳐 둔다. 고른 기간이 프리셋(기본: 이번 주말)과 같으면 그 버튼을 켠다
-  const [custom, setCustom] = useState(true);
+  // 날짜 버튼은 늘 펼쳐 둔다(기간 버튼을 눌러도 접지 않음). 고른 기간이 프리셋과 같으면 그 버튼을 켠다
   // 시작일만 고른 상태
   const [anchor, setAnchor] = useState<string | null>(null);
   const dates = Array.from({ length: MAX_DAYS }, (_, i) => addDays(today, i));
@@ -38,41 +37,38 @@ export function PeriodPicker({ value, today, onChange }: { value: Period; today:
             className="chip"
             aria-pressed={active === p.id}
             onClick={() => {
-              setCustom(false);
               setAnchor(null);
-              onChange(presetPeriod(p.id, today));
+              onChange(chipPeriod(p.id, today));
             }}
           >
             {t(p.label)}
           </button>
         ))}
-        <button className="chip" aria-pressed={active == null} onClick={() => setCustom(true)}>
+        <button className="chip" aria-pressed={active == null} onClick={() => setAnchor(null)}>
           {t("직접 선택")}
         </button>
       </div>
-      {custom && (
-        <div className="day-pick">
-          <p className="muted">{t(anchor ? "끝나는 날을 누르세요" : "시작하는 날과 끝나는 날을 차례로 누르세요")}</p>
-          <div className="day-grid" role="group" aria-label={t("날짜 선택")}>
-            {dates.map((d) => {
-              const w = weekday(d);
-              const edge = d === value.from || d === value.to;
-              const inside = d > value.from && d < value.to;
-              return (
-                <button
-                  key={d}
-                  className={[edge && "edge", inside && "in", w === 6 && "d-sat", w === 0 && "d-sun"].filter(Boolean).join(" ")}
-                  aria-pressed={edge || inside}
-                  onClick={() => pick(d)}
-                >
-                  <b>{d === today ? t("오늘") : d.endsWith("-01") ? `${Number(d.slice(5, 7))}/1` : Number(d.slice(8))}</b>
-                  <small>{weekdayName(d, locale)}</small>
-                </button>
-              );
-            })}
-          </div>
+      <div className="day-pick">
+        <p className="muted">{t(anchor ? "끝나는 날을 누르세요" : "시작하는 날과 끝나는 날을 차례로 누르세요")}</p>
+        <div className="day-grid" role="group" aria-label={t("날짜 선택")}>
+          {dates.map((d) => {
+            const w = weekday(d);
+            const edge = d === value.from || d === value.to;
+            const inside = d > value.from && d < value.to;
+            return (
+              <button
+                key={d}
+                className={[edge && "edge", inside && "in", w === 6 && "d-sat", w === 0 && "d-sun"].filter(Boolean).join(" ")}
+                aria-pressed={edge || inside}
+                onClick={() => pick(d)}
+              >
+                <b>{d === today ? t("오늘") : d.endsWith("-01") ? `${Number(d.slice(5, 7))}/1` : Number(d.slice(8))}</b>
+                <small>{weekdayName(d, locale)}</small>
+              </button>
+            );
+          })}
         </div>
-      )}
+      </div>
     </div>
   );
 }

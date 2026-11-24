@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { clampPeriod, inPeriod, periodNights, presetPeriod } from "./period";
+import { chipPeriod, clampPeriod, inPeriod, matchPreset, periodNights, presetPeriod } from "./period";
 
 describe("period", () => {
   it("이번 주말: 평일이면 다가오는 토·일", () => {
@@ -33,5 +33,17 @@ describe("topic", () => {
     expect(topic("자라섬 오토캠핑장")).toBe("자라섬 오토캠핑장은");
     expect(topic("태안")).toBe("태안은");
     expect(topic("서귀포")).toBe("서귀포는");
+  });
+});
+
+describe("chipPeriod", () => {
+  it("일요일의 주말 버튼은 다음 토·일", () => {
+    expect(chipPeriod("weekend", "2026-11-22")).toEqual({ from: "2026-11-28", to: "2026-11-29" });
+    expect(matchPreset({ from: "2026-11-28", to: "2026-11-29" }, "2026-11-22")).toBe("weekend");
+    expect(matchPreset({ from: "2026-11-22", to: "2026-11-22" }, "2026-11-22")).toBe("today");
+  });
+  it("다른 요일은 presetPeriod와 같음", () => {
+    expect(chipPeriod("weekend", "2026-11-21")).toEqual({ from: "2026-11-21", to: "2026-11-22" });
+    expect(chipPeriod("16d", "2026-11-22")).toEqual(presetPeriod("16d", "2026-11-22"));
   });
 });

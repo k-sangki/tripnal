@@ -11,6 +11,9 @@ import { MOUNTAIN_GUIDE, MOUNTAIN_INTRO } from "@/data/mountain-intro";
 import { PLACE_INTRO } from "@/data/place-intro";
 import { mountainClimateLine } from "@/lib/mountainClimate";
 import { mountainMonths } from "@/lib/mountainMonths";
+import MountainGuideCard from "@/components/MountainGuideCard";
+
+const kstMonth = () => new Date(Date.now() + 9 * 3600_000).getUTCMonth() + 1;
 import { guidesFor } from "@/data/guides";
 import { hasForeignPage } from "@/data/places-i18n";
 import { languageAlternates } from "@/lib/i18n";
@@ -185,67 +188,8 @@ export default async function PlacePage({ params }: PageProps<"/weather/[slug]">
         </section>
       )}
 
-      {guide && (
-        <section className="card seo-text mtn-guide" style={{ marginTop: 12 }}>
-          <h2>{place.name} 산행 길잡이</h2>
-          {guide.map((g) => (
-            <div key={g.h}>
-              <h3>{g.h}</h3>
-              {g.p.includes("\n") ? (
-                <ul>
-                  {g.p.split("\n").map((line) => {
-                    const [k, ...rest] = line.split(" · ");
-                    return (
-                      <li key={k}>
-                        {rest.length ? (
-                          <>
-                            <b>{k}</b> · {rest.join(" · ")}
-                          </>
-                        ) : (
-                          line
-                        )}
-                      </li>
-                    );
-                  })}
-                </ul>
-              ) : (
-                <p>{g.p}</p>
-              )}
-            </div>
-          ))}
-          {months && (
-            <>
-              <h3>월별 정상 일출·기온·옷차림</h3>
-              <table className="km-table mtn-months">
-                <thead>
-                  <tr>
-                    <th>월</th>
-                    <th>일출</th>
-                    <th>새벽 / 한낮</th>
-                    <th>비</th>
-                    <th>옷차림</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {months.map((r) => (
-                    <tr key={r.m}>
-                      <td>{r.m}월</td>
-                      <td>{r.sunrise}</td>
-                      <td>
-                        <span className="v-lo">{r.lo}°</span> / <span className="v-hi">{r.hi}°</span>
-                      </td>
-                      <td>{r.rain}mm</td>
-                      <td className="wear">{r.wear}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              <p className="sum-note">
-                일출은 매달 15일 정상 기준 계산값, 기온·비는 NASA POWER 평년값을 해발 {place.elevation?.toLocaleString()}m로 보정한 값이에요. 바람이 불면 체감은 이보다 훨씬 낮아요.
-              </p>
-            </>
-          )}
-        </section>
+      {guide && place.elevation && (
+        <MountainGuideCard name={place.name} elevation={place.elevation} guide={guide} months={months} thisMonth={kstMonth()} />
       )}
 
       {golfRows.length > 0 && (

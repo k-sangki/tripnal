@@ -10,41 +10,12 @@ jobs:
       - name: MISS/HIT timings
         run: |
           T=$RANDOM$RANDOM
-          for p in / /weather/seoul /weather/jirisan-cheonwangbong /weather/jarasum-autocamp /golf/gangwon /golf/gyeonggi /golf /tide /weekend /first-snow /ski /overseas/osaka /guide /sitemap.xml; do
-            for i in 1 2; do
+          for p in /tide /weather/seoul /golf/gangwon /golf/gyeonggi /weather/jirisan-cheonwangbong /; do
+            for i in 1 2 3; do T=$RANDOM;
               curl -s -o /dev/null -A "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)" -D /tmp/h -w "$p try$i %{http_code} ttfb=%{time_starttransfer}s total=%{time_total}s size=%{size_download}" "https://tripnalc.com$p?_d=$T"
               echo " $(grep -i '^x-edge-cache' /tmp/h | tr -d '\r') $(grep -i '^cf-ray' /tmp/h | tr -d '\r')"
             done
           done
-      - name: sitemap lastmod count
-        run: curl -s https://tripnalc.com/sitemap.xml | tee /tmp/s.xml | grep -c "<loc>"; grep -c "<lastmod>" /tmp/s.xml || true
-      - name: seoul links
-        run: curl -s https://tripnalc.com/weather/seoul | grep -o 'href="/\(en\|ja\|zh\)/[^"]*"\|href="/weather/seoul/[0-9]*"' | sort | uniq -c
-      - uses: actions/setup-python@v5
-        with: { python-version: "3.12" }
-      - run: pip install boto3 -q
-      - name: R2 sizes
-        env:
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
-          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-        working-directory: collector
-        run: |
-          python - <<'PY'
-          from upload import client
-          s=client(); b="tripnal-data"
-          for k in ["weekend/days.json","tide/stations.json"]:
-              try: print(k, s.head_object(Bucket=b,Key=k)["ContentLength"])
-              except Exception as e: print(k, e)
-          tot=0;n=0
-          for pg in s.get_paginator("list_objects_v2").paginate(Bucket=b,Prefix="tide/"):
-              for o in pg.get("Contents",[]): tot+=o["Size"]; n+=1
-          print("tide files",n,"bytes",tot)
-          n=0
-          for pg in s.get_paginator("list_objects_v2").paginate(Bucket=b,Prefix="fc/"):
-              n+=len(pg.get("Contents",[]))
-          print("fc objects",n)
-          PY
       - name: Workers status counts (7d)
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -58,3 +29,25 @@ jobs:
           for r in d['data']['viewer']['accounts'][0]['workersInvocationsAdaptive']:
               print(r['dimensions'], r['sum'], r['quantiles'])
           "
+      - name: Workers Logs exceptions
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          NOW=$(date +%s%3N); FROM=$((NOW-3*86400000))
+          for body in \
+            '{"queryId":"diag","timeframe":{"from":'$FROM',"to":'$NOW'},"view":"events","limit":50,"parameters":{"filters":[{"key":"$metadata.outcome","operation":"eq","type":"string","value":"exception"}]}}' \
+            '{"queryId":"diag2","timeframe":{"from":'$FROM',"to":'$NOW'},"view":"events","limit":50,"parameters":{"filters":[{"key":"$metadata.level","operation":"eq","type":"string","value":"error"}]}}'; do
+            curl -s "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/observability/telemetry/query" -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" -H 'Content-Type: application/json' -d "$body" > /tmp/o.json
+            python3 - <<'PY'
+          import json
+          d=json.load(open('/tmp/o.json'))
+          if not d.get('success'): print(json.dumps(d)[:1500]); raise SystemExit
+          ev=(d.get('result') or {}).get('events',{}).get('events',[])
+          print('events',len(ev))
+          for e in ev[:50]:
+              m=e.get('$metadata',{}); w=e.get('$workers',{})
+              req=(w.get('event') or {}).get('request') or {}
+              print(m.get('service'), e.get('timestamp'), w.get('outcome'), req.get('url'), (req.get('headers') or {}).get('user-agent','')[:40], '|', str(m.get('error') or m.get('message'))[:200])
+          PY
+          done

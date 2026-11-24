@@ -26,11 +26,16 @@ jobs:
       NEXT_PUBLIC_AD_SLOT_BOTTOM: ${{ secrets.NEXT_PUBLIC_AD_SLOT_BOTTOM }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          # 사이트맵 lastmod를 git 기록에서 계산한다 (scripts/gen-lastmod.mjs)
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: 사이트맵 lastmod 계산
+        run: node scripts/gen-lastmod.mjs
       - name: 빌드·배포
         run: npm run deploy
       - name: 서버 비밀값 등록
